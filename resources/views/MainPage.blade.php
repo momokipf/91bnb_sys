@@ -217,6 +217,8 @@
             	 				<!-- check current name == repName ? Why ? Need to study -->
             	 				@if($query->reprensent->repPriority >=2)  
             	 					<!-- To Do :: Add handler function in JS -->
+                        <td></td><td></td>
+                      @else 
             	 					<td><button type='button' class='btn btn-primary btn-sm' id='modify' onclick="bootbox_test()"><span class='glyphicon glyphicon-edit'></span> Modify</button></td>
             	 					<td><button type='button' class='btn btn-primary btn-sm' id='addfollowup' onclick='addFollowUp({{$query->inquiryID}})'><span class='glyphicon glyphicon-plus'></span> Add Follow Up</button></td>
 
@@ -538,13 +540,13 @@
 
                     <div class="caption">
                         <div class="my-title"><h5>Inquiry</h5></div>
-                        <a href="inquiry/newInquiry.php"><h6>Add New Inquiry</h6></a>
-                    @if($Rep->repPriority<=3)
-                    	<a href="#"><h6>Search/Modify/Follow Up</h6></a>
-                    	@if(!$Rep->repPriority==3)
-                    		<a href="" id="extAllInquiry" download><h6>Extract All Inquiries</h6></a>
-                    	@endif
-                    @endif
+                        <a href='addinquiry'><h6>Add New Inquiry</h6></a>
+                        @if($Rep->repPriority<=3)
+                        	<a href="#"><h6>Search/Modify/Follow Up</h6></a>
+                        	@if(!$Rep->repPriority==3)
+                        		<a href="" id="extAllInquiry" download><h6>Extract All Inquiries</h6></a>
+                        	@endif
+                        @endif
                     <a href="inquiry/passdue.php"><h6>Pass Due Log</h6></a>
                 	</div>
                 </div>
