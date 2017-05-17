@@ -58,6 +58,9 @@ class Inquiry extends Model
     	return $this->belongsTo('App\Representative','repID');
     }
 
+    public function quirer(){
+        return $this->belongsTo('App\Inquirer','inquirerID');
+    }
 
     //Scope
 
