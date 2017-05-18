@@ -559,7 +559,7 @@
                     @if($Rep->repPriority<=3)
                     	<a href="inquiry/modifyInquirer.php"><h6>Search/Modify Inquirer</h6></a>
                     @endif
-                    	<a href="inquiry/showAllInquirers.php"><h6>Show All Inquirers</h6></a>
+                    	<a href="inquirer/showAll"><h6>Show All Inquirers</h6></a>
                     </div>
                 </div>
 

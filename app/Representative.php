@@ -11,6 +11,7 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 use Schema;
+use DB;
 
 class Representative extends Model implements
 	 AuthenticatableContract,
@@ -55,6 +56,16 @@ class Representative extends Model implements
         if(! Schema::hasColumn($this->table,$attributes))
             return $query;
         return $query->distinct()->select($attributes);
+    }
+
+    public function inquirer() {
+        return DB::table('inquirer')
+                ->whereIn('inquirerID', function ($query) {
+                    $query->select('inquirerID')
+                        ->from('inquiry')
+                        ->where('repID', $this->repID);
+                });
+        //return DB::select('select * from inquirer where inquirerID in (select inquirerID from inquiry where repID = ?)', [$this->repID]);
     }
 
 
