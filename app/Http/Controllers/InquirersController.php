@@ -27,4 +27,19 @@ class InquirersController extends Controller
     			->with('rep', $rep)
     			->with('inquirers', $inquirers);
     }
+
+    public function search(Request $request,$similar = null){
+        Log::info($request->all());
+        $search = Inquirer::searchablefield($request->all());
+        if($search->isEmpty())
+        {
+            return response($search)->header('Content-Type', 'json');
+        }
+        if($similar==null)
+            $ret = Inquirer::FindSimilar($search,'AND')->get();
+        else 
+            $ret = Inquirer::FindSimilar($search,'OR')->get();
+        //Log::info(response($ret)->header('Content-Type', 'json'));
+        return  response($ret)->header('Content-Type', 'json');
+    }
 }

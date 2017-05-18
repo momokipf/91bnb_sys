@@ -251,15 +251,15 @@
             	 							@endforeach
             	 					</select>
             	 					&nbsp
-            	 					@if($query->reprensent->repPriority ==1)
+            	 					@if($query->inquiryPriorityLevel ==1)
             	 						<font id='image_{{$loop->index}}' color='red'>
-            	 					@elseif($query->reprensent->repPriority ==2)
+            	 					@elseif($query->inquiryPriorityLevel ==2)
             	 						<font id='image_{{$loop->index}}' color='orange'>
-            	 					@elseif($query->reprensent->repPriority ==3)
+            	 					@elseif($query->inquiryPriorityLevel ==3)
             	 						<font id='image_{{$loop->index}}' color='green'>
-            	 					@elseif($query->reprensent->repPriority ==4)
+            	 					@elseif($query->inquiryPriorityLevel ==4)
             	 						<font id='image_{{$loop->index}}' color='blue'>
-            	 					@elseif($query->reprensent->repPriority ==5)
+            	 					@elseif($query->inquiryPriorityLevel ==5)
             	 						<font id='image_{{$loop->index}}' color='grey'>
             	 					@endif
             	 					<i class='fa fa-star' aria-hidden='true'></i>
@@ -505,7 +505,7 @@
 
 
 
-            <div class=’row bg3 text-center‘ style=’margin:0; background-color:#FAFAFA; line-height:1.2;‘>
+            <div class="row bg-3 text-center" style="margin:0; background-color:#FAFAFA; line-height:1.2;">
             	<div class="col-sm-1 bg1"></div>
             	@if($Rep->repPriority ==1)
 	            	<!-- Admin -->

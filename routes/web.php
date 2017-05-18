@@ -20,14 +20,19 @@ Route::get('login','LoginController@show')->name('login');
 Route::post('login','LoginController@login')->name('login');
 Route::get('logout','LoginController@logout');
 
+Route::get('resource/{typename}','ResourceController@getlist');
 
 Route::get('inquiry/index','InquirysController@index');
 Route::get('inquiry/{post}','InquirysController@show');
+Route::get('addinquiry',function(){return view('inquiry');});
 
 Route::get('MainPage','MainPageController@index')
 	->name('MainPage');
 Route::post('MainPage/addfollow','FollowUpController@store');
 
+
+Route::post('inquiry/search/{similar?}','InquirersController@search');
+Route::get('inquirer/showAll', 'InquirersController@show');
 
 //Route::resource('/postmech','PostController');
 Route::get('/post','PostController@index');
@@ -36,4 +41,3 @@ Route::get('/post','PostController@index');
 
 //Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('inquirer/showAll', 'InquirersController@show');

@@ -4,11 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Log;
 use App\Representative;
 use App\Inquiry;
 use Session;
-use Log;
 
 class MainPageController extends Controller
 {
@@ -45,21 +44,7 @@ class MainPageController extends Controller
     	$allreps = Representative::GetValuesinField('repName')->get()->toarray();
 
     	$allreps = array_flatten($allreps);
-    	Log::info($allreps);
-    	//$item = $hotInquirys->count();
-    	// if(!$request->session()->has('page')){
-    	// 	$page = intval($items/$itemsEachPage);
-    	// 	if($page==0)
-    	// 	{
-    	// 		$page = 1;
-    	// 	}
-    	// 	$request->session()->put('page',$page);
-    	// 	//Log::info('get page from calculate');
-    	// }
-    	// else{
-    	// 	Log::info('get page from session');
-    	// 	$page =  $request->session()->get('page');
-    	// }
+
     	return view('MainPage')
     		->with('hotquerys',$hotquerys)
     		->with('items',$items)
