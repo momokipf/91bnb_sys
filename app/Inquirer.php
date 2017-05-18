@@ -32,18 +32,20 @@ class Inquirer extends Model
 
     public $timestamps = false;
 
-    protected static $searable = ['inquirerFirst','inquirerLast','inquirerTaobaoUserName','inquirerWechatUserName','inquirerWechatID'];
+    protected static $searchable = ['inquirerFirst','inquirerLast','inquirerTaobaoUserName','inquirerWechatUserName','inquirerWechatID'];
+
 
     public function queries(){
         return $this->hasMany('App\Inquiry','inquirerID');
     }
     
-    public static function searablefield ($arr)
+
+    public static function searchablefield ($arr)
     {   
         // if(!is_array($arr))
         //     return ;
         $res = collect();
-        foreach(self::$searable as $field)
+        foreach(self::$searchable as $field)
         {
             $tmp = array_get($arr,$field);
             if($tmp)
@@ -55,13 +57,13 @@ class Inquirer extends Model
     }
 
 
-    public function scopeFindSimilar($query,$keypair){
+    public function scopeFindSimilar($query,$keypair,$andOr){
 
         $wheresql = "";
         foreach($keypair as $attributes=>$value){
-            $wheresql .= ((strcmp($wheresql,"")==0)? "":"AND ").$attributes." like '%".$value."%' "; 
+            $wheresql .= ((strcmp($wheresql,"")==0)? "":$andOr." ").$attributes." like '%".$value."%' "; 
         }
-        Log::info($wheresql);
+        //Log::info($wheresql);
         return $query-> whereRaw(DB::raw("$wheresql"));
     }
 
