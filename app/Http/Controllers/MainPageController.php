@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+
 use App\Representative;
 use App\Inquiry;
 use Session;
@@ -46,8 +47,8 @@ class MainPageController extends Controller
     	$allreps = array_flatten($allreps);
 
     	return view('MainPage')
-    		->with('hotquerys',$hotquerys)
-    		->with('items',$items)
+    		->with('Hotquerys',$hotquerys)
+    		->with('Items',$items)
     		->with('Allreps',$allreps)
     		->with('Rep',Auth::user());
     }

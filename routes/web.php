@@ -22,9 +22,11 @@ Route::get('logout','LoginController@logout');
 
 Route::get('resource/{typename}','ResourceController@getlist');
 
-Route::get('inquiry/index','InquirysController@index');
+Route::get('inquiry/add','InquirysController@addIndex');
+Route::post('inquiry/add','InquirysController@store');
 Route::get('inquiry/{post}','InquirysController@show');
-Route::get('addinquiry',function(){return view('inquiry');});
+
+//Route::get('addinquiry',    function(){return view('inquiry');});
 
 Route::get('MainPage','MainPageController@index')
 	->name('MainPage');

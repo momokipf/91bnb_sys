@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Inquiry; 
 use App\InquiryFollow;
-use Log;
 
 
 class FollowUpController extends Controller

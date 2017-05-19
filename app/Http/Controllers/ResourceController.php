@@ -82,7 +82,6 @@ class ResourceController extends Controller
 			$content = File::get(storage_path('list/'.$resfilename));
 			$content = preg_split("/\r\n|\n|\r/", $content);
 
-			Log::info(response($content)->header('Content-Type', 'json'));
 			return response($content)
 				->header('Cache-Control', 'max-stale[3600]')
 				->header('Content-Type', 'json');

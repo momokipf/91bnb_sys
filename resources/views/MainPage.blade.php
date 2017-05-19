@@ -207,7 +207,7 @@
             	 </tr>
 
             	 	<tbody id="mytable">
-            	 			@foreach($hotquerys as $query)
+            	 			@foreach($Hotquerys as $query)
             	 			<tr>
             	 				<!-- @if($date>$query->checkIn)
             	 					<td><i class="glyphicon glyphicon-time" style="color:grey"></i></td>
@@ -236,7 +236,7 @@
 	            	 					@php
             	 							data_to_option($Allreps,$query->reprensent->repName);
             	 						@endphp
-
+                          </select>
             	 				</td>
             	 				<td><div id='repID_{{$loop->index}}'> {{$query->reprensent->employeeID}}</div></td>
             	 				<td><div id='inquiryID_{{$loop->index}}'>IQ#{{$query->inquiryID}}</div></td>
@@ -471,10 +471,10 @@
     		  <div class='test'>
     		  		
 
-            	 	<!-- @foreach($hotquerys as $query)
-            	 		<p>{{$hotquerys->url('1')}}</p>
+            	 	<!-- @foreach($Hotquerys as $query)
+            	 		<p>{{$Hotquerys->url('1')}}</p>
             	 	@endforeach -->
-            	 	<!-- <p>{{$hotquerys[2]}}</p> -->
+            	 	<!-- <p>{{$Hotquerys[2]}}</p> -->
            
             		
     		  </div>
@@ -496,7 +496,7 @@
             </div>
 
             <div class='page' id='pagination' style='text-align:right'>
-				{{$hotquerys->links()}}
+				    {{$Hotquerys->links()}}
 			</div>
 
 
@@ -540,7 +540,7 @@
 
                     <div class="caption">
                         <div class="my-title"><h5>Inquiry</h5></div>
-                        <a href='addinquiry'><h6>Add New Inquiry</h6></a>
+                        <a href='inquiry/add'><h6>Add New Inquiry</h6></a>
                         @if($Rep->repPriority<=3)
                         	<a href="#"><h6>Search/Modify/Follow Up</h6></a>
                         	@if(!$Rep->repPriority==3)

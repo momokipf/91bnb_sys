@@ -24,6 +24,27 @@
 		<script src="{{asset('js/bootbox.min.js')}}"></script>
 	    <link rel="stylesheet" href="{{asset('css/self.css')}}">
 
+	    <?php
+
+	    	function data_to_option($array,$selected){
+			 	$sel = trim($selected);
+			 	$sel = str_replace(' ','',$sel);
+			 	foreach($array as $ele)
+			 	{
+			 		$trimedele = trim($ele);
+			 		$trimedele = str_replace(' ','',$trimedele);
+			 		if(strcasecmp($sel,$trimedele)===0){
+			 			 echo "<option selected value='$ele'>$ele</option>";
+			 		}
+			 		else {
+			 			echo "<option value='$ele'>$ele</option>";
+			 		}
+
+			 	}
+			 }
+	    ?>
+
+
 
 	    <style type="text/css">
 					body {
@@ -96,7 +117,7 @@
 		          <!-- navbar right -->
 		          <ul class="nav navbar-nav navbar-right">
 		              <li class="dropdown">
-		                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
+		                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{$Rep->repUserName}}<span class="caret"></span></a>
 		                  <ul class="dropdown-menu">
 		                    <li><a href="#">Profile</a></li>
 		                    <li><a href="#">Change Password</a></li>
@@ -111,58 +132,58 @@
 		</nav>
 
 	<div class="container" style="margin-top:70px;">
-		<div class="well">
+		<div class="well" id ="searchiquirer">
 			<span class="title-lg">① </span> <span class="title-sm">Select or Create Inquirer ID</span>
 			<hr>
 			<div class="row">
-			<div class="col-sm-6">
-				<h5>Existing inquier?</h5>
-				<form id="search_form" class="form-horizontal"  onsubmit="return false;">
-					{{ csrf_field() }}
-					<div class="form-group">
-						<label class="col-sm-4 control-label">First Name</label>
-							<div class="col-sm-6">
-                              <input type="search" class="form-control input-sm" name="inquirerFirst" placeholder="First Name">
-                            </div>
-					</div>
-					<div class="form-group">
-                            <label class="col-sm-4 control-label">Last Name</label>
-                            <div class="col-sm-6">
-                              <input type="search" class="form-control input-sm" name="inquirerLast" placeholder="Last Name">
-                            </div>
-                    </div>
-                    <div class="form-group">
-                            <label class="col-sm-4 control-label">WeChat ID</label>
-                            <div class="col-sm-6">
-                              <input type="search" class="form-control input-sm" name="inquirerWechatID" placeholder="Wechat ID">
-                            </div>
-                    </div>
-                    <div class="form-group">
-                            <label class="col-sm-4 control-label">WeChat Username</label>
-                            <div class="col-sm-6">
-                              <input type="search" class="form-control input-sm" name="inquirerWechatUserName" placeholder="Wechat Name">
-                            </div>
-                	</div>
-                	<div class="form-group">
-                            <label class="col-sm-4 control-label">Taobao Username</label>
-                            <div class="col-sm-6">
-                              <input type="search" class="form-control input-sm" name="inquirerTaobaoUserName" placeholder="Taobao Username">
-                            </div>
-                    </div> <!-- button get -->
+				<div class="col-sm-6">
+					<h5>Existing Inquirer?</h5>
+					<form id="search_form" class="form-horizontal"  onsubmit="return false;">
+						{{ csrf_field() }}
+						<div class="form-group">
+							<label class="col-sm-4 control-label">First Name</label>
+								<div class="col-sm-6">
+	                              <input type="search" class="form-control input-sm" name="inquirerFirst" placeholder="First Name">
+	                            </div>
+						</div>
+						<div class="form-group">
+	                            <label class="col-sm-4 control-label">Last Name</label>
+	                            <div class="col-sm-6">
+	                              <input type="search" class="form-control input-sm" name="inquirerLast" placeholder="Last Name">
+	                            </div>
+	                    </div>
+	                    <div class="form-group">
+	                            <label class="col-sm-4 control-label">WeChat ID</label>
+	                            <div class="col-sm-6">
+	                              <input type="search" class="form-control input-sm" name="inquirerWechatID" placeholder="Wechat ID">
+	                            </div>
+	                    </div>
+	                    <div class="form-group">
+	                            <label class="col-sm-4 control-label">WeChat Username</label>
+	                            <div class="col-sm-6">
+	                              <input type="search" class="form-control input-sm" name="inquirerWechatUserName" placeholder="Wechat Name">
+	                            </div>
+	                	</div>
+	                	<div class="form-group">
+	                            <label class="col-sm-4 control-label">Taobao Username</label>
+	                            <div class="col-sm-6">
+	                              <input type="search" class="form-control input-sm" name="inquirerTaobaoUserName" placeholder="Taobao Username">
+	                            </div>
+	                    </div> <!-- button get -->
 
-                    <div class="form-group">
-                            <div class="col-sm-6 col-sm-offset-4">
-                                <button class="btn btn-primary btn-sm" type ="sumnit">Search</button>
-                                <!-- clear input by refresh page -->
-                                <button class="btn btn-warning btn-sm" type="reset">Clear</button>   
-                            </div>
-                    </div>
-				</form>
-			</div>
-			<div class="col-sm-6">
-				<h5>New inquirer?</h5>
-                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addInquirerFieldModal"  onclick="$('#similarResult').empty(); $('#inquirerSubmitBtn').show();">Add New Inquirer</button> 
-			</div>
+	                    <div class="form-group">
+	                            <div class="col-sm-6 col-sm-offset-4">
+	                                <button class="btn btn-primary btn-sm" type ="sumnit">Search</button>
+	                                <!-- clear input by refresh page -->
+	                                <button class="btn btn-warning btn-sm" type="reset">Clear</button>   
+	                            </div>
+	                    </div>
+					</form>
+				</div>
+				<div class="col-sm-6">
+					<h5>New inquirer?</h5>
+	                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addInquirerFieldModal"  onclick="$('#similarResult').empty(); $('#inquirerSubmitBtn').show();">Add New Inquirer</button> 
+				</div>
 			</div>
 
 
@@ -260,9 +281,6 @@
 				</div>
 			</form>
 
-
-
-
 			<div class="modal fade" id="getInquirerIDResModal" role="dialog">
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
@@ -278,9 +296,13 @@
 					</div>
 				</div>
 			</div>
+		</div>
+
+
 
 			<!-- to showHouse.php -->
-			<form action="#" method="post" id="adjustLineSpacing" name="toshowhousepage">
+			<form action="#" method="post" id="adjustLineSpacing" name="toshowhousepage" style="display:none;">
+				{{ csrf_field() }}
 				<div class="well">
 					<span class="title-lg">② </span> <span class="title-sm">Add New Inquiry</span>
 					<hr>
@@ -295,7 +317,11 @@
 						<div class="col-lg-3">
 							<div>
 								<label>Representative</label>
-								<? //php printHere(); ?>
+								<select id="repID" class="form-control" name="repWithOwner">
+								@php
+    	 							data_to_option($Allreps,$Rep->repName);
+    	 						@endphp
+    	 						</select>
 							</div>
 						</div>
 					</div>
@@ -305,7 +331,6 @@
 							<div>
 								<label>Source</label>
 								<select id="inquirySource" class="form-control" name="inquirySource">
-									<? //php listtoselect("../list/inquirySourceList"); ?>
 								</select>
 							</div>
 						</div>
@@ -320,7 +345,6 @@
 							<div>
 								<label>Purpose</label>
 								<select id="Purpose" class="form-control" name="Purpose">
-								  <?//php listtoselect("../list/purpose"); ?>
 								</select>
 							</div>
 						</div>
@@ -439,15 +463,10 @@
 								</div>
 							</div>
 
-							<div class="col-lg-3">
-								<div id="room1TypeOtherDiv" style="display:none;">
-									<label>Room 1 Type Other</label>
-									<input name = "room1TypeOther" type = "search" id="room1TypeOther" class="form-control" placeholder="Enter Room Type">
-								</div>
-							</div>
 						</div>
 
-						<div class="row">
+						<!-- <div class="row">
+>>>>>>> Stashed changes
 							<div class="col-lg-3">
 								<div>
 									<label>Room 2 Type</label>
@@ -481,7 +500,10 @@
 									<input name = "room3TypeOther" type = "search" id="room3TypeOther" class="form-control" placeholder="Enter Room Type">
 								</div>
 							</div>
+<<<<<<< Updated upstream
 						</div>
+=======
+						</div> -->
 					</div>
 
 					<div id="houseTypeDiv">
@@ -626,7 +648,7 @@
 
 					<div class="row">
 						<div class="col-lg-12 text-center">
-							<input class="btn btn-primary text-center" style="width:200px;" type="button" onclick="addinquirydata()" value="Submit">
+							<input class="btn btn-primary text-center" style="width:200px;" type="button" onclick="addinquirydata({{$Rep->repID}})" value="Submit">
 						</div>
 					</div>
 				</div>
@@ -637,8 +659,169 @@
 	</div>
 </body>
 
+	<script>
+
+		function loadList(type,element){
+			$.get("resource/"+type),function(data,status){
+				element.empty();
+				for(i=0;i<data.length;++i)
+				{
+					var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+					element.append(option);
+				}
+			};
+		}
+
+		function loadOpt(){
+				$.get("/resource/inquirySource",function(data,status){
+							$('#inquirySource').empty();
+							for(i=0;i<data.length;++i){
+								var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+								$('#inquirySource').append(option);
+							}
+
+					});
+				//loadList("inquirySource",$('#inquirySource'));
+				// Load list 
+				$.get("/resource/purposes",function(data,status){
+						$('#Purpose').empty();
+						for(i=0;i<data.length;++i){
+							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+							$('#Purpose').append(option);
+						}
+
+				});
+				$.get("/resource/countries",function(data,status){
+						$('#country').empty();
+						for(i=0;i<data.length;++i){
+							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+							$('#country').append(option);
+						}
+
+				});
+
+				$.get("/resource/roomTypes",function(data,status){
+						$('#room1Type').empty();
+						for(i=0;i<data.length;++i){
+							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+							$('#room1Type').append(option);
+						}
+
+				});
+
+				$.get("/resource/houseTypes",function(data,status){
+						$('#houseType').empty();
+						for(i=0;i<data.length;++i){
+							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+							$('#houseType').append(option);
+						}
+
+				});
+		}
+
+		function converttimetosql(str){
+			var d = new Date(str);
+			return d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate();
+		}
+
+		function vieweffect_1(){
+				$("#searchiquirer").hide();
+				$("#adjustLineSpacing").show();
+		}
+
+		function addinquirydata(repID){
+			var quiryinfo = $('#adjustLineSpacing').serializeArray();
+			var quiryinfojson = {};
+			quiryinfojson["repID"]=repID;
+			for(var i =0;i<quiryinfo.length;++i){
+				quiryinfojson[quiryinfo[i]['name']] = quiryinfo[i]['value'];
+			}
+
+			quiryinfojson.inquiryDate = converttimetosql(quiryinfojson.inquiryDate);
+			quiryinfojson.checkIn = converttimetosql(quiryinfojson.checkIn);
+			quiryinfojson.checkOut = converttimetosql(quiryinfojson.checkOut);
+			if(quiryinfojson.checkOut < quiryinfojson.checkIn)
+			{
+				bootbox.dialog({
+		            message: 'Check-In Date must be earlier than Check-Out Date',
+		            title: 'Error in the Form',
+		            buttons: {
+		              success: {
+		              label: 'OK',
+		              className: 'btn-danger'
+		              }
+		            }
+		        });
+		        return ;
+			}
+			if(quiryinfojson.inquiryDate > checkIn){
+				bootbox.dialog({
+		            message: 'Inquiry Date must be earlier than Check-In Date',
+		            title: 'Error in the Form',
+		            buttons: {
+		              success: {
+		              label: 'OK',
+		              className: 'btn-danger'
+		              }
+		            }
+		          });
+				return ;
+			}
+
+			if(quiryinfojson.state.includes("Select")){
+				quiryinfojson.state = "";
+
+
+			}
+			if(quiryinfojson.city.includes("Select")){
+				quiryinfojson.city="";
+			}
+			var toSend = jQuery.param(quiryinfojson);
+			alert(toSend);
+			$.ajax({
+				type:"POST",
+				dataType: "json",//data type expected from server
+				url: "/inquiry/add",
+				data: toSend,
+				cache:false,
+				success: function(data){
+					alert(JSON.stringify(data));
+				},
+				error : function(xhr, ajaxOptions, thrownError){
+
+				}
+			});
+
+		}
+	</script>
+
 	<script type="text/javascript">
 			$(document).ready(function(){
+				$("#inquiryDate").datepicker({
+		          dateFormat: "mm/dd/yy",
+		          maxDate: 0
+				});
+		        $("#inquiryDate").datepicker("setDate", new Date());
+
+		        $('#checkIn').datepicker({
+		          dateFormat: "mm/dd/yy",
+		          beforeShow: function () {
+		          $('#checkIn').datepicker('option', 'minDate', 0);
+		          }
+		        });
+
+		        $('#checkOut').datepicker({
+		          dateFormat: "mm/dd/yy",
+		          beforeShow: function () {
+		            var checkIn = $('#checkIn').datepicker("getDate");
+		            if(checkIn){
+		            	checkIn.setDate(checkIn.getDate() + 1);
+		            	$('#checkOut').datepicker('option', 'minDate', checkIn);
+		            }
+		          }
+		        });
+
+
 				$("#search_form").submit(function(){
 					var toSend = $(this).serialize();
 					// $.ajaxSetup({
@@ -649,7 +832,7 @@
 					$.ajax({
 						type: "POST",
 						dataType: "json",//data type expected from server
-						url: 'inquiry/search',
+						url: 'search',
 						data: toSend,
 						success: function(data) {
 							var htmlcont = "";
@@ -671,7 +854,7 @@
 												"</tr>";
 
 								for(i =0 ;i<data.length;++i){
-									htmlcont += "<tr><td data-dismiss='modal' style='cursor:pointer; text-decoration:underline; color:blue;'>Select</td>"+
+									htmlcont += "<tr><td data-dismiss=\"modal\" style=\"cursor:pointer; text-decoration:underline; color:blue;\" onclick=\"$(\'#inquirerID\').val(" +data[i].inquirerID+ ");vieweffect_1();\">Select</td>"+
 												"<td>"+data[i].inquirerID + "</td>"+
 												"<td>"+data[i].inquirerFirst+"</td>"+
 												"<td>"+data[i].inquirerLast+"</td>"+
@@ -705,6 +888,52 @@
 					});
 				});
 
+
+				$("#inquirySource").change(function(){
+					if($(this).val().trim() == "Other"){
+						$("#inquirySourceOtherDiv").show();
+					}else{
+
+						$("#inquirySourceOtherDiv").hide();
+						$('#inquirySourceOther').val('');//empty input
+					}
+				});
+
+				$("#Purpose").change(function(){
+					if($(this).val().trim() == "Other"){
+						$("#PurposeOtherDiv").show();
+					}else{
+						$("#PurposeOtherDiv").hide();
+						$('#PurposeOtherDiv').val('');//empty input
+					}
+				});
+
+				$("#country").change(function(){
+					if($(this).val().length!=0){
+						var countryfile = $(this).val().replace(' ','');
+						$.get("resource/"+countryfile,function(data,status){
+						$('#state').empty();
+						for(i=0;i<data.length;++i){
+							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+							$('#state').append(option);
+						}
+						});
+					}
+				});
+
+				$('#state').change(function(){
+					if($(this).val().length!=0){
+						var cityfile = $("#country").val().replace(' ','')+"_"+$(this).val().replace(' ','');
+						$.get("resource/"+cityfile,function(data,status){
+						$('#city').empty();
+						for(i=0;i<data.length;++i){
+							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+							$('#city').append(option);
+						}
+						});
+					}
+				});
+
 				$('#new_inquirer_form').submit(function(){
 					var toSend = $(this).serialize();
 					$.ajax({
@@ -713,7 +942,6 @@
 						url:"#",
 						data:toSend,
 						success: function(){
-							alert("success");
 						}
 						,
 						error: function(xhr, ajaxOptions, thrownError){
@@ -722,6 +950,9 @@
 					}
 					);
 				});
+
+				// Load list 
+				loadOpt();
 			});
 			
 	</script>	

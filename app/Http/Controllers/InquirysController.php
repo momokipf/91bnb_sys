@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+// use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Log;
 
 use App\Inquiry;
 use App\Inquirer;
+use App\Representative;
+use Validator;
 use View;
-use Log;
 
 class InquirysController extends Controller
 {
@@ -19,11 +23,16 @@ class InquirysController extends Controller
         $this->middleware('auth');
     }
 
-	public function index()
+	public function addIndex()
     {
-    	$inquirys = Inquiry::all();
 
-    	//return view('test',compact('inquirys'));
+        $allreps = Representative::GetValuesinField('repName')->get()->toarray();
+
+        $allreps = array_flatten($allreps);
+
+    	return view('inquiry')
+                 ->with('Allreps',$allreps)
+                 ->with('Rep',Auth::user());
     }
 
 
@@ -34,11 +43,28 @@ class InquirysController extends Controller
     	return $inquiry;
     }
 
-    public function search(Request $request){
-        $search = Inquirer::searablefield($request->all());
-        $ret = Inquirer::FindSimilar($search)->get();
-        Log::info($ret);
-        return $ret;
-    }
+    public function store(Request $request)
+    {
+        $input = $request->all();
+        Log::info($input);
+        $validator= Validator::make($input,[
+                    'inquirerID' => 'bail|required',
+                    'repID' => 'bail|required',
+                    'inquiryDate' => 'bail|required',
+                    'checkIn' => 'required',
+                    'inquirySourceOther' => 'max:20',
+                    'purposeOther' =>'max:50',]);
+        if($validator->fails())
+        {
+            return $validator->errors();
+        }
+        if($input["repID"] == Auth::user()->repID)
+        {
+            $newquiry = new Inquiry($input);
+            Log::info($newquiry);
+            
+        }   
 
+
+    }
 }

@@ -48,7 +48,6 @@ class Inquiry extends Model
 
     public $timestamps = false;
 
-
     //Table relationship
     public function getfollowup(){
     	return $this->hasMany('App\InquiryFollow','inquiryID');
@@ -80,6 +79,9 @@ class Inquiry extends Model
     		return $query;
     	return $query->select($attributes);
     }
+
+    //public customized function
+    //public function 
 
 
 }

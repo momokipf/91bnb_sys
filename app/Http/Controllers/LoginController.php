@@ -8,11 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
+use Illuminate\Support\Facades\Log;
 
 use App\Inquiry;
 use Validator;
 use View;
-use Log;
 
 class LoginController extends Controller
 {
