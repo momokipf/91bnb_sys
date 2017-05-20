@@ -557,7 +557,7 @@
                         <div class="my-title"><h5>Inquirer</h5></div>
                         <!--<a href="inquiry/newInquirer.php"><h6>Add New Inquirer</h6></a>-->
                     @if($Rep->repPriority<=3)
-                    	<a href="inquiry/modifyInquirer.php"><h6>Search/Modify Inquirer</h6></a>
+                    	<a href="inquirer/searchAndModify"><h6>Search/Modify Inquirer</h6></a>
                     @endif
                     	<a href="inquirer/showAll"><h6>Show All Inquirers</h6></a>
                     </div>
