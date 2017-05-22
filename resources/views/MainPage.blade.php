@@ -542,7 +542,7 @@
                         <div class="my-title"><h5>Inquiry</h5></div>
                         <a href='inquiry/add'><h6>Add New Inquiry</h6></a>
                         @if($Rep->repPriority<=3)
-                        	<a href="#"><h6>Search/Modify/Follow Up</h6></a>
+                        	<a href="/inquiry/search"><h6>Search/Modify/Follow Up</h6></a>
                         	@if(!$Rep->repPriority==3)
                         		<a href="" id="extAllInquiry" download><h6>Extract All Inquiries</h6></a>
                         	@endif
