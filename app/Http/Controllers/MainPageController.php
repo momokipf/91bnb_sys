@@ -42,6 +42,7 @@ class MainPageController extends Controller
     		//$hotInquiry = Inquiry::HotQuerys()->skip($offset*$itemsEachPage)->take($itemsEachPage)->get();
     		$hotquerys = Inquiry::HotQuerys()->with('reprensent')->paginate($itemsEachPage);
     	}
+
     	$allreps = Representative::GetValuesinField('repName')->get()->toarray();
 
     	$allreps = array_flatten($allreps);

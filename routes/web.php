@@ -25,7 +25,12 @@ Route::get('resource/{country}/{state}','ResourceController@getCity');
 
 Route::get('inquiry/add','InquirysController@addIndex');
 Route::post('inquiry/add','InquirysController@store');
+Route::get('inquiry/search','InquirysController@searchIndex');
+Route::get('inquiry/search/result','InquirysController@search');
+
 Route::get('inquiry/{post}','InquirysController@show');
+Route::get('test','InquirysController@result');
+
 
 //Route::get('addinquiry',    function(){return view('inquiry');});
 

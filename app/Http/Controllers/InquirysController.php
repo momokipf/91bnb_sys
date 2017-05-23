@@ -6,12 +6,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 // use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Routing\Redirector;
 
 use App\Inquiry;
 use App\Inquirer;
 use App\Representative;
 use Validator;
 use View;
+use DB;
 
 class InquirysController extends Controller
 {
@@ -30,7 +33,7 @@ class InquirysController extends Controller
 
         $allreps = array_flatten($allreps);
 
-    	return view('inquiry')
+    	return view('inquiry/add')
                  ->with('Allreps',$allreps)
                  ->with('Rep',Auth::user());
     }
@@ -62,9 +65,79 @@ class InquirysController extends Controller
         {
             $newquiry = new Inquiry($input);
             Log::info($newquiry);
-            
+            $inquirer = Inquirer::find($input["inquirerID"]);
+            $inquirer->queries()->save($newquiry);
         }   
-
-
     }
+
+    public function searchIndex()
+    {
+
+        return view('inquiry/search')
+                //->with('Allreps',$allreps)
+                ->with('Rep',Auth::user());
+    }
+
+
+
+
+    public function search(Request $request)
+    {
+        $inquiryid = $request->input('inquiryID');
+        if($inquiryid)
+        {
+            $inquiry = Inquiry::find($inquiryid);
+            if($inquiry)
+            {
+                return response($inquiry)->header('Content-Type', 'json');
+            }
+        }
+
+        $inquirysearchField = $request->only('inquiryDate','inquiryDateFrom','inquiryDateTo','inquiryPriorityLevel','inquirycity');
+        $querybuilder = null;
+        $rep = Auth::user();
+        if($rep->repPriority>3){
+            $querybuilder = $rep->queries()->SearchbyField($inquirysearchField);
+        }
+        else{
+            $querybuilder = Inquiry::SearchbyField($inquirysearchField);
+        }
+
+        $inquirerinfo = $request->only(['inquirerFirst','inquirerLast','wechatname','inquirerWechatID']);
+        if($inquirerinfo['inquirerFirst'])
+        {
+                $querybuilder = $querybuilder->whereHas('quirer',function($query) use($inquirerinfo){
+                    $query->where('inquirerFirst','LIKE',$inquirerinfo['inquirerFirst']);
+                });
+        }
+
+        if($inquirerinfo['inquirerLast'])
+        {
+                $querybuilder = $querybuilder->whereHas('quirer',function($query) use($inquirerinfo){
+                    $query->where('inquirerLast','LIKE',$inquirerinfo['inquirerLast']);
+                });
+        }
+        if($inquirerinfo['inquirerWechatID'])
+        {
+                $querybuilder = $querybuilder->whereHas('quirer',function($query) use($inquirerinfo){
+                    $query->where('inquirerWechatID','LIKE',$inquirerinfo['inquirerWechatID']);
+                });
+        }
+        $ret = $querybuilder->get();
+        return response($ret)
+                ->header('Content-Type', 'json');
+    }
+
+    // public function result(Request $request){
+
+
+    //     $queries = session('result');
+    //     $paginator = new Paginator($queries,3,1,[ 'path'  => $request->url()]);
+
+    //     Log::info($request->url());
+    //     return view('test')
+    //             ->with('paginator',$paginator);
+    // }
+
+
 }
