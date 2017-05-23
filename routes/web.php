@@ -39,7 +39,13 @@ Route::post('MainPage/addfollow','FollowUpController@store');
 
 
 Route::post('inquirer/search/{similar?}','InquirersController@search');
+
+
 Route::get('inquirer/showAll', 'InquirersController@show');
+
+Route::post('inquirer/search/{similar?}','InquirersController@searchForModify');
+Route::get('inquirer/searchAndModify', 'InquirersController@searchAndModify');
+Route::post('inquirer/searchAndModify', 'InquirersController@searchAndModify');
 
 //Route::resource('/postmech','PostController');
 Route::get('/post','PostController@index');

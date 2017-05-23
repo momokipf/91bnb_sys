@@ -32,7 +32,7 @@ class Inquirer extends Model
 
     public $timestamps = false;
 
-    protected static $searchable = ['inquirerFirst','inquirerLast','inquirerTaobaoUserName','inquirerWechatUserName','inquirerWechatID'];
+    protected static $searchable = ['inquirerFirst','inquirerLast','inquirerTaobaoUserName','inquirerWechatUserName','inquirerWechatID', 'inquirerUsPhoneNumber'];
 
 
     public function queries(){

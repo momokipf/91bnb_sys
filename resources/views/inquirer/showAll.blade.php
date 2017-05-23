@@ -13,7 +13,9 @@
 		<link rel="stylesheet" href="{{asset('css/loader.css')}}">
 		<link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
 
-		<script src="{{ asset('js/jquery-1.11.3.js') }}"></script>
+		<script type="text/javascript" src="{{ asset('js/jquery-1.11.3.js') }}"></script>
+		<script src="{{ asset('js/bootstrap.min.js')}}"></script>
+		<script src="{{ asset('js/bootstrap-formhelpers-phone.js')}}"></script>
 
 		<style>
 			/*body {
@@ -34,6 +36,7 @@
 	</head>
 
 	<body>
+		<!-- Fixed navbar -->
 		<nav class="navbar navbar-inverse navbar-fixed-top">
 			<div class="container">
 				<div class="navbar-header">
@@ -43,21 +46,24 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" style="padding-top:5px;"><img src="../img/icon.png" class="img-rounded img-responsive" width="45px" height="45px" alt=""></a>
-					<a class="navbar-brand" href="../mainPage.php">91bnb Manage System</a>
+					<a class="navbar-brand" style="padding-top:5px;"><img src="{{asset('img/icon.png')}}" class="img-rounded img-responsive" width="45px" height="45px" alt=""></a>
+					<a class="navbar-brand" href="/MainPage">91bnb Manage System</a>
 				</div>
 
 				<div id="navbar" class="navbar-collapse collapse">
 					<!-- navbar left -->
 					<ul class="nav navbar-nav">
-						<li><a href="../mainPage.php">Home</a></li>
+						<li><a href="/MainPage">Home</a></li>
 						<li class="active"><a>Show All Inquirers</a></li>
 					</ul>
 					<!-- navbar right -->
 					<ul class="nav navbar-nav navbar-right">
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-							<span class="glyphicon glyphicon-user"></span><span id="username"> {{$rep->repUserName}} </span><span class="caret"></span></a>
+								<span class="glyphicon glyphicon-user"></span>
+								<span id="username"> {{$rep->repUserName}} </span>
+								<span class="caret"></span>
+							</a>
 							<ul class="dropdown-menu">
 								<li><a href="#">Profile</a></li>
 								<li><a href="#">Change Password</a></li>
@@ -139,7 +145,7 @@
 			</div>
 		</div>
 	</body>
-	
+
 	<script type="text/javascript">
 		$("#extAll").click(function(){
 			console.log("extract all inquirers");

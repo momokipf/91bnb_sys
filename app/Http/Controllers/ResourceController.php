@@ -9,12 +9,11 @@ use File;
 
 class ResourceController extends Controller
 {
-    //
-
     private $resource = [  "inquirySource"=>"inquirySourceList",
     					   "purposes"=>"purpose",
     					   "countries"=>"countryList",
     					   "houseTypes"=>"houseTypeList",
+    					   "roomTypes"=>"roomTypeList",
     					   "China"=>"China_StateList",
     					   "UnitedStates"=>["origin"=>"Country_State/UnitedStates_StateList",
     					   					"Alabama"=>"State_City/AlabamaCityList",
