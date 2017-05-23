@@ -21,6 +21,7 @@ Route::post('login','LoginController@login')->name('login');
 Route::get('logout','LoginController@logout');
 
 Route::get('resource/{typename}','ResourceController@getlist');
+Route::get('resource/{country}/{state}','ResourceController@getCity');
 
 Route::get('inquiry/add','InquirysController@addIndex');
 Route::post('inquiry/add','InquirysController@store');
@@ -33,11 +34,16 @@ Route::get('MainPage','MainPageController@index')
 Route::post('MainPage/addfollow','FollowUpController@store');
 
 
-Route::post('inquiry/search/{similar?}','InquirersController@search');
+Route::post('inquirer/search/{similar?}','InquirersController@search');
+
 
 Route::get('inquirer/showAll', 'InquirersController@show');
 
-Route::post('inquirer/search/{similar?}','InquirersController@searchForModify');
+
+Route::post('inquirer/searchForModify/{similar?}','InquirersController@searchForModify');
+
+Route::patch('inquirer/modifyInquirer', 'InquirersController@modifyInquirer');
+
 Route::get('inquirer/searchAndModify', 'InquirersController@searchAndModify');
 Route::post('inquirer/searchAndModify', 'InquirersController@searchAndModify');
 

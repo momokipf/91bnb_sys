@@ -31,7 +31,8 @@ class InquirersController extends Controller
 	public function searchAndModify() {
 		$rep = Auth::user();
 		return view('inquirer.searchAndModify')
-				->with('rep', $rep);
+				->with('rep', $rep)
+				->with('success', 0);
 	}
 
 	public function searchForModify(Request $request,$similar = null){
@@ -61,6 +62,35 @@ class InquirersController extends Controller
 		}
 		//Log::info(response($ret)->header('Content-Type', 'json'));
 		return  response($ret)->header('Content-Type', 'json');
+	}
+
+	public function modifyInquirer(Request $request) {
+		$updateInfo = array_slice($request->all(), 2);
+		Log::info($request->all());
+		Log::info($updateInfo);
+		if (array_key_exists('inquirerState', $updateInfo) && $updateInfo['inquirerState'] == 'InputState') {
+			$updateInfo['inquirerState'] = $updateInfo['inquirerStateOther'];
+		}
+		if (array_key_exists('inquirerCity', $updateInfo) && $updateInfo['inquirerCity'] == 'InputCity') {
+			$updateInfo['inquirerCity'] = $updateInfo['inquirerCityOther'];
+		}
+
+		/*array_splice($updateInfo, 13, 1);*/
+		unset($updateInfo['inquirerStateOther']);
+		foreach ($updateInfo as $key => $value) {
+			if ($value == null) {
+				$updateInfo[$key] = '';
+			}
+		}
+		Inquirer::where('inquirerID', array_get($request->all(), 'inquirerID'))
+					->update($updateInfo);
+		/*
+		return view('inquirer.searchAndModify')
+				->with('rep', Auth::user())
+				->with('success', 1);
+		*/
+		$request->session()->flash('status', 'Task was successful!');
+		return back()->withInput();
 	}
 
 	public function search(Request $request,$similar = null){
