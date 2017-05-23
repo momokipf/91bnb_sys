@@ -54,10 +54,70 @@
 				}
 			}
 
-			function selectInquirer(inquirerID) {
+			function selectInquirer(json) {
 				$("#modifyForm").hide();
-				//console.log(inquirerID);
 				$("#modifyForm").show();
+				console.log(json);
+
+				$("#inquirerID").val(json.inquirerID);
+				$("#inquirerFirst").val(json.inquirerFirst);
+				$("#inquirerLast").val(json.inquirerLast);
+				$("#inquirerUsPhoneNumber").val(json.inquirerUsPhoneNumber);
+				$("#inquirerPhoneCountry").val(json.inquirerPhoneCountry);
+				$("#inquirerPhoneNumber").val(json.inquirerPhoneNumber);
+				$("#inquirerEmail").val(json.inquirerEmail);
+				$("#inquirerTaobaoUserName").val(json.inquirerTaobaoUserName);
+				$("#inquirerWechatUserName").val(json.inquirerWechatUserName);
+				$("#inquirerWechatID").val(json.inquirerWechatID);
+				$("#inquirerCountry").val(json.inquirerCountry);
+
+				if(json.inquirerCountry == 'China' || json.inquirerCountry == 'United States' || json.inquirerCountry == 'United Kingdom'){
+					$.ajax({
+						type: "GET",
+						dataType: "json",//data type expected from server
+						url: "/resource/" + json.inquirerCountry,
+						success: function(data) {
+							$("#inquirerState").html("");
+							for (i = 0; i < data.length; i++) {
+								$("#inquirerState").append("<option value='" + data[i] + "'>" + data[i] + "</option>");
+							}
+							$("#inquirerState").val(json.inquirerState);
+							$('#inquirerCityOther').val('');
+							$('#inquirerStateOther').val('');
+							$(".inquirerStateOtherDiv").hide();
+							$.ajax({
+								type: "GET",
+								dataType: "html",//data type expected from server
+								url: "/resource/" + json.inquirerCountry + "/" + json.inquirerState,
+								success: function(data) {
+									$("#inquirerCity").html(data);
+									$("#inquirerCity").val(json.inquirerCity);
+									console.log(json.inquirerCity);
+									if(json.inquirerCity == "Other"){
+										$("#inquirerCityOtherDiv").show();
+										$('#inquirerCityOther').val(json.inquirerCityOther);//empty input
+									} else {
+										$("#inquirerCityOtherDiv").hide();
+										$('#inquirerCityOther').val('');//empty input
+									  
+									}
+								}
+							});
+						}
+					});
+				} else {
+					console.log("other country");
+					// $("#inquirerState").hide();
+					$(".inquirerStateOtherDiv").show();
+					$('#inquirerState').empty();
+					$("#inquirerState").append("<option value='InputState'>Input State</option>");  //添加一项option                  
+					$('#inquirerStateOther').val(json.inquirerState);
+
+					$('#inquirerCity').empty();
+					$('#inquirerCityOther').val(json.inquirerCity);
+					$("#inquirerCity").append("<option value='InputCity'>Input City</option>");
+					$("#inquirerCityOtherDiv").show();
+				}
 			}
 
 			$(document).ready(function(){
@@ -66,13 +126,72 @@
 					$("#inquirerList").hide();
 					$("#modifyForm").hide();
 				});
+
+				$.ajax({
+					type: "GET",
+					dataType: "json",//data type expected from server
+					url: "/resource/countries",
+					success: function(data) {
+						for (i = 0; i < data.length; i++) {
+							$("#inquirerCountry").append("<option value='" + data[i] + "'>" + data[i] + "</option>");
+						}
+					}
+				});
+
+				$.ajax({
+					type: "GET",
+					dataType: "json",//data type expected from server
+					url: "/resource/countryCode",
+					success: function(data) {
+						for (i = 0; i < data.length; i++) {
+							$("#inquirerPhoneCountry").append("<option value='" + data[i] + "'>" + data[i] + "</option>");
+						}
+					}
+				});
+
+				$("#inquirerCountry").change(function(){//fix 0309
+					// $("#inquirerState").load("../list/Country_State_Option/" + $(this).val().replace(/\s/g, '') + "_StateListOption");
+					if($(this).val() == "China" || $(this).val() == "United Kingdom" || $(this).val() == "United States"){
+						console.log("china us uk");            
+						$("#inquirerState").load("/list/Country_State_Option/" + $(this).val().replace(/\s/g, '') + "_StateListOption");
+						$("#inquirerCity").html("");
+						$(".inquirerStateOtherDiv").hide();
+						$("#inquirerCityOtherDiv").hide();
+						$('#inquirerStateOther').val('');//empty input
+						$('#inquirerCityOther').val('');//empty input
+						// $("#inquirerCity").load('../list/State_City_Option/' + state + 'CityListOption');
+					} else {
+						console.log("other country");
+						// $("#inquirerState").hide();
+						$(".inquirerStateOtherDiv").show();
+						$('#inquirerState').empty();
+						$('#inquirerStateOther').val('');
+						$("#inquirerState").append("<option value='InputState'>Input State</option>");  //添加一项option
+						console.log( $('#inquirerState').val());
+
+						$('#inquirerCity').empty();
+						$('#inquirerCityOther').val('');
+						$("#inquirerCity").append("<option value='InputCity'>Input City</option>");
+						$("#inquirerCityOtherDiv").show();
+					}
+				});
+
+				$("#inquirerState").change(function(){
+					var state = $(this).val().replace(/\s/g, '');
+					//console.log(state);	
+					$("#inquirerCity").load('/list/State_City_Option/' + state + 'CityListOption');
+					$("#inquirerCityOtherDiv").hide();
+					$('#inquirerCityOther').val('');//empty input
+				});
+
 				$("#inquirer_search_form").submit(function(){
+					$('.alert').alert('close')
 					var toSend = $(this).serialize();
 					$("#modifyForm").hide();
 					$.ajax({
 						type: "POST",
 						dataType: "json",//data type expected from server
-						url: "search",
+						url: "searchForModify",
 						data: toSend,
 						success: function(data) {
 							html = "";
@@ -103,7 +222,7 @@
 								
 								for (i = 0; i < data.length; i++) {
 									html += "<tr>";
-									html += "<td style='cursor:pointer; text-decoration:underline; color:blue;' onClick='selectInquirer(" + data[i]['inquirerID'] + ")'>Select</td>";
+									html += "<td style='cursor:pointer; text-decoration:underline; color:blue;' onClick='selectInquirer(" + JSON.stringify(data[i]) + ")'>Select</td>";
 									html += "<td>" + data[i]['inquirerID'] + "</td>";
 									html += "<td>" + data[i]['inquirerFirst'] + "</td>";
 									html += "<td>" + data[i]['inquirerLast'] + "</td>";
@@ -120,7 +239,6 @@
 									html += "<td>" + data[i]['inquirerCityOther'] + "</td>";
 									html += "</tr>";
 								}
-								
 							}
 							$("#inquirerList").html(html);
 							$("#inquirerList").show();
@@ -128,6 +246,11 @@
 					});
 					return false;
 				});
+
+				$("#inquirer_search_form").submit(function(){
+
+				});
+
 			});
 		</script>
 	</head>
@@ -229,13 +352,29 @@
 			</form>
 		</div>
 
+		@if (Session::has('status'))
+			<div class="alert alert-success alert-dismissible fade in" role="alert" style="margin-left:150px;margin-right:150px;">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+				<strong>Success!</strong> The inquirer has been modified.
+			</div>
+
+			<!-- <div class="alert alert-success fade in alert-dismissable" style="margin-left:150px;margin-right:150px;">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+				<strong>Success!</strong> The inquirer has been modified.
+			</div> -->
+		@endif
+	
 		<div id="inquirerList" class="container"></div>
 
 		<div id="modifyForm" class="container" style="display:none;">
 			<hr>
 			<h4><span class="badge">3</span> Modify Inquirer</h4>
 			<hr>
-			<form style='margin-bottom:5px;' action='modifyInquirer.php' method = 'post'>
+			<form style='margin-bottom:5px;' action='modifyInquirer' method = 'post'>
+				{{ method_field('PATCH') }}
+				{{ csrf_field() }}
 				<div class="row">
 					<div class="col-lg-2">
 						<label>Inquirer ID</label>
@@ -335,7 +474,7 @@
 				<hr>
 				<div class="row">
 					<div class="col-lg-2">
-					  <button class='btn btn-success form-control' type='submit' name='submitModifiedInquirer'>Save Modified Info</button>
+					  <button class='btn btn-success form-control' type='submit'>Save Modified Info</button>
 					</div>
 				</div>
 

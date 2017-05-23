@@ -9,14 +9,19 @@ use File;
 
 class ResourceController extends Controller
 {
-    private $resource = [  "inquirySource"=>"inquirySourceList",
-    					   "purposes"=>"purpose",
-    					   "countries"=>"countryList",
-    					   "houseTypes"=>"houseTypeList",
-    					   "roomTypes"=>"roomTypeList",
-    					   "China"=>"China_StateList",
-    					   "UnitedStates"=>["origin"=>"Country_State/UnitedStates_StateList",
-    					   					"Alabama"=>"State_City/AlabamaCityList",
+
+
+	private $resource = [  "inquirySource"=>"inquirySourceList",
+						   "purposes"=>"purpose",
+						   "countries"=>"countryList",
+						   "houseTypes"=>"houseTypeList",
+						   "roomTypes"=>"roomTypeList",
+						   "China"=>"Country_State/China_StateList",
+						   "United States"=>"Country_State/UnitedStates_StateList",
+						   "United Kingdom"=>"Country_State/UnitedKingdom_StateList",
+						   "countryCode"=>"phoneCountryCode",
+						   "UnitedStates"=>["origin"=>"Country_State/UnitedStates_StateList",
+											"Alabama"=>"State_City/AlabamaCityList",
 											"Alaska"=>"State_City/AlaskaCityList",
 											"Arizona" =>"State_City/ArizonaList",
 											"Arkansas"=>"State_City/ArkansasCityList",
@@ -66,17 +71,16 @@ class ResourceController extends Controller
 											"West_Virginia"=>"State_City/West_VirginiaCityList",
 											"Wisconsin"=>"State_City/WisconsinCityList",
 											"Wyoming"=>"State_City/WyomingCityList"
-    					   					]
-    						];
+											]
+							];
 
-    public function getlist($type){
-
-    	$restype = str_replace('_','.',$type);
-    	if(array_has($this->resource, $restype))
-    	{
-    		$resfilename = array_get($this->resource,$restype);
-    		if(is_array($resfilename))
-    			$resfilename = $resfilename["origin"];
+	public function getlist($type){
+		$restype = str_replace('_','.',$type);
+		if(array_has($this->resource, $restype))
+		{
+			$resfilename = array_get($this->resource,$restype);
+			if(is_array($resfilename))
+				$resfilename = $resfilename["origin"];
 
 			$content = File::get(storage_path('list/'.$resfilename));
 			$content = preg_split("/\r\n|\n|\r/", $content);
@@ -84,8 +88,13 @@ class ResourceController extends Controller
 			return response($content)
 				->header('Cache-Control', 'max-stale[3600]')
 				->header('Content-Type', 'json');
-    	}
-    	else 
-    		abort(400);
-    }
+		}
+		else 
+			abort(400);
+	}
+
+	public function getCity($country, $state){
+		$content = File::get(storage_path('list/State_City_Option/'. $state. 'CityListOption'));			
+		return $content;
+	}
 }
