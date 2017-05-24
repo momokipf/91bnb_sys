@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 use DB;
 use Schema;
+
 use App\InquiryFollow;
 use App\Representative;
 
@@ -24,7 +26,7 @@ class Inquiry extends Model
      *
      * @var array
      */
-    protected $fillable = [
+    protected $fillable = [ 'repID',
         'inquiryDate','inquirySource','inquirySourceOther','inquirerID','purpose','purposeOther',
         'checkIn','checkOut',
         'country','state','city','cityOther',
@@ -34,7 +36,7 @@ class Inquiry extends Model
         'budgetLower','budgetUpper','budgetUnit',
         'pet','petType',
         'specialNote',
-        'inquiryPrioirityLevel','status',
+        'inquiryPriorityLevel','status',
         'reasonOfDecline',
         'note',
         'comment',
@@ -47,6 +49,8 @@ class Inquiry extends Model
     protected $primaryKey = 'inquiryID';
 
     public $timestamps = false;
+
+    //protected static $searchable = ['inquiryID','repID','inquiryDate','checkIn','checkOut','inquiryPriorityLevel'];
 
     //Table relationship
     public function getfollowup(){
@@ -78,6 +82,30 @@ class Inquiry extends Model
     	if(! Schema::hasColumn($this->table,$attributes))
     		return $query;
     	return $query->select($attributes);
+    }
+
+
+    public function scopeSearchbyField($query,$attributes)
+    {
+        Log::info($attributes);
+        if($attributes['inquiryDate']){
+            $query =$query->where('InquiryDate','=',$attributes['inquiryDate']);
+        }
+        if($attributes['inquiryDateFrom']){
+            $query = $query->whereRaw("inquiryDate>='".$attributes['inquiryDateFrom']."'");
+        }
+        if($attributes['inquiryDateTo']){
+            $query = $query->whereRaw("InquiryDate<='".$attributes['inquiryDateTo']."'");
+        }
+        if($attributes['inquiryPriorityLevel']){
+            $query = $query->where('inquiryPriorityLevel','=',$attributes['inquiryPriorityLevel']);
+        }
+        if($attributes['inquirycity']){
+            $query = $query->where('city','=',$attributes['inquirycity']);
+        }
+
+        return $query;
+
     }
 
     //public customized function
