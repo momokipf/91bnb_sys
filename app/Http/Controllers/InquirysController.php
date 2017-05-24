@@ -83,7 +83,6 @@ class InquirysController extends Controller
 
     public function search(Request $request)
     {
-        Log::info($request->all());
         $inquiryid = $request->input('inquiryID');
         if($inquiryid)
         {
@@ -124,17 +123,21 @@ class InquirysController extends Controller
                     $query->where('inquirerWechatID','LIKE',$inquirerinfo['inquirerWechatID']);
                 });
         }
-        $ret = $querybuilder->paginate(4);
-
-        $allreps = Representative::GetValuesinField('repName')->get()->toarray();
-
-        $allreps = array_flatten($allreps);
-        // return response($ret)
-        //         ->header('Content-Type', 'json');
-        return view('test')
-                ->with('Rep',$rep)
-                ->with('Hotquerys',$ret)
-                ->with('Allreps',$allreps);
+        $ret = $querybuilder->get();
+        return response($ret)
+                ->header('Content-Type', 'json');
     }
+
+    // public function result(Request $request){
+
+
+    //     $queries = session('result');
+    //     $paginator = new Paginator($queries,3,1,[ 'path'  => $request->url()]);
+
+    //     Log::info($request->url());
+    //     return view('test')
+    //             ->with('paginator',$paginator);
+    // }
+
 
 }
