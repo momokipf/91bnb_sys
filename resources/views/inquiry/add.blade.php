@@ -670,7 +670,57 @@
 			};
 		}
 
+		function loadOpt(){
+				$.get("/resource/inquirySource",function(data,status){
+							$('#inquirySource').empty();
+							for(i=0;i<data.length;++i){
+								var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+								$('#inquirySource').append(option);
+							}
 
+					});
+				//loadList("inquirySource",$('#inquirySource'));
+				// Load list 
+				$.get("/resource/purposes",function(data,status){
+						$('#Purpose').empty();
+						for(i=0;i<data.length;++i){
+							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+							$('#Purpose').append(option);
+						}
+
+				});
+				$.get("/resource/countries",function(data,status){
+						$('#country').empty();
+						for(i=0;i<data.length;++i){
+							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+							$('#country').append(option);
+						}
+
+				});
+
+				$.get("/resource/roomTypes",function(data,status){
+						$('#room1Type').empty();
+						for(i=0;i<data.length;++i){
+							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+							$('#room1Type').append(option);
+						}
+
+				});
+
+				$.get("/resource/houseTypes",function(data,status){
+						$('#houseType').empty();
+						for(i=0;i<data.length;++i){
+							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+							$('#houseType').append(option);
+						}
+
+				});
+		}
+
+		function converttimetosql(str){
+			var d = new Date(str);
+			return d.getFullYear()+"-"+('0' + (d.getMonth()+1)).slice(-2)+"-"+('0' + d.getDate()).slice(-2);
+		}
 
 		function vieweffect_1(){
 				$("#searchiquirer").hide();
@@ -880,30 +930,24 @@
 				}
 			});
 
-				$("#country").change(function(){
-					if($(this).val().length!=0){
-						var countryfile = $(this).val().replace(' ','');
-						$.get("/resource/"+countryfile,function(data,status){
-						$('#state').empty();
-						for(i=0;i<data.length;++i){
-							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-							$('#state').append(option);
-						}
-						});
+			$.ajax({
+				type: "GET",
+				dataType: "json",//data type expected from server
+				url: "/resource/countries",
+				success: function(data) {
+					for (i = 0; i < data.length; i++) {
+						$("#inquirerCountry").append("<option value='" + data[i] + "'>" + data[i] + "</option>");
 					}
 				}
 			});
 
-				$('#state').change(function(){
-					if($(this).val().length!=0){
-						var cityfile = $("#country").val().replace(' ','')+"_"+$(this).val().replace(' ','');
-						$.get("/resource/"+cityfile,function(data,status){
-						$('#city').empty();
-						for(i=0;i<data.length;++i){
-							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-							$('#city').append(option);
-						}
-						});
+			$.ajax({
+				type: "GET",
+				dataType: "json",//data type expected from server
+				url: "/resource/countryCode",
+				success: function(data) {
+					for (i = 0; i < data.length; i++) {
+						$("#inquirerPhoneCountry").append("<option value='" + data[i] + "'>" + data[i] + "</option>");
 					}
 				}
 			});
