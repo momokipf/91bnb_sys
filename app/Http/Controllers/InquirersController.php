@@ -107,4 +107,27 @@ class InquirersController extends Controller
 		//Log::info(response($ret)->header('Content-Type', 'json'));
 		return  response($ret)->header('Content-Type', 'json');
 	}
+
+	public function store(Request $request) {
+		Log::info($request->all());
+		$storeInfo = array_slice($request->all(), 1);
+
+		if (array_key_exists('inquirerState', $storeInfo) && $storeInfo['inquirerState'] == 'InputState') {
+			$storeInfo['inquirerState'] = $storeInfo['inquirerStateOther'];
+		}
+		if (array_key_exists('inquirerCity', $storeInfo) && $storeInfo['inquirerCity'] == 'InputCity') {
+			$storeInfo['inquirerCity'] = $storeInfo['inquirerCityOther'];
+		}
+
+		unset($storeInfo['inquirerStateOther']);
+		foreach ($storeInfo as $key => $value) {
+			if ($value == null) {
+				$storeInfo[$key] = '';
+			}
+		}
+
+		$id = Inquirer::insertGetId($storeInfo);
+
+		return $id;
+	}
 }

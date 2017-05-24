@@ -4,7 +4,7 @@
 		<title> Add New Inquiry</title>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 		<meta name="csrf-token" content="{{ csrf_token() }}" />
-	    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
 
 		<!-- jquery -->
 		<script src="{{asset('js/jquery.min.js')}}"></script>
@@ -22,70 +22,70 @@
 
 		<!-- alert box -->
 		<script src="{{asset('js/bootbox.min.js')}}"></script>
-	    <link rel="stylesheet" href="{{asset('css/self.css')}}">
+		<link rel="stylesheet" href="{{asset('css/self.css')}}">
 
-	    <?php
+		<?php
 
-	    	function data_to_option($array,$selected){
-			 	$sel = trim($selected);
-			 	$sel = str_replace(' ','',$sel);
-			 	foreach($array as $ele)
-			 	{
-			 		$trimedele = trim($ele);
-			 		$trimedele = str_replace(' ','',$trimedele);
-			 		if(strcasecmp($sel,$trimedele)===0){
-			 			 echo "<option selected value='$ele'>$ele</option>";
-			 		}
-			 		else {
-			 			echo "<option value='$ele'>$ele</option>";
-			 		}
+			function data_to_option($array,$selected){
+				$sel = trim($selected);
+				$sel = str_replace(' ','',$sel);
+				foreach($array as $ele)
+				{
+					$trimedele = trim($ele);
+					$trimedele = str_replace(' ','',$trimedele);
+					if(strcasecmp($sel,$trimedele)===0){
+						 echo "<option selected value='$ele'>$ele</option>";
+					}
+					else {
+						echo "<option value='$ele'>$ele</option>";
+					}
 
-			 	}
+				}
 			 }
-	    ?>
+		?>
 
 
 
-	    <style type="text/css">
+		<style type="text/css">
 					body {
 						/*line-height: 200%;*/
 						/*background-image: url("../background.jpg");*/
 		/*				background-color: #82CAFA;*/
-		                font-size: 14px;
-		                line-height: normal;
+						font-size: 14px;
+						line-height: normal;
 					}
 					#adjustLineSpacing div, #new_inquirer_form div {
 						margin-bottom: 5px;
 					}
-		      .control-label {
-		          font-weight: normal;
-		      }
-		      .form-control {
+			  .control-label {
+				  font-weight: normal;
+			  }
+			  .form-control {
 
-		      }
-		      .title-lg {
-		          color: #337AB7;
-		          font-size: 20px;
-		          font-weight: bold;
-		      }
-		      .title-sm {
-		          color: #337AB7;
-		          font-size: 15px;
-		          font-weight: bold;
-		      }
-		      hr {
-		        -moz-border-bottom-colors: none;
-		        -moz-border-image: none;
-		        -moz-border-left-colors: none;
-		        -moz-border-right-colors: none;
-		        -moz-border-top-colors: none;
-		        color: #3C3F41;
-		        border-color: #EEEEEE -moz-use-text-color #FFFFFF;
-		        border-style: solid none;
-		        border-width: 1px 0;
-		        margin: 8px 0;
-		      }
-		      input[type="search"]::-webkit-search-cancel-button{
+			  }
+			  .title-lg {
+				  color: #337AB7;
+				  font-size: 20px;
+				  font-weight: bold;
+			  }
+			  .title-sm {
+				  color: #337AB7;
+				  font-size: 15px;
+				  font-weight: bold;
+			  }
+			  hr {
+				-moz-border-bottom-colors: none;
+				-moz-border-image: none;
+				-moz-border-left-colors: none;
+				-moz-border-right-colors: none;
+				-moz-border-top-colors: none;
+				color: #3C3F41;
+				border-color: #EEEEEE -moz-use-text-color #FFFFFF;
+				border-style: solid none;
+				border-width: 1px 0;
+				margin: 8px 0;
+			  }
+			  input[type="search"]::-webkit-search-cancel-button{
 						-webkit-appearance: searchfield-cancel-button;
 					}
 
@@ -97,37 +97,37 @@
 				<!-- Fixed navbar -->
 		<nav class="navbar navbar-inverse navbar-fixed-top">
 		  <div class="container">
-		        <div class="navbar-header">
-		              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-		                <span class="sr-only">Toggle navigation</span>
-		                <span class="icon-bar"></span>
-		                <span class="icon-bar"></span>
-		                <span class="icon-bar"></span>
-		              </button>
-		              <a class="navbar-brand" style="padding-top:5px;"><img src="{{asset('img/icon.png')}}" class="img-rounded img-responsive" width="45px" height="45px" alt=""></a>
-		              <a class="navbar-brand" href="/MainPage">91bnb Manage System</a>
-		        </div>
+				<div class="navbar-header">
+					  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					  </button>
+					  <a class="navbar-brand" style="padding-top:5px;"><img src="{{asset('img/icon.png')}}" class="img-rounded img-responsive" width="45px" height="45px" alt=""></a>
+					  <a class="navbar-brand" href="/MainPage">91bnb Manage System</a>
+				</div>
 
-		    <div id="navbar" class="navbar-collapse collapse">
-		          <!-- navbar left -->
-		          <ul class="nav navbar-nav">
-		            <li><a href="/MainPage">Home</a></li>
-		            <li class="active"><a>Add New Inquiry</a></li>
-		          </ul>
-		          <!-- navbar right -->
-		          <ul class="nav navbar-nav navbar-right">
-		              <li class="dropdown">
-		                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{$Rep->repUserName}}<span class="caret"></span></a>
-		                  <ul class="dropdown-menu">
-		                    <li><a href="#">Profile</a></li>
-		                    <li><a href="#">Change Password</a></li>
-		                    <li role="separator" class="divider"></li>
-		                    <li><a href="../logout.php">Log Out</a></li>
-		                  </ul>
-		                </li>
-		          </ul>
+			<div id="navbar" class="navbar-collapse collapse">
+				  <!-- navbar left -->
+				  <ul class="nav navbar-nav">
+					<li><a href="/MainPage">Home</a></li>
+					<li class="active"><a>Add New Inquiry</a></li>
+				  </ul>
+				  <!-- navbar right -->
+				  <ul class="nav navbar-nav navbar-right">
+					  <li class="dropdown">
+						  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{$Rep->repUserName}}<span class="caret"></span></a>
+						  <ul class="dropdown-menu">
+							<li><a href="#">Profile</a></li>
+							<li><a href="#">Change Password</a></li>
+							<li role="separator" class="divider"></li>
+							<li><a href="../logout.php">Log Out</a></li>
+						  </ul>
+						</li>
+				  </ul>
 
-		    </div><!--/.nav-collapse -->
+			</div><!--/.nav-collapse -->
 		  </div><!--/ container -->
 		</nav>
 
@@ -143,51 +143,51 @@
 						<div class="form-group">
 							<label class="col-sm-4 control-label">First Name</label>
 								<div class="col-sm-6">
-	                              <input type="search" class="form-control input-sm" name="inquirerFirst" placeholder="First Name">
-	                            </div>
+								  <input type="search" class="form-control input-sm" name="inquirerFirst" placeholder="First Name">
+								</div>
 						</div>
 						<div class="form-group">
-	                            <label class="col-sm-4 control-label">Last Name</label>
-	                            <div class="col-sm-6">
-	                              <input type="search" class="form-control input-sm" name="inquirerLast" placeholder="Last Name">
-	                            </div>
-	                    </div>
-	                    <div class="form-group">
-	                            <label class="col-sm-4 control-label">WeChat ID</label>
-	                            <div class="col-sm-6">
-	                              <input type="search" class="form-control input-sm" name="inquirerWechatID" placeholder="Wechat ID">
-	                            </div>
-	                    </div>
-	                    <div class="form-group">
-	                            <label class="col-sm-4 control-label">WeChat Username</label>
-	                            <div class="col-sm-6">
-	                              <input type="search" class="form-control input-sm" name="inquirerWechatUserName" placeholder="Wechat Name">
-	                            </div>
-	                	</div>
-	                	<div class="form-group">
-	                            <label class="col-sm-4 control-label">Taobao Username</label>
-	                            <div class="col-sm-6">
-	                              <input type="search" class="form-control input-sm" name="inquirerTaobaoUserName" placeholder="Taobao Username">
-	                            </div>
-	                    </div> <!-- button get -->
+								<label class="col-sm-4 control-label">Last Name</label>
+								<div class="col-sm-6">
+								  <input type="search" class="form-control input-sm" name="inquirerLast" placeholder="Last Name">
+								</div>
+						</div>
+						<div class="form-group">
+								<label class="col-sm-4 control-label">WeChat ID</label>
+								<div class="col-sm-6">
+								  <input type="search" class="form-control input-sm" name="inquirerWechatID" placeholder="Wechat ID">
+								</div>
+						</div>
+						<div class="form-group">
+								<label class="col-sm-4 control-label">WeChat Username</label>
+								<div class="col-sm-6">
+								  <input type="search" class="form-control input-sm" name="inquirerWechatUserName" placeholder="Wechat Name">
+								</div>
+						</div>
+						<div class="form-group">
+								<label class="col-sm-4 control-label">Taobao Username</label>
+								<div class="col-sm-6">
+								  <input type="search" class="form-control input-sm" name="inquirerTaobaoUserName" placeholder="Taobao Username">
+								</div>
+						</div> <!-- button get -->
 
-	                    <div class="form-group">
-	                            <div class="col-sm-6 col-sm-offset-4">
-	                                <button class="btn btn-primary btn-sm" type ="sumnit">Search</button>
-	                                <!-- clear input by refresh page -->
-	                                <button class="btn btn-warning btn-sm" type="reset">Clear</button>   
-	                            </div>
-	                    </div>
+						<div class="form-group">
+								<div class="col-sm-6 col-sm-offset-4">
+									<button class="btn btn-primary btn-sm" type ="sumnit">Search</button>
+									<!-- clear input by refresh page -->
+									<button class="btn btn-warning btn-sm" type="reset">Clear</button>   
+								</div>
+						</div>
 					</form>
 				</div>
 				<div class="col-sm-6">
 					<h5>New inquirer?</h5>
-	                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addInquirerFieldModal"  onclick="$('#similarResult').empty(); $('#inquirerSubmitBtn').show();">Add New Inquirer</button> 
+						<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addInquirerFieldModal"  onclick="$('#similarResult').empty(); $('#inquirerSubmitBtn').show(); $('#inquirerStillSubmitBtn').hide();">Add New Inquirer</button> 
 				</div>
 			</div>
 
 
-			<form method = "POST" id = "nwq_inquirer_form" class='form-horizontal' onsubmit="return false;">
+			<form method = "POST" id = "new_inquirer_form" class='form-horizontal' onsubmit="return false;">
 				{{ csrf_field() }}
 				<!-- Modal add -->
 				<div class="modal fade" id="addInquirerFieldModal" role="dialog">
@@ -195,14 +195,14 @@
 						<div class="modal-content">
 							<div class="modal-header">
 								<button type="button" class="close" data-dismiss="modal">&times;</button>
-  							    <h4 class="modal-title">Add New Inquirer</h4>
-  							</div>
-  							<div class="modal-body">
-  								<div class="row">
-  									<div class="col-sm-4 control-label"><span style="color:red">*</span>First Name:</div>
-                              		<div class="col-sm-4"><input class="form-control input-sm" type='search' name='inquirerFirst'></div>
-                              	</div>
-                              	<div class="row">
+								<h4 class="modal-title">Add New Inquirer</h4>
+							</div>
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-sm-4 control-label"><span style="color:red">*</span>First Name:</div>
+									<div class="col-sm-4"><input class="form-control input-sm" type='search' name='inquirerFirst'></div>
+								</div>
+								<div class="row">
 									<div class="col-sm-4 control-label"><span style="color:red">*</span>Last Name:</div>
 									<div class="col-sm-4"><input class="form-control input-sm" type='search' name='inquirerLast'></div>
 								</div>
@@ -213,7 +213,7 @@
 								<div class="row">
 									<div class="col-sm-4 control-label">Phone Country:</div>
 									<div class="col-sm-4">
-										<select class="form-control input-sm" type='search' name='inquirerPhoneCountry'>
+										<select class="form-control input-sm" type='search' id='inquirerPhoneCountry' name='inquirerPhoneCountry'>
 											<?//php //listtoselect("../list/phoneCountryCode"); ?>
 										</select>
 									</div>
@@ -274,6 +274,7 @@
 							</div> <!-- body -->
 						<div class="modal-footer" id="testAddNewInquirer">
 							<button class="btn btn-primary" onclick="findSimilarInquirers();" type="button" id="inquirerSubmitBtn">Submit</button>
+							<button class="btn btn-primary" type="submit" id="inquirerStillSubmitBtn">Still Submit</button>
 							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 							</div>
 						</div>
@@ -319,9 +320,9 @@
 								<label>Representative</label>
 								<select id="repID" class="form-control" name="repWithOwner">
 								@php
-    	 							data_to_option($Allreps,$Rep->repName);
-    	 						@endphp
-    	 						</select>
+									data_to_option($Allreps,$Rep->repName);
+								@endphp
+								</select>
 							</div>
 						</div>
 					</div>
@@ -739,28 +740,28 @@
 			if(quiryinfojson.checkOut < quiryinfojson.checkIn)
 			{
 				bootbox.dialog({
-		            message: 'Check-In Date must be earlier than Check-Out Date',
-		            title: 'Error in the Form',
-		            buttons: {
-		              success: {
-		              label: 'OK',
-		              className: 'btn-danger'
-		              }
-		            }
-		        });
-		        return ;
+					message: 'Check-In Date must be earlier than Check-Out Date',
+					title: 'Error in the Form',
+					buttons: {
+					  success: {
+					  label: 'OK',
+					  className: 'btn-danger'
+					  }
+					}
+				});
+				return ;
 			}
 			if(quiryinfojson.inquiryDate > checkIn){
 				bootbox.dialog({
-		            message: 'Inquiry Date must be earlier than Check-In Date',
-		            title: 'Error in the Form',
-		            buttons: {
-		              success: {
-		              label: 'OK',
-		              className: 'btn-danger'
-		              }
-		            }
-		          });
+					message: 'Inquiry Date must be earlier than Check-In Date',
+					title: 'Error in the Form',
+					buttons: {
+					  success: {
+					  label: 'OK',
+					  className: 'btn-danger'
+					  }
+					}
+				  });
 				return ;
 			}
 
@@ -791,165 +792,257 @@
 	</script>
 
 	<script type="text/javascript">
-			$(document).ready(function(){
-				$("#inquiryDate").datepicker({
-		          dateFormat: "mm/dd/yy",
-		          maxDate: 0
-				});
-		        $("#inquiryDate").datepicker("setDate", new Date());
-
-		        $('#checkIn').datepicker({
-		          dateFormat: "mm/dd/yy",
-		          beforeShow: function () {
-		          $('#checkIn').datepicker('option', 'minDate', 0);
-		          }
-		        });
-
-		        $('#checkOut').datepicker({
-		          dateFormat: "mm/dd/yy",
-		          beforeShow: function () {
-		            var checkIn = $('#checkIn').datepicker("getDate");
-		            if(checkIn){
-		            	checkIn.setDate(checkIn.getDate() + 1);
-		            	$('#checkOut').datepicker('option', 'minDate', checkIn);
-		            }
-		          }
-		        });
-
-
-				$("#search_form").submit(function(){
-					var toSend = $(this).serialize();
-					// $.ajaxSetup({
-					//     headers: {
-					//         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-					//     }
-					// });
-					$.ajax({
-						type: "POST",
-						dataType: "json",//data type expected from server
-						url: '/inquirer/search',
-						data: toSend,
-						success: function(data) {
-							var htmlcont = "";
-							if(data.length==0){
-								htmlcont = "<span style='color:red;'>No records found.</span>";
-							}
-							else{
-								htmlcont +=  "<div style='overflow:auto'> "+
-												"<table class='table table-striped table-bordered'>"+
-												"<tr>"+
-												"<th></th>"+
-												"<th>ID</th> "+
-												"<th>First Name</th>"+
-												"<th>Last Name</th>"+
-												"<th>U.S. Phone Number</th>"+
-												"<th>Wechat ID</th> "+
-												"<th>Wechat Username</th>"+
-												"<th>Taobao Username</th>"+
-												"</tr>";
-
-								for(i =0 ;i<data.length;++i){
-									htmlcont += "<tr><td data-dismiss=\"modal\" style=\"cursor:pointer; text-decoration:underline; color:blue;\" onclick=\"$(\'#inquirerID\').val(" +data[i].inquirerID+ ");vieweffect_1();\">Select</td>"+
-												"<td>"+data[i].inquirerID + "</td>"+
-												"<td>"+data[i].inquirerFirst+"</td>"+
-												"<td>"+data[i].inquirerLast+"</td>"+
-												"<td>"+data[i].inquirerUsPhoneNumber + "</td>"+
-												"<td>"+data[i].inquirerWechatID+"</td>"+
-												"<td>"+data[i].inquirerWechatUserName+"</td>"+
-												"<td>"+data[i].inquirerTaobaoUserName+"</td>"+
-												"</tr>";
-
-								}
-								htmlcont += "</table></div>";
-								//alert(htmlcont);
-							}
-							$("#getInquirerIDRes").html(htmlcont);
-							$('#getInquirerIDResModal').modal('toggle');
-							return false;
-						}
-						,
-						error: function (xhr, ajaxOptions, thrownError) {
-			            bootbox.dialog({
-				              message: "Something's wrong, try again later.",
-				              title: "Failed",
-				              buttons: {
-				                main: {
-				                  label: "OK",
-				                  className: "btn-primary"
-				                }
-				              }
-				            });
-						}
-					});
-				});
-
-
-				$("#inquirySource").change(function(){
-					if($(this).val().trim() == "Other"){
-						$("#inquirySourceOtherDiv").show();
-					}else{
-
-						$("#inquirySourceOtherDiv").hide();
-						$('#inquirySourceOther').val('');//empty input
-					}
-				});
-
-				$("#Purpose").change(function(){
-					if($(this).val().trim() == "Other"){
-						$("#PurposeOtherDiv").show();
-					}else{
-						$("#PurposeOtherDiv").hide();
-						$('#PurposeOtherDiv').val('');//empty input
-					}
-				});
-
-				$("#country").change(function(){
-					if($(this).val().length!=0){
-						var countryfile = $(this).val().replace(' ','');
-						$.get("resource/"+countryfile,function(data,status){
-						$('#state').empty();
-						for(i=0;i<data.length;++i){
-							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-							$('#state').append(option);
-						}
-						});
-					}
-				});
-
-				$('#state').change(function(){
-					if($(this).val().length!=0){
-						var cityfile = $("#country").val().replace(' ','')+"_"+$(this).val().replace(' ','');
-						$.get("resource/"+cityfile,function(data,status){
-						$('#city').empty();
-						for(i=0;i<data.length;++i){
-							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-							$('#city').append(option);
-						}
-						});
-					}
-				});
-
-				$('#new_inquirer_form').submit(function(){
-					var toSend = $(this).serialize();
-					$.ajax({
-						type:"POST",
-						dataType:"json",
-						url:"#",
-						data:toSend,
-						success: function(){
-						}
-						,
-						error: function(xhr, ajaxOptions, thrownError){
-							alert("error");
-						}
-					}
-					);
-				});
-
-				// Load list 
-				loadOpt();
+		$(document).ready(function(){
+			$("#inquiryDate").datepicker({
+			  dateFormat: "mm/dd/yy",
+			  maxDate: 0
 			});
-			
+			$("#inquiryDate").datepicker("setDate", new Date());
+
+			$('#checkIn').datepicker({
+			  dateFormat: "mm/dd/yy",
+			  beforeShow: function () {
+			  $('#checkIn').datepicker('option', 'minDate', 0);
+			  }
+			});
+
+			$('#checkOut').datepicker({
+			  dateFormat: "mm/dd/yy",
+			  beforeShow: function () {
+				var checkIn = $('#checkIn').datepicker("getDate");
+				if(checkIn){
+					checkIn.setDate(checkIn.getDate() + 1);
+					$('#checkOut').datepicker('option', 'minDate', checkIn);
+				}
+			  }
+			});
+
+
+			$("#search_form").submit(function(){
+				var toSend = $(this).serialize();
+				// $.ajaxSetup({
+				//     headers: {
+				//         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				//     }
+				// });
+				$.ajax({
+					type: "POST",
+					dataType: "json",//data type expected from server
+					url: '/inquirer/search',
+					data: toSend,
+					success: function(data) {
+						var htmlcont = "";
+						if(data.length==0){
+							htmlcont = "<span style='color:red;'>No records found.</span>";
+						}
+						else{
+							htmlcont +=  "<div style='overflow:auto'> "+
+											"<table class='table table-striped table-bordered'>"+
+											"<tr>"+
+											"<th></th>"+
+											"<th>ID</th> "+
+											"<th>First Name</th>"+
+											"<th>Last Name</th>"+
+											"<th>U.S. Phone Number</th>"+
+											"<th>Wechat ID</th> "+
+											"<th>Wechat Username</th>"+
+											"<th>Taobao Username</th>"+
+											"</tr>";
+
+							for(i =0 ;i<data.length;++i){
+								htmlcont += "<tr><td data-dismiss=\"modal\" style=\"cursor:pointer; text-decoration:underline; color:blue;\" onclick=\"$(\'#inquirerID\').val(" +data[i].inquirerID+ ");vieweffect_1();\">Select</td>"+
+											"<td>"+data[i].inquirerID + "</td>"+
+											"<td>"+data[i].inquirerFirst+"</td>"+
+											"<td>"+data[i].inquirerLast+"</td>"+
+											"<td>"+data[i].inquirerUsPhoneNumber + "</td>"+
+											"<td>"+data[i].inquirerWechatID+"</td>"+
+											"<td>"+data[i].inquirerWechatUserName+"</td>"+
+											"<td>"+data[i].inquirerTaobaoUserName+"</td>"+
+											"</tr>";
+
+							}
+							htmlcont += "</table></div>";
+							//alert(htmlcont);
+						}
+						$("#getInquirerIDRes").html(htmlcont);
+						$('#getInquirerIDResModal').modal('toggle');
+						return false;
+					},
+					error: function (xhr, ajaxOptions, thrownError) {
+					bootbox.dialog({
+						  message: "Something's wrong, try again later.",
+						  title: "Failed",
+						  buttons: {
+							main: {
+							  label: "OK",
+							  className: "btn-primary"
+							}
+						  }
+						});
+					}
+				});
+			});
+
+
+			$("#inquirySource").change(function(){
+				if($(this).val().trim() == "Other"){
+					$("#inquirySourceOtherDiv").show();
+				}else{
+
+					$("#inquirySourceOtherDiv").hide();
+					$('#inquirySourceOther').val('');//empty input
+				}
+			});
+
+			$("#Purpose").change(function(){
+				if($(this).val().trim() == "Other"){
+					$("#PurposeOtherDiv").show();
+				}else{
+					$("#PurposeOtherDiv").hide();
+					$('#PurposeOtherDiv').val('');//empty input
+				}
+			});
+
+			$("#country").change(function(){
+				if($(this).val().length!=0){
+					var countryfile = $(this).val().replace(' ','');
+					$.get("resource/"+countryfile,function(data,status){
+					$('#state').empty();
+					for(i=0;i<data.length;++i){
+						var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+						$('#state').append(option);
+					}
+					});
+				}
+			});
+
+			$('#state').change(function(){
+				if($(this).val().length!=0){
+					var cityfile = $("#country").val().replace(' ','')+"_"+$(this).val().replace(' ','');
+					$.get("resource/"+cityfile,function(data,status){
+					$('#city').empty();
+					for(i=0;i<data.length;++i){
+						var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+						$('#city').append(option);
+					}
+					});
+				}
+			});
+
+			$.ajax({
+				type: "GET",
+				dataType: "json",//data type expected from server
+				url: "/resource/countries",
+				success: function(data) {
+					for (i = 0; i < data.length; i++) {
+						$("#inquirerCountry").append("<option value='" + data[i] + "'>" + data[i] + "</option>");
+					}
+				}
+			});
+
+			$.ajax({
+				type: "GET",
+				dataType: "json",//data type expected from server
+				url: "/resource/countryCode",
+				success: function(data) {
+					for (i = 0; i < data.length; i++) {
+						$("#inquirerPhoneCountry").append("<option value='" + data[i] + "'>" + data[i] + "</option>");
+					}
+				}
+			});
+
+			$("#inquirerCountry").change(function(){//fix 0309
+				// $("#inquirerState").load("../list/Country_State_Option/" + $(this).val().replace(/\s/g, '') + "_StateListOption");
+				if($(this).val() == "China" || $(this).val() == "United Kingdom" || $(this).val() == "United States"){
+					console.log("china us uk");            
+					$("#inquirerState").load("/list/Country_State_Option/" + $(this).val().replace(/\s/g, '') + "_StateListOption");
+					$("#inquirerCity").html("");
+					$("#inquirerStateOtherDiv").hide();
+					$("#inquirerCityOtherDiv").hide();
+					$('#inquirerStateOther').val('');//empty input
+					$('#inquirerCityOther').val('');//empty input
+					// $("#inquirerCity").load('../list/State_City_Option/' + state + 'CityListOption');
+				} else {
+					console.log("other country");
+					// $("#inquirerState").hide();
+					$("#inquirerStateOtherDiv").show();
+					$('#inquirerState').empty();
+					$('#inquirerStateOther').val('');
+					$("#inquirerState").append("<option value='InputState'>Input State</option>");  //添加一项option
+					console.log( $('#inquirerState').val());
+
+					$('#inquirerCity').empty();
+					$('#inquirerCityOther').val('');
+					$("#inquirerCity").append("<option value='InputCity'>Input City</option>");
+					$("#inquirerCityOtherDiv").show();
+				}
+			});
+
+			$("#inquirerState").change(function(){
+				var state = $(this).val().replace(/\s/g, '');
+				//console.log(state);	
+				$("#inquirerCity").load('/list/State_City_Option/' + state + 'CityListOption');
+				$("#inquirerCityOtherDiv").hide();
+				$('#inquirerCityOther').val('');//empty input
+			});
+
+			$('#new_inquirer_form').submit(function(){
+				var toSend = $(this).serialize();
+				$.ajax({
+					type:"POST",
+					dataType:"html",
+					url:"/inquirer/add",
+					data:toSend,
+					success: function(data) {
+						if (data.substring(data.length-5, data.length) == "error") {
+							bootbox.dialog({
+								message: "Failed to add new inquirer. Please try again later.",
+								title: "Failed",
+								buttons: {
+									main: {
+										label: "OK",
+										className: "btn-primary"
+									}
+								}
+							});
+						} else {
+							bootbox.dialog({
+								message: "Successfully added new inquirer. ID: " + data,
+								title: "Confirmation",
+								buttons: {
+									main: {
+										label: "OK",
+										className: "btn-primary"
+									}
+								}
+							});
+							//fix 0307 maybe this causes modal block not sure
+							$("#inquirerID").val(data);
+							vieweffect_1();
+							$('#addInquirerFieldModal').modal('toggle');
+							//test 0309 
+							// return true;
+						}
+					},
+					error: function (xhr, ajaxOptions, thrownError) {
+						bootbox.dialog({
+							message: "Failed to add new inquirer.",
+							title: "Failed",
+							buttons: {
+								main: {
+									label: "OK",
+									className: "btn-primary"
+								}
+							}
+						});
+					}
+				});
+			});
+
+			// Load list 
+			loadOpt();
+		});
+		
 	</script>	
 
 	<script>
@@ -957,39 +1050,66 @@
 			$("#similarResult").empty();
 			var toSend = $("#new_inquirer_form").serialize();
 			$.ajaxSetup({
-					    headers: {
-					        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-					    }
-					});
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
 			$.ajax({
-					type: "POST",
-					dataType: "json",//data type expected from server
-					url: "inquiry/search/similar=0",
-					data: toSend,
-					success: function(data) {
-						if (data.length==0) {
-							$("#new_inquirer_form").submit();
-						} 
-						else {
-							$('#inquirerSubmitBtn').hide();
-							$("#similarResult").html(data);             
+				type: "POST",
+				dataType: "json",//data type expected from server
+				url: "/inquirer/search/similar=0",
+				data: toSend,
+				success: function(data) {
+					if (data.length == 0) {
+						$("#new_inquirer_form").submit();
+					} 
+					else {
+						$('#inquirerSubmitBtn').hide();
+						$('#inquirerStillSubmitBtn').show();						
+						html = "";
+						html += "<div style='color:red'>We found some similar owners, do you mean any of them?<br></div>";
+						html += "<div style='overflow:auto'>";
+						html += "<table class=\"table table-striped table-bordered\">";
+						html += "<tr>";
+						html += "<th></th>";
+						html += "<th style=\"min-width:100px;\">First Name</th>";
+						html += "<th style=\"min-width:100px;\">Last Name</th>";
+						html += "<th style=\"min-width:120px;\">Phone Number</th>";
+						html += "<th style=\"min-width:150px;\">Email</th>";
+						html += "<th style=\"min-width:150px;\">Taobao Username</td>";
+						html += "<th style=\"min-width:100px;\">WeChat ID</td>";
+						html += "<th style=\"min-width:100px;\">Inquirer ID</td>";
+						html += "</tr>";
+						for (i = 0; i < data.length; i++) {
+							html += "<tr>";
+							// data-dismiss="modal" is to close the pop up window when clicked
+							html += "<td data-dismiss=\"modal\" style='cursor:pointer; text-decoration:underline; color:blue;' onclick='$(\"#inquirerID\").val(\"" + data[i]['inquirerID'] + "\"); vieweffect_1();'>Select</td>";
+							html += "<td>" + data[i]['inquirerFirst'] + "</td>";
+							html += "<td>" + data[i]['inquirerLast'] + "</td>";
+							html += "<td>" + data[i]['inquirerPhoneNumber'] + "</td>";
+							html += "<td>" + data[i]['inquirerEmail'] + "</td>";
+							html += "<td>" + data[i]['inquirerTaobaoUserName'] + "</td>";
+							html += "<td>" + data[i]['inquirerWechatID'] + "</td>";
+							html += "<td>" + data[i]['inquirerID'] + "</td>";
+							html += "</tr>";
 						}
+						html +=  "</table></div>";
+						$("#similarResult").html(html);
 					}
-					,
-					error: function (xhr, ajaxOptions, thrownError) {
-			            bootbox.dialog({
-			              message: "Something's wrong, try again later.",
-			              title: "Failed",
-			              buttons: {
-			                main: {
-			                  label: "OK",
-			                  className: "btn-primary"
-			                }
-			              }
-			            });
-					}
-				});
-
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+					bootbox.dialog({
+						message: "Something's wrong, try again later.",
+						title: "Failed",
+						buttons: {
+							main: {
+								label: "OK",
+								className: "btn-primary"
+							}
+						}
+					});
+				}
+			});
 		}
 	</script>
 

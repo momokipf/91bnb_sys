@@ -52,6 +52,8 @@ Route::patch('inquirer/modifyInquirer', 'InquirersController@modifyInquirer');
 Route::get('inquirer/searchAndModify', 'InquirersController@searchAndModify');
 Route::post('inquirer/searchAndModify', 'InquirersController@searchAndModify');
 
+Route::post('inquirer/add', 'InquirersController@store');
+
 //Route::resource('/postmech','PostController');
 Route::get('/post','PostController@index');
 
