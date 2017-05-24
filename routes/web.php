@@ -29,7 +29,7 @@ Route::get('inquiry/search','InquirysController@searchIndex');
 Route::get('inquiry/search/result','InquirysController@search');
 
 Route::get('inquiry/{post}','InquirysController@show');
-//Route::get('test','InquirysController@result');
+Route::get('test','InquirysController@result');
 
 
 //Route::get('addinquiry',    function(){return view('inquiry');});
@@ -51,6 +51,8 @@ Route::patch('inquirer/modifyInquirer', 'InquirersController@modifyInquirer');
 
 Route::get('inquirer/searchAndModify', 'InquirersController@searchAndModify');
 Route::post('inquirer/searchAndModify', 'InquirersController@searchAndModify');
+
+Route::post('inquirer/add', 'InquirersController@store');
 
 //Route::resource('/postmech','PostController');
 Route::get('/post','PostController@index');
