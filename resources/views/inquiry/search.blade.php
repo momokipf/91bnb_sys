@@ -333,12 +333,6 @@
 
 	<script>
 
-		function converttimetosql(str){
-			if(str=="")
-				return "";
-			var d = new Date(str);
-			return d.getFullYear()+"/"+('0' + (d.getMonth()+1)).slice(-2)+"/"+('0' + d.getDate()).slice(-2);
-		}
 
 		function filterInquiry(){
 			$(".loaderDiv").show();

@@ -7,7 +7,7 @@ use App\Representative;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-
+use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Support\Facades\Log;
 
 use App\Inquiry;
@@ -17,6 +17,7 @@ use View;
 class LoginController extends Controller
 {
 
+    //use ThrottlesLogins;
     //protected $redirectTo = '/welcome';   // this can be the pre-definede or use protected function redirectTO(){}
 
 
@@ -81,8 +82,19 @@ class LoginController extends Controller
                     ->withErrors($validator->errors());
         }
 
-        //if safety is important
 
+        // If the class is using the ThrottlesLogins trait, we can automatically throttle
+        // the login attempts for this application. We'll key this by the username and
+        // the IP address of the client making these requests into this application.
+        // if ($this->hasTooManyLoginAttempts($request)) {
+        //     $this->fireLockoutEvent($request);
+
+        //     return $this->sendLockoutResponse($request);
+        // }
+
+        // if ($this->attemptLogin($request)) {
+        //     return $this->sendLoginResponse($request);
+        // }
         if(Auth::attempt([
                 'repUserName'=>$input['userID'],
                 'password'=>$input['userPwd'],
@@ -94,36 +106,30 @@ class LoginController extends Controller
             //return redirect('/welcome');
         }
         else{
+            $this->incrementLoginAttempts($request);
+
             return redirect('login')
                 ->withInput()
                 ->with('status','login failed');
         }
-        // $rep = Representative::where('active',1)
-        //      ->where('repUserName',$input['userID'])
-        //      ->where('repPassword',$input['userPwd'])
-        //      ->first();
 
-        // if($rep)
-        // {
-        //  $number = Inquiry::getHotQuery();
-        //  //return redirect('/MainPage');
-        //  return view('MainPage')->with('num',$number)
-        //                  ->with('userID',$input['userID']);
-        // }
-        // else{
-        //  return redirect('/login')
-        //      ->withInput()
-        //      ->with('status','login failed');
-        // }
-
-
-
+        // If the login attempt was unsuccessful we will increment the number of attempts
+        // to login and redirect the user back to the login form. Of course, when this
+        // user surpasses their maximum number of attempts they will get locked out.
+        //return $this->sendFailedLoginResponse($request);
 
     }
 
-    public function logout(){
+    public function logout(Request $request){
+        Auth::logout();
+        $request->session()->flush();
+        $request->session()->regenerate();
 
+        return redirect('/login');
     }
+
+
+
 
 
     public function username()
@@ -135,7 +141,7 @@ class LoginController extends Controller
 
     protected function guard()
     {
-        return Auth::guard('web');
+        return Auth::guard();
     }
 
 }
