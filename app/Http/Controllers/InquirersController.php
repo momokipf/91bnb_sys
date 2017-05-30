@@ -12,8 +12,11 @@ use App\Inquirer;
 
 class InquirersController extends Controller
 {
-	public function show()
-	{
+	public function __construct() {
+		$this->middleware('auth');
+	}
+
+	public function show() {
 		#Log::info('Showing user profile for user:');
 		$rep = Auth::user();
 
