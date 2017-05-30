@@ -8,25 +8,26 @@
          <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
 
 				<!-- jquery -->
-				<script src="../js/jquery.min.js"></script>
+				<script src="{{asset('js/jquery.min.js')}}"></script>
 
 
 				<!-- bootstrap -->
-				<link rel="stylesheet" href="../css/bootstrap.min.css">
+				<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
 
-				<script src="../js/bootstrap.min.js"></script>
+				<script src="{{asset('js/bootstrap.min.js')}}"></script>
 
 				<!-- bootstrap phone (local file) -->
-				<script src="../js/bootstrap-formhelpers-phone.js"></script>
+				<script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
 
                 <!-- alert box -->
-				<script src="../js/bootbox.min.js"></script>
-                <link rel="stylesheet" href="../css/self.css">
-                <link rel="stylesheet" href="../css/font-awesome.min.css">
+				<script src="{{asset('js/bootbox.min.js')}}"></script>
+                <link rel="stylesheet" href="{{asset('css/self.css')}}">
+                <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
                 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+            <script src="{{asset('js/util.js')}}"></script>
               <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
               <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
-							<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCpF-_i-utIH6cZl94zpu4C5vx_FBDDI9s&libraries=places&language=en"></script>
+			  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCpF-_i-utIH6cZl94zpu4C5vx_FBDDI9s&libraries=places&language=en"></script>
 
 		<style>
 			html {width:100%; height:100%;}
@@ -48,17 +49,6 @@
 			}
 		</style>
 
-        <?php
-            function list_to_select($pathName){
-                $listArray = file($pathName);
-                $arraySize = sizeof($listArray);
-                for($i = 0 ; $i < $arraySize ; $i++){
-                    $string = str_replace("\n","",$listArray[$i]);
-                    echo "<OPTION value = \"".$string."\" ";
-                    echo ">".$string."</OPTION>";
-                }
-            }
-        ?>
 
 	</head>
 
@@ -81,7 +71,7 @@
     <div id="navbar" class="navbar-collapse collapse">
           <!-- navbar left -->
           <ul class="nav navbar-nav">
-            <li class=""><a href="mainPage">Home</a></li>
+            <li class=""><a href="/MainPage">Home</a></li>
             <li class="active"><a>House Search</a></li>
           </ul>
           <!-- navbar right -->
@@ -89,9 +79,7 @@
               <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                       <span class="glyphicon glyphicon-user"></span>
-                      @if(isset($_SESSION["username"]))
-                      {{$_SESSION["username"]}}
-                      @endif
+                        {{$Rep->repUserName}}
                       <span class="caret"></span></a>
                   <ul class="dropdown-menu">
                     <li><a href="#">Profile</a></li>
@@ -113,12 +101,12 @@
      <!-- form here !!!-->
     <form id="myForm">
         <ul class="nav nav-tabs">
-          <li class="active"><a data-toggle="tab" href="#aboutLocation">Location</a></li>
-          <li><a data-toggle="tab" href="#aboutShare">Whole/Share</a></li>
-          <li><a data-toggle="tab" href="#aboutCheckin">Check-In/Out Date</a></li>
-          <li><a data-toggle="tab" href="#aboutCondition">House Condition</a></li>
-          <li><a data-toggle="tab" href="#aboutAmenity">Detail Condition</a></li>
-          <li><a data-toggle="tab" href="#aboutPrice">House/Room Price</a></li>
+            <li class="active"><a data-toggle="tab" href="#aboutLocation">Location</a></li>
+            <li><a data-toggle="tab" href="#aboutShare">Whole/Share</a></li>
+            <li><a data-toggle="tab" href="#aboutCheckin">Check-In/Out Date</a></li>
+            <li><a data-toggle="tab" href="#aboutCondition">House Condition</a></li>
+            <li><a data-toggle="tab" href="#aboutAmenity">Detail Condition</a></li>
+            <li><a data-toggle="tab" href="#aboutPrice">House/Room Price</a></li>
         </ul>
 
         <div class="tab-content">
@@ -126,59 +114,43 @@
             <!-- house condition -->
             <div class="tab-pane fade in active" id="aboutLocation">
 
-								<div class="row">
-										<div class="col-sm-3">
-												<label>Inquerier ID</label>
-                                                @if(isset($inquirerID))
-                                                <input class="form-control input-sm" type="text" id="inquirerID" name="inquirerID" value="{{$inquirerID}}" readonly>
-                                                @else
-                                                <input class="form-control input-sm" type="text" id="inquirerID" name="inquirerID" readonly>
-                                                @endif
-												
-										</div>
+				<div class="row">
+						<div class="col-sm-3">
+							<label>Inquerier ID</label>
+                            @if(isset($inquirerID))
+                            <input class="form-control input-sm" type="text" id="inquirerID" name="inquirerID" value="{{$inquirerID}}" readonly>
+                            @else
+                            <input class="form-control input-sm" type="text" id="inquirerID" name="inquirerID" readonly>
+                            @endif
+								
+						</div>
 
-										<div class="col-sm-3">
-												<label>Representatives</label>
-                                                @if(isset($repID))
-                                                <input class="form-control input-sm" type="text" id="repWithOwner" name="repWithOwner" value="{{$repID}}" readonly>
-                                                @else
-                                                <input class="form-control input-sm" type="text" id="repWithOwner" name="repWithOwner" readonly>
-												@endif
-										</div>
-								</div>
+						<div class="col-sm-3">
+							<label>Representatives</label>
+                            @if(isset($searchrepID))
+                            <input class="form-control input-sm" type="text" id="repWithOwner" name="repWithOwner" value="{{$repID}}" readonly>
+                            @else
+                            <input class="form-control input-sm" type="text" id="repWithOwner" name="repWithOwner" readonly>
+							@endif
+						</div>
+				</div>
 
                 <div class="row">
                     <div class="col-sm-2">
                         <label>Country*</label>
-                        <select class="form-control input-sm" id="country" name="country">
-                            @if(isset($country))
-                            <option>{{$country}}</option>
-                            @else
-                            <option>Select Country</option>
-                            @endif
+                        <select class="form-control input-sm" name = "country"  id="country" >
                         </select>
                     </div>
 
                     <div class="col-sm-2">
                         <label>State/Province*</label>
-                        <select class="form-control input-sm" id="state" name="state">
-                            @if(isset($state))
-                            <option>{{$state}}</option>
-                            @else
-                            <option>Select State</option>
-                            @endif
-                            
+                        <select class="form-control input-sm" id="state" name="state"> 
                         </select>
                     </div>
 
                     <div class="col-sm-2">
                         <label>City*</label>
                         <select class="form-control input-sm" id="city" name="city">
-                            @if(isset($city))
-                            <option>{{$city}}</option>
-                            @else
-                            <option>Select City</option>
-                            @endif
                         </select>
                     </div>
                 </div>
@@ -239,44 +211,45 @@
              </div> <!-- / house condition -->
 
 
-            <!-- 0117 -->
             <!-- share -1, whole 1, either 0 -->
             <div class="tab-pane fade" id="aboutShare">
                 <div class="row">
-                    @if($share =='1')
-                    <div class="col-sm-12"><input type="radio" id="rentWhole" name="rentShareWhole" value="1" checked> Rent Whole</div>
-                    @else
-                    <div class="col-sm-12"><input type="radio" id="rentWhole" name="rentShareWhole" value="1"> Rent Whole</div>
-                    @endif
-                    
+                    <div class="col-sm-12">
+                        @if(empty($Query) || (isset($Query->share)&&$Query->share==1))
+                            <input type="radio" id="rentWhole" name="rentShareWhole" value="1" checked> Rent Whole
+                        @else
+                            <input type="radio" id="rentWhole" name="rentShareWhole" value="1"> Rent Whole
+                        @endif
+                    </div>
                 </div>
                 <div class="row">
-                    @if($share =='-1')
-                    <div class="col-sm-12"><input type="radio" id="rentShare" name="rentShareWhole" value="-1" checked> Rent Share</div>
-                    @else
-                    <div class="col-sm-12"><input type="radio" id="rentShare" name="rentShareWhole" value="-1"> Rent Share</div>
-                    @endif
+                    <div class="col-sm-12">
+                        @if(!empty($Query) && (isset($Query->share)&&$Query->share==-1))
+                            <input type="radio" id="rentShare" name="rentShareWhole" value="-1" checked> Rent Share
+                        @else
+                            <input type="radio" id="rentShare" name="rentShareWhole" value="-1"> Rent Share
+                        @endif
+                    </div>
                 </div>
                 <div class="row">
-                    @if($share =='0')
-                    <div class="col-sm-12"><input type="radio" id="rentEither" name="rentShareWhole" value="0" checked> Rent Either</div>
-                    @elseif(!isset($share))
-                    <div class="col-sm-12"><input type="radio" id="rentEither" name="rentShareWhole" value="0" checked> Rent Either</div>
-                    @else
-                    <div class="col-sm-12"><input type="radio" id="rentEither" name="rentShareWhole" value="0"> Rent Either</div>
-                    @endif
+                    <div class="col-sm-12">
+                        @if(!empty($Query)&& (isset($Query->share)&&$Query->share==0))
+                            <input type="radio" id="rentEither" name="rentShareWhole" value="0" checked> Rent Either
+                        @else 
+                            <input type="radio" id="rentEither" name="rentShareWhole" value="0" > Rent Either
+                        @endif
+                    </div>
                 </div>
-            </div><!-- / Whole or Share -->
 
-
-
+            </div>
+            <!-- / Whole or Share -->
 
             <div class="tab-pane fade" id="aboutCheckin">
                 <div class="row">
                     <div class="col-sm-2">
                         <label>Check-In Date</label>
-                        @if(isset($checkIn))
-                        <input class="form-control input-sm" type="search" id="checkin" name="checkin" value="{{$checkIn}}">
+                        @if(!empty($Query)&&isset($Query->checkIn))
+                        <input class="form-control input-sm" type="search" id="checkin" name="checkin" value="{{$Query->checkIn}}">
                         @else
                         <input class="form-control input-sm" type="search" id="checkin" name="checkin">
                         @endif
@@ -284,8 +257,8 @@
 
                     <div class="col-sm-2">
                         <label>Check-Out Date</label>
-                        @if(isset($checkOut))
-                        <input class="form-control input-sm" type="search" id="checkout" name="checkout" value="{{$checkOut}}">
+                        @if(!empty($Query)&&isset($Query->checkOut))
+                        <input class="form-control input-sm" type="search" id="checkout" name="checkout" value="{{$Query->checkOut}}">
                         @else
                         <input class="form-control input-sm" type="search" id="checkout" name="checkout">
                         @endif
@@ -295,16 +268,16 @@
                     <div class="col-sm-12">
                         <div class="alert alert-warning">
                             <h5><i class="fa fa-info-circle" aria-hidden="true"></i><em><strong> Note:</strong> If guest didn't indicate the exact date, please apply the 1st of the month
-                              for Check-In date, and the end of the month for Check-Out date.</em>
-                          </h5>
+                            for Check-In date, and the end of the month for Check-Out date.</em>
+                            </h5>
                         </div>
                     </div>
                 </div>
-                 <div class="row">
+                <div class="row">
                     <div class="col-sm-12">
                         <div class="alert alert-warning">
                             <h5><i class="fa fa-info-circle" aria-hidden="true"></i><em><strong> Note:</strong> * indicates required field. </em>
-                          </h5>
+                            </h5>
                         </div>
                     </div>
                 </div>
@@ -313,8 +286,6 @@
                         <div id='checkDateCheck'></div>
                     </div>
                 </div>
-
-
             </div><!-- / Check in and check out -->
 
 
@@ -326,8 +297,8 @@
                         <label>Number of Rooms</label>
                         <div class="input-group">
                             <span class="input-group-addon">Range from</span>
-                            @if(isset($number))
-                            <input class="form-control input-sm" type="text" id="numOfRoomsFrom" name="numOfRoomsFrom" value="{{$number}}">
+                            @if(!empty($Query)&&isset($Query->rooms))
+                            <input class="form-control input-sm" type="text" id="numOfRoomsFrom" name="numOfRoomsFrom" value="{{$Query->number}}">
                             @else
                             <input class="form-control input-sm" type="text" id="numOfRoomsFrom" name="numOfRoomsFrom">
                             @endif
@@ -341,301 +312,265 @@
                 <div class="row">
                     <div class="col-sm-2">
                         <label>Number of Adults</label>
-
-                        @if(isset($numOfAdult))
-                        <input class="form-control input-sm" type="number" id="numOfAdults" name="numOfAdults" value="{{$numOfAdult}}">
+                        @if(!empty($Query)&&isset($Query->numOfAdult))
+                        <input class="form-control input-sm" type="number" id="numOfAdults" name="numOfAdults" value="{{$Query->numOfAdult}}">
                         @else
                         <input class="form-control input-sm" type="number" id="numOfAdults" name="numOfAdults">
                         @endif
                     </div>
                 </div>
+
+
             </div><!-- / House Condition -->
 
            <!-- condtion details -->
             <div class="tab-pane fade" id="aboutAmenity" style="font-size:12px;">
             <h5>Basic Info</h5>
-            <div class="row">
-                <div class="col-sm-2">
-                    ＠if($pregnancy==1)
-                    <input type="checkbox" value="1" name="allowPregnant" checked > Allow Pregnant
-                    @else
-                    <input type="checkbox" value="1" name="allowPregnant"> Allow Pregnant
-                    @endif
+                <div class="row">
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="allowPregnant" 
+                            @if(!empty($Query)&&isset($Query->pregnancy)&&$Query->pregnancy==1){
+                                checked
+                            @endif
+                            >Allow Pregnant
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="allowBaby"
+                            @if(!empty($Query)&&isset($Query->hasBaby)&&$Query->hasBaby==1)
+                                checked
+                            @endif
+                            >Allow Baby
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="allowKid" id="allowKid"
+                            @if(!empty($Query)&&isset($Query->numOfChildren)&&$Query->numOfChildren>0)
+                                checked
+                            @endif
+                            >Allow Kid
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="allowPets" id="allowPets"
+                            @if(!empty($Query)&&isset($Query->pet)&& $Query->pet==1)
+                                checked
+                            @endif
+                            > Allow Pet
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="havePet" id="havePet"> Have Pet
+                    </div>
                 </div>
-                <div class="col-sm-2">
-                    @if($hasBaby==1)
-                    <input type="checkbox" value="1" name="allowBaby" checked> Allow Baby
-                    @else
-                    <input type="checkbox" value="1" name="allowBaby"> Allow Baby
-                    @endif
+                <div class="row">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-2">
+                        <input id="allowKidAge" type="text" name="allowKidAge" class="form-control input-sm" 
+                            @if(!isset($Query)&&($Query->childAge<=3||$Query->numOfChildren<=0))
+                                disabled
+                            @else 
+                                value= {{$Query->numOfChildren}}
+                            @endif
+                            placeholder="Allow Kids Age">
+                    </div>
+                    <div class="col-sm-2">
+                        <input id="allowPetType" type="text" name="allowPetType" class="form-control input-sm" 
+                            @if(!empty($Query)&&$Query->pet!=1)
+                                disabled
+                            @endif
+                            placeholder="Allow Pet Type" 
+                            @if(!empty($Query)&&isset($Query->petType))
+                                value={{$Query->petType}}
+                            @endif
+                            >
+                    </div>
+                    <div class="col-sm-2">
+                        <input id="havePetType" type="text" name="havePetType" class="form-control input-sm" disabled placeholder="Have Pet Type">
+                    </div>
                 </div>
-                <div class="col-sm-2">
-                    @if($numOfChildren>0)
-                    <input type="checkbox" value="1" name="allowKid" id="allowKid" checked> Allow Kid
-                    @else
-                    <input type="checkbox" value="1" name="allowKid" id="allowKid" > Allow Kid
-                    @endif    
+                <hr>
+                <h5>Guests Can Use</h5>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="allowKitchen"> Kitchen
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="allowParking"> Parking Space
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="allowBBQ"> BBQ Grill
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="allowFrontYard"> Front Yard
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="allowBackYard"> Back Yard
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="allowSwimmingPool"> Swimming Pool
+                    </div>
                 </div>
-                <div class="col-sm-2">
-                    @if
-                    <input type="checkbox" value="1" name="allowPets" id="allowPets" checked> Allow Pet
-                    @else
-                    <input type="checkbox" value="1" name="allowPets" id="allowPets"> Allow Pet
-                    @endif
+                <hr>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="allowLaundryWasher"> Laundry - Washer
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="allowLandryDryer"> Laundry - Dryer
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="allowElevator"> Elevator
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="allowHotTub"> Hot Tub
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="allowGym"> Gym
+                    </div>
                 </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="havePet" id="havePet"> Have Pet
+                <hr>
+                <h5>General Amenities</h5>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerToothbrush"> Toothbrush
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerToothpaste"> Toothpaste
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerFacialWash"> Facial Wash
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerBodyWash"> Body Wash
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerSoap"> Soap
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerShampoo"> Shampoo
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-2"></div>
-                <div class="col-sm-2"></div>
-                <div class="col-sm-2">
-                    @if($childAge<=3||$numOfChildren<=0)
-                    <input id="allowKidAge" type="text" name="allowKidAge" class="form-control input-sm" disabled placeholder="Allow Kids Age">
-                    @else
-                    <input id="allowKidAge" type="text" name="allowKidAge" class="form-control input-sm" value="{{$childAge}}" placeholder="Allow Kids Age">                    
-                    @endif
-                </div>
-                <div class="col-sm-2">
-                    @if($pet!=1 && isset($petType))
-                    <input id="allowPetType" type="text" name="allowPetType" class="form-control input-sm" disabled placeholder="Allow Pet Type" value="{{$petType}}">                    
-                    @elseif($pet!=1)
-                    <input id="allowPetType" type="text" name="allowPetType" class="form-control input-sm" disabled placeholder="Allow Pet Type">
-                    @elseif(isset($petType))
-                    <input id="allowPetType" type="text" name="allowPetType" class="form-control input-sm" placeholder="Allow Pet Type" value="{{$petType}}">                                        
-                    @else
-                    <input id="allowPetType" type="text" name="allowPetType" class="form-control input-sm" placeholder="Allow Pet Type">                                        
-                    @endif
-                </div>
-                <div class="col-sm-2">
-                    <input id="havePetType" type="text" name="havePetType" class="form-control input-sm" disabled placeholder="Have Pet Type">
-                </div>
-            </div>
-            <hr>
-            <script>
-                $("#allowKid").change(function(){
-                    if ($("#allowKid").is(":checked")) {
-                        $("#allowKidAge").removeAttr("disabled");
-                    } else {
-                        $("#allowKidAge").attr("disabled", "true");
-                    }
-                });
 
-                $("#allowPets").change(function(){
-                    if ($("#allowPets").is(":checked")) {
-                        $("#allowPetType").removeAttr("disabled");
-                    } else {
-                        $("#allowPetType").attr("disabled", "true");
-                    }
-                });
+                <div class="row">
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerConditioner"> Conditioner
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerTowel"> Towel
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerBathTowel"> Bath Towel
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerHairDryer"> Hair Dryer
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerIron"> Iron
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerHangers"> Hangers
+                    </div>
+                </div>
 
-                $("#havePet").change(function(){
-                    if ($("#havePet").is(":checked")) {
-                        $("#havePetType").removeAttr("disabled");
-                    } else {
-                        $("#havePetType").attr("disabled", "true");
-                    }
-                });
-            </script>
-            <h5>Guests Can Use</h5>
-            <div class="row">
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="allowKitchen"> Kitchen
+                <div class="row">
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerSlippers"> Slippers
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerWorkSpace"> Desk/Workspace
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerWifi"> Wifi
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerTV"> TV
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerChineseTV"> Chinese TV
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerCable"> Cable
+                    </div>
                 </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="allowParking"> Parking Space
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="allowBBQ"> BBQ Grill
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="allowFrontYard"> Front Yard
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="allowBackYard"> Back Yard
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="allowSwimmingPool"> Swimming Pool
-                </div>
-            </div>
 
-            <div class="row">
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="allowLaundryWasher"> Laundry - Washer
+                <div class="row">
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerAC"> Air Conditioning
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerHeater"> Heater
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerHotWaterkettle"> Hot Water Kettle
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerRiceCooker"> Rice Cooker
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerCookware"> Cookware
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerCookingPan"> Cooking Pan
+                    </div>
                 </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="allowLandryDryer"> Laundry - Dryer
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="allowElevator"> Elevator
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="allowHotTub"> Hot Tub
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="allowGym"> Gym
-                </div>
-            </div>
 
-            <hr>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerCookingPot"> Cooking Pot
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerCookingKnife"> Cooking Knife
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="offerUtensils"> Utensils
+                    </div>
+                </div>
 
-            <h5>General Amenities</h5>
+                <h5>Safety Amenities</h5>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="haveSmokeDetector"> Smoke Detector
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="haveFirstAidKit"> First Aid Kit
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="haveFireExt"> Fire Extinguisher
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="haveCCTV"> CCTV
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="haveSecurityAlarm"> Security Alarm
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="haveSafetyGuard"> Safety Guard
+                    </div>
+                </div>
 
-            <div class="row">
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerToothbrush"> Toothbrush
+                <div class="row">
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" name="haveBedroomLock"> Lock on Bedroom Door
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="checkbox" value="1" name="haveCODetector"> Carbon Monoxide Detector
+                    </div>
                 </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerToothpaste"> Toothpaste
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerFacialWash"> Facial Wash
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerBodyWash"> Body Wash
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerSoap"> Soap
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerShampoo"> Shampoo
-                </div>
-            </div>
 
-            <div class="row">
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerConditioner"> Conditioner
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerTowel"> Towel
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerBathTowel"> Bath Towel
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerHairDryer"> Hair Dryer
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerIron"> Iron
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerHangers"> Hangers
-                </div>
-            </div>
 
-            <div class="row">
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerSlippers"> Slippers
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerWorkSpace"> Desk/Workspace
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerWifi"> Wifi
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerTV"> TV
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerChineseTV"> Chinese TV
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerCable"> Cable
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerAC"> Air Conditioning
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerHeater"> Heater
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerHotWaterkettle"> Hot Water Kettle
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerRiceCooker"> Rice Cooker
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerCookware"> Cookware
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerCookingPan"> Cooking Pan
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerCookingPot"> Cooking Pot
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerCookingKnife"> Cooking Knife
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="offerUtensils"> Utensils
-                </div>
-            </div>
-
-            <hr>
-
-            <h5>Safety Amenities</h5>
-            <div class="row">
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="haveSmokeDetector"> Smoke Detector
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="haveFirstAidKit"> First Aid Kit
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="haveFireExt"> Fire Extinguisher
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="haveCCTV"> CCTV
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="haveSecurityAlarm"> Security Alarm
-                </div>
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="haveSafetyGuard"> Safety Guard
+                <hr>
+                <h5>Additional Note</h5>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <textarea name="additionalNote" ROWS=10 COLS=100 class="form-control input-sm"></textarea>
+                    </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-sm-2">
-                    <input type="checkbox" value="1" name="haveBedroomLock"> Lock on Bedroom Door
-                </div>
-                <div class="col-sm-3">
-                    <input type="checkbox" value="1" name="haveCODetector"> Carbon Monoxide Detector
-                </div>
-            </div>
-
-
-            <hr>
-            <h5>Additional Note</h5>
-		    <div class="row">
-                <div class="col-sm-6">
-                    <textarea name="additionalNote" ROWS=10 COLS=100 class="form-control input-sm"></textarea>
-                </div>
-            </div>
-          </div><!-- / House Condition Details -->
-
-
-<!-- house Price -->
             <div class="tab-pane fade" id="aboutPrice">
-                
-                <div class="alert alert-warning">
+                <!-- <div class="alert alert-warning">
                   <em><i class="fa fa-info-circle" aria-hidden="true"></i><strong> Inquiry Budget: </strong>
-                  From $ <input style="background-color:#E6E6E6" class="input-sm" value="{{$budgetLower}}" readonly> to $
-                    <input style="background-color:#E6E6E6" class="input-sm" value="{{$budgetUpper}}" disabled>
-
-                  @if ($budgetUnit == '1')
-                  Per Month</em>
-                </div>
-                  @else
-                 Per Day</em></div>
-                  @endif
+                  From $ <input style="background-color:#E6E6E6" class="input-sm" value= readonly> to $
+                    <input style="background-color:#E6E6E6" class="input-sm" value="'.$budgetUpper.'" disabled>';
+                if ($budgetUnit == '1') {echo ' Per Month</em></div>'; } else { echo ' Per Day</em></div>'; } -->
                 <div class="row">
                 <div class="col-sm-6">
                         <h4>House Price Range</h4>
@@ -644,7 +579,9 @@
                                 <label>Monthly Price Approx</label>
                                 <div class="input-group">
                                     <span class="input-group-addon">$</span>
-                                    <input class="form-control input-sm" type="text" id="houseMonthlyPrice" name="houseMonthlyPrice">
+                                    <?php
+                                        echo '<input class="form-control input-sm" type="text" id="houseMonthlyPrice" name="houseMonthlyPrice">';
+                                    ?>
                                     <span class="input-group-addon">with Up/Down Rate of</span>
                                     <SELECT id='houseMonthlyRate' class='form-control input-sm' name="houseMonthlyRate">
                                             <OPTION value=5 selected>&nbsp;&nbsp;5%</OPTION>
@@ -660,8 +597,12 @@
                             <div class="col-sm-10">
                                 <label>Daily Price Approx</label>
                                 <div class="input-group">
-                                    <span class="input-group-addon">$</span
-                                    <input class="form-control input-sm" type="text" id="houseDailyPrice" name="houseDailyPrice">
+                                    <span class="input-group-addon">$</span>
+                                    <?php
+
+                                        echo '<input class="form-control input-sm" type="text" id="houseDailyPrice" name="houseDailyPrice">';
+
+                                    ?>
                                     <span class="input-group-addon">with Up/Down Rate of</span>
                                     <SELECT id="houseDailyRate" class="form-control input-sm" name="houseDailyRate">
                                             <OPTION value=5 selected>&nbsp;&nbsp;5%</OPTION>
@@ -711,79 +652,17 @@
                         </div>
                     </div>
                 </div>
-                </div>
-            </div><!-- / House Price -->
-
-
-
-
-      <!-- / tab content -->
-
-
-
-        <div style="margin-top:30px; margin-bottom:50px;">
-            <button class="btn btn-success" type="button" id="myBtn"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Apply Filter</button>
-            <button class="btn btn-warning disToLeft" type="reset" id = "refreshPage"><span class="glyphicon glyphicon-refresh"></span> Reset Filter</button>
-            <button id="extall" type="button" class="btn btn-primary disToLeft"><span class="glyphicon glyphicon-download-alt"></span>
-                Export Filtered Result to Excel
-            </button>
+            </div>
         </div>
 
 
-
-        </form>
-        <!-- end of form -->
-</div>
-<div id="map_canvas"></div>
-<!-- display none -->
-<div class="" id="showResult" style="margin-top:60px;overflow:auto;margin-bottom:60px;display:none;">
-    <table class="table table-bordered table-striped text-center" style="font-size:12px;">
-        <thead>
-            <tr>
-								<th style="min-width:100px;">Number ID</th>
-                <th style="min-width:100px;">House ID</th>
-                <th style="min-width:100px;">State</th>
-                <th style="min-width:100px;">City</th>
-								<th style="min-width:150px;">House Address</th>
-                <th style="min-width:150px;">Number of Rooms</th>
-                <th style="min-width:150px;">Number of Baths</th>
-
-                <th style="min-width:100px;">House Type</th>
-								<th style="min-width:100px;">HouseownerID</th>
-                <th style="min-width:180px;">House Price per Month</th>
-                <th style="min-width:170px;">House Price per Day</th>
-                <th style="min-width:170px;">Next Available Date</th>
-
-                <th style="min-width:170px;">Minimum Stay Term</th>
-                <th style="min-width:100px;">Whole/Share</th>
-                <th style="min-width:170px;">Owner First Name</th>
-                <th style="min-width:170px;">Owner Last Name</th>
-                <th style="min-width:170px;">Owner Phone Number</th>
-
-                <th style="min-width:150px;">WeChat Name</th>
-                <th style="min-width:100px;">WeChat ID</th>
-            </tr>
-        </thead>
-        <tbody id="fillArea">
-
-        </tbody>
-    </table>
-</div>
-<div id="showForm" style="margin-top:20px;margin-bottom:20px; margin-left:auto; margin-right:auto;"></div>
-<!-- display none -->
-<div class="alert alert-danger" id="noResult" style="display:none">
-  <strong>No Result Found!</strong> Please adjust your filter.
-</div>
+    </div>
 
 
 
-<!-- modal -->
-<!-- initial hidden -->
-<div class="loaderDiv" style="display:none">
-    <div class="loader"></div>
-    <div class="loaderLabel text-center"><h4>Processing</h4><h4>Please Wait...</h4></div>
-</div>
-<!-- initial hidden -->
+
+
+
 <script>
 //fix 0201 suppose all is formatted
 function convertPhoneFormat(phone) {
@@ -793,36 +672,55 @@ function convertPhoneFormat(phone) {
 
 $(document).ready(function() {
     // locations
+        $("#country").change(function(){
+            if($(this).val().length!=0){
+                var countryfile = $(this).val().replace(' ','');
+                $.get("/resource/"+countryfile,function(data,status){
+                $('#state').empty();
+                for(i=0;i<data.length;++i){
+                    var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+                    $('#state').append(option);
+                }
+                });
+            }
+        });
 
-    var country = $("#country").val();
-    $("#country").load("../list/hotCountryList", function() {
-        $("#country").val(country);
-    });
+        $('#state').change(function(){
+            if($(this).val().length!=0){
+                var cityfile = $("#country").val().replace(' ','')+"_"+$(this).val().replace(' ','');
+                $.get("/resource/"+cityfile,function(data,status){
+                $('#city').empty();
+                for(i=0;i<data.length;++i){
+                    var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+                    $('#city').append(option);
+                }
+                });
+            }
+        });
+        
+        $("#allowKid").change(function(){
+            if ($("#allowKid").is(":checked")) {
+                $("#allowKidAge").removeAttr("disabled");
+            } else {
+                $("#allowKidAge").attr("disabled", "true");
+            }
+        });
 
+        $("#allowPets").change(function(){
+            if ($("#allowPets").is(":checked")) {
+                $("#allowPetType").removeAttr("disabled");
+            } else {
+                $("#allowPetType").attr("disabled", "true");
+            }
+        });
 
-		var state = $("#state").val();
-		countryinstate = country.replace(/\s/g,'');
-		console.log(country);
-		$("#state").load("../list/Country_State_Option/"+ countryinstate + "_StateListOption", function() {
-    $("#state").val(state);
-    });
-
-		var city = $("#city").val();
-		$("#city").load("../list/State_City_Option/"+  state + "CityListOption", function() {
-        $("#city").val(city);
-    });
-
-		$("#country").change(function() {
-				var country = $(this).val().replace(/\s/g, '');
-				$("#state").load("../list/Country_State_Option/" + country + "_StateListOption");
-		});
-
-
-    $("#state").change(function() {
-        var state = $(this).val().replace(/\s+/g, '');
-        $("#city").load('../list/State_City_Option/' + state + 'CityListOption');
-    });
-
+        $("#havePet").change(function(){
+            if ($("#havePet").is(":checked")) {
+                $("#havePetType").removeAttr("disabled");
+            } else {
+                $("#havePetType").attr("disabled", "true");
+            }
+        });
 
 
        $('#checkin').datepicker({
@@ -858,6 +756,8 @@ $(document).ready(function() {
           }
         });
 
+
+        loadOpt();
 });
 
 $("#refreshPage").click(function(){
@@ -1109,164 +1009,6 @@ function initialize(){
 			});
 		}
 	});
-}
-
-
-function getState(fullName) {
-	switch (fullName) {
-	case "AL":
-		return "Alabama";
-		break;
-	case "AK":
-		return "Alaska";
-		break;
-	case "AZ":
-		return "Arizona";
-		break;
-	case "AR":
-		return "Arkansas";
-		break;
-	case "CA":
-		return "California";
-		break;
-	case "CO":
-		return "Colorado";
-		break;
-	case "CT":
-		return "Connecticut";
-		break;
-	case "DE":
-		return "Delaware";
-		break;
-	case "FL":
-		return "Florida";
-		break;
-	case "GA":
-		return "Georgia";
-		break;
-	case "HI":
-		return "Hawaii";
-		break;
-	case "ID":
-		return "Idaho";
-		break;
-	case "IL":
-		return "Illinois";
-		break;
-	case "IN":
-		return "Indiana";
-		break;
-	case "IA":
-		return "Iowa";
-		break;
-	case "KS":
-		return "Kansas";
-		break;
-	case "KY":
-		return "Kentucky";
-		break;
-	case "LA":
-		return "Louisiana";
-		break;
-	case "ME":
-		return "Maine";
-		break;
-	case "MD":
-		return "Maryland";
-		break;
-	case "MA":
-		return "Massachusetts";
-		break;
-	case "MI":
-		return "Michigan";
-		break;
-	case "MN":
-		return "Minnesota";
-		break;
-	case "MS":
-		return "Mississippi";
-		break;
-	case "MO":
-		return "Missouri";
-		break;
-	case "MT":
-		return "Montana";
-		break;
-	case "NE":
-		return "Nebraska";
-		break;
-	case "NV":
-		return "Nevada";
-		break;
-	case "NH":
-		return "New Hampshire";
-		break;
-	case "NJ":
-		return "New Jersey";
-		break;
-	case "NM":
-		return "New Mexico";
-		break;
-	case "NY":
-		return "New York";
-		break;
-	case "NC":
-		return "North Carolina";
-		break;
-	case "ND":
-		return "North Dakota";
-		break;
-	case "OH":
-		return "Ohio";
-		break;
-	case "OK":
-		return "Oklahoma";
-		break;
-	case "OR":
-		return "Oregon";
-		break;
-	case "PA":
-		return "Pennsylvania";
-		break;
-	case "RI":
-		return "Rhode Island";
-		break;
-	case "SC":
-		return "South Carolina";
-		break;
-	case "SD":
-		return "South Dakota";
-		break;
-	case "TN":
-		return "Tennessee";
-		break;
-	case "TX":
-		return "Texas";
-		break;
-	case "UT":
-		return "Utah";
-		break;
-	case "VT":
-		return "Vermont";
-		break;
-	case "VA":
-		return "Virginia";
-		break;
-	case "WA":
-		return "Washington";
-		break;
-	case "WV":
-		return "West Virginia";
-		break;
-	case "WI":
-		return "Wisconsin";
-		break;
-	case "WY":
-		return "Wyoming";
-		break;
-	default:
-		return fullName;
-	}
 }
 
 function selecthouse(numberID) {

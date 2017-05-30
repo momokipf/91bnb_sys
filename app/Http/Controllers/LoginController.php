@@ -101,7 +101,7 @@ class LoginController extends Controller
                 'active' => 1
             ])){
             //Log::info(Auth::user());
-            return redirect('MainPage/');
+            return redirect('/MainPage');
 
             //return redirect('/welcome');
         }

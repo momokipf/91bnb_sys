@@ -29,7 +29,6 @@ Route::get('inquiry/search','InquirysController@searchIndex');
 Route::get('inquiry/search/result','InquirysController@search');
 
 Route::get('inquiry/{post}','InquirysController@show');
-Route::get('test','InquirysController@result');
 
 
 //Route::get('addinquiry',    function(){return view('inquiry');});
@@ -40,19 +39,18 @@ Route::post('MainPage/addfollow','FollowUpController@store');
 
 
 Route::post('inquirer/search/{similar?}','InquirersController@search');
-
-
 Route::get('inquirer/showAll', 'InquirersController@show');
-
-
 Route::post('inquirer/searchForModify/{similar?}','InquirersController@searchForModify');
-
 Route::patch('inquirer/modifyInquirer', 'InquirersController@modifyInquirer');
-
 Route::get('inquirer/searchAndModify', 'InquirersController@searchAndModify');
 Route::post('inquirer/searchAndModify', 'InquirersController@searchAndModify');
-
 Route::post('inquirer/add', 'InquirersController@store');
+
+
+Route::get('house','HousesController@index');
+
+
+
 
 //Route::resource('/postmech','PostController');
 Route::get('/post','PostController@index');

@@ -143,7 +143,7 @@
 
 
 	<div class='content container' style='margin-top:70px;'>
-	        <h4><B><I>Hello {{$Rep->repName}}</I></B></h4> 
+	        <h4><B><I>Hello {{$Rep->repName}} </I></B></h4> 
 	        <span>Follow Up Closely of All Listed HOT Inquiries</span>
 
 
@@ -174,7 +174,7 @@
               	 <td>Whole/Share</td>
               	 <td style="min-width:120px;">House Type</td>
               	 <td style="min-width:130px;">House Type Other</td>
-              	 <<!-- td style="min-width:130px;">Room 1 Type</td>
+              	 <!-- td style="min-width:130px;">Room 1 Type</td>
               	 <td style="min-width:150px;">Room 1 Type Other</td>
               	 <td style="min-width:130px;">Room 2 Type</td>
               	 <td style="min-width:150px;">Room 2 Type Other</td>
@@ -569,7 +569,7 @@
                 <div class="col-sm-2 bg1">
                       <div class="caption">
                         <div class="my-title"><h5>House</h5></div>
-                        <a href="house/showHouse2.php"><h6>House Search</h6></a>
+                        <a href="house"><h6>House Search</h6></a>
                         <a href="house/newHouse2.php"><h6>Add New House</h6></a>
                         <a href="house/modifyHouse2.php"><h6>Modify/Update Houses</h6></a>
                         <a id="extAllHouse" href=""><h6>Extract All Houses</h6></a>
