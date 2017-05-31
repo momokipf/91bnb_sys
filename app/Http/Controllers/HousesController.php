@@ -46,5 +46,11 @@ class HousesController extends Controller
     			->with('Rep',Auth::user());
     }
 
+    public function report(Request $request)
+    {
+        return view('/report/houseReport')
+                ->with('rep',Auth::user());
+    }
+
 
 }

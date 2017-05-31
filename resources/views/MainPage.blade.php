@@ -515,7 +515,7 @@
                         <a href="/representatives"><h6>Representatives</h6></a>
                         <a><h6>User Log</h6></a>
                         <a><h6>Accounting</h6></a>
-                        <a href="#"><h6>House Reporting</h6></a>
+                        <a href="report/houseReport"><h6>House Reporting</h6></a>
                         <a href="#"><h6>Inquiry Reporting</h6></a>
                     </div>
                 </div>
@@ -526,7 +526,7 @@
                         <div class="caption">
                             <div class="my-title"><h5>ACCT</h5></div>
                             <a><h6>Accounting</h6></a>
-                            <a href="report/HouseReportIndex.php"><h6>House Reporting</h6></a>
+                            <a href="report/houseReport"><h6>House Reporting</h6></a>
                             <a href="report/reportIndex.php"><h6>Inquiry Reporting</h6></a>
                         </div>
 
