@@ -57,6 +57,10 @@ Route::post('houseowner/search',function(){
 	return response($ret)
 			->header('Content-Type','json');
 });
+Route::get('representatives', 'RepresentativesController@showAll');
+Route::post('representatives/update', 'RepresentativesController@update');
+Route::post('representatives/add', 'RepresentativesController@store');
+
 
 
 //Route::resource('/postmech','PostController');
