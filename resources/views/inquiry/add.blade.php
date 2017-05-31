@@ -123,7 +123,7 @@
 							<li><a href="#">Profile</a></li>
 							<li><a href="#">Change Password</a></li>
 							<li role="separator" class="divider"></li>
-							<li><a href="../logout.php">Log Out</a></li>
+							<li><a href="/logout">Log Out</a></li>
 						  </ul>
 						</li>
 				  </ul>
@@ -855,7 +855,7 @@
 			$("#country").change(function(){
 				if($(this).val().length!=0){
 					var countryfile = $(this).val().replace(' ','');
-					$.get("resource/"+countryfile,function(data,status){
+					$.get("/resource/"+countryfile,function(data,status){
 					$('#state').empty();
 					for(i=0;i<data.length;++i){
 						var option = $("<option></option>").attr("value", data[i]).text(data[i]);
@@ -868,7 +868,7 @@
 			$('#state').change(function(){
 				if($(this).val().length!=0){
 					var cityfile = $("#country").val().replace(' ','')+"_"+$(this).val().replace(' ','');
-					$.get("resource/"+cityfile,function(data,status){
+					$.get("/resource/"+cityfile,function(data,status){
 					$('#city').empty();
 					for(i=0;i<data.length;++i){
 						var option = $("<option></option>").attr("value", data[i]).text(data[i]);

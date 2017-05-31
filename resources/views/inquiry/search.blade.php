@@ -70,7 +70,7 @@
 				<li><a href="#">Profile</a></li>
 				<li><a href="#">Change Password</a></li>
 				<li role="separator" class="divider"></li>
-				<li><a href="../logout.php">Log Out</a></li>
+				<li><a href="/logout.php">Log Out</a></li>
 			</ul>
 				</li>
 			</ul>

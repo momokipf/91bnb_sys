@@ -24,7 +24,7 @@
                 <link rel="stylesheet" href="{{asset('css/self.css')}}">
                 <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
                 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
-            <script src="{{asset('js/util.js')}}"></script>
+                <script src="{{asset('js/util.js')}}"></script>
               <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
               <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
 			  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCpF-_i-utIH6cZl94zpu4C5vx_FBDDI9s&libraries=places&language=en"></script>
@@ -655,14 +655,16 @@
             </div>
         </div>
 
+        <div style="margin-top:30px; margin-bottom:50px;">
+            <button class="btn btn-success" type="button" id="myBtn"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Apply Filter</button>
+            <button class="btn btn-warning disToLeft" type="reset" id = "refreshPage"><span class="glyphicon glyphicon-refresh"></span> Reset Filter</button>
+            <button id="extall" type="button" class="btn btn-primary disToLeft"><span class="glyphicon glyphicon-download-alt"></span>
+                Export Filtered Result to Excel
+            </button>
+        </div>
+
 
     </div>
-
-
-
-
-
-
 <script>
 //fix 0201 suppose all is formatted
 function convertPhoneFormat(phone) {

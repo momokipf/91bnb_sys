@@ -20,6 +20,7 @@ class ResourceController extends Controller
 						   "United States"=>"Country_State/UnitedStates_StateList",
 						   "United Kingdom"=>"Country_State/UnitedKingdom_StateList",
 						   "countryCode"=>"phoneCountryCode",
+						   "hotcountry" =>"hotCountryList",
 						   "UnitedStates"=>["origin"=>"Country_State/UnitedStates_StateList",
 											"Alabama"=>"State_City/AlabamaCityList",
 											"Alaska"=>"State_City/AlaskaCityList",
@@ -94,7 +95,10 @@ class ResourceController extends Controller
 	}
 
 	public function getCity($country, $state){
-		$content = File::get(storage_path('list/State_City_Option/'. $state. 'CityListOption'));			
-		return $content;
+		$content = File::get(storage_path('list/State_City_Option/'. $state. 'CityListOption'));
+		$content = preg_split("/\r\n|\n|\r/", $content);
+		return response($content)
+				->header('Cache-Control', 'max-stale[3600]')
+				->header('Content-Type', 'json');
 	}
 }

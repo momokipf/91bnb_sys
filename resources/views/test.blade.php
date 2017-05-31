@@ -101,53 +101,9 @@
 
 		</style>
 	</head>
-
-	<body>
-
-	<!-- Fixed navbar -->
-	<nav class="navbar navbar-inverse navbar-fixed-top" >
-	  <div class="container">
-	        <div class="navbar-header">
-	              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-	                <span class="sr-only">Toggle navigation</span>
-	                <span class="icon-bar"></span>
-	                <span class="icon-bar"></span>
-	                <span class="icon-bar"></span>
-	              </button>
-	            <a class="navbar-brand" style="padding-top:5px;"><img src="{{asset('img/icon.png')}}" class="img-rounded img-responsive" width="45px" height="45px" alt=""></a>
-	              <a class="navbar-brand">91bnb Manage System</a>
-	        </div>
-
-	    <div id="navbar" class="navbar-collapse collapse">
-	          <!-- navbar left -->
-	          <ul class="nav navbar-nav">
-	            <li class="active"><a>Home</a></li>
-	          </ul>
-	          <!-- navbar right -->
-	          <ul class="nav navbar-nav navbar-right">
-	              <li class="dropdown">
-	                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-	                      <span class="glyphicon glyphicon-user"></span><span id='username'>{{$Rep->repUserName}}</span><span class="caret"></span></a>
-	                  <ul class="dropdown-menu">
-	                    <li><a href="#">Profile</a></li>
-	                    <li><a href="#">Change Password</a></li>
-	                    <li role="separator" class="divider"></li>
-	                    <li><a href="/logout">Log Out</a></li>
-	                  </ul>
-	                </li>
-	          </ul>
-
-	    </div><!--/.nav-collapse -->
-	  </div><!--/ container -->
-	</nav>
-
-
-	<div class='content container' style='margin-top:70px;'>
-	        <h4><B><I>Hello {{$Rep->repName}} </I></B></h4> 
-	        <span>Follow Up Closely of All Listed HOT Inquiries</span>
-
-
-            <div class="table-responsive">
+	<body>	
+		<h1>Test </h1>
+		<div class="table-responsive">
               <div id="modal"></div>
             	<table border='1' style="text-align:center" class="table table-bordered">
             	 <tr style="text-align:center">
@@ -174,7 +130,7 @@
               	 <td>Whole/Share</td>
               	 <td style="min-width:120px;">House Type</td>
               	 <td style="min-width:130px;">House Type Other</td>
-              	 <!-- td style="min-width:130px;">Room 1 Type</td>
+              	 <<!-- td style="min-width:130px;">Room 1 Type</td>
               	 <td style="min-width:150px;">Room 1 Type Other</td>
               	 <td style="min-width:130px;">Room 2 Type</td>
               	 <td style="min-width:150px;">Room 2 Type Other</td>
@@ -465,23 +421,8 @@
             	 </table>
     		  </div>
 
-   
 
-
-    		  <div class='test'>
-    		  		
-
-            	 	<!-- @foreach($Hotquerys as $query)
-            	 		<p>{{$Hotquerys->url('1')}}</p>
-            	 	@endforeach -->
-            	 	<!-- <p>{{$Hotquerys[2]}}</p> -->
-           
-            		
-    		  </div>
-
-
-
-    		<div class='well' id='followup' hidden>
+		<div class='well' id='followup' hidden>
                 <div class='input-group'>
                   <form id='addFollowupForm' action='MainPage/addfollow' method='POST' hidden>
                   	{{ csrf_field() }}
@@ -495,99 +436,11 @@
                 </div>
             </div>
 
-            <div class='page' id='pagination' style='text-align:right'>
-				    {{$Hotquerys->links()}}
-			</div>
+        <div class='page' id='pagination' style='text-align:right'>
+			    {{$Hotquerys->links()}}
+		</div>
 
-
-            <hr>
-
-
-
-
-            <div class="row bg-3 text-center" style="margin:0; background-color:#FAFAFA; line-height:1.2;">
-            	<div class="col-sm-1 bg1"></div>
-            	@if($Rep->repPriority ==1)
-	            	<!-- Admin -->
-	            	<div class="col-sm-2 bg2">
-            		<div class="caption">
-                        <div class="my-title"><h5>Admin</h5></div>
-                        <a href="#"><h6>Representatives</h6></a>
-                        <a><h6>User Log</h6></a>
-                        <a><h6>Accounting</h6></a>
-                        <a href="#"><h6>House Reporting</h6></a>
-                        <a href="#"><h6>Inquiry Reporting</h6></a>
-                    </div>
-                </div>
-                @elseif($Rep->repPriority ==2)
-                	<!-- Admin -->
-                    <div class="col-sm-2 bg2">
-
-                        <div class="caption">
-                            <div class="my-title"><h5>ACCT</h5></div>
-                            <a><h6>Accounting</h6></a>
-                            <a href="report/HouseReportIndex.php"><h6>House Reporting</h6></a>
-                            <a href="report/reportIndex.php"><h6>Inquiry Reporting</h6></a>
-                        </div>
-
-
-                    </div>
-
-	            @endif
-
-	            <!-- Inquiry -->
-                <div class="col-sm-2 bg1">
-
-                    <div class="caption">
-                        <div class="my-title"><h5>Inquiry</h5></div>
-                        <a href='inquiry/add'><h6>Add New Inquiry</h6></a>
-                        @if($Rep->repPriority<=3)
-                        	<a href="/inquiry/search"><h6>Search/Modify/Follow Up</h6></a>
-                        	@if(!$Rep->repPriority==3)
-                        		<a href="" id="extAllInquiry" download><h6>Extract All Inquiries</h6></a>
-                        	@endif
-                        @endif
-                    <a href="inquiry/passdue.php"><h6>Pass Due Log</h6></a>
-                	</div>
-                </div>
-
-                <!-- Inquirer -->
-                <div class="col-sm-2 bg1">
-                    <div class="caption">
-                        <div class="my-title"><h5>Inquirer</h5></div>
-                        <!--<a href="inquiry/newInquirer.php"><h6>Add New Inquirer</h6></a>-->
-                    @if($Rep->repPriority<=3)
-                    	<a href="inquirer/searchAndModify"><h6>Search/Modify Inquirer</h6></a>
-                    @endif
-                    	<a href="inquirer/showAll"><h6>Show All Inquirers</h6></a>
-                    </div>
-                </div>
-
-
-
-                <!-- House -->
-                <div class="col-sm-2 bg1">
-                      <div class="caption">
-                        <div class="my-title"><h5>House</h5></div>
-                        <a href="house"><h6>House Search</h6></a>
-                        <a href="house/add"><h6>Add New House</h6></a>
-                        <a href="house/modifyHouse2.php"><h6>Modify/Update Houses</h6></a>
-                        <a id="extAllHouse" href=""><h6>Extract All Houses</h6></a>
-                      </div>
-                </div>
-
-
-                	<div class="col-sm-1 bg1"></div>
-                	</div>
-	            </div>
-
-
-
-
-            </div>
-        </div>
-    </div>
-
+	</body>
 </html>
 
 <script src="{{asset('js/jquery-1.11.3.js')}}"></script>
@@ -598,8 +451,7 @@
 
   <script src="{{asset('js/jquery.maskedinput.min.js')}}"></script>
   <!-- jquery ui -->
-  <script src="{{asset('js/jquery-ui.js')}}"></script>
-  <script src="{{asset('js/util.js')}}"></script>
+  <script src="{{asset('/js/jquery-ui.js')}}"></script>
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
 <script type="text/javascript">
 		function bootbox_test(){
@@ -637,9 +489,6 @@
 			 $('.fordate').datepicker({
 	          dateFormat: "mm/dd/yy"
 	        });
-       loadOpt();
 		});
 
 </script>
-
-

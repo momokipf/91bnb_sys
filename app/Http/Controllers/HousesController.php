@@ -18,11 +18,33 @@ class HousesController extends Controller
         $this->middleware('auth');
     }
 
-    public function index(Request $request)
+    public function searchindex(Request $request)
     {
     	$fakequery = Inquiry::find(114);
-    	return view('HouseSearch')
+    	return view('House/HouseSearch')
     			->with('Query',$fakequery)
     			->with('Rep',Auth::user());
     }
+
+    //Different Reaction based on request 
+    // if ($request->ajax() || $request->wantsJson())
+    // {
+    //     $json = [
+    //         'success' => false,
+    //         'error' => [
+    //             'code' => $e->getCode(),
+    //             'message' => $e->getMessage(),
+    //         ],
+    //     ];
+
+    //     return response()->json($json, 400);
+    // }
+
+    public function addindex(Request $request)
+    {
+    	return view('House/HouseAdd')
+    			->with('Rep',Auth::user());
+    }
+
+
 }

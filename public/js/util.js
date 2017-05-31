@@ -44,6 +44,16 @@ function loadOpt()
 				}
 
 		});
+
+		$.get("/resource/countryCode",function(data,status){
+				$('.Phone').empty();
+				alert(Json.stringify(data));
+				for(i=0;i<data.length;++i){
+					var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+					$('.Phone').append(option);
+				}
+
+		});
 }
 
 

@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+use Illuminate\Support\Facades\Log;
 
 Route::get('/welcome', function () {
     return view('welcome');
@@ -47,9 +47,16 @@ Route::post('inquirer/searchAndModify', 'InquirersController@searchAndModify');
 Route::post('inquirer/add', 'InquirersController@store');
 
 
-Route::get('house','HousesController@index');
+Route::get('house','HousesController@searchindex');
+Route::get('house/add','HousesController@addindex');
 
-
+Route::post('houseowner/search',function(){
+	$ret = collect([['houseOwnerID'=>'5','first'=>'Jay','last'=>'Chou','ownerWechatUserName'=>'jaywechat']]);
+	Log::info(response($ret)
+			->header('Content-Type','json'));
+	return response($ret)
+			->header('Content-Type','json');
+});
 
 
 //Route::resource('/postmech','PostController');
