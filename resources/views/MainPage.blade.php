@@ -512,7 +512,7 @@
 	            	<div class="col-sm-2 bg2">
             		<div class="caption">
                         <div class="my-title"><h5>Admin</h5></div>
-                        <a href="#"><h6>Representatives</h6></a>
+                        <a href="/representatives"><h6>Representatives</h6></a>
                         <a><h6>User Log</h6></a>
                         <a><h6>Accounting</h6></a>
                         <a href="#"><h6>House Reporting</h6></a>

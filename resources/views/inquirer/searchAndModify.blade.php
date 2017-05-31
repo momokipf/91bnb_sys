@@ -187,6 +187,7 @@
 				$("#inquirer_search_form").submit(function(){
 					$('.alert').alert('close')
 					var toSend = $(this).serialize();
+					console.log(toSend);
 					$("#modifyForm").hide();
 					$.ajax({
 						type: "POST",
@@ -245,10 +246,6 @@
 						}
 					});
 					return false;
-				});
-
-				$("#inquirer_search_form").submit(function(){
-
 				});
 
 			});

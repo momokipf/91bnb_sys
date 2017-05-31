@@ -50,6 +50,11 @@ Route::post('inquirer/add', 'InquirersController@store');
 Route::get('house','HousesController@index');
 
 
+Route::get('representatives', 'RepresentativesController@showAll');
+Route::post('representatives/update', 'RepresentativesController@update');
+Route::post('representatives/add', 'RepresentativesController@store');
+
+
 
 
 //Route::resource('/postmech','PostController');
