@@ -26,7 +26,7 @@ class Representative extends Model implements
     *
     * @var string
     */
-    protected $table = 'representatives';
+    protected $table = 'representative';
 
 	/**
      * The attributes that are mass assignable.
@@ -34,9 +34,9 @@ class Representative extends Model implements
      * @var array
      */
     protected $fillable = [
-        'active', 'repUserName'
+        'active', 'repUserName','repFirstName','repLastName'
     ];
-    protected $hidden = ['repPassword'];
+    protected $hidden = ['password'];
 
     public function queries(){
         return $this->hasMany('App\Inquiry','repID');
