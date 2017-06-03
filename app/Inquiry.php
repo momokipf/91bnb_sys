@@ -57,7 +57,7 @@ class Inquiry extends Model
     	return $this->hasMany('App\InquiryFollow','inquiryID');
     }
 
-    public function reprensent(){
+    public function represent(){
     	return $this->belongsTo('App\Representative','repID');
     }
 
@@ -88,19 +88,24 @@ class Inquiry extends Model
     public function scopeSearchbyField($query,$attributes)
     {
         Log::info($attributes);
-        if($attributes['inquiryDate']){
-            $query =$query->where('InquiryDate','=',$attributes['inquiryDate']);
+        if($attributes['inquiryDate']&&$attributes['inquiryDate']!="NULL"){
+            $date = str_replace('/','-',$attributes['inquiryDate']);
+            //Log::info($date);
+            $query =$query->where('InquiryDate','=',$date);
         }
-        if($attributes['inquiryDateFrom']){
-            $query = $query->whereRaw("inquiryDate>='".$attributes['inquiryDateFrom']."'");
+        if($attributes['inquiryDateFrom']&&$attributes['inquiryDateFrom']!="NULL"){
+            $date = str_replace('/','-',$attributes['inquiryDateFrom']);
+            //Log::info($date);
+            $query = $query->whereRaw("inquiryDate>='".$date."'");
         }
-        if($attributes['inquiryDateTo']){
-            $query = $query->whereRaw("InquiryDate<='".$attributes['inquiryDateTo']."'");
+        if($attributes['inquiryDateTo']&&$attributes['inquiryDateTo']!="NULL"){
+            $date = str_replace('/','-',$attributes['inquiryDateTo']);
+            $query = $query->whereRaw("InquiryDate<='".$date."'");
         }
         if($attributes['inquiryPriorityLevel']){
             $query = $query->where('inquiryPriorityLevel','=',$attributes['inquiryPriorityLevel']);
         }
-        if($attributes['inquirycity']){
+        if($attributes['inquirycity']&&$attributes['inquirycity']){
             $query = $query->where('city','=',$attributes['inquirycity']);
         }
 

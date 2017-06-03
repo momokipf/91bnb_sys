@@ -107,7 +107,7 @@ class InquirersController extends Controller
 			$ret = Inquirer::FindSimilar($search,'AND')->get();
 		else 
 			$ret = Inquirer::FindSimilar($search,'OR')->get();
-		//Log::info(response($ret)->header('Content-Type', 'json'));
+		// Log::info(response($ret)->header('Content-Type', 'json'));
 		return  response($ret)->header('Content-Type', 'json');
 	}
 

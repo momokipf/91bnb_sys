@@ -91,7 +91,7 @@ return [
     |
     */
 
-    'repPassword' => [
+    'password' => [
         'representatives' => [
             'provider' => 'representatives',
             'table' => 'representatives',

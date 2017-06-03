@@ -58,6 +58,11 @@ class Representative extends Model implements
         return $query->distinct()->select($attributes);
     }
 
+    public function scopeRepName($query)
+    {
+        return $query->select(DB::raw('CONCAT(repFirstName,\' \',repLastName) as name'));
+    }
+
     public function inquirer() {
         return DB::table('inquirer')
                 ->whereIn('inquirerID', function ($query) {
@@ -67,7 +72,5 @@ class Representative extends Model implements
                 });
         //return DB::select('select * from inquirer where inquirerID in (select inquirerID from inquiry where repID = ?)', [$this->repID]);
     }
-
-
 
 }

@@ -127,7 +127,7 @@
 	          <ul class="nav navbar-nav navbar-right">
 	              <li class="dropdown">
 	                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-	                      <span class="glyphicon glyphicon-user"></span><span id='username'>{{$Rep->repUserName}}</span><span class="caret"></span></a>
+	                      <span class="glyphicon glyphicon-user"></span><span id='username'>{{$Rep->repFirstName}}</span><span class="caret"></span></a>
 	                  <ul class="dropdown-menu">
 	                    <li><a href="#">Profile</a></li>
 	                    <li><a href="#">Change Password</a></li>
@@ -143,7 +143,7 @@
 
 
 	<div class='content container' style='margin-top:70px;'>
-	        <h4><B><I>Hello {{$Rep->repName}} </I></B></h4> 
+	        <h4><B><I>Hello {{$Rep->repFirstName}} </I></B></h4> 
 	        <span>Follow Up Closely of All Listed HOT Inquiries</span>
 
 
@@ -232,13 +232,14 @@
 	            	 					<select class='repName' id='repName_{{$loop->index}}'> 
 	            	 				@endif
 	            	 					<!--  Get All repName -->
-	            	 					<!-- <option value="{{$query->reprensent->repName}}"> {{$query->reprensent->repName}}</option> -->
+	            	 					<!-- <option value="{{$query->represent->repName}}"> {{$query->represent->repName}}</option> -->
 	            	 					@php
-            	 							data_to_option($Allreps,$query->reprensent->repName);
+                               $rep = $query->represent;
+            	 							   data_to_option($Allreps,$rep->repFirstName.' '.$rep->repLastName);
             	 						@endphp
                           </select>
             	 				</td>
-            	 				<td><div id='repID_{{$loop->index}}'> {{$query->reprensent->employeeID}}</div></td>
+            	 				<td><div id='repID_{{$loop->index}}'> {{$query->represent->repID}}</div></td>
             	 				<td><div id='inquiryID_{{$loop->index}}'>IQ#{{$query->inquiryID}}</div></td>
             	 				<td>
             	 					<select class='inquiryPriorityLevel' id='inquiryPriorityLevel_{{$loop->index}}'>
@@ -306,7 +307,6 @@
             	 					> 
             	 				</td>
             	 				<td><select class='country' id='country_{{$loop->index}}'>
-            	 						@php data_to_option($countries,$query->country); @endphp
             	 					</select>
             	 				</td>
             	 				<td><select class='state' id='state_{{$loop->index}}'>
@@ -472,10 +472,14 @@
     		  		
 
             	 	<!-- @foreach($Hotquerys as $query)
-            	 		<p>{{$Hotquerys->url('1')}}</p>
-            	 	@endforeach -->
-            	 	<!-- <p>{{$Hotquerys[2]}}</p> -->
-           
+            	 		<p>
+                  
+                    
+                    $rep = $query->represent;
+                    {{$rep->repFirstName.' '.$rep->repLastName}}
+                  </p>
+            	 	@endforeach
+            -->
             		
     		  </div>
 
