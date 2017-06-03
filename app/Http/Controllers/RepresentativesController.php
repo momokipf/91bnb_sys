@@ -30,14 +30,21 @@ class RepresentativesController extends Controller
 
 	public function update(Request $request) {
 		Log::info($request->all());
+		$updateinfo = $request->all();
+		if (array_key_exists('password', $updateinfo)) {
+			$updateinfo['password'] = bcrypt($updateinfo['password']);
+		}
 		Representative::where('repID', array_get($request->all(), 'repID'))
-					->update($request->all());
+					->update($updateinfo);
 	}
 
 	public function store(Request $request) {
 		Log::info($request->all());
 		$storeInfo = array_slice($request->all(), 1);
 		$storeInfo["active"] = 1;
+		if (array_key_exists('password', $storeInfo)) {
+			$storeInfo['password'] = bcrypt($storeInfo['password']);
+		}
 		$id = Representative::insertGetId($storeInfo);
 		return $id;
 	}

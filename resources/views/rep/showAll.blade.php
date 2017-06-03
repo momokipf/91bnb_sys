@@ -97,18 +97,17 @@
 							<th>Active</th>
 							<th>Rep UserName</th>
 							<th>Rep Password</th>
-							<th>Rep Name</th>
+							<!-- <th>Rep Name</th> -->
 							<th style="min-width:100px;">Rep Priority</th>
 							<th>Rep Position</th>
-							<th>Employee ID</th>
-							<th>Employee FirstName</th>
-							<th>Employee LastName</th>
+							<!-- <th>Employee ID</th> -->
+							<th>Rep FirstName</th>
+							<th>Rep LastName</th>
 						</tr>
 
 						<tbody id="mytable">
 							@foreach ($reps as $thisrep)
 								<tr style='text-align:center;'>
-
 									@if ($thisrep->active == 1)
 										<td><i class="glyphicon glyphicon-time" style="color:green"></i></td>
 									@else
@@ -126,8 +125,8 @@
 										<td><select id='active{{$thisrep->repID}}'><option value=1>Yes</option><option value=0 selected>No</option></td>
 									@endif
 									<td><input type='text' id='repUserName{{$thisrep->repID}}' value={{ $thisrep->repUserName }}></td>
-									<td><input type='text' id='repPassword{{$thisrep->repID}}' value={{ $thisrep->repPassword }}></td>
-									<td><input type='text' id='repName{{$thisrep->repID}}' value={{ $thisrep->repName }}></td>
+									<td><input type='text' id='repPassword{{$thisrep->repID}}' value="******"></td>
+									<!-- <td><input type='text' id='repName{{$thisrep->repID}}' value={{ $thisrep->repName }}></td> -->
 									<td style="min-width:100px;">
 										<select id='repPriority{{$thisrep->repID}}'>
 											@for ($i = 1; $i <= 5; $i++)
@@ -150,9 +149,9 @@
 											@endforeach
 										</select>
 									</td>
-									<td><input type='text' id='employeeID{{$thisrep->repID}}' value={{ $thisrep->employeeID }}></td>
-									<td><input type='text' id='employeeFirstName{{$thisrep->repID}}' value={{ $thisrep->employeeFirstName }}></td>
-									<td><input type='text' id='employeeLastName{{$thisrep->repID}}' value={{ $thisrep->employeeLastName }}></td>
+									<!-- <td><input type='text' id='employeeID{{$thisrep->repID}}' value={{ $thisrep->employeeID }}></td> -->
+									<td><input type='text' id='repFirstName{{$thisrep->repID}}' value={{ $thisrep->repFirstName }}></td>
+									<td><input type='text' id='repLastName{{$thisrep->repID}}' value={{ $thisrep->repLastName }}></td>
 								</tr>
 							@endforeach
 						</tbody>
@@ -189,12 +188,12 @@
 									</div>
 									<div class='row'>
 										<div class='col-sm-5'>Representative Password: </div>
-										<div class='col-sm-7'><input type='search' name="repPassword" id='Password' autocomplete='off' ></div>
+										<div class='col-sm-7'><input type='search' name="password" id='Password' autocomplete='off' ></div>
 									</div>
-									<div class='row'>
+									<!-- <div class='row'>
 										<div class='col-sm-5'>Representative Name: </div>
 										<div class='col-sm-7'><input type='search' name="repName" id='repName' autocomplete='off' ></div>
-									</div>
+									</div> -->
 									<div class='row'>
 										<div class='col-sm-5'>Representative Priority: </div>
 										<div class='col-sm-7'>
@@ -214,17 +213,17 @@
 									<div class='row'>
 										<hr>
 									</div>
-									<div class='row'>
+									<!-- <div class='row'>
 										<div class='col-sm-5'>Employee ID: </div>
 										<div class='col-sm-7'><input type='search' name="employeeID" id='employeeID' ></div>
+									</div> -->
+									<div class='row'>
+										<div class='col-sm-5'>Rep First Name: </div>
+										<div class='col-sm-7'><input type='search' name="repFirstName" id='repFirstName' autocomplete='off' ></div>
 									</div>
 									<div class='row'>
-										<div class='col-sm-5'>Employee First Name: </div>
-										<div class='col-sm-7'><input type='search' name="employeeFirstName" id='employeeFirstName' autocomplete='off' ></div>
-									</div>
-									<div class='row'>
-										<div class='col-sm-5'>Employee Last Name: </div>
-										<div class='col-sm-7'><input type='search' name="employeeLastName" id='employeeLastName' autocomplete='off' ></div>
+										<div class='col-sm-5'>Rep Last Name: </div>
+										<div class='col-sm-7'><input type='search' name="repLastName" id='repLastName' autocomplete='off' ></div>
 									</div>
 								</div>
 								<div class="modal-footer">
@@ -251,15 +250,20 @@
 						callback: function() {
 							var active = document.getElementById('active'+repID).value;
 							var repUserName = document.getElementById('repUserName'+repID).value;
-							var repPassword = document.getElementById('repPassword'+repID).value;
-							var repName = document.getElementById('repName'+repID).value;
+							var password = document.getElementById('repPassword'+repID).value;
+							// var repName = document.getElementById('repName'+repID).value;
 							var repPriority = document.getElementById('repPriority'+repID).value;
 							var repPosition = document.getElementById('repPosition'+repID).value;
-							var employeeID = document.getElementById('employeeID'+repID).value;
-							var employeeFirstName = document.getElementById('employeeFirstName'+repID).value;
-							var employeeLastName = document.getElementById('employeeLastName'+repID).value;
+							// var employeeID = document.getElementById('employeeID'+repID).value;
+							var repFirstName = document.getElementById('repFirstName'+repID).value;
+							var repLastName = document.getElementById('repLastName'+repID).value;
 
-							toSend = {"repID": repID, "active": active, "repUserName": repUserName, "repPassword": repPassword, "repName": repName, "repPriority": repPriority, "repPosition": repPosition, "employeeID": employeeID, "employeeFirstName": employeeFirstName, "employeeLastName": employeeLastName};
+							if (password == "******") {
+								toSend = {"repID": repID, "active": active, "repUserName": repUserName, "repPriority": repPriority, "repPosition": repPosition, "repFirstName": repFirstName, "repLastName": repLastName};
+							}
+							else {
+								toSend = {"repID": repID, "active": active, "repUserName": repUserName, "password": password, "repPriority": repPriority, "repPosition": repPosition, "repFirstName": repFirstName, "repLastName": repLastName};								
+							}
 							//toSend = {name: "John"};
 							$.ajax({
 								headers: {
@@ -276,6 +280,9 @@
 											success: {
 												label: 'OK',
 												className: 'btn-success',
+												callback: function() {
+													location.reload();
+												}
 											}
 										}
 									});
@@ -287,7 +294,10 @@
 										buttons: {
 											success: {
 												label: "OK",
-												className: "btn-danger"
+												className: "btn-danger",
+												callback: function() {
+													location.reload();
+												}
 											}
 										}
 									});
@@ -333,7 +343,10 @@
 							buttons: {
 								main: {
 									label: "OK",
-									className: "btn-primary"
+									className: "btn-primary",
+									callback: function() {
+										location.reload();
+									}
 								}
 							}
 						});
@@ -353,6 +366,7 @@
 					});
 				}
 			});
+			this.reset();
 		});
 	</script>
 </html>
