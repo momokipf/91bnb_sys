@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Facades\Log;
 use DB;
 class House extends Model
 {
@@ -16,8 +16,9 @@ class House extends Model
 
     protected $geofields = array('location');
 
-	protected $hidden = [];
+	protected $hidden = ['location','houseOwnerID'];
 
+	protected $visible =['country','state','city','fullHouseID','houseAddress','longitude','latitude'];
     /* primaryKey keyword*/
 
     protected $primaryKey = 'numberID';
@@ -74,17 +75,21 @@ class House extends Model
 
     public function scopeShpereDistance($query,$dist,$location)
     {
-    	return $query->whereRaw('ST_Distance_Sphere(location,POINT('.$location.')) < '. $dist*1000);
+    	//$locationarray = explode(",",trim($center));
+    	
+    	$loc = $location['longitude'].','.$location['latitude'];
+    	return $query->whereRaw('ST_Distance_Sphere(location,POINT('.$loc.')) < '. $dist*1000);
     }
 
-    public function scopeWithinCircle($query,$radius,$center)
+    public function scopeWithinCircle($query,$radius,$loc)
     {
-    	$locationarray = explode(",",trim($center));
-    	$longitude = $locationarray[1];
-    	$latitude = $locationarray[0]; 
 
-    	$search_area_str = "ST_makeEnvelope(POINT(".$longitude."+".$radius."/111.045,".$latitude."+".$radius."/(111.045*COS(RADIANS(".$longitude.")))),"."POINT(".$longitude."-".$radius."/111.045,".$latitude."-".$radius."/(111.045*COS(RADIANS(".$longitude.")))) )";
+    	$longitude = $loc['longitude'];
+    	$latitude =$loc['latitude'];
 
+    	$search_area_str = "ST_makeEnvelope(POINT(".$longitude."+".$radius."/111.045,".$latitude."+".$radius."/111.045*COS(RADIANS(".$longitude."))),
+    											  "."POINT(".$longitude."-".$radius."/111.045,".$latitude."-".$radius."/111.045*COS(RADIANS(".$longitude."))))";
+		Log::info($search_area_str);
     	return $query = $query->whereRaw('MBRContains('.$search_area_str.',location)');
     }
 
