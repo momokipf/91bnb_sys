@@ -77,7 +77,7 @@ class HousesController extends Controller
 
     	$road_1 = $request->input('crossroadA');
     	$road_2 = $request->input('crossroadB');
-    	$radius = $request->input('milesrange',5);
+    	$radius = $request->input('milesrange',2);
 
     	$target_pt = "";
 
@@ -132,20 +132,22 @@ class HousesController extends Controller
 
 		if(isset($target_pt))
     	{
-    		$housesql = House::WithinCircle($radius,$target_pt)->get();
-    // 		$circlesql = "st_distance(r.location,POINT(".$target_pt['longitude'].','.$target_pt['latitude']."))<".$radius;
-    // 		$housebuilder = DB::table(DB::raw("(".$housesql.") as r"))
-    // 					->select(DB::raw('country,state,city,fullHouseID,houseAddress,longitude,latitude,'.$circlesql.' as distance'))
-    // 					->whereRaw($circlesql)
-    // 					->orderBy(DB::raw($circlesql));
+    		$housesql = House::WithinCircle($radius,$target_pt)->toSql();
+    		$circlesql = "ST_Distance_Sphere(r.location,POINT(".$target_pt['longitude'].','.$target_pt['latitude']."))";//<".$radius;
+    		$housebuilder = DB::table(DB::raw("(".$housesql.") as r"))
+    					->select(DB::raw('country,state,city,fullHouseID,houseAddress,longitude,latitude,'.$circlesql.' as distance'))
+    					->whereRaw($circlesql.'<'.$radius*1000)
+    					->orderBy(DB::raw($circlesql));
+    		// foreach($housesql as $house )
+    		// {
+    		// 	$house = collect($house);
+    		// 	Log::info($house->toArray());
+    		// }
+    		$houses =$housebuilder->get();
+    		$houses = collect($houses);
 
- 			// $house = collect($housebuilder->first());
-    		//Log::info($house->toArray());
-    		foreach($housesql as $house )
-    		{
-    			$house = collect($house);
-    			Log::info($house->toArray());
-    		}
+    		return response($houses)
+                ->header('Content-Type', 'json');
     	}
 
 

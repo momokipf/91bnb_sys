@@ -11,7 +11,7 @@ class Housingcondition extends Model
     *
     * @var string
     */
-    protected $table = 'housingcondition';
+    protected $table = 'Housingcondition';
     protected $hidden = [];
      /**
      * The attributes that are mass assignable.

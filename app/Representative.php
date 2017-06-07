@@ -26,7 +26,7 @@ class Representative extends Model implements
     *
     * @var string
     */
-    protected $table = 'representative';
+    protected $table = 'Representative';
 
 	/**
      * The attributes that are mass assignable.

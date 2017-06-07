@@ -81,15 +81,20 @@ class House extends Model
     	return $query->whereRaw('ST_Distance_Sphere(location,POINT('.$loc.')) < '. $dist*1000);
     }
 
+
+    /*
+	mile per degree = 69.0
+	km per degree = 111.045
+    */
     public function scopeWithinCircle($query,$radius,$loc)
     {
 
     	$longitude = $loc['longitude'];
     	$latitude =$loc['latitude'];
 
-    	$search_area_str = "ST_makeEnvelope(POINT(".$longitude."+".$radius."/111.045,".$latitude."+".$radius."/111.045*COS(RADIANS(".$longitude."))),
-    											  "."POINT(".$longitude."-".$radius."/111.045,".$latitude."-".$radius."/111.045*COS(RADIANS(".$longitude."))))";
-		Log::info($search_area_str);
+    	$search_area_str = "ST_makeEnvelope(POINT(".$longitude."+".$radius."/111.045,".$latitude."+".$radius."/(111.045*COS(RADIANS(".$longitude.")))),
+    											  "."POINT(".$longitude."-".$radius."/111.045,".$latitude."-".$radius."/(111.045*COS(RADIANS(".$longitude.")))))";
+
     	return $query = $query->whereRaw('MBRContains('.$search_area_str.',location)');
     }
 

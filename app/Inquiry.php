@@ -19,7 +19,7 @@ class Inquiry extends Model
     *
     * @var string
     */
-    protected $table = 'inquiry';
+    protected $table = 'Inquiry';
 
     /**
      * The attributes that are mass assignable.

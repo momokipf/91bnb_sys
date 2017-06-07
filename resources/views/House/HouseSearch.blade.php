@@ -189,8 +189,8 @@
                                 <label>Apply Range</label>
                                 <select class="form-control input-sm" id="milesrange" name="milesrange">
         														<OPTION value=1>&nbsp;&nbsp;1 Mile</OPTION>
-                                    <OPTION value=2>&nbsp;&nbsp;2 Miles</OPTION>
-                                    <OPTION value=5 selected>&nbsp;&nbsp;5 Miles</OPTION>
+                                    <OPTION value=2 selected>&nbsp;&nbsp;2 Miles</OPTION>
+                                    <OPTION value=5 >&nbsp;&nbsp;5 Miles</OPTION>
                                     <OPTION value=10>10 Miles</OPTION>
                                     <OPTION value=20>20 Miles</OPTION>
                                     <OPTION value=30>30 Miles</OPTION>
@@ -684,6 +684,21 @@
 src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAAIAQT72snLXj_BITkOc5TMZjpTrzbYRw&language=en&callback=initialize">
 </script>
 <script>
+
+    var autocomplete; 
+    var search_geo;
+    var map;
+    var housemarkers = [];
+    var componentForm = {
+        //street_number: 'short_name',
+        route: 'long_name',
+        locality: 'long_name',
+        administrative_area_level_1: 'short_name',
+        country: 'short_name',
+        postal_code: 'short_name'
+    };
+
+
 //fix 0201 suppose all is formatted
 $(document).ready(function() {
     // locations
@@ -793,33 +808,58 @@ $(document).ready(function() {
             toSend.push({'name':'search_latitude','value':location['lat']});
             toSend.push({'name':'search_longitude','value':location['lng']});
         }
-        alert(JSON.stringify(toSend));
+        //alert(JSON.stringify(toSend));
         $.ajax({
             type:"POST",
             url:"/house/search",
             data:$.param(toSend),
             datatype:'json',
             success: function(data){
+                if(map){
+                    deleteMarkers();
+                }
                 initMap(search_geo);
+                if(data.length>0)
+                {
+                    for(var i=0;i<data.length;++i)
+                    {
+                        var marker = new google.maps.Marker({
+                            position:{'lat':data[i].latitude,'lng':data[i].longitude},
+                            map:map
+                        });
+                        housemarkers.push(marker);
+                    }
+                    showMarkers();
 
+                }
+                else
+                {
+                    // Notice that there is no result
+                }
             }
         });
     });
+    
+    function setMapOnAll(map){
+        //var bounds = new google.maps.LatLngBounds();
+        for(var i=0;i<housemarkers.length;++i)
+        {
+            housemarkers[i].setMap(map);
+        }
+    }
 
+    function clearMarker(){
+        setMapOnAll(null);
+    }
 
+    function showMarkers(){
+        setMapOnAll(map);
+    }
 
-    var autocomplete; 
-    var search_geo;
-    var map;
-    var componentForm = {
-        //street_number: 'short_name',
-        route: 'long_name',
-        locality: 'long_name',
-        administrative_area_level_1: 'short_name',
-        country: 'short_name',
-        postal_code: 'short_name'
-    };
-
+    function deleteMarkers(){
+        clearMarker();
+        housemarkers=[];
+    }
 
     function initMap(search_geo){
         if(!map)
@@ -843,7 +883,7 @@ $(document).ready(function() {
               fillOpacity: 0.35,
               map: map,
               center: uluru,
-              radius: 5000
+              radius: 2000
             });
         }
     }
@@ -912,6 +952,7 @@ $(document).ready(function() {
 
     function geolocate(){
         var place = autocomplete.getPlace();
+        console.log(JSON.stringify(place));
         if(place){
             for(var i = 0 ;i < place.address_components.length;i++){
                 var addressType = place.address_components[i].types[0];
