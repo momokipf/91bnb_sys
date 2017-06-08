@@ -79,6 +79,10 @@ class HousesController extends Controller
     	$road_2 = $request->input('crossroadB');
     	$radius = $request->input('milesrange',2);
 
+    	$numOfRoomsFrom = $request->input('numOfRoomsFrom');
+    	$numOfRoomsTo = $request->input('numOfRoomsTo');
+
+
     	$target_pt = "";
 
     	if($request->input('search_latitude')&&$request->input('search_longitude'))
@@ -130,21 +134,40 @@ class HousesController extends Controller
 			}
 		}
 
+		$fields = array('r.numberID', 'fullHouseID', 'state', 'city', 'houseAddress','numOfRooms', 'numOfBaths','houseType','r.houseOwnerID','latitude','longitude',//basic information
+                     'costMonthPrice', 'costDayPrice',//price information
+                     'nextAvailableDate', 'minStayTerm','minStayUnit', 'rentShared',//available information
+                     'first', 'last', 'ownerUsPhoneNumber', 'ownerWechatUserName','ownerWechatID');
+
 		if(isset($target_pt))
     	{
     		$housesql = House::WithinCircle($radius,$target_pt)->toSql();
     		$circlesql = "ST_Distance_Sphere(r.location,POINT(".$target_pt['longitude'].','.$target_pt['latitude']."))";//<".$radius;
     		$housebuilder = DB::table(DB::raw("(".$housesql.") as r"))
-    					->select(DB::raw('country,state,city,fullHouseID,houseAddress,longitude,latitude,'.$circlesql.' as distance'))
+    					->select(DB::raw(implode(',',$fields)))
+    					->join('HouseOwner','r.houseOwnerID','=','HouseOwner.houseOwnerID')
+    					->join('HousePrice','r.numberID','=','HousePrice.numberID')
+    					->join('HouseAvailability','r.numberID','=','HouseAvailability.numberID')
+    					->join('HousingCondition','r.numberID','=','HousingCondition.numberID')
     					->whereRaw($circlesql.'<'.$radius*1000)
     					->orderBy(DB::raw($circlesql));
-    		// foreach($housesql as $house )
-    		// {
-    		// 	$house = collect($house);
-    		// 	Log::info($house->toArray());
-    		// }
+
+    		if(isset($numOfRoomsFrom))
+    		{
+    			$housesql = $housesql->whereRaw('numOfRooms >='.$numOfRoomsFrom);
+    		}
+    		if(isset($numOfRoomsTo))
+    		{
+    			$housesql = $housesql->whereRaw('numOfRooms <='.$numOfRoomsTo);
+    		}
+
+
     		$houses =$housebuilder->get();
     		$houses = collect($houses);
+
+
+    		Log::info( response($houses)
+                ->header('Content-Type', 'json'));
 
     		return response($houses)
                 ->header('Content-Type', 'json');

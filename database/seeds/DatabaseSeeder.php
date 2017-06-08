@@ -31,7 +31,7 @@ class House_locDataSeeder extends Seeder {
 
 class UserSeeder extends Seeder{
         public function run(){
-                DB::table('representative')->delete();
+                DB::table('Representative')->delete();
                 Representative::create(array('repID'=>1,'active'=>1,'repUserName'=>'lindawang@91bnb.com','password'=>bcrypt('1234') ,'repPriority'=>1,'repPosition'=>'Admin','repFirstName'=> 'Linda','repLastName'=>'Wang'));
                 Representative::create(array('repID'=>2,'active'=>1 ,'repUserName'=>'joshliu@91bnb.com','password'=>bcrypt('1234') ,'repPriority'=>3,'repPosition'=>'BD','repFirstName'=> 'Josh','repLastName'=>'Liu'));
                 Representative::create(array('repID'=>3,'active'=>1 ,'repUserName'=> 'jadeguo@91bnb.com','password'=>bcrypt('1234') ,'repPriority'=> 2,'repPosition'=>'ACCT','repFirstName'=>'Jade','repLastName'=>'Guo'));

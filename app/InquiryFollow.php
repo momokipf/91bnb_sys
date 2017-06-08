@@ -17,7 +17,7 @@ class InquiryFollow extends Model
     *
     * @var string
     */
-	protected $table = 'Inquiryfollowup';
+	protected $table = 'InquiryFollowup';
 
     /**
      * The attributes that are mass assignable.

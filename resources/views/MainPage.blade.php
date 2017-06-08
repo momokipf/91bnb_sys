@@ -127,7 +127,7 @@
 	          <ul class="nav navbar-nav navbar-right">
 	              <li class="dropdown">
 	                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-	                      <span class="glyphicon glyphicon-user"></span><span id='username'>{{$Rep->repFirstName}}</span><span class="caret"></span></a>
+	                      <span class="glyphicon glyphicon-user"></span><span id='username'>{{$Rep->repUserName}}</span><span class="caret"></span></a>
 	                  <ul class="dropdown-menu">
 	                    <li><a href="#">Profile</a></li>
 	                    <li><a href="#">Change Password</a></li>

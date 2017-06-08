@@ -215,15 +215,15 @@
                     <div class="row">
                         <div class="col-sm-12">
                             @if(isset($Query)|| (isset($Query->share)&&$Query->share==1))
-                                <input type="radio" id="rentWhole" name="rentShareWhole" value="1" checked> Rent Whole
+                                <input type="radio" id="rentWhole" name="rentShareWhole" value="1" checked> Whole
                             @else
-                                <input type="radio" id="rentWhole" name="rentShareWhole" value="1"> Rent Whole
+                                <input type="radio" id="rentWhole" name="rentShareWhole" value="1"> Whole
                             @endif
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            @if(!isset($Query) && (isset($Query->share)&&$Query->share==-1))
+                            @if(isset($Query) && (isset($Query->share)&&$Query->share==-1))
                                 <input type="radio" id="rentShare" name="rentShareWhole" value="-1" checked> Rent Share
                             @else
                                 <input type="radio" id="rentShare" name="rentShareWhole" value="-1"> Rent Share
@@ -232,10 +232,10 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            @if(!isset($Query)&& (isset($Query->share)&&$Query->share==0))
-                                <input type="radio" id="rentEither" name="rentShareWhole" value="0" checked> Rent Either
+                            @if(!isset($Query))
+                                <input type="radio" id="rentEither" name="rentShareWhole" value="0" checked> Either
                             @else 
-                                <input type="radio" id="rentEither" name="rentShareWhole" value="0" > Rent Either
+                                <input type="radio" id="rentEither" name="rentShareWhole" value="0" > Either
                             @endif
                         </div>
                     </div>
@@ -678,6 +678,41 @@
         </div>
     </div>
     </div>
+
+    <div class="" id="showResult" style="margin-top:60px;overflow:auto;margin-bottom:60px;" hidden>
+        <table class="table table-bordered table-striped text-center" style="font-size:12px;">
+            <thead>
+                <tr>
+                    <th style="min-width:100px;">Number ID</th>
+                    <th style="min-width:100px;">House ID</th>
+                    <th style="min-width:100px;">State</th>
+                    <th style="min-width:100px;">City</th>
+                    <th style="min-width:150px;">House Address</th>
+                    <th style="min-width:150px;">Number of Rooms</th>
+                    <th style="min-width:150px;">Number of Baths</th>
+
+                    <th style="min-width:100px;">House Type</th>
+                    <th style="min-width:100px;" hidden>HouseownerID</th>
+                    <th style="min-width:180px;">House Price per Month</th>
+                    <th style="min-width:170px;">House Price per Day</th>
+                    <th style="min-width:170px;">Next Available Date</th>
+
+                    <th style="min-width:170px;">Minimum Stay Term</th>
+                    <th style="min-width:100px;">Whole/Share</th>
+                    <th style="min-width:170px;">Owner Name</th>
+                    <th style="min-width:170px;">Owner Phone Number</th>
+
+                    <th style="min-width:150px;">WeChat Name</th>
+                    <th style="min-width:100px;">WeChat ID</th>
+                </tr>
+            </thead>
+            <tbody id="fillArea">
+
+            </tbody>
+
+        </table>
+    </div>
+
 </div>
 
 <script async defer
@@ -697,6 +732,50 @@ src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAAIAQT72
         country: 'short_name',
         postal_code: 'short_name'
     };
+    var rangemarker;
+    var itemsToShow = [
+        'numberID','fullHouseID', 'state', 'city', 'houseAddress','numOfRooms', 'numOfBaths',
+        'houseType','costMonthPrice', 'costDayPrice', 'nextAvailableDate',
+        'minStayTerm','rentShared', 'OwnerName', 'ownerUsPhoneNumber', 'ownerWechatUserName','ownerWechatID'
+    ];
+    var infowindow ;
+    function initMap(){
+        uluru = {lat: 36.778259, lng: -119.417931};
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 6,
+            center: uluru
+        });
+        infowindow = new google.maps.InfoWindow({
+        maxWidth:350
+    });
+        // var cityCircle = new google.maps.Circle({
+        //   strokeColor: '#FF0000',
+        //   strokeOpacity: 0.8,
+        //   strokeWeight: 2,
+        //   fillColor: '#FF0000',
+        //   fillOpacity: 0.35,
+        //   map: map,
+        //   center: uluru,
+        //   radius: 2000
+        // });
+    }
+
+    function initAutoComplete(){
+        var options = {
+        // bounds: new google.maps.LatLngBounds(southwest, northeast),
+        componentRestrictions: {country: "us"}//Make the range fixed
+        }
+
+        autocomplete = new google.maps.places.Autocomplete(
+            (document.getElementById('houseAddress')),
+            options);
+        autocomplete.addListener('place_changed',geolocate)
+    }
+
+    function initialize(){
+        initMap();
+        initAutoComplete();
+    }
 
 
 //fix 0201 suppose all is formatted
@@ -818,33 +897,121 @@ $(document).ready(function() {
                 if(map){
                     deleteMarkers();
                 }
-                initMap(search_geo);
-                if(data.length>0)
-                {
+                mapMovecenter(search_geo);
+                var tablehtml = "";
+                if(data.length>0){
+                    $("#showResult").show();
+
                     for(var i=0;i<data.length;++i)
                     {
+                        var loc = new google.maps.LatLng(data[i].latitude,data[i].longitude);
+                        var address = data[i].houseAddress+','+data[i].city+','+data[i].state;
                         var marker = new google.maps.Marker({
-                            position:{'lat':data[i].latitude,'lng':data[i].longitude},
+                            position:loc,
+                            title: data[i].fullHouseID,
                             map:map
                         });
+
+                        google.maps.event.addListener(marker,'click',infocallbackClosure(marker,data[i].fullHouseID,data[i].numberID,address,setinfohtml));
                         housemarkers.push(marker);
+                        if (data[i]['rentShared'] == '1') {
+                            data[i]['rentShared'] = 'Whole';
+                        } else if (data[i]['rentShared'] == '-1') {
+                            data[i]['rentShared'] = 'Share';
+                        } else {
+                            data[i]['rentShared'] = 'Either';
+                        }
+                        data[i]['minStayTerm'] = data[i]['minStayTerm'] + ' ' + data[i]['minStayUnit'];
+
+                        var rowhtml = "<tr id='house_" + data[i]['numberID'] + "'>";
+                        for(var j =0 ; j< itemsToShow.length;++j){
+                            if(!data[i][itemsToShow[j]]){
+                                rowhtml += "<td>N/A</td>";
+                                continue;
+                            }
+
+                            if(itemsToShow[j]=='numberID'){
+                                rowhtml += "<td> <a onclick = makeMarkerBounce("+i+");'' >" + 
+                                            data[i][itemsToShow[j]] + "</a></td>";
+                            }
+                            else if(itemsToShow[j] == 'OwnerName'){
+                                rowhtml += "<td>" + data[i].first + ' ' + data[i].last + "</td>";
+                            }
+                            else 
+                                rowhtml += "<td>" + data[i][itemsToShow[j]] + "</td>"; 
+                        }
+                        rowhtml += "</tr>";
+                        tablehtml += rowhtml;
                     }
                     showMarkers();
 
+                    $('#fillArea').html(tablehtml);
                 }
                 else
                 {
+                    $("#showResult").hide();
                     // Notice that there is no result
                 }
             }
         });
     });
-    
+
+    function setinfohtml(title,id,addr)
+    {
+        html = "<div>"+
+                "<h4>" + title + "</h4><p>" + addr + "<br>"+
+                "<a href='#house_"+id+"   'onclick=''>View Details</a></p></div>";
+        infowindow.setContent(html);
+    }
+
+    function infocallbackClosure(marker,title,id,addr,callback){
+        return function(){
+            var caller = event.target;
+            callback(title,id,addr);
+            infowindow.open(map,marker);
+        }   
+    }
+
+    function makeMarkerBounce(index){
+        var marker = housemarkers[index];
+        marker.setAnimation(google.maps.Animation.BOUNCE); 
+        setTimeout(function(){ marker.setAnimation(null); }, 5000);  
+    }
+    function mapMovecenter(search_geo)
+    {
+        var loc = search_geo['location'];
+        var radius = (document.getElementById('milesrange')).value*1000;
+        map.setCenter(loc);
+        if(!rangemarker){
+            rangemarker = new google.maps.Circle({
+              strokeColor: '#FF0000',
+              strokeWeight: 2,
+              map: map,
+              center: loc,
+              radius: radius
+            });
+        }
+        else{
+            rangemarker.setCenter(loc);
+            rangemarker.setRadius(radius);
+        }
+    }
+
     function setMapOnAll(map){
-        //var bounds = new google.maps.LatLngBounds();
-        for(var i=0;i<housemarkers.length;++i)
+        if(!map)
         {
-            housemarkers[i].setMap(map);
+            for(var i=0;i<housemarkers.length;++i){
+                housemarkers[i].setMap(map);
+            }
+        }
+        else{
+            var bounds = new google.maps.LatLngBounds();
+            for(var i=0;i<housemarkers.length;++i)
+            {
+                housemarkers[i].setMap(map);
+                bounds.extend(housemarkers[i].getPosition());
+            }
+            map.fitBounds(bounds);
         }
     }
 
@@ -860,73 +1027,6 @@ $(document).ready(function() {
         clearMarker();
         housemarkers=[];
     }
-
-    function initMap(search_geo){
-        if(!map)
-        {
-            if(search_geo)
-            {
-                uluru = search_geo['location'];
-            }
-            else{
-                uluru = {lat: 36.778259, lng: -119.417931};
-            }
-            map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 10,
-                center: uluru
-            });
-            var cityCircle = new google.maps.Circle({
-              strokeColor: '#FF0000',
-              strokeOpacity: 0.8,
-              strokeWeight: 2,
-              fillColor: '#FF0000',
-              fillOpacity: 0.35,
-              map: map,
-              center: uluru,
-              radius: 2000
-            });
-        }
-    }
-
-    function initAutoComplete(){
-        var options = {
-        // bounds: new google.maps.LatLngBounds(southwest, northeast),
-        componentRestrictions: {country: "us"}//Make the range fixed
-        }
-
-        autocomplete = new google.maps.places.Autocomplete(
-            (document.getElementById('houseAddress')),
-            options);
-        autocomplete.addListener('place_changed',geolocate)
-    }
-
- //    function geocodeAddress(locations) {
-	//   var title = locations[0];
-	// 	var address = locations[1];
-	//   var lat = locations[2];
-	// 	var lng = locations[3];
-	// 	var id = locations[4];
-	//   //var url = locations[4];
-	// 	var position = new google.maps.LatLng(locations[2],locations[3]);
-	// 	var marker = new google.maps.Marker({
-	// 			icon: 'http://maps.google.com/mapfiles/ms/icons/blue.png',
-	// 			map: map,
-	// 			position: position,
-	// 		  title: title,
-	// 			animation: google.maps.Animation.DROP,
-	// 			address: address
-	// 			});
-	// 			infoWindow(marker, map, title, address, id);
-	// 			bounds.extend(marker.getPosition());
-	// 			map.fitBounds(bounds);
-	// 			google.maps.event.addListener(marker, 'mouseover', function(event) {
-	// 	          this.setIcon('http://maps.google.com/mapfiles/ms/icons/red.png');
-	// 	      });
-	// 			google.maps.event.addListener(marker, 'mouseout', function(event) {
- //           this.setIcon('http://maps.google.com/mapfiles/ms/icons/blue.png');
- //       });
-
-	// }
 
     // function infoWindow(marker, map, title, address, id) {
     // 	  google.maps.event.addListener(marker, 'click', function() {
@@ -944,15 +1044,9 @@ $(document).ready(function() {
     // }
 
 
-
-    function initialize(){
-        //initMap();
-        initAutoComplete();
-    }
-
     function geolocate(){
         var place = autocomplete.getPlace();
-        console.log(JSON.stringify(place));
+        //console.log(JSON.stringify(place));
         if(place){
             for(var i = 0 ;i < place.address_components.length;i++){
                 var addressType = place.address_components[i].types[0];
