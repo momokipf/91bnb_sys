@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 use GuzzleHttp\Pool;
 use GuzzleHttp\Client;
 
 use View;
-use DB;
 
 use App\House;
+use App\Houseavailability;
 
 
 define("GOOGLE_KEY","AIzaSyAAIAQT72snLXj_BITkOc5TMZjpTrzbYRw");
@@ -28,6 +29,95 @@ class HousesController extends Controller
     {
         $this->middleware('auth');
     }
+
+    public function reportingSearch(Request $request) {
+		Log::info($request->all());
+		$query = House::where('country', 'united States');
+		// dd($query);
+		if ($request->input('state') != 'Please Select State' && $request->input('state') != '' && $request->input('state') != null) {
+			$query = $query->where('state', $request->input('state'));
+		}
+		if ($request->input('city') != 'Please Select City' && $request->input('city') != '' && $request->input('city') != null) {
+			$query = $query->where('city', $request->input('city'));
+		}
+		if ($request->input('houseZip') != '' && $request->input('houseZip') != null) {
+			$query = $query->where('houseZip', $request->input('houseZip'));
+		}
+		if ($request->input('rentShared') == 1) {
+			$query = $query->whereHas('Houseavailability', function($q) {
+				$q->where('rentShared', '>=', 0);
+			});
+		}
+		else if ($request->input('rentShared') == -1) {
+			$query = $query->whereHas('Houseavailability', function($q) {
+				$q->where('rentShared', '<=', 0);
+			});
+		}
+		if ($request->input('houseType') != 'All') {
+			$query = $query->where('houseType', $request->input('houseType'));
+		}
+		// $result = $query->first();
+		// unset($result['cus_location']);
+		Log::info($query->get());
+		return response($query->get())->header('Content-Type', 'json');
+	}
+
+	public function houseTotal() {
+		$count = House::count();
+		$lastHouse = House::orderBy('numberID', 'desc')->first();
+		$wholeCount = House::whereHas('Houseavailability', function($q) {
+		        $q->where('rentShared', 1);
+		    })->count();
+		$shareCount = House::whereHas('Houseavailability', function($q) {
+		        $q->where('rentShared', -1);
+		    })->count();
+		$eitherCount = House::whereHas('Houseavailability', function($q) {
+		        $q->where('rentShared', 0);
+		    })->count();
+		$aptCount = House::where('houseType', 'Apartment')->count();
+		$boatCount = House::where('houseType', 'Boat')->count();
+		$condoCount = House::where('houseType', 'Condo')->count();
+		$loftCount = House::where('houseType', 'Loft')->count();
+		$mansionCount = House::where('houseType', 'Mansion')->count();
+		$RVCount = House::where('houseType', 'RV')->count();
+		$studioCount = House::where('houseType', 'Studio')->count();
+		$singleCount = House::where('houseType', 'Single House')->count();
+		$townCount = House::where('houseType', 'Townhouse')->count();
+		$villaCount = House::where('houseType', 'Villa')->count();
+		$otherCount = House::where('houseType', 'Other')->count();
+
+		return view('report.houseTotal')
+				->with('count',$count)
+				->with('lastHouse',$lastHouse)
+				->with('wholeCount',$wholeCount)
+				->with('shareCount',$shareCount)
+				->with('eitherCount',$eitherCount)
+				->with('aptCount',$aptCount)
+				->with('boatCount',$boatCount)
+				->with('condoCount',$condoCount)
+				->with('loftCount',$loftCount)
+				->with('mansionCount',$mansionCount)
+				->with('RVCount',$RVCount)
+				->with('studioCount',$studioCount)
+				->with('singleCount',$singleCount)
+				->with('townCount',$townCount)
+				->with('villaCount',$villaCount)
+				->with('otherCount',$otherCount);
+	}
+
+	public function houseLocation() {
+		$count = House::where('country', 'United States')->count();
+		$state_count = House::where('country', 'United States')->select('state', DB::raw('count(*) as count'))->groupBy('state')->get();
+		return view('report.houseLocation')
+				->with('state_count', $state_count)
+				->with('count', $count);
+	}
+
+	public function getCityCount($state) {
+		$city_count = House::where('state', $state)->select('city', DB::raw('count(*) as count'))->groupBy('city')->get();
+		// Log::info($city_count);
+		return $city_count;
+	}
 
     public function searchindex(Request $request)
     {

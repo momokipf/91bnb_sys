@@ -1,23 +1,24 @@
 <html>
 	<head>
 	<!-- jquery -->
-		<script src="../js/jquery.min.js"></script>
-		<link rel="stylesheet" href="../css/bootstrap.min.css">
-		<script src="../js/bootstrap.min.js"></script>
-		<script src="../js/bootstrap-formhelpers-phone.js"></script>
-		<script src="../js/bootbox.min.js"></script>
-		<link rel="stylesheet" href="../css/self.css">
-		<link rel="stylesheet" href="../css/font-awesome.min.css">
+		<script src="{{asset('js/jquery.min.js')}}"></script>
+		<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
+		<script src="{{asset('js/bootstrap.min.js')}}"></script>
+		<script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
+		<script src="{{asset('js/bootbox.min.js')}}"></script>
+		<link rel="stylesheet" href="{{asset('css/self.css')}}">
+		<link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
 		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 		<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
 		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCpF-_i-utIH6cZl94zpu4C5vx_FBDDI9s&libraries=places&language=en"></script>
 
-		<script src="../js/canvasjs.min.js"></script>
-		<script src="../js/canvas2image.js"></script>
-		<script src="../js/html2canvas.js"></script>
+		<script src="{{asset('js/canvasjs.min.js')}}"></script>
+		<script src="{{asset('js/canvas2image.js')}}"></script>
+		<script src="{{asset('js/html2canvas.js')}}"></script>
 		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs-3.3.6/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-colvis-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.css"/>
 		<script type="text/javascript" src="https://cdn.datatables.net/v/bs-3.3.6/jqc-1.12.3/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.12/b-1.2.2/b-colvis-1.2.2/b-flash-1.2.2/b-html5-1.2.2/b-print-1.2.2/datatables.min.js"></script>
+		
 		<style>
 			html {width:100%; height:100%;}
 			body { line-height: 100%; line-height: 100%; width:100%; height:100%;}
@@ -152,13 +153,18 @@
 		$("#myBtn").click(function() {
 			console.log("test 57");
 			console.log($("#country").val()+$("#state").val()+$("#city").val());
-			$.post("getHouseInfo.php", 
-				$("#myForm").serialize(),
-				function(response) {
+			toSend = $("#myForm").serialize();
+			$.ajax({
+				type: "get",
+				url: "getHouse",
+				datatype: "json",
+				data: toSend,
+				success: function(response) {
 					console.log(response+"");
 					// var data = JSON.parse(response);
-					var data = JSON.parse(response+"");
 					//summary
+					data = response;
+					console.log(data.length);
 					var generalInfo="<h4 style='text-align:center'>";
 					var tmpCountry=$("#country").val();
 					var tmpState=$("#state").val();
@@ -174,10 +180,10 @@
 						}                          
 						if(tmpState!=='Please Select State'){
 							generalInfo+=tmpState+", ";
-						}               
+						}
 						if(tmpCity!=='Please Select City'){
 							generalInfo+=tmpCity+", ";
-						}              
+						}
 						if(tmpZip!==''){
 							generalInfo+="Zip "+tmpZip+", ";
 						}
@@ -188,21 +194,26 @@
 							generalInfo+=" Share Type"+" ";
 						}  
 						if(tmpHouseType!==''){
-							generalInfo+=tmpHouseType+" ";
+							generalInfo+= " (" + tmpHouseType+") ";
 						}
-						 generalInfo+=" house</h4>"
+						if (data.length <= 1) {
+							generalInfo+=" house</h4>";
+						}
+						else {
+							generalInfo+=" houses</h4>";
+						}
 					   
-					}           
+					}
 					$("#generalInfo").html(generalInfo);
 					if (data.length == 0) {
 						$("#map_canvas").hide();
-						$("#showResult").hide();
-						$("#noResult").show();
-						$("#showForm").hide();
+						// $("#showResult").hide();
+						// $("#noResult").show();
+						// $("#showForm").hide();
 					} else {
-						$("#noResult").hide();
-						$("#showResult").show();
 						$("#map_canvas").show();
+						// $("#noResult").hide();
+						// $("#showResult").show();
 						//console.log(data);
 						var itemsToShow = ['numberID','fullHouseID', 'state', 'city', 'houseAddress','numOfRooms', 'numOfBaths','latitude','longitude',
 									'houseType','houseOwnerID', 'costMonthPrice', 'costDayPrice', 'nextAvailableDate',
@@ -218,50 +229,10 @@
 						for (var i = 0; i < data.length; i++) {
 							var location = new Array(data[i]['fullHouseID'], data[i]['houseAddress']+", "+data[i]['city']+", "+data[i]['state'],data[i]['latitude'],data[i]['longitude'],data[i]['numberID']);
 							geocodeAddress(location);
-							// convert number to 'whole, share, either'
-							if (data[i]['rentShared'] == '1') {
-								data[i]['rentShared'] = 'Whole';
-							} else if (data[i]['rentShared'] == '-1') {
-								data[i]['rentShared'] = 'Share';
-							} else {
-								data[i]['rentShared'] = 'Either';
-							}
-							// data[i]['ownerUsPhoneNumber'] = convertPhoneFormat(data[i]['ownerUsPhoneNumber']);
-							// add '$' before Prices
-							data[i]['costMonthPrice'] = '$ ' + data[i]['costMonthPrice'];
-							data[i]['costDayPrice']   = '$ ' + data[i]['costDayPrice'];
-							// min stay term
-							data[i]['minStayTerm'] = data[i]['minStayTerm'] + ' ' + data[i]['minStayUnit'];
-
-							// output items in each row
-							myStr += "<tr id='my" + i + "' class='hello'>";
-							//fix 0207
-							for (var j = 0; j < itemsToShow.length; j++) {
-								if(itemsToShow[j] == 'latitude' || itemsToShow[j] == 'longitude') continue;
-								if (itemsToShow[j] == 'numberID') {
-									myStr += "<td><a href='###' onclick='selecthouse(" + data[i]['numberID'] + ")' id='" + data[i]['numberID'] + "'  class='showdetails' >" +
-										data[i][itemsToShow[j]] + "</a></td>";
-								} else if(data[i][itemsToShow[j]].trim()==""||data[i][itemsToShow[j]]==null||data[i][itemsToShow[j]]=="00/00/0000"||data[i][itemsToShow[j]]=="01/01/3000"){
-									myStr += "<td>" + "N/A" + "</td>";
-								}
-								  else if(itemsToShow[j] == 'minStayTerm'&& data[i][itemsToShow[j]].charAt(0)=="0"){
-									myStr += "<td>" + "N/A" + "</td>";
-								} else if(itemsToShow[j] == 'costDayPrice'&& data[i][itemsToShow[j]].charAt(2)=="0"){
-									myStr += "<td>" + "No price" + "</td>";
-								}
-								else if(itemsToShow[j] == 'costMonthPrice'&& data[i][itemsToShow[j]].charAt(2)=="0"){
-									myStr += "<td>" + "No price" + "</td>";
-								}
-								else{
-									myStr += "<td>" + data[i][itemsToShow[j]] + "</td>";
-								}
-							}
-							myStr += "</tr>";
 						}
-						// $("#fillArea").html(myStr);
 					}
 				} // function response
-			);
+			});
 		});
 
 		function geocodeAddress(locations) {
@@ -296,57 +267,13 @@
 				if(previousmarker != false){
 					previousmarker.close();
 				}
-				var html = "<div><h3>" + title + "</h3><p>" + address + "<br></div><a onclick='selecthouse("+id+")'>View Details</a></p></div>";
+				var html = "<div><h3>" + title + "</h3><p>" + address;
 				iw = new google.maps.InfoWindow({
 					content: html,
 					maxWidth: 350
 				});
 				iw.open(map, marker);
 				previousmarker = iw;
-			});
-		}
-
-		function selecthouse(numberID) {
-			console.log("select house"+numberID);
-			$.ajax({
-				type: "POST",
-				dataType: "html",//data type expected from server
-				url: "housedetailinshowhouse.php",
-				data: 'numberID='+numberID,
-				success: function(data) {
-					$("#showForm").html(data);
-					// -----------------------------------------------
-					$("#btnDiscard").click(function() {
-						$("#houseID_search_form").submit();
-					});
-					$("#allowKid").change(function(){
-						if ($("#allowKid").is(":checked")) {
-							$("#allowKidAge").removeAttr('disabled');
-						} else {
-							$("#allowKidAge").attr('disabled', 'true');
-							// $("#allowKidAge").removeAttr('value');
-							$("#allowKidAge").val('');
-						}
-					});
-					$("#allowPets").change(function(){
-						if ($("#allowPets").is(":checked")) {
-							$("#allowPetType").removeAttr("disabled");
-						} else {
-							$("#allowPetType").attr("disabled", "true");
-							$("#allowPetType").val('');
-						}
-					});
-
-					$("#havePet").change(function(){
-						if ($("#havePet").is(":checked")) {
-							$("#havePetType").removeAttr("disabled");
-						} else {
-							$("#havePetType").attr("disabled", "true");
-							$("#havePetType").val('');
-						}
-					});
-					// -----------------------------------------------
-				}
 			});
 		}
 	</script>
