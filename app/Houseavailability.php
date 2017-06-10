@@ -12,7 +12,7 @@ class Houseavailability extends Model
     *
     * @var string
     */
-    protected $table = 'houseavailability';
+    protected $table = 'HouseAvailability';
     protected $hidden = [];
      /**
      * The attributes that are mass assignable.

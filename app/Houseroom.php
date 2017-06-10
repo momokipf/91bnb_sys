@@ -13,7 +13,7 @@ class Houseroom extends Model
     *
     * @var string
     */
-    protected $table = 'house';
+    protected $table = 'HouseRoom';
 
     /**
      * The attributes that are mass assignable.

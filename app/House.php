@@ -16,9 +16,9 @@ class House extends Model
 
     protected $geofields = array('location');
 
-	protected $hidden = ['location','houseOwnerID'];
+	protected $hidden = ['location'];
 
-	protected $visible =['country','state','city','fullHouseID','houseAddress','longitude','latitude'];
+	//protected $visible =['country','state','city','fullHouseID','houseAddress','longitude','latitude'];
     /* primaryKey keyword*/
 
     protected $primaryKey = 'numberID';

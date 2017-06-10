@@ -47,7 +47,7 @@
 				margin-top:20px;width:100%;height:60%;display:none;*/
 			}
             #map_div{
-                height: 800px;
+                height: 650px;
                 width: 100%;
             }
             #map {
@@ -91,7 +91,7 @@
                     <li><a href="#">Profile</a></li>
                     <li><a href="#">Change Password</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="../logout.php">Log Out</a></li>
+                    <li><a href="/logout">Log Out</a></li>
                   </ul>
                 </li>
           </ul>
@@ -114,6 +114,7 @@
                 <li><a data-toggle="tab" href="#aboutCondition">House Condition</a></li>
                 <li><a data-toggle="tab" href="#aboutAmenity">Detail Condition</a></li>
                 <li><a data-toggle="tab" href="#aboutPrice">House/Room Price</a></li>
+                <!-- <li><a data-toggle="tab" href="#aboutOwner">House Owner</a></li> -->
             </ul>
 
             <div class="tab-content">
@@ -659,6 +660,11 @@
                     </div>
                     </div>
                 </div>
+
+                <!-- <div class="tab-pane fade" id="aboutOwner">
+
+                </div>  -->
+
             </div>
 
             <div style="margin-top:30px; margin-bottom:50px;">
@@ -683,27 +689,27 @@
         <table class="table table-bordered table-striped text-center" style="font-size:12px;">
             <thead>
                 <tr>
-                    <th style="min-width:100px;">Number ID</th>
+                    <th style="min-width:50px;">Number ID</th>
                     <th style="min-width:100px;">House ID</th>
                     <th style="min-width:100px;">State</th>
                     <th style="min-width:100px;">City</th>
                     <th style="min-width:150px;">House Address</th>
-                    <th style="min-width:150px;">Number of Rooms</th>
-                    <th style="min-width:150px;">Number of Baths</th>
+                    <th style="min-width:50px;">Number of Rooms</th>
+                    <th style="min-width:50px;">Number of Baths</th>
 
                     <th style="min-width:100px;">House Type</th>
-                    <th style="min-width:100px;" hidden>HouseownerID</th>
-                    <th style="min-width:180px;">House Price per Month</th>
-                    <th style="min-width:170px;">House Price per Day</th>
-                    <th style="min-width:170px;">Next Available Date</th>
+                    <th style="min-width:100px;">Price per Month</th>
+                    <th style="min-width:100px;">Price per Day</th>
+                    <th style="min-width:150px;">Next Available Date</th>
 
-                    <th style="min-width:170px;">Minimum Stay Term</th>
+                    <th style="min-width:100px;">Minimum Stay Term</th>
                     <th style="min-width:100px;">Whole/Share</th>
+                    <th style="min-width:150px;">View House info</th>
+                    <th style="min-width:150px;">View Owner info</th>
+                    <!--<th style="min-width:170px;">Owner Phone Number</th>
                     <th style="min-width:170px;">Owner Name</th>
-                    <th style="min-width:170px;">Owner Phone Number</th>
-
                     <th style="min-width:150px;">WeChat Name</th>
-                    <th style="min-width:100px;">WeChat ID</th>
+                    <th style="min-width:100px;">WeChat ID</th> -->
                 </tr>
             </thead>
             <tbody id="fillArea">
@@ -734,11 +740,14 @@ src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAAIAQT72
     };
     var rangemarker;
     var itemsToShow = [
-        'numberID','fullHouseID', 'state', 'city', 'houseAddress','numOfRooms', 'numOfBaths',
+        'numberID','fullHouseID', 'state', 'city', 'houseAddress',
+        'numOfRooms', 'numOfBaths',
         'houseType','costMonthPrice', 'costDayPrice', 'nextAvailableDate',
-        'minStayTerm','rentShared', 'OwnerName', 'ownerUsPhoneNumber', 'ownerWechatUserName','ownerWechatID'
+        'minStayTerm','rentShared',
+        // ,'OwnerName', 'ownerUsPhoneNumber', 'ownerWechatUserName','ownerWechatID'
     ];
     var infowindow ;
+
     function initMap(){
         uluru = {lat: 36.778259, lng: -119.417931};
         map = new google.maps.Map(document.getElementById('map'), {
@@ -838,6 +847,9 @@ $(document).ready(function() {
             $('#checkin').datepicker('option', 'minDate', 0);
            
           },
+          /*
+          Display and send Date in different format 
+          */
           onSelect:function(){
             var checkOutDate = $('#checkout').datepicker('getDate');
             // alert(checkOutDate);
@@ -868,6 +880,12 @@ $(document).ready(function() {
 
         loadOpt();
     });
+
+    
+    /*
+
+    TODO: implement extract content to excel later
+    Date: 06/09/2017
     $("#extall").click(function(){
         console.log("displayInquiry - extract all");
         $(".loaderDiv").show();
@@ -879,7 +897,13 @@ $(document).ready(function() {
                 // },
         function(data){ $(".loaderDiv").hide();  window.location.href="../PHPExcel/Files/" + data;})
     });
+    */
 
+    /*
+    TODO:(1)add link to initialize a GET request to server to get house info
+         (2)add link to initialize a GET request to server to get houseowner info
+    
+    */
     $("#myBtn").click(function() {
         var toSend = $('#houseSearchForm').serializeArray();
         if(search_geo){
@@ -924,6 +948,7 @@ $(document).ready(function() {
                         data[i]['minStayTerm'] = data[i]['minStayTerm'] + ' ' + data[i]['minStayUnit'];
 
                         var rowhtml = "<tr id='house_" + data[i]['numberID'] + "'>";
+                        var numberID = data[i].numberID;
                         for(var j =0 ; j< itemsToShow.length;++j){
                             if(!data[i][itemsToShow[j]]){
                                 rowhtml += "<td>N/A</td>";
@@ -931,8 +956,8 @@ $(document).ready(function() {
                             }
 
                             if(itemsToShow[j]=='numberID'){
-                                rowhtml += "<td> <a onclick = makeMarkerBounce("+i+");'' >" + 
-                                            data[i][itemsToShow[j]] + "</a></td>";
+                                rowhtml += "<td> <a href='#map_div' onclick = 'makeMarkerBounce("+i+");' >" + 
+                                            numberID + "</a></td>";
                             }
                             else if(itemsToShow[j] == 'OwnerName'){
                                 rowhtml += "<td>" + data[i].first + ' ' + data[i].last + "</td>";
@@ -940,6 +965,9 @@ $(document).ready(function() {
                             else 
                                 rowhtml += "<td>" + data[i][itemsToShow[j]] + "</td>"; 
                         }
+
+                        rowhtml += "<td><a onclick=' retrieveHouseInfo("+numberID+");' > View House Info</td>";
+                        rowhtml += "<td><a href='/houseowner/" +data[i].houseOwnerID+"' > View House Owner Info</td>";
                         rowhtml += "</tr>";
                         tablehtml += rowhtml;
                     }
@@ -959,7 +987,7 @@ $(document).ready(function() {
     function setinfohtml(title,id,addr)
     {
         html = "<div>"+
-                "<h4>" + title + "</h4><p>" + addr + "<br>"+
+                "<h4>" + title + "</h4><h5>No:"+ id + " </h5><p>Address:" + addr + "<br>"+
                 "<a href='#house_"+id+"   'onclick=''>View Details</a></p></div>";
         infowindow.setContent(html);
     }
@@ -975,7 +1003,7 @@ $(document).ready(function() {
     function makeMarkerBounce(index){
         var marker = housemarkers[index];
         marker.setAnimation(google.maps.Animation.BOUNCE); 
-        setTimeout(function(){ marker.setAnimation(null); }, 5000);  
+        setTimeout(function(){ marker.setAnimation(null); }, 2000);  
     }
     function mapMovecenter(search_geo)
     {
@@ -1042,8 +1070,6 @@ $(document).ready(function() {
     // 			previousmarker = iw;
     // 	  });
     // }
-
-
     function geolocate(){
         var place = autocomplete.getPlace();
         //console.log(JSON.stringify(place));
@@ -1058,6 +1084,22 @@ $(document).ready(function() {
             search_geo = place.geometry;
         }
     }
+
+
+    function retrieveHouseInfo(houseid){
+    }
+
+    function retrieveHouseOwnerInfo(houseid){
+        $.ajax({
+            type:"GET",
+            url:"/houseowner/"+houseid,
+            datatype:'json',
+            success: function(data){
+                alert(JSON.stringify(data));
+            }
+        });
+    }
+
 
 // function selecthouse(numberID) {
 // 	$.ajax({

@@ -11,7 +11,7 @@ class Houseprice extends Model
     *
     * @var string
     */
-    protected $table = 'houseprice';
+    protected $table = 'HousePrice';
     protected $hidden = [];
      /**
      * The attributes that are mass assignable.

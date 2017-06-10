@@ -51,6 +51,17 @@ class HousesController extends Controller
     //     return response()->json($json, 400);
     // }
 
+    public function showhouse(Request $request,$id)
+    {
+    	$house = House::find($id);
+
+    	if($request->ajax() || $request->wantsJson())
+    	{
+    		return response($house)
+    				->header('Content-Type', 'json');
+    	}
+    }
+
     public function addindex(Request $request)
     {
     	return view('House/HouseAdd')
@@ -166,8 +177,6 @@ class HousesController extends Controller
     		$houses = collect($houses);
 
 
-    		Log::info( response($houses)
-                ->header('Content-Type', 'json'));
 
     		return response($houses)
                 ->header('Content-Type', 'json');

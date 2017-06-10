@@ -13,7 +13,7 @@ class Houseowner extends Model
     *
     * @var string
     */
-    protected $table = 'houseowner';
+    protected $table = 'HouseOwner';
     protected $hidden = [];
      /**
      * The attributes that are mass assignable.
@@ -28,7 +28,7 @@ class Houseowner extends Model
     public $timestamps = false;
 
     //Table relationship
-    public function house(){
+    public function houses(){
     	return $this->hasMany('App\House','houseOwnerID');
     }
 

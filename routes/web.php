@@ -48,10 +48,11 @@ Route::post('inquirer/add', 'InquirersController@store');
 
 
 Route::get('house','HousesController@searchindex');
+Route::get('house/{id}','HousesController@showhouse');
 Route::get('house/add','HousesController@addindex');
 Route::post('house/search','HousesController@search');
 
-
+Route::get('houseowner/{id}/{house?}','HouseOwnersController@ownerinfo');
 Route::post('houseowner/search',function(){
 	$ret = collect([['houseOwnerID'=>'5','first'=>'Jay','last'=>'Chou','ownerWechatUserName'=>'jaywechat']]);
 	Log::info(response($ret)
