@@ -74,12 +74,13 @@ class InquirersController extends Controller
 		if (array_key_exists('inquirerState', $updateInfo) && $updateInfo['inquirerState'] == 'InputState') {
 			$updateInfo['inquirerState'] = $updateInfo['inquirerStateOther'];
 		}
-		if (array_key_exists('inquirerCity', $updateInfo) && $updateInfo['inquirerCity'] == 'InputCity') {
+		if (array_key_exists('inquirerCity', $updateInfo) && ($updateInfo['inquirerCity'] == 'InputCity' || $updateInfo['inquirerCity'] == 'Other')) {
 			$updateInfo['inquirerCity'] = $updateInfo['inquirerCityOther'];
 		}
 
 		/*array_splice($updateInfo, 13, 1);*/
 		unset($updateInfo['inquirerStateOther']);
+		unset($updateInfo['inquirerCityOther']);
 		foreach ($updateInfo as $key => $value) {
 			if ($value == null) {
 				$updateInfo[$key] = '';
@@ -118,11 +119,12 @@ class InquirersController extends Controller
 		if (array_key_exists('inquirerState', $storeInfo) && $storeInfo['inquirerState'] == 'InputState') {
 			$storeInfo['inquirerState'] = $storeInfo['inquirerStateOther'];
 		}
-		if (array_key_exists('inquirerCity', $storeInfo) && $storeInfo['inquirerCity'] == 'InputCity') {
+		if (array_key_exists('inquirerCity', $storeInfo) && ($storeInfo['inquirerCity'] == 'InputCity' || $storeInfo['inquirerCity'] == 'Other')) {
 			$storeInfo['inquirerCity'] = $storeInfo['inquirerCityOther'];
 		}
 
 		unset($storeInfo['inquirerStateOther']);
+		unset($storeInfo['inquirerCityOther']);
 		foreach ($storeInfo as $key => $value) {
 			if ($value == null) {
 				$storeInfo[$key] = '';
