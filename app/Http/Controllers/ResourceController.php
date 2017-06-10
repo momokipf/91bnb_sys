@@ -96,7 +96,8 @@ class ResourceController extends Controller
 
 	public function getCity($country, $state){
 		$content = File::get(storage_path('list/State_City_Option/'. $state. 'CityListOption'));
-		$content = preg_split("/\r\n|\n|\r/", $content);
+		//$content = preg_split("/\r\n|\n|\r/", $content);
+		// Log::info($content);
 		return response($content)
 				->header('Cache-Control', 'max-stale[3600]')
 				->header('Content-Type', 'json');

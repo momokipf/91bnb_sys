@@ -26,8 +26,7 @@ class Inquirer extends Model
         'inquirerFirst', 'inquirerLast',
         'inquirerUsPhoneNumber','inquirerPhoneCountry','inquirerPhoneNumber',
         'inquirerEmail','inquirerTaobaoUserName','inquirerWechatUserName',
-        'inquirerWechatID','inquirerCountry','inquirerState','inquirerCity',
-        'inquirerCityOther'
+        'inquirerWechatID','inquirerCountry','inquirerState','inquirerCity'
     ];
 
     public $timestamps = false;

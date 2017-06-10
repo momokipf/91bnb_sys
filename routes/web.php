@@ -69,6 +69,10 @@ Route::get('report/houseReport', 'HousesController@report');
 Route::get('report/houseVisual', function() {
 	return view('report.houseVisual');
 });
+Route::get('report/getHouse', 'HousesController@reportingSearch');
+Route::get('report/houseTotal', 'HousesController@houseTotal');
+Route::get('report/houseLocation', 'HousesController@houseLocation');
+Route::get('report/getCityCount/{state}', 'HousesController@getCityCount');
 
 
 

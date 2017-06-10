@@ -19,6 +19,7 @@ class House extends Model
 	protected $hidden = ['location'];
 
 	//protected $visible =['country','state','city','fullHouseID','houseAddress','longitude','latitude'];
+
     /* primaryKey keyword*/
 
     protected $primaryKey = 'numberID';
@@ -31,15 +32,15 @@ class House extends Model
         return $this->belongsTo('App\Houseowner','houseOwnerID');
     }
 
-    public function gethouseprice(){
-    	return $this->hasMany('App\Houseprice','numberID');
+    public function houseprice(){
+    	return $this->hasOne('App\Houseprice','numberID');
     }
 
-    public function gethouseavailability(){
-        return $this->hasMany('App\Houseavailability','numberID');
+    public function houseavailability(){
+        return $this->hasOne('App\Houseavailability','numberID');
     }
-    public function gethousingcondition(){
-        return $this->hasMany('App\Housingcondition','numberID');
+    public function housingcondition(){
+        return $this->hasOne('App\Housingcondition','numberID');
     }
 
 

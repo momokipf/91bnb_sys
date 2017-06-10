@@ -935,6 +935,15 @@
 				$('#inquirerCityOther').val('');//empty input
 			});
 
+			$("#inquirerCity").change(function(){
+				if($(this).val() == "Other"){
+					$("#inquirerCityOtherDiv").show();
+				} else {
+					$("#inquirerCityOtherDiv").hide();
+					$('#inquirerCityOther').val('');//empty input
+				}
+			});
+
 			$('#new_inquirer_form').submit(function(){
 				var toSend = $(this).serialize();
 				$.ajax({

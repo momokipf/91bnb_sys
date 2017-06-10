@@ -103,10 +103,10 @@
 					<iframe style="position: absolute; width:100%; height: 90%; border: none"  scrolling="yes" src="/report/houseVisual"></iframe>
 				</div>
 				<div role="tabpanel" class="tab-pane fade " id="total">
-					<iframe style="position: absolute; width:100%; height: 90%; border: none"  scrolling="yes" src="HouseTotal.html"></iframe>
+					<iframe style="position: absolute; width:100%; height: 90%; border: none"  scrolling="yes" src="/report/houseTotal"></iframe>
 				</div>
 				<div role="tabpanel" class="tab-pane fade" id="RentArea">
-					<iframe style="position: absolute; width:100%; height: 90%; border: none" scrolling="yes" src="HouseLocation.html"></iframe>
+					<iframe style="position: absolute; width:100%; height: 90%; border: none" scrolling="yes" src="/report/houseLocation"></iframe>
 				</div>
 				<div role="tabpanel" class="tab-pane fade" id="houseType">
 					<iframe style="position: absolute; width:100%; height: 90%; border: none" scrolling="yes" src="HouseTypeNew.html"></iframe>

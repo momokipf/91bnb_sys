@@ -90,12 +90,20 @@
 								dataType: "html",//data type expected from server
 								url: "/resource/" + json.inquirerCountry + "/" + json.inquirerState,
 								success: function(data) {
+									// console.log(data);
+									console.log(json.inquirerCity);
 									$("#inquirerCity").html(data);
 									$("#inquirerCity").val(json.inquirerCity);
-									console.log(json.inquirerCity);
-									if(json.inquirerCity == "Other"){
+									var exist = 0;
+									$('#inquirerCity  option').each(function(){
+										if (this.value == json.inquirerCity) {
+											exist = 1;
+										}
+									});
+									if(exist == 0){
 										$("#inquirerCityOtherDiv").show();
-										$('#inquirerCityOther').val(json.inquirerCityOther);//empty input
+										$('#inquirerCity').val("Other");
+										$('#inquirerCityOther').val(json.inquirerCity);//empty input
 									} else {
 										$("#inquirerCityOtherDiv").hide();
 										$('#inquirerCityOther').val('');//empty input
@@ -184,6 +192,15 @@
 					$('#inquirerCityOther').val('');//empty input
 				});
 
+				$("#inquirerCity").change(function(){
+					if($(this).val() == "Other"){
+						$("#inquirerCityOtherDiv").show();
+					} else {
+						$("#inquirerCityOtherDiv").hide();
+						$('#inquirerCityOther').val('');//empty input
+					}
+				});
+
 				$("#inquirer_search_form").submit(function(){
 					$('.alert').alert('close')
 					var toSend = $(this).serialize();
@@ -218,7 +235,7 @@
 								html += "<th style='min-width:150px;'>Origin Country</th>";
 								html += "<th style='min-width:150px;'>Origin State</th>";
 								html += "<th style='min-width:150px;'>Origin City</th>";
-								html += "<th style='min-width:150px;'>Origin City Other</th>";
+								// html += "<th style='min-width:150px;'>Origin City Other</th>";
 								html += "</tr>";
 								
 								for (i = 0; i < data.length; i++) {
@@ -237,7 +254,7 @@
 									html += "<td>" + data[i]['inquirerCountry'] + "</td>";
 									html += "<td>" + data[i]['inquirerState'] + "</td>";
 									html += "<td>" + data[i]['inquirerCity'] + "</td>";
-									html += "<td>" + data[i]['inquirerCityOther'] + "</td>";
+									// html += "<td>" + data[i]['inquirerCityOther'] + "</td>";
 									html += "</tr>";
 								}
 							}
