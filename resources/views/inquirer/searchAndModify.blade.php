@@ -93,7 +93,6 @@
 									// console.log(data);
 									console.log(json.inquirerCity);
 									$("#inquirerCity").html(data);
-									$("#inquirerCity").val(json.inquirerCity);
 									var exist = 0;
 									$('#inquirerCity  option').each(function(){
 										if (this.value == json.inquirerCity) {
@@ -102,12 +101,12 @@
 									});
 									if(exist == 0){
 										$("#inquirerCityOtherDiv").show();
+										$('#inquirerCityOther').val(json.inquirerCity);
 										$('#inquirerCity').val("Other");
-										$('#inquirerCityOther').val(json.inquirerCity);//empty input
 									} else {
 										$("#inquirerCityOtherDiv").hide();
-										$('#inquirerCityOther').val('');//empty input
-									  
+										$('#inquirerCityOther').val('');
+										$("#inquirerCity").val(json.inquirerCity);
 									}
 								}
 							});

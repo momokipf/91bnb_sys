@@ -109,7 +109,7 @@
 							<th style="min-width:180px;"><B>Inquirer Country From</B></th>
 							<th style="min-width:180px;"><B>Inquirer State From</B></th>
 							<th style="min-width:180px;"><B>Inquirer City From</B></th>
-							<th style="min-width:180px;"><B>Inquirer Other City From</B></th>
+							<!-- <th style="min-width:180px;"><B>Inquirer Other City From</B></th> -->
 						</tr>
 
 						@foreach ($inquirers as $inquirer)
@@ -127,7 +127,7 @@
 								<td>{{ $inquirer->inquirerCountry }}</td>
 								<td>{{ $inquirer->inquirerState }}</td>
 								<td>{{ $inquirer->inquirerCity }}</td>
-								<td>{{ $inquirer->inquirerCityOther }}</td>
+								<!-- <td>{{ $inquirer->inquirerCityOther }}</td> -->
 							</tr>
 						@endforeach
 					</table>
