@@ -129,11 +129,11 @@
 						<!-- <div class='panel-group' id='myGroup'> -->
 						<div class='panel panel-default ' style='margin-top:1em;border-left:0px;border-right:0px;border-bottom:0px;'>
 							<div class="panel-heading" >
-								<a data-toggle="collapse" data-parent="#myGroup" data-target="#collapseTotalHouse"href="#collapseTotalHouse" ><h3>Total Houses</h3></a>
-								</div>
-								<div id='collapseTotalHouse' >
-									<div class="panel-body " >  
-										<div class="col-md-6 col-md-offset-1">
+								<a data-toggle="collapse" data-parent="#myGroup" data-target="#collapseTotalHouse" href="#collapseTotalHouse" aria-expanded="true"><h3>Total Houses</h3></a>
+							</div>
+							<div id='collapseTotalHouse' class="panel-collapse collapse in">
+								<div class="panel-body " >  
+									<div class="col-md-6 col-md-offset-1">
 										<table class="table table-responsive table2" style='border-left:0px;border-right:0px;'>
 										<tr><td class='col-md-5'>Houses</td><td class='col-md-3'id='totalHouses'></td><td>{{$count}}</td></tr></table>
 									</div>   
