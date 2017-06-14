@@ -306,21 +306,27 @@
             	 					@endif
             	 					> 
             	 				</td>
-            	 				<td><select class='country' id='country_{{$loop->index}}'>
+            	 				<td><select class='country_select' id='country_{{$loop->index}}'>
+                          @php data_to_option($countries,$query->country); @endphp
             	 					</select>
             	 				</td>
             	 				<td><select class='state' id='state_{{$loop->index}}'>
             	 					@php
-            	 						$States = list_to_data(public_path('list/Country_State/'.str_replace(' ','',$query->country).'_StateList'));
-            	 						data_to_option($States,$query->state);
+
+                          if(file_exists(public_path('list/Country_State/'.str_replace(' ','',$query->country).'_StateList'))){
+            	 						  $States = list_to_data(public_path('list/Country_State/'.str_replace(' ','',$query->country).'_StateList'));
+            	 						  data_to_option($States,$query->state);
+                          }
             	 					@endphp
             	 					</select>
             	 				</td>
             	 				<td><select class='city' id='city_{{$loop->index}}'>
             	 					@php
-		    	 						$cities = list_to_data(public_path('list/State_City/'.$query->state.'CityList'));
-		    	 						data_to_option($cities,$query->city);
-		    	 					@endphp
+                          if(file_exists(public_path('list/State_City/'.$query->state.'CityList'))){
+  		    	 						    $cities = list_to_data(public_path('list/State_City/'.$query->state.'CityList'));
+  		    	 						    data_to_option($cities,$query->city);
+                          }
+  		    	 					  @endphp
             	 					</select></td>
             	 				</td>
             	 				<!-- city other -->
@@ -573,9 +579,9 @@
                 <div class="col-sm-2 bg1">
                       <div class="caption">
                         <div class="my-title"><h5>House</h5></div>
-                        <a href="house"><h6>House Search</h6></a>
-                        <a href="house/add"><h6>Add New House</h6></a>
-                        <a href="house/modifyHouse2.php"><h6>Modify/Update Houses</h6></a>
+                        <a href="/housesearchindex"><h6>House Search</h6></a>
+                        <a href="/house/add"><h6>Add New House</h6></a>
+                        <a href="/house/modifyHouse2.php"><h6>Modify/Update Houses</h6></a>
                         <a id="extAllHouse" href=""><h6>Extract All Houses</h6></a>
                       </div>
                 </div>

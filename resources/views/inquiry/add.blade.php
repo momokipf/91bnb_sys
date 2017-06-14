@@ -174,7 +174,7 @@
 
 						<div class="form-group">
 								<div class="col-sm-6 col-sm-offset-4">
-									<button class="btn btn-primary btn-sm" type ="submit">Ssubmitearch</button>
+									<button class="btn btn-primary btn-sm" type ="submit">Search</button>
 									<!-- clear input by refresh page -->
 									<button class="btn btn-warning btn-sm" type="reset">Clear</button>   
 								</div>
@@ -387,7 +387,7 @@
 						<div class="col-lg-3">
 							<div>
 								<label>Country</label>
-								<select name = "country" type = "search" id="country" class="form-control">
+								<select name = "country" type = "search" id="country" class="form-control country">
 								</select>
 							</div>
 						</div>
@@ -742,6 +742,7 @@
 
 	<script type="text/javascript">
 		$(document).ready(function(){
+			loadOpt();
 			$("#inquiryDate").datepicker({
 			  dateFormat: "mm/dd/yy",
 			  maxDate: 0

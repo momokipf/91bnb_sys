@@ -143,10 +143,11 @@ class HousesController extends Controller
 
     public function showhouse(Request $request,$id)
     {
-    	$house = House::find($id);
+    	$house = House::with('Houseavailability','HousePrice')->find($id);
 
     	if($request->ajax() || $request->wantsJson())
     	{
+    		Log::info($house);
     		return response($house)
     				->header('Content-Type', 'json');
     	}
@@ -170,7 +171,7 @@ class HousesController extends Controller
     	$httpclient = new Client(['base_uri'=>'https://maps.googleapis.com/','timeout'=>2.0]);
 
     	$zipcode = $request->input('zipcode');
-    	$search_center = $request->input('center');
+    	$houseAddress = $request->input('houseAddress');
 
     	$country = $request->input('country');
     	$state = $this->getState($request->input('state'));
@@ -197,9 +198,9 @@ class HousesController extends Controller
 	    		$response =$httpclient->request('GET','maps/api/geocode/json?',['query'=>['address'=>$query_addr,'key'=>GOOGLE_KEY]]);
 
 	    	}
-	    	else if($search_center)
+	    	else if($houseAddress)
 	    	{
-	    		$query_addr=$search_center.($country?','.$country:' ').($state?','.$state:' ').($city?','.$city:' ').','.$zipcode;
+	    		$query_addr=$houseAddress.($country?','.$country:' ').($state?','.$state:' ').($city?','.$city:' ').','.$zipcode;
 	    		$response =$httpclient->request('GET','maps/api/geocode/json?',['query'=>['address'=>$query_addr,'key'=>GOOGLE_KEY]]);
 	    	}
     	}
@@ -213,9 +214,11 @@ class HousesController extends Controller
 				if($status=='OK')
 				{
 					//$target_pt = $obj->{'results'}[0]->{'geometry'}->{'location'}->{'lat'}.','.$obj->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
+
+					//$search_geo = collect($obj->{'results'}[0]->{'geometry'}->{'location'});
 					$target_pt = collect(['latitude'=>$obj->{'results'}[0]->{'geometry'}->{'location'}->{'lat'},'longitude'=>$obj->{'results'}[0]->{'geometry'}->{'location'}->{'lng'}]);
 					//$isExact = $obj->{'results'}[0]->{'geometry'}->{'location_type'};
-					Log::info($target_pt);
+					//Log::info($search_geo);
 				}
 				else if($status=='ZERO_RESULTS')
 				{
@@ -238,7 +241,7 @@ class HousesController extends Controller
 		$fields = array('r.numberID', 'fullHouseID', 'state', 'city', 'houseAddress','numOfRooms', 'numOfBaths','houseType','r.houseOwnerID','latitude','longitude',//basic information
                      'costMonthPrice', 'costDayPrice',//price information
                      'nextAvailableDate', 'minStayTerm','minStayUnit', 'rentShared',//available information
-                     'first', 'last', 'ownerUsPhoneNumber', 'ownerWechatUserName','ownerWechatID');
+                     'first', 'last', 'ownerUsPhoneNumber', 'ownerWechatUserName','ownerWechatID','first','last','ownerCompanyName');
 
 		if(isset($target_pt))
     	{
@@ -264,10 +267,13 @@ class HousesController extends Controller
 
 
     		$houses =$housebuilder->get();
+
+
     		$houses = collect($houses);
 
 
-
+    		Log::info(response($houses)
+                ->header('Content-Type', 'json'));
     		return response($houses)
                 ->header('Content-Type', 'json');
     	}
