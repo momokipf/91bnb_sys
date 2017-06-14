@@ -156,12 +156,13 @@
 										</div>
 								</div> <!-- button get -->
 
-								<div class="form-group">
-										<div class="col-sm-6 col-sm-offset-4">
-											<button class="btn btn-primary btn-sm" type ="submit">Search</button>
-											<!-- clear input by refresh page -->
-											<button class="btn btn-warning btn-sm" type="reset">Clear</button>   
-										</div>
+						<div class="form-group">
+								<div class="col-sm-6 col-sm-offset-4">
+									<button class="btn btn-primary btn-sm" type ="submit">Search</button>
+									<!-- clear input by refresh page -->
+									<button class="btn btn-warning btn-sm" type="reset">Clear</button>   
+
+
 								</div>
 							</form>
 						</div>
@@ -304,6 +305,7 @@
 												<input readonly id="inquirerID" class="form-control" name="inquirerID" type="search"/>
 											</div>
 										</div>
+
 
 										<div class="col-lg-3">
 											<div>
@@ -803,6 +805,7 @@
 
 	<script type="text/javascript">
 		$(document).ready(function(){
+			loadOpt();
 			$("#inquiryDate").datepicker({
 			  dateFormat: "mm/dd/yy",
 			  maxDate: 0

@@ -43,9 +43,11 @@
                 border-bottom: 1px solid #ddd;
                 border-radius: 0px 0px 5px 5px;
             }
-			#map_canvas{
-				margin-top:20px;width:100%;height:60%;display:none;*/
-			}
+            .input-w label, .input-w input {
+                float: none; /* if you had floats before? otherwise inline-block will behave differently */
+                display: inline-block;
+                vertical-align: middle;    
+            }
             #map_div{
                 height: 650px;
                 width: 100%;
@@ -54,6 +56,17 @@
               height: 100%;
               width: 100%;
              }
+            i.arrow {
+              border: solid black;
+              border-width: 0 3px 3px 0;
+              display: inline-block;
+              padding: 3px;
+            }
+            .left{
+                transform: rotate(135deg);
+                -webkit-transform: rotate(135deg);
+            }
+
 		</style>
 
 
@@ -112,7 +125,7 @@
                 <li><a data-toggle="tab" href="#aboutShare">Whole/Share</a></li>
                 <li><a data-toggle="tab" href="#aboutCheckin">Check-In/Out Date</a></li>
                 <li><a data-toggle="tab" href="#aboutCondition">House Condition</a></li>
-                <li><a data-toggle="tab" href="#aboutAmenity">Detail Condition</a></li>
+                <!-- <li><a data-toggle="tab" href="#aboutAmenity">Detail Condition</a></li> -->
                 <li><a data-toggle="tab" href="#aboutPrice">House/Room Price</a></li>
                 <!-- <li><a data-toggle="tab" href="#aboutOwner">House Owner</a></li> -->
             </ul>
@@ -149,6 +162,7 @@
                                 <input id="administrative_area_level_1" name="state">
                                 <input id="locality" name="city">
                                 <input id="route" name="route">
+                                <input id="address" diabled>
                         </div>
 
                         <div class="row">
@@ -324,7 +338,7 @@
                 </div><!-- / House Condition -->
 
                <!-- condtion details -->
-                <div class="tab-pane fade" id="aboutAmenity" style="font-size:12px;">
+                <!-- <div class="tab-pane fade" id="aboutAmenity" style="font-size:12px;">
                     <h5>Basic Info</h5>
                     <div class="row">
                         <div class="col-sm-2">
@@ -569,7 +583,7 @@
                             <textarea name="additionalNote" ROWS=10 COLS=100 class="form-control input-sm"></textarea>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="tab-pane fade" id="aboutPrice">
                     <!-- <div class="alert alert-warning">
@@ -685,12 +699,18 @@
     </div>
     </div>
 
-    <div class="" id="showResult" style="margin-top:60px;overflow:auto;margin-bottom:60px;" hidden>
-        <table class="table table-bordered table-striped text-center" style="font-size:12px;">
+
+    <hr>
+
+    <div class="" id="showResult" style="width='100%';margin-top:60px;display:none" >
+        <div class="row" id="back_menu" onclick="resultSM.toTablePage()" >
+            <button><p><i class="arrow left" ></i>Back</p></button>
+        </div>
+        <table id="housestable" class="table table-bordered table-striped text-center" style="font-size:12px;">
             <thead>
                 <tr>
                     <th style="min-width:50px;">Number ID</th>
-                    <th style="min-width:100px;">House ID</th>
+                    <!-- <th style="min-width:100px;">House ID</th> -->
                     <th style="min-width:100px;">State</th>
                     <th style="min-width:100px;">City</th>
                     <th style="min-width:150px;">House Address</th>
@@ -705,7 +725,7 @@
                     <th style="min-width:100px;">Minimum Stay Term</th>
                     <th style="min-width:100px;">Whole/Share</th>
                     <th style="min-width:150px;">View House info</th>
-                    <th style="min-width:150px;">View Owner info</th>
+                    <th style="min-width:159px;">View Owner info</th>
                     <!--<th style="min-width:170px;">Owner Phone Number</th>
                     <th style="min-width:170px;">Owner Name</th>
                     <th style="min-width:150px;">WeChat Name</th>
@@ -717,7 +737,103 @@
             </tbody>
 
         </table>
+        <div id = "ownerdiv" >
+        </div>
+        <div id = "housediv" class="container" style="display:none">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#HouseBasicinfo">Basic Info</a></li>
+                <li><a data-toggle="tab" href="#HouseCondition">Condition</a></li> 
+                <li><a data-toggle="tab" href="#HouseAvailability">Availability</a></li>
+                <li><a data-toggle="tab" href="#HousePrice">Price</a></li>
+                <!-- <li><a data-toggle -->
+            </ul>
+            <div class="tab-content">
+                <div id="HouseBasicinfo" class="tab-pane fade in active" style="pading:20px;">
+                    <div class="row" >
+                        <div class="col-sm-2 input-w">
+                            <label>House ID:</label><p id="houseid_info"></p>
+                         </div>  
+                        <div class='col-sm-2'>
+                            <label>House Owner ID:</label>
+                            <p id='houseOwnerID_info'></p>
+                        </div> 
+                        <div class='col-sm-2'>
+                            <label>House ID in Owner:</label>
+                            <p id='houseIDByOwner_info'></p>
+                        </div> 
+                    </div>
+
+                    <div class='row'>
+                        <div class="col-sm-2 input-w">
+                            <label>Country:</label><p id="country_info"></p>
+                        </div>
+                        <div class="col-sm-2 input-w">
+                            <label>State:</label><p id="state_info"></p>
+                        </div>
+                        <div class="col-sm-2 input-w">
+                            <label>City:</label><p id="city_info"></p>
+                        </div>
+                        <div class='col-sm-2'>
+                            <label>Region:</label>
+                            <p id='region_info'></p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class='col-sm-6'>
+                            <label>House Address:</label>
+                            <p id='houseAddress_info'></p>
+                        </div>
+                        <div class='col-sm-2'>
+                            <label>Zip:</label>
+                            <p id='houseZip_info'></p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class='col-sm-4'>
+                            <label>House Type:</label>
+                            <p id="houseType_info"></p>
+                        </div>
+                        <div class='col-sm-4'>
+                            <label>Size:</label>
+                            <p id="size_info"></p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class='col-sm-2'>
+                            <label>Number Of Rooms:</label>
+                            <p id='numOfRooms_info'></p>
+                        </div>
+                        <div class='col-sm-2'>
+                            <label>Number Of Baths:</label>
+                            <p id='numOfBaths_info'></p>
+                        </div>
+                        <div class='col-sm-2'>
+                            <label>Number Of Beds:</label>
+                            <p id='numOfBeds_info'></p>
+                        </div>
+                        <div class='col-sm-2'>
+                            <label>Max Number of Guests</label>
+                            <p id='maxNumOfGuest_info'></p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class='col-sm-4'>
+                            <label>On Other Website</label>
+                            <p id='onOtherWebsite_info'></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- <div class="container">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href"#"> -->
 
 </div>
 
@@ -740,13 +856,15 @@ src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAAIAQT72
     };
     var rangemarker;
     var itemsToShow = [
-        'numberID','fullHouseID', 'state', 'city', 'houseAddress',
+        'numberID', 'state', 'city', 'houseAddress',
         'numOfRooms', 'numOfBaths',
         'houseType','costMonthPrice', 'costDayPrice', 'nextAvailableDate',
         'minStayTerm','rentShared',
         // ,'OwnerName', 'ownerUsPhoneNumber', 'ownerWechatUserName','ownerWechatID'
     ];
     var infowindow ;
+    var resultSM;
+
 
     function initMap(){
         uluru = {lat: 36.778259, lng: -119.417931};
@@ -778,7 +896,7 @@ src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAAIAQT72
         autocomplete = new google.maps.places.Autocomplete(
             (document.getElementById('houseAddress')),
             options);
-        autocomplete.addListener('place_changed',geolocate)
+        autocomplete.addListener('place_changed',geolocate);
     }
 
     function initialize(){
@@ -877,27 +995,15 @@ $(document).ready(function() {
           }
         });
 
-
-        loadOpt();
+        if(document.getElementById('address').value){
+            document.getElementById('houseAddress').value =  document.getElementById('address').value;
+            $("#houseAddress").focus();
+        }
+        // $("#housestable").colResizable({liveDrag:true});
+        //loadOpt();
+        // alert((document.getElementById('houseAddress')).value);
+        // alert((document.getElementById('milesrange')).value);
     });
-
-    
-    /*
-
-    TODO: implement extract content to excel later
-    Date: 06/09/2017
-    $("#extall").click(function(){
-        console.log("displayInquiry - extract all");
-        $(".loaderDiv").show();
-
-        // post excel download requeset to myResponse.php
-        $.post("ext_filter_house.php",
-                    $("#myForm").serialize(),
-                // {   msg: "filter"
-                // },
-        function(data){ $(".loaderDiv").hide();  window.location.href="../PHPExcel/Files/" + data;})
-    });
-    */
 
     /*
     TODO:(1)add link to initialize a GET request to server to get house info
@@ -921,10 +1027,17 @@ $(document).ready(function() {
                 if(map){
                     deleteMarkers();
                 }
+
+
                 mapMovecenter(search_geo);
+
+
+
                 var tablehtml = "";
                 if(data.length>0){
+
                     $("#showResult").show();
+                    resultSM = makeResuiltSM();
 
                     for(var i=0;i<data.length;++i)
                     {
@@ -950,24 +1063,37 @@ $(document).ready(function() {
                         var rowhtml = "<tr id='house_" + data[i]['numberID'] + "'>";
                         var numberID = data[i].numberID;
                         for(var j =0 ; j< itemsToShow.length;++j){
+
+                            // if(j==0){
+                            //     rowhtml += "<td class='left'>";
+                            // }
+                            // if(j==itemsToShow.length-1){
+                            //     rowhtml += "<td class='right'>";
+                            // }
+
                             if(!data[i][itemsToShow[j]]){
                                 rowhtml += "<td>N/A</td>";
                                 continue;
                             }
 
+
                             if(itemsToShow[j]=='numberID'){
-                                rowhtml += "<td> <a href='#map_div' onclick = 'makeMarkerBounce("+i+");' >" + 
+                                rowhtml += "<td><a href='#map_div' onclick = 'makeMarkerBounce("+i+");' >" + 
                                             numberID + "</a></td>";
                             }
                             else if(itemsToShow[j] == 'OwnerName'){
-                                rowhtml += "<td>" + data[i].first + ' ' + data[i].last + "</td>";
+                                rowhtml +=  "<td>"+data[i].first + ' ' + data[i].last + "</td>";
                             }
                             else 
-                                rowhtml += "<td>" + data[i][itemsToShow[j]] + "</td>"; 
+                                rowhtml += "<td>"+data[i][itemsToShow[j]] + "</td>"; 
+                            //console.log(rowhtml);
                         }
 
-                        rowhtml += "<td><a onclick=' retrieveHouseInfo("+numberID+");' > View House Info</td>";
-                        rowhtml += "<td><a href='/houseowner/" +data[i].houseOwnerID+"' > View House Owner Info</td>";
+                        //rowhtml += "<td><a onclick=' retrieveHouseInfo("+numberID+");' > View House Info</td>";
+                        rowhtml += "<td><button type='button' class='btm btn-info' onclick='retrieveHouseInfo("+data[i].numberID+");resultSM.toHousePage("+i+")'>"+"View House Info"+"</button></td>";
+                        rowhtml += "<td><button type='button' class='btm btn-info' onclick='resultSM.toOwnerPage("+i+")'>View Owner Info</button></td>";
+                        attachHouseOwnerDiv(data[i],i);
+
                         rowhtml += "</tr>";
                         tablehtml += rowhtml;
                     }
@@ -1056,20 +1182,6 @@ $(document).ready(function() {
         housemarkers=[];
     }
 
-    // function infoWindow(marker, map, title, address, id) {
-    // 	  google.maps.event.addListener(marker, 'click', function() {
-    // 			if(previousmarker != false){
-    // 				previousmarker.close();
-    // 			}
-    // 	    var html = "<div><h3>" + title + "</h3><p>" + address + "<br></div><a onclick='selecthouse("+id+")'>View Details</a></p></div>";
-    // 	    iw = new google.maps.InfoWindow({
-    // 	      content: html,
-    // 	      maxWidth: 350
-    // 	    });
-    // 	    iw.open(map, marker);
-    // 			previousmarker = iw;
-    // 	  });
-    // }
     function geolocate(){
         var place = autocomplete.getPlace();
         //console.log(JSON.stringify(place));
@@ -1082,71 +1194,138 @@ $(document).ready(function() {
                 }
             }
             search_geo = place.geometry;
+            document.getElementById('address').value = document.getElementById('houseAddress').value;
+        }
+        else {
+            alert("something wrong");
         }
     }
 
 
-    function retrieveHouseInfo(houseid){
-    }
-
-    function retrieveHouseOwnerInfo(houseid){
+    function retrieveHouseInfo(id){
         $.ajax({
             type:"GET",
-            url:"/houseowner/"+houseid,
+            url:"/house/info/"+id,
             datatype:'json',
             success: function(data){
-                alert(JSON.stringify(data));
+                //alert(JSON.stringify(data));
+                $('#houseid_info').text(data.numberID);
+                $('#houseOwnerID_info').text(data.houseOwnerID);
+                $('#houseIDByOwner_info').text((data.houseIDByOwner?data.houseIDByOwner:"N/A"));
+                $('#country_info').text(data.country);
+                $('#state_info').text(data.state);
+                $('#city_info').text(data.city);
+                $('#region_info').text(data.region);
+                $('#houseAddress_info').text(data.houseAddress);
+                $('#houseZip_info').text(data.houseZip);
+                $('#houseType_info').text(data.houseType);
+                $('#size_info').text(data.size);
+                $('#numOfRooms_info').text(data.numOfRooms);
+                $('#numOfBaths_info').text(data.numOfBaths);
+                $('#numOfBeds_info').text(data.numOfBeds);
+                $('#maxNumOfGuest_info').text(data.maxNumOfGuest);
+                $('#onOtherWebsite_info').text(data.onOtherWebsite);
             }
         });
     }
 
+    function attachHouseOwnerDiv(data,index){
+        var houseownerhtml= "<div class='col-sm-6' id=ownerinfo_"+index+" style='width=\"50%\";display:none'>";
+        houseownerhtml+= "<table class='table table-bordered table-striped text-center' style='font-size:12px;' >";
+        houseownerhtml += "<thead></thead><tbody><col width = '20%'><col width='80%'>"
 
-// function selecthouse(numberID) {
-// 	$.ajax({
-// 		type: "POST",
-// 		dataType: "html",//data type expected from server
-// 		url: "housedetailinshowhouse.php",
-// 		data: 'numberID='+numberID,
-// 		success: function(data) {
-// 			$("#showForm").html(data);
-// 				// -----------------------------------------------
-// 											$("#btnDiscard").click(function() {
-// 													$("#houseID_search_form").submit();
-// 											});
+        var displayedfield = ['Name','ownerCompanyName','ownerUsPhoneNumber','ownerPhone2Number','ownerEmail','ownerWechatUserName'];
+
+        for(var i =0;i<displayedfield.length;++i){
+            switch(displayedfield[i]){
+                case 'Name':houseownerhtml += "<tr><td>Owner Name</td>"+
+                                                "<td>"+data.first+' '+data.last+"</td></tr>";
+                                break;
+                case 'ownerCompanyName': houseownerhtml += "<tr><td> Company Name </td>"+
+                                                           "<td>"+(data[displayedfield[i]]?data[displayedfield[i]]:"Individual")+"</td><tr>";
+                                                           break;
+                case 'ownerUsPhoneNumber':houseownerhtml += "<tr><td>US Phone Number</td>"+
+                                                           "<td>"+data[displayedfield[i]]+"</td><tr>";
+                                                           break;
+                case 'ownerPhone2Number': houseownerhtml += "<tr><td>Other Phone Number</td>"+
+                                                           "<td>"+(data[displayedfield[i]]?data[displayedfield[i]]:"N/A")+"</td><tr>";
+                                                           break;
+                case 'ownerEmail': houseownerhtml += "<tr><td>Email</td>"+
+                                                           "<td>"+(data[displayedfield[i]]?data[displayedfield[i]]:"N/A")+"</td><tr>";
+                                                           break; 
+                case 'ownerWechatUserName': houseownerhtml += "<tr><td>Wechat Username</td>"+
+                                                           "<td title='Wechat ID:"+data.ownerWechatID+"'>"+(data[displayedfield[i]]?data[displayedfield[i]]:"N/A")+"</td><tr>";
+                                                           break;
+            }
+        }
+        houseownerhtml+= "</tbody></table></div>";
+
+        $('#ownerdiv').append(houseownerhtml);
+    }
 
 
-// 											$("#allowKid").change(function(){
-// 													if ($("#allowKid").is(":checked")) {
-// 															$("#allowKidAge").removeAttr('disabled');
-// 													} else {
-// 															$("#allowKidAge").attr('disabled', 'true');
-// 																// $("#allowKidAge").removeAttr('value');
-// 															$("#allowKidAge").val('');
 
-// 													}
-// 											});
+    var makeResuiltSM = function(){
+        var states = -1 ;  
+        var divindex = -1;
 
-// 											$("#allowPets").change(function(){
-// 													if ($("#allowPets").is(":checked")) {
-// 															$("#allowPetType").removeAttr("disabled");
-// 													} else {
-// 															$("#allowPetType").attr("disabled", "true");
-// 															$("#allowPetType").val('');
-// 													}
-// 											});
+        function changestate(stat){
+            switch(stat){
+                case "Table": states=0; break;
+                case "House": states=1; break;
+                case "Owner": states=2; break;
+            }
+        }  
+        function getstates(){
+            switch(states){
+                case 0: return "Table";
+                case 1: return "House";
+                case 2: return "Owner";
+            }
+        }
 
-// 											$("#havePet").change(function(){
-// 													if ($("#havePet").is(":checked")) {
-// 															$("#havePetType").removeAttr("disabled");
-// 													} else {
-// 															$("#havePetType").attr("disabled", "true");
-// 															$("#havePetType").val('');
-// 													}
-// 											});
-// 		}
+        function setDivindex(val){
+            divindex = val;
+        }
 
-// 	});
-// }
+        function getDivindex(){
+            return divindex;
+        }
+        return {
+            toOwnerPage:function(index){
+                $('#housestable').fadeOut();
+                //$('#ownerdiv').show();
+                $('#ownerinfo_'+index).show();
+                $("#back_menu").show();
+                changestate("Owner");
+                setDivindex(index);
+            },
+            toHousePage: function(index){
+                $('#housestable').fadeOut();
+                $('#housediv').fadeIn();
+                $('#back_menu').show();
+                changestate("House");
+                setDivindex(index);
+            },
+            toTablePage:function(){
+                $('#housestable').fadeIn();
+                if(getstates()=="Owner"){
+                    //$('#ownerdiv').hide();
+                    $('#ownerinfo_'+getDivindex()).hide();
+                    //$("#back_menu").css("visibility", "hidden");
+                    setDivindex(-1);
+                }
+                if(getstates()=="House"){
+                    //$("#back_menu").css("visibility", "hidden");
+                    $('#housediv').fadeOut();
+                    setDivindex(-1);
+                }
+                changestate("Table");
+            }
+        }
+    }
+
+
 </script>
 </body>
 </html>

@@ -47,8 +47,8 @@ Route::post('inquirer/searchAndModify', 'InquirersController@searchAndModify');
 Route::post('inquirer/add', 'InquirersController@store');
 
 
-Route::get('house','HousesController@searchindex');
-Route::get('house/{id}','HousesController@showhouse');
+Route::get('housesearchindex','HousesController@searchindex');
+Route::get('house/info/{id}','HousesController@showhouse');
 Route::get('house/add','HousesController@addindex');
 Route::post('house/search','HousesController@search');
 
