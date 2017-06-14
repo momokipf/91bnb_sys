@@ -57,6 +57,10 @@ class Inquiry extends Model
     	return $this->hasMany('App\InquiryFollow','inquiryID');
     }
 
+    public function roomType(){
+        return $this->hasMany('App\RoomRequirement','inquiryID');
+    }
+
     public function represent(){
     	return $this->belongsTo('App\Representative','repID');
     }

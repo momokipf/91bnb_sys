@@ -29,9 +29,11 @@ function loadOpt()
 
 		$.get("/resource/roomTypes",function(data,status){
 				$('#room1Type').empty();
+				// $('#room2Type').empty();
 				for(i=0;i<data.length;++i){
 					var option = $("<option></option>").attr("value", data[i]).text(data[i]);
 					$('#room1Type').append(option);
+					$('#room2Type').append("<option>" + data[i] + "</option>");
 				}
 
 		});

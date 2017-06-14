@@ -12,6 +12,8 @@ use Illuminate\Routing\Redirector;
 use App\Inquiry;
 use App\Inquirer;
 use App\Representative;
+use App\RoomRequirement;
+
 use Validator;
 use View;
 use DB;
@@ -29,9 +31,9 @@ class InquirysController extends Controller
 	public function addIndex()
     {
 
-        $allreps = Representative::GetValuesinField('repName')->get()->toarray();
+        $allreps = Representative::GetValuesinField('repName')->get();
 
-        $allreps = array_flatten($allreps);
+        // $allreps = array_flatten($allreps);
 
     	return view('inquiry/add')
                  ->with('Allreps',$allreps)
@@ -52,7 +54,7 @@ class InquirysController extends Controller
         Log::info($input);
         $validator= Validator::make($input,[
                     'inquirerID' => 'bail|required',
-                    'repID' => 'bail|required',
+                    // 'repID' => 'bail|required',
                     'inquiryDate' => 'bail|required',
                     'checkIn' => 'required',
                     'inquirySourceOther' => 'max:20',
@@ -61,13 +63,37 @@ class InquirysController extends Controller
         {
             return $validator->errors();
         }
-        if($input["repID"] == Auth::user()->repID)
-        {
-            $newquiry = new Inquiry($input);
-            Log::info($newquiry);
-            $inquirer = Inquirer::find($input["inquirerID"]);
-            $inquirer->queries()->save($newquiry);
-        }   
+        $input["repID"] = Representative::where('repUserName', $input['repWithOwner'])->first()->repID;
+        unset($input['_token']);
+        unset($input['repWithOwner']);
+        unset($input["room1Type"]);
+        unset($input["room1TypeOther"]);
+        unset($input["room2Type"]);
+        unset($input["room2TypeOther"]);
+        Log::info($input);
+        $id = Inquiry::insertGetId($input);
+
+        $data = $request->all();
+        $room = array();
+        for ($i = 1; $i <= 2; $i++) {
+            if ($data["room".$i."Type"] != null) {
+                $room["inquiryID"] = $id;
+                $room["roomID"] = $i;
+                $room["roomType"] = $data["room".$i."Type"];
+                $room["roomTypeOther"] = $data["room".$i."TypeOther"];
+                Log::info($room);
+                RoomRequirement::insert($room);
+            }
+        }
+
+        // if($input["repID"] == Auth::user()->repID)
+        // {
+        //     $newquiry = new Inquiry($input);
+        //     Log::info($newquiry);
+        //     $inquirer = Inquirer::find($input["inquirerID"]);
+        //     $inquirer->queries()->save($newquiry);
+        // }
+        return "{}";
     }
 
     public function searchIndex()

@@ -129,11 +129,11 @@
 						<!-- <div class='panel-group' id='myGroup'> -->
 						<div class='panel panel-default ' style='margin-top:1em;border-left:0px;border-right:0px;border-bottom:0px;'>
 							<div class="panel-heading" >
-								<a data-toggle="collapse" data-parent="#myGroup" data-target="#collapseTotalHouse"href="#collapseTotalHouse" ><h3>Total Houses</h3></a>
-								</div>
-								<div id='collapseTotalHouse' >
-									<div class="panel-body " >  
-										<div class="col-md-6 col-md-offset-1">
+								<a data-toggle="collapse" data-parent="#myGroup" data-target="#collapseTotalHouse" href="#collapseTotalHouse" aria-expanded="true"><h3>Total Houses</h3></a>
+							</div>
+							<div id='collapseTotalHouse' class="panel-collapse collapse in">
+								<div class="panel-body " >  
+									<div class="col-md-6 col-md-offset-1">
 										<table class="table table-responsive table2" style='border-left:0px;border-right:0px;'>
 										<tr><td class='col-md-5'>Houses</td><td class='col-md-3'id='totalHouses'></td><td>{{$count}}</td></tr></table>
 									</div>   
@@ -364,89 +364,8 @@
 					</div>
 				</div>
 				<!-- </table> -->
-				<table id="USAtable" class="table table-striped"></table>
-				<table id="USAcitytable" class="table table-striped"></table>
-		   </div>
-
-
-			<div id="UK" class="tab-pane">
-				<table id="UKtable" class="table table-striped">
-				</table>
-				<div id="UKchartContainer" style="height: 300px; width: 50%;"></div>
-
-		   </div>
-
-		   <div id="selectUSA" class="tab-pane">
-				<p class="text-center" style="font-size: 20px; font-weight: 700">Selected USA Rental Location Table</p>
-
-			   <!--        search-->
-				<form class="form-inline" onsubmit="return searchRentArea()">
-					<div class="form-group">
-						<label for="starttime">Select a Duration From</label>
-						<input type="date" class="form-control" id="date1">
-						<label for="endtime">To</label>
-						<input type="date" class="form-control" id="date2">
-					</div>
-					<button id="searchtheDate" type="submit" class="btn btn-default" >Search</button>
-					<button id="resettheDate" type="reset" class="btn btn-default" >Reset</button>
-					<button id="showtable" class="btn btn-success" disabled="true">Export Excel</button>
-				</form>
-				<hr>
-
-			   <table id="USASelectTable" class="table table-striped"></table>
-			   <table id="USAcitySelectTable" class="table table-striped"></table>
-
-				<div id="select_print_inquiry" style="padding-left: 30px; padding-right: 30px; padding-bottom: 50px; background-color: white";>
-					<p class="text-center" style="font-size: 20px; font-weight: 700">Selected USA Rental Location (Cities) Chart</p>
-					<hr>
-					<!--<button id="select_printChart" style="display: none">Print Chart</button>  -->
-					<div id="USAselectChartContainer" style="height: 600px; width: 100%;"></div>
-				</div>
-			</div>
-
-
-			<div id="levelpiechart" class="tab-pane">
-				<div id="country_level" style="padding-left: 30px; padding-right: 30px; padding-bottom: 20px; background-color: white">
-					<p class="text-center" style="font-size: 20px; font-weight: 700">Country Level</p>
-					<hr>
-				 <!--	<button id="country_printChart" style="display: none">Print Chart</button>  -->
-
-					<div id="country_level_chart" style="height: 400px; width: 100%; padding-left: 300px;"></div>
-					<select id="country_select" style="margin-top: 50px;">
-						<option value="Choose" selected="selected">Choose</option>
-					</select>
-
-				</div>
-
-				<div id="state_level" style="padding-left: 30px; padding-right: 30px; padding-bottom: 20px; background-color: white">
-					<p class="text-center" style="font-size: 20px; font-weight: 700">State Level</p>
-					<hr>
-				<!--	<button id="state_printChart" style="display: none">Print Chart</button>  -->
-
-					<div id="state_level_chart" style="height: 400px; width: 100%;"></div>
-					<select id="state_select" style="margin-top: 50px;">
-	<!-- 					<option value="Choose" selected="selected">Choose</option>   -->
-					</select>
-
-				</div>
-
-				<div id="city_level" style="padding-left: 30px; padding-right: 30px; padding-bottom: 20px; background-color: white">
-					<p class="text-center" style="font-size: 20px; font-weight: 700">City Level</p>
-					<hr>
-				<!--	<button id="city_printChart" style="display: none">Print Chart</button>  -->
-
-					<div id="city_level_chart" style="height: 500px; width: 100%;"></div>
-
-
-				</div>
-				<p style="height: 50px;"></p>
-
-			</div>
-
-			<div id="map" class="tab-pane fade">
-				<p class="text-center" style="font-size: 20px; font-weight: 700">House Location in Map</p>
-				<hr>
-				<!-- <iframe id="iframeid" src="houseMap.html" ></iframe> -->
+				<!-- <table id="USAtable" class="table table-striped"></table>
+				<table id="USAcitytable" class="table table-striped"></table> -->
 			</div>
 		</div>
 	</body>
