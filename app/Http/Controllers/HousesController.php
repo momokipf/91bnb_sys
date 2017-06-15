@@ -183,10 +183,11 @@ class HousesController extends Controller
 
     	$numOfRoomsFrom = $request->input('numOfRoomsFrom');
     	$numOfRoomsTo = $request->input('numOfRoomsTo');
+    	$rentShared = $request->input('rentShareWhole');
 
 
-    	$target_pt = "";
-
+    	$target_pt = null;
+    	$search_geo = null;
     	if($request->input('search_latitude')&&$request->input('search_longitude'))
     	{
     		$target_pt = collect(['latitude'=>$request->input('search_latitude'),'longitude'=>$request->input('search_longitude')]);
@@ -215,7 +216,7 @@ class HousesController extends Controller
 				{
 					//$target_pt = $obj->{'results'}[0]->{'geometry'}->{'location'}->{'lat'}.','.$obj->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
 
-					//$search_geo = collect($obj->{'results'}[0]->{'geometry'}->{'location'});
+					$search_geo = collect($obj->{'results'}[0]->{'geometry'});
 					$target_pt = collect(['latitude'=>$obj->{'results'}[0]->{'geometry'}->{'location'}->{'lat'},'longitude'=>$obj->{'results'}[0]->{'geometry'}->{'location'}->{'lng'}]);
 					//$isExact = $obj->{'results'}[0]->{'geometry'}->{'location_type'};
 					//Log::info($search_geo);
@@ -242,7 +243,7 @@ class HousesController extends Controller
                      'costMonthPrice', 'costDayPrice',//price information
                      'nextAvailableDate', 'minStayTerm','minStayUnit', 'rentShared',//available information
                      'first', 'last', 'ownerUsPhoneNumber', 'ownerWechatUserName','ownerWechatID','first','last','ownerCompanyName');
-
+		Log::info($target_pt);
 		if(isset($target_pt))
     	{
     		$housesql = House::WithinCircle($radius,$target_pt)->toSql();
@@ -253,8 +254,13 @@ class HousesController extends Controller
     					->join('HousePrice','r.numberID','=','HousePrice.numberID')
     					->join('HouseAvailability','r.numberID','=','HouseAvailability.numberID')
     					->join('HousingCondition','r.numberID','=','HousingCondition.numberID')
-    					->whereRaw($circlesql.'<'.$radius*1000)
-    					->orderBy(DB::raw($circlesql));
+    					->whereRaw($circlesql.'<'.$radius*1000);
+
+    		if($rentShared!=0){
+    			$housebuilder = $housebuilder->where('rentShared','=',$rentShared);
+    		}
+    		$housebuilder = $housebuilder
+    							->orderBy(DB::raw($circlesql));
 
     		if(isset($numOfRoomsFrom))
     		{
@@ -266,16 +272,16 @@ class HousesController extends Controller
     		}
 
 
-    		$houses =$housebuilder->get();
+    		//$houses = collect(['houses'=>$housebuilder->get()]);
 
 
-    		$houses = collect($houses);
+    		//$data = collect(['houses'=>$houses],['geo_center'=>$search_geo]);
 
 
-    		Log::info(response($houses)
-                ->header('Content-Type', 'json'));
-    		return response($houses)
-                ->header('Content-Type', 'json');
+    		return response()
+    			->json(['houses'=>$housebuilder->get(),
+    					 'geo_center'=>$search_geo
+    				]);
     	}
 
 

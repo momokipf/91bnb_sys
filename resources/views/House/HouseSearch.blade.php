@@ -23,6 +23,7 @@
 				<script src="{{asset('js/bootbox.min.js')}}"></script>
                 <link rel="stylesheet" href="{{asset('css/self.css')}}">
                 <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
+                <link rel="stylesheet" href="{{asset('css/priceswitch.css')}}">
                 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
                 <script src="{{asset('js/util.js')}}"></script>
               <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -43,10 +44,18 @@
                 border-bottom: 1px solid #ddd;
                 border-radius: 0px 0px 5px 5px;
             }
-            .input-w label, .input-w input {
-                float: none; /* if you had floats before? otherwise inline-block will behave differently */
+            a {
+                text-decoration: none;
                 display: inline-block;
-                vertical-align: middle;    
+                padding: 8px 16px;
+            }
+            a:hover {
+                background-color: #ddd;
+                color: black;
+            }
+            .previous {
+                background-color: #f1f1f1;
+                color: black;
             }
             #map_div{
                 height: 650px;
@@ -65,6 +74,20 @@
             .left{
                 transform: rotate(135deg);
                 -webkit-transform: rotate(135deg);
+            }
+
+            #houseroomswitch-inner:before {
+                content: "House";
+            }
+            #houseroomswitch-inner:after {
+                content: "Room";
+            }
+
+            #monthdailyswitch-inner:before{
+                content: "Monthly";
+            }
+            #monthdailyswitch-inner:after{
+                content: "Daily";
             }
 
 		</style>
@@ -96,7 +119,8 @@
           <!-- navbar right -->
           <ul class="nav navbar-nav navbar-right">
               <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                  <a href="#" class=
+                  "dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                       <span class="glyphicon glyphicon-user"></span>
                         {{$Rep->repUserName}}
                       <span class="caret"></span></a>
@@ -260,7 +284,7 @@
 
                 <div class="tab-pane fade" id="aboutCheckin">
                     <div class="row">
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <label>Check-In Date</label>
                             @if(!isset($Query)&&isset($Query->checkIn))
                             <input class="form-control input-sm" type="search" id="checkin" name="checkin" value="{{$Query->checkIn}}">
@@ -269,7 +293,7 @@
                             @endif
                         </div>
 
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <label>Check-Out Date</label>
                             @if(!isset($Query)&&isset($Query->checkOut))
                             <input class="form-control input-sm" type="search" id="checkout" name="checkout" value="{{$Query->checkOut}}">
@@ -586,93 +610,49 @@
                 </div> -->
 
                 <div class="tab-pane fade" id="aboutPrice">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <label>Monthly Price Approx</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                    <input class="form-control input-sm" type="text" id="Price" name="Price">
+                                <span class="input-group-addon">with Up/Down Rate of</span>
+                                <SELECT id='houseMonthlyRate' class='form-control input-sm' name="Rate">
+                                        <OPTION value=5 selected>&nbsp;&nbsp;5%</OPTION>
+                                        <OPTION value=10>10%</OPTION>
+                                        <OPTION value=20>20%</OPTION>
+                                        <OPTION value=50>50%</OPTION>
+                                </SELECT>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="col-sm-6">
+                                <div class="onoffswitch" style="margin: auto;">
+                                    <input type="checkbox" name="houseroomswitch" class="onoffswitch-checkbox" id="houseroomswitch" checked>
+                                    <label class="onoffswitch-label" for="houseroomswitch">
+                                        <span class="onoffswitch-inner" id="houseroomswitch-inner"></span>
+                                        <span class="onoffswitch-switch"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="onoffswitch" style="margin: auto;">
+                                    <input type="checkbox" name="monthdailyswitch" class="onoffswitch-checkbox" id="monthdailyswitch" checked>
+                                    <label class="onoffswitch-label" for="monthdailyswitch">
+                                        <span class="onoffswitch-inner" id="monthdailyswitch-inner"></span>
+                                        <span class="onoffswitch-switch"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- <div class="alert alert-warning">
                       <em><i class="fa fa-info-circle" aria-hidden="true"></i><strong> Inquiry Budget: </strong>
                       From $ <input style="background-color:#E6E6E6" class="input-sm" value= readonly> to $
                         <input style="background-color:#E6E6E6" class="input-sm" value="'.$budgetUpper.'" disabled>';
                     if ($budgetUnit == '1') {echo ' Per Month</em></div>'; } else { echo ' Per Day</em></div>'; } -->
-                    <div class="row">
-                    <div class="col-sm-6">
-                            <h4>House Price Range</h4>
-                            <div class="row">
-                                <div class="col-sm-10">
-                                    <label>Monthly Price Approx</label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">$</span>
-                                        <?php
-                                            echo '<input class="form-control input-sm" type="text" id="houseMonthlyPrice" name="houseMonthlyPrice">';
-                                        ?>
-                                        <span class="input-group-addon">with Up/Down Rate of</span>
-                                        <SELECT id='houseMonthlyRate' class='form-control input-sm' name="houseMonthlyRate">
-                                                <OPTION value=5 selected>&nbsp;&nbsp;5%</OPTION>
-                                                <OPTION value=10>10%</OPTION>
-                                                <OPTION value=20>20%</OPTION>
-                                                <OPTION value=50>50%</OPTION>
-                                        </SELECT>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-10">
-                                    <label>Daily Price Approx</label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">$</span>
-                                        <?php
-
-                                            echo '<input class="form-control input-sm" type="text" id="houseDailyPrice" name="houseDailyPrice">';
-
-                                        ?>
-                                        <span class="input-group-addon">with Up/Down Rate of</span>
-                                        <SELECT id="houseDailyRate" class="form-control input-sm" name="houseDailyRate">
-                                                <OPTION value=5 selected>&nbsp;&nbsp;5%</OPTION>
-                                                <OPTION value=10>10%</OPTION>
-                                                <OPTION value=20>20%</OPTION>
-                                                <OPTION value=50>50%</OPTION>
-                                        </SELECT>
-                                    </div>
-                                </div>
-                            </div>
-                    </div>
-
-
-                    <div class="col-sm-6">
-                        <h4>Room Price Range</h4>
-                    <div class="row">
-                            <div class="col-sm-10">
-                                <label>Monthly Price Approx</label>
-                                <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input class="form-control input-sm" type="text" id="roomMonthlyPrice" name="roomMonthlyPrice">
-                                    <span class="input-group-addon">with Up/Down Rate of</span>
-                                    <SELECT id='roomMonthlyRate' class='form-control input-sm' name="roomMonthlyRate">
-                                            <OPTION value=5 selected>&nbsp;&nbsp;5%</OPTION>
-                                            <OPTION value=10>10%</OPTION>
-                                            <OPTION value=20>20%</OPTION>
-                                            <OPTION value=50>50%</OPTION>
-                                    </SELECT>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-sm-10">
-                                <label>Daily Price Approx</label>
-                                <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input class="form-control input-sm" type="text" id="roomDailyPrice" name="roomDailyPrice">
-                                    <span class="input-group-addon">with Up/Down Rate of</span>
-                                    <SELECT id='roomDailyRate' class='form-control input-sm' name="roomDailyRate">
-                                            <OPTION value=5 selected>&nbsp;&nbsp;5%</OPTION>
-                                            <OPTION value=10>10%</OPTION>
-                                            <OPTION value=20>20%</OPTION>
-                                            <OPTION value=50>50%</OPTION>
-                                    </SELECT>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
                 </div>
 
                 <!-- <div class="tab-pane fade" id="aboutOwner">
@@ -703,8 +683,9 @@
     <hr>
 
     <div class="" id="showResult" style="width='100%';margin-top:60px;display:none" >
-        <div class="row" id="back_menu" onclick="resultSM.toTablePage()" >
-            <button><p><i class="arrow left" ></i>Back</p></button>
+        <div class="row" id="back_menu" sytle="visibility:hidden">
+            <!-- <button><p><i class="arrow left" ></i>Back</p></button> -->
+            <a class="previous" onclick="resultSM.toTablePage()" >&laquo; Previous</a>
         </div>
         <table id="housestable" class="table table-bordered table-striped text-center" style="font-size:12px;">
             <thead>
@@ -765,7 +746,7 @@
 
                     <div class='row'>
                         <div class="col-sm-2 input-w">
-                            <label>Country:</label><p id="country_info"></p>
+                            <label for="country_info">Country:</label><p id="country_info"></p>
                         </div>
                         <div class="col-sm-2 input-w">
                             <label>State:</label><p id="state_info"></p>
@@ -827,6 +808,41 @@
                         </div>
                     </div>
                 </div>
+
+                <div id="HouseCondition" class="tab-pane fade" style="padding:20px;font-size:12px">
+
+                </div>
+
+                <div id="HouseAvailability" class="tab-pane fade" style="padding:20px;font-size:12px">
+                    <p><label>Whole/Share: </label><span id='rentShared'><span></p>
+                    <p><label>Availablitity: </label><span id='availability'><span></p>
+                    <p><label>Minimum Stay: </label><span id='minStayTerm'></span><span id='minStayUnit'></span></p>
+                    <p><label>Allow Cooking: </label><span id='allowCooking'><span></p>
+                    <p><label>Furnished: </label><span id='furnished'><span></p>
+                    <p><label>Availability Note: </label><span id='availabilityNote'><span></p>
+                </div>
+
+                <div id="HousePrice" class="tab-pane fade" style="padding:20px;font-size:12px">
+                    <p><label>Day Price:  $</label><span id='costDayPrice'><span></p>
+                    <p><label>Week Price:  $</label><span id='costWeekPrice'><span></p>
+                    <p><label>Month Price:  $</label><span id='costMonthPrice'><span></p>
+                    <p><label>Utility:  $</label><span id='costUtility'><span></p>
+                    <p><label>Cleaning Fee:  $</label><span id='costCleaning'><span></p>
+                    <p><label>Deposite:  $</label><span id='costSecurityDeposit'><span></p>
+                    <p><label>Utility Note:</label><span id='utilityNote'><span></p>
+                    <p><label>Cost Note:</label><span id='costNote'><span></p>
+
+                    <p><label>Retail Day Price:  $</label><span id='retailDayPrice'><span></p>
+                    <p><label>Retail Week Price:  $</label><span id='retailWeekPrice'><span></p>
+                    <p><label>Retail Month Price:  $</label><span id='retailMonthPrice'><span></p>
+                    <p><label>Retail Utility:  $</label><span id='retailUtility'><span></p>
+                    <p><label>Retail Cleaning Fee:  $</label><span id='retailCleaning'><span></p>
+                    <p><label>Retail Deposite:  $</label><span id='retailSecurityDeposit'><span></p>
+
+                    <p><label>Upsell Percent:</label><span id='upsellPercent'><span>%</p>
+                    <p><label>TOT Percent:</label><span id='totPercent'><span>%</p>
+                </div>
+
             </div>
         </div>
     </div>
@@ -1011,13 +1027,19 @@ $(document).ready(function() {
     
     */
     $("#myBtn").click(function() {
+
+        if(!$('#houseID').val()&&!$('#houseAddress').val()&&!$('#crossroadA').val()&&!$('#crossroadB').val()){
+            return;
+        }
+
         var toSend = $('#houseSearchForm').serializeArray();
+
         if(search_geo){
             var location = search_geo['location'];
             toSend.push({'name':'search_latitude','value':location['lat']});
             toSend.push({'name':'search_longitude','value':location['lng']});
         }
-        //alert(JSON.stringify(toSend));
+
         $.ajax({
             type:"POST",
             url:"/house/search",
@@ -1028,84 +1050,93 @@ $(document).ready(function() {
                     deleteMarkers();
                 }
 
+                // if(search_geo){
 
-                mapMovecenter(search_geo);
+                var houses = data.houses;
+                if(houses){
+                    var tablehtml = "";
+                    if(houses.length>0){
+
+                        $("#showResult").show();
+                        resultSM = makeResuiltSM();
+
+                        for(var i=0;i<houses.length;++i)
+                        {
+                            var loc = new google.maps.LatLng(houses[i].latitude,houses[i].longitude);
+                            var address = houses[i].houseAddress+','+houses[i].city+','+houses[i].state;
+                            var marker = new google.maps.Marker({
+                                position:loc,
+                                title: houses[i].fullHouseID,
+                                map:map
+                            });
+
+                            google.maps.event.addListener(marker,'click',infocallbackClosure(marker,houses[i].fullHouseID,houses[i].numberID,address,setinfohtml));
+                            housemarkers.push(marker);
+                            if (houses[i]['rentShared'] == '1') {
+                                houses[i]['rentShared'] = 'Whole';
+                            } else if (houses[i]['rentShared'] == '-1') {
+                                houses[i]['rentShared'] = 'Share';
+                            } else {
+                                houses[i]['rentShared'] = 'Either';
+                            }
+                            houses[i]['minStayTerm'] = houses[i]['minStayTerm'] + ' ' + houses[i]['minStayUnit'];
+
+                            var rowhtml = "<tr id='house_" + houses[i]['numberID'] + "'>";
+                            var numberID = houses[i].numberID;
+                            for(var j =0 ; j< itemsToShow.length;++j){
+
+                                // if(j==0){
+                                //     rowhtml += "<td class='left'>";
+                                // }
+                                // if(j==itemsToShow.length-1){
+                                //     rowhtml += "<td class='right'>";
+                                // }
+
+                                if(!houses[i][itemsToShow[j]]){
+                                    rowhtml += "<td>N/A</td>";
+                                    continue;
+                                }
 
 
+                                if(itemsToShow[j]=='numberID'){
+                                    rowhtml += "<td><a href='#map_div' onclick = 'makeMarkerBounce("+i+");' >" + 
+                                                numberID + "</a></td>";
+                                }
+                                else if(itemsToShow[j] == 'OwnerName'){
+                                    rowhtml +=  "<td>"+houses[i].first + ' ' + houses[i].last + "</td>";
+                                }
+                                else 
+                                    rowhtml += "<td>"+houses[i][itemsToShow[j]] + "</td>"; 
+                                //console.log(rowhtml);
+                            }
 
-                var tablehtml = "";
-                if(data.length>0){
+                            //rowhtml += "<td><a onclick=' retrieveHouseInfo("+numberID+");' > View House Info</td>";
+                            rowhtml += "<td><button type='button' class='btm btn-info' onclick='retrieveHouseInfo("+houses[i].numberID+");resultSM.toHousePage("+i+")'>"+"View House Info"+"</button></td>";
+                            rowhtml += "<td><button type='button' class='btm btn-info' onclick='resultSM.toOwnerPage("+i+")'>View Owner Info</button></td>";
+                            attachHouseOwnerDiv(houses[i],i);
 
-                    $("#showResult").show();
-                    resultSM = makeResuiltSM();
-
-                    for(var i=0;i<data.length;++i)
-                    {
-                        var loc = new google.maps.LatLng(data[i].latitude,data[i].longitude);
-                        var address = data[i].houseAddress+','+data[i].city+','+data[i].state;
-                        var marker = new google.maps.Marker({
-                            position:loc,
-                            title: data[i].fullHouseID,
-                            map:map
-                        });
-
-                        google.maps.event.addListener(marker,'click',infocallbackClosure(marker,data[i].fullHouseID,data[i].numberID,address,setinfohtml));
-                        housemarkers.push(marker);
-                        if (data[i]['rentShared'] == '1') {
-                            data[i]['rentShared'] = 'Whole';
-                        } else if (data[i]['rentShared'] == '-1') {
-                            data[i]['rentShared'] = 'Share';
-                        } else {
-                            data[i]['rentShared'] = 'Either';
+                            rowhtml += "</tr>";
+                            tablehtml += rowhtml;
                         }
-                        data[i]['minStayTerm'] = data[i]['minStayTerm'] + ' ' + data[i]['minStayUnit'];
+                        showMarkers();
 
-                        var rowhtml = "<tr id='house_" + data[i]['numberID'] + "'>";
-                        var numberID = data[i].numberID;
-                        for(var j =0 ; j< itemsToShow.length;++j){
-
-                            // if(j==0){
-                            //     rowhtml += "<td class='left'>";
-                            // }
-                            // if(j==itemsToShow.length-1){
-                            //     rowhtml += "<td class='right'>";
-                            // }
-
-                            if(!data[i][itemsToShow[j]]){
-                                rowhtml += "<td>N/A</td>";
-                                continue;
-                            }
-
-
-                            if(itemsToShow[j]=='numberID'){
-                                rowhtml += "<td><a href='#map_div' onclick = 'makeMarkerBounce("+i+");' >" + 
-                                            numberID + "</a></td>";
-                            }
-                            else if(itemsToShow[j] == 'OwnerName'){
-                                rowhtml +=  "<td>"+data[i].first + ' ' + data[i].last + "</td>";
-                            }
-                            else 
-                                rowhtml += "<td>"+data[i][itemsToShow[j]] + "</td>"; 
-                            //console.log(rowhtml);
-                        }
-
-                        //rowhtml += "<td><a onclick=' retrieveHouseInfo("+numberID+");' > View House Info</td>";
-                        rowhtml += "<td><button type='button' class='btm btn-info' onclick='retrieveHouseInfo("+data[i].numberID+");resultSM.toHousePage("+i+")'>"+"View House Info"+"</button></td>";
-                        rowhtml += "<td><button type='button' class='btm btn-info' onclick='resultSM.toOwnerPage("+i+")'>View Owner Info</button></td>";
-                        attachHouseOwnerDiv(data[i],i);
-
-                        rowhtml += "</tr>";
-                        tablehtml += rowhtml;
+                        $('#fillArea').html(tablehtml);
                     }
-                    showMarkers();
+                    else
+                    {
+                        $("#showResult").hide();
+                        // Notice that there is no result
+                    }
+                }
 
-                    $('#fillArea').html(tablehtml);
+                if(search_geo){
+                    mapMovecenter(search_geo);
                 }
-                else
-                {
-                    $("#showResult").hide();
-                    // Notice that there is no result
+                else{
+                    //alert(JSON.stringify(data.geo_center));
+                    mapMovecenter(data.geo_center);
                 }
+
             }
         });
     });
@@ -1208,7 +1239,7 @@ $(document).ready(function() {
             url:"/house/info/"+id,
             datatype:'json',
             success: function(data){
-                //alert(JSON.stringify(data));
+                //alert(JSON.stringify(data[house_price]));
                 $('#houseid_info').text(data.numberID);
                 $('#houseOwnerID_info').text(data.houseOwnerID);
                 $('#houseIDByOwner_info').text((data.houseIDByOwner?data.houseIDByOwner:"N/A"));
@@ -1225,6 +1256,83 @@ $(document).ready(function() {
                 $('#numOfBeds_info').text(data.numOfBeds);
                 $('#maxNumOfGuest_info').text(data.maxNumOfGuest);
                 $('#onOtherWebsite_info').text(data.onOtherWebsite);
+
+                var housecondition = data.housingcondition;
+                var houseprice = data.house_price;
+                var houseavailability = data.houseavailability;
+                if(housecondition){
+
+                }
+                if(houseprice){
+                    $('#costDayPrice').text((houseprice.costDayPrice?houseprice.costDayPrice:"N/A"));
+                    $('#costWeekPrice').text((houseprice.costWeekPrice?houseprice.costWeekPrice:"N/A"));
+                    $('#costMonthPrice').text((houseprice.costMonthPrice?houseprice.costMonthPrice:"N/A"));
+                    $('#costUtility').text((houseprice.costUtility?houseprice.costUtility:"N/A"));
+                    $('#utilityNote').text((houseprice.utilityNote?houseprice.utilityNote:"N/A"));
+                    $('#costCleaning').text((houseprice.costCleaning?houseprice.costCleaning:"N/A"));
+                    $('#costSecurityDeposit').text((houseprice.costSecurityDeposit?houseprice.costSecurityDeposit:"N/A"));
+                    $('#costNote').text((houseprice.costNote?houseprice.costNote:"N/A"));
+
+                    $('#retailDayPrice').text((houseprice.retailDayPrice?houseprice.retailDayPrice:"N/A"));
+                    $('#retailWeekPrice').text((houseprice.retailWeekPrice?houseprice.retailWeekPrice:"N/A"));
+                    $('#retailMonthPrice').text((houseprice.retailMonthPrice?houseprice.retailMonthPrice:"N/A"));
+                    $('#retailUtility').text((houseprice.retailUtility?houseprice.retailUtility:"N/A"));
+                    $('#retailCleaning').text((houseprice.retailCleaning?houseprice.retailCleaning:"N/A"));
+                    $('#retailSecurityDeposit').text((houseprice.retailSecurityDeposit?houseprice.retailSecurityDeposit:"N/A"));
+
+                    $('#upsellPercent').text((houseprice.upsellPercent?houseprice.upsellPercent:"N/A"));
+                    $('#totPercent').text((houseprice.totPercent?houseprice.totPercent:"N/A"));
+                }
+                if(houseavailability){
+                    if(houseavailability.rentShared==1){
+                        $('#rentShared').text('Whole');
+                    }
+                    else if(houseavailability.rentShared==-1){
+                        $('#rentShared').text('Shared');
+                    }
+                    else{
+                        $('#rentShared').text('Either');
+                    }
+
+                    if(houseavailability.availability==1){
+                        $('#availability').text("Yes");
+                    }
+                    else if(houseavailability.availability==0){
+                        $('#availability').text('Yes, Not Now');
+                    }
+                    else{
+                        $('#availability').text("No");
+                    }
+                    $('#minStayTerm').text(houseavailability.minStayTerm);
+                    $('#minStayUnit').text(houseavailability.minStayUnit);
+                    if(houseavailability.allowCooking==1){
+                        $('#allowCooking').text("Yes");
+                    }
+                    else if(houseavailability.allowCooking==2){
+                        $('#allowCooking').text("Occasional");
+                    }
+                    else if(houseavailability.allowCooking==0){
+                        $('#allowCooking').text("N/A");
+                    }
+                    else {
+                        $('#allowCooking').text("No");
+                    }
+
+                    if(houseavailability.furnished==0){
+                        $('#furnished').text("N/A");
+                    }
+                    else if(houseavailability.furnished==2){
+                        $('#furnished').text("Simple");
+                    }
+                    else if(houseavailability.furnished==1){
+                        $('#furnished').text("Yes");
+                    }
+                    else if(houseavailability.furnished==-1){
+                        $('#furnished').text("No");
+                    }
+
+                    $('#availabilityNote').text(houseavailability.availabilityNote);
+                }
             }
         });
     }
@@ -1296,14 +1404,14 @@ $(document).ready(function() {
                 $('#housestable').fadeOut();
                 //$('#ownerdiv').show();
                 $('#ownerinfo_'+index).show();
-                $("#back_menu").show();
+                $("#back_menu").css("visibility", "visible");
                 changestate("Owner");
                 setDivindex(index);
             },
             toHousePage: function(index){
                 $('#housestable').fadeOut();
                 $('#housediv').fadeIn();
-                $('#back_menu').show();
+                $("#back_menu").css("visibility", "visible");
                 changestate("House");
                 setDivindex(index);
             },
@@ -1320,6 +1428,7 @@ $(document).ready(function() {
                     $('#housediv').fadeOut();
                     setDivindex(-1);
                 }
+                $("#back_menu").css("visibility", "hidden");
                 changestate("Table");
             }
         }
