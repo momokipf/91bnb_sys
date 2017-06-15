@@ -310,7 +310,7 @@
 			</div><!--/ container -->
 		</nav>
 
-		<div class="container" style="margin-top:70px;">
+		<div class="container well" style="margin-top:70px;background-color:white;">
 			<form method = "post" id="inquirer_search_form" onsubmit="return false">
 				{{ csrf_field() }}
 				<h4><span class="badge">1</span> Inquirer Filter</h4>
@@ -361,7 +361,6 @@
 						<button id="resetBtn" class="btn btn-warning form-control" type="reset">Clear</button>
 					</div>
 				</div>
-				<hr>
 			</form>
 		</div>
 
@@ -379,10 +378,9 @@
 			</div> -->
 		@endif
 	
-		<div id="inquirerList" class="container"></div>
+		<div id="inquirerList" class="container well" style="background-color:white;display:none;"></div>
 
-		<div id="modifyForm" class="container" style="display:none;">
-			<hr>
+		<div id="modifyForm" class="container well" style="background-color:white;display:none;">
 			<h4><span class="badge">3</span> Modify Inquirer</h4>
 			<hr>
 			<form style='margin-bottom:5px;' action='modifyInquirer' method = 'post'>
