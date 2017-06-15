@@ -16,6 +16,10 @@ Route::get('/welcome', function () {
     return view('welcome');
 });
 
+Route::get('/',function(){
+	 return redirect('/MainPage');
+});
+
 Route::get('login','LoginController@show')->name('login');
 Route::post('login','LoginController@login')->name('login');
 Route::get('logout','LoginController@logout');
