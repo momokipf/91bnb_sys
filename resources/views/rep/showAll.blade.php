@@ -125,7 +125,7 @@
 										<td><select id='active{{$thisrep->repID}}'><option value=1>Yes</option><option value=0 selected>No</option></td>
 									@endif
 									<td><input type='text' id='repUserName{{$thisrep->repID}}' value={{ $thisrep->repUserName }}></td>
-									<td><input type='text' id='repPassword{{$thisrep->repID}}' value="******"></td>
+									<td><input type='password' id='repPassword{{$thisrep->repID}}' value="******"></td>
 									<!-- <td><input type='text' id='repName{{$thisrep->repID}}' value={{ $thisrep->repName }}></td> -->
 									<td style="min-width:100px;">
 										<select id='repPriority{{$thisrep->repID}}'>
@@ -170,7 +170,8 @@
 				</div>
 
 				<!------------------------- modal fade of add representative form -------------->
-				<form method='POST' onsubmit='return false;' id="addForm">
+				<form onsubmit='return false;' method='POST' id="addForm" class='form-horizontal'>
+				<!-- <form method='POST' id="addForm" class='form-horizontal' action='/representatives/add'> -->
 					{{ csrf_field() }}
 					<div class='modal fade' id='myModal' role='dialog'>
 						<div class="modal-dialog modal-md">
@@ -182,12 +183,21 @@
 									</h4>
 								</div>
 								<div class="modal-body">
+									<div class="alert alert-danger" id='errorDiv' style="display:none">
+										<!-- <strong>Whoops!</strong> There were some problems with your input.
+										<br/>
+										<ul>
+											@foreach($errors->all() as $error)
+											<li>{{ $error }}</li>
+											@endforeach
+										</ul> -->
+									</div>
 									<div class='row'>
-										<div class='col-sm-5'>Representative User Name: </div>
+										<div class='col-sm-5 control-label'><span style="color:red">*</span>Representative User Name: </div>
 										<div class='col-sm-7'><input type='search' name="repUserName" id='UserName' autocomplete='off' ></div>
 									</div>
 									<div class='row'>
-										<div class='col-sm-5'>Representative Password: </div>
+										<div class='col-sm-5 control-label'><span style="color:red">*</span>Representative Password: </div>
 										<div class='col-sm-7'><input type='search' name="password" id='Password' autocomplete='off' ></div>
 									</div>
 									<!-- <div class='row'>
@@ -195,7 +205,7 @@
 										<div class='col-sm-7'><input type='search' name="repName" id='repName' autocomplete='off' ></div>
 									</div> -->
 									<div class='row'>
-										<div class='col-sm-5'>Representative Priority: </div>
+										<div class='col-sm-5 control-label'>Representative Priority: </div>
 										<div class='col-sm-7'>
 											<select id='repPriority' name="repPriority">
 												<option value=1 selected>1</option><option value=2>2</option><option value=3>3</option><option value=4>4</option><option value=5>5</option>
@@ -203,7 +213,7 @@
 										</div>
 									</div>
 									<div class='row'>
-										<div class='col-sm-5'>Representative Position: </div>
+										<div class='col-sm-5 control-label'>Representative Position: </div>
 										<div class='col-sm-7'>
 											<select id='repPosition' name="repPosition">
 												<option value='Admin' selected>Admin</option><option value='ACCT'>ACCT</option><option value='BD'>BD</option><option value='IT'>IT</option><option value='Marketing'>Marketing</option><option value='Temp'>Temp</option>
@@ -218,11 +228,11 @@
 										<div class='col-sm-7'><input type='search' name="employeeID" id='employeeID' ></div>
 									</div> -->
 									<div class='row'>
-										<div class='col-sm-5'>Rep First Name: </div>
+										<div class='col-sm-5 control-label'>Rep First Name: </div>
 										<div class='col-sm-7'><input type='search' name="repFirstName" id='repFirstName' autocomplete='off' ></div>
 									</div>
 									<div class='row'>
-										<div class='col-sm-5'>Rep Last Name: </div>
+										<div class='col-sm-5 control-label'>Rep Last Name: </div>
 										<div class='col-sm-7'><input type='search' name="repLastName" id='repLastName' autocomplete='off' ></div>
 									</div>
 								</div>
@@ -264,7 +274,6 @@
 							else {
 								toSend = {"repID": repID, "active": active, "repUserName": repUserName, "password": password, "repPriority": repPriority, "repPosition": repPosition, "repFirstName": repFirstName, "repLastName": repLastName};								
 							}
-							//toSend = {name: "John"};
 							$.ajax({
 								headers: {
 									'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -321,52 +330,37 @@
 					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 				},
 				type: "POST",
-				dataType: "html",
+				dataType: "json",
 				url: "representatives/add",
 				data: toSend,
 				success: function(data) {
-					if (data.substring(data.length-5, data.length) == "error") {
-						bootbox.dialog({
-							message: "Failed to add new inquirer. Please try again later.",
-							title: "Modify Status",
-							buttons: {
-								main: {
-									label: "OK",
-									className: "btn-primary"
-								}
-							}
-						});
-					} else {
-						bootbox.dialog({
-							message: "Successfully added new representative. ID: " + data,
-							title: "Modify Status",
-							buttons: {
-								main: {
-									label: "OK",
-									className: "btn-primary",
-									callback: function() {
-										location.reload();
-									}
-								}
-							}
-						});
-						$('#myModal').modal('toggle');
-					}
-				},
-				error: function (xhr, ajaxOptions, thrownError) {
+					console.log(data);
 					bootbox.dialog({
-						message: "Failed to add new inquirer.",
-						title: "Failed",
+						message: "Successfully added a new representative (ID: " + data['id'] + ").",
+						title: "Success",
 						buttons: {
 							main: {
 								label: "OK",
-								className: "btn-primary"
+								className: "btn-primary",
+								callback: function() {
+									location.reload();
+								}
 							}
 						}
 					});
+					$('#myModal').modal('toggle');
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+					console.log(xhr);
+					html = "<strong>Whoops!</strong> There were some problems with your input."
+					html += "<br><ul>";
+					for (i = 0; i < xhr.responseJSON.length; i++) {
+						html += "<li>" + xhr.responseJSON[i] + "</li>";
+					}
+					$("#errorDiv").html(html);
+					$("#errorDiv").show();
 				}
 			});
-			this.reset();
 		});
 	</script>
 </html>

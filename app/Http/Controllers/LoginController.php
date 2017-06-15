@@ -106,7 +106,7 @@ class LoginController extends Controller
             //return redirect('/welcome');
         }
         else{
-            $this->incrementLoginAttempts($request);
+            // $this->incrementLoginAttempts($request);
 
             return redirect('login')
                 ->withInput()

@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\MessageBag;
 
 use App\Inquiry;
 use App\Inquirer;
 use App\Representative;
+use App\Http\Controllers\Controller;
+
+use Validator;
 
 class RepresentativesController extends Controller
 {
@@ -41,11 +45,22 @@ class RepresentativesController extends Controller
 	public function store(Request $request) {
 		Log::info($request->all());
 		$storeInfo = array_slice($request->all(), 1);
+		$this->validate($request,[
+					'repUserName' => 'required|email',
+					'password' => 'required'
+		]);
+
+		// $validator= Validator::make($storeInfo,[
+		// 			'repUserName' => 'required|email',
+		// 			'password' => 'required']);
+
 		$storeInfo["active"] = 1;
 		if (array_key_exists('password', $storeInfo)) {
 			$storeInfo['password'] = bcrypt($storeInfo['password']);
 		}
 		$id = Representative::insertGetId($storeInfo);
-		return $id;
+		$a = array();
+		$a['id'] = $id;
+		return $a;
 	}
 }

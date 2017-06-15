@@ -26,33 +26,37 @@
 		<link rel="stylesheet" href="{{asset('css/self.css')}}">
 
 		<style type="text/css">
-					body {
-						/*line-height: 200%;*/
-						/*background-image: url("../background.jpg");*/
-		/*				background-color: #82CAFA;*/
-						font-size: 14px;
-						line-height: normal;
-					}
-					#adjustLineSpacing div, #new_inquirer_form div {
-						margin-bottom: 5px;
-					}
-			  .control-label {
-				  font-weight: normal;
-			  }
-			  .form-control {
+			body {
+				/*line-height: 200%;*/
+				/*background-image: url("../background.jpg");*/
+/*				background-color: #82CAFA;*/
+				font-size: 14px;
+				line-height: normal;
+			}
+			#adjustLineSpacing div, #new_inquirer_form div {
+				margin-bottom: 5px;
+			}
+			.control-label {
+				font-weight: normal;
+			}
+			/*.form-control {
 
-			  }
-			  .title-lg {
-				  color: #337AB7;
-				  font-size: 20px;
-				  font-weight: bold;
-			  }
-			  .title-sm {
-				  color: #337AB7;
-				  font-size: 15px;
-				  font-weight: bold;
-			  }
-			  hr {
+			}*/
+			.title-lg {
+				color: #337AB7;
+				font-size: 20px;
+				font-weight: bold;
+			}
+			.title-sm {
+				color: #337AB7;
+				font-size: 18px;
+				font-weight: bold;
+			}
+			.badge {
+				font-size: 25px; 
+				background-color: #5CB85C;
+			}
+			hr {
 				-moz-border-bottom-colors: none;
 				-moz-border-image: none;
 				-moz-border-left-colors: none;
@@ -63,11 +67,10 @@
 				border-style: solid none;
 				border-width: 1px 0;
 				margin: 8px 0;
-			  }
-			  input[type="search"]::-webkit-search-cancel-button{
-						-webkit-appearance: searchfield-cancel-button;
-					}
-
+			}
+			input[type="search"]::-webkit-search-cancel-button{
+				-webkit-appearance: searchfield-cancel-button;
+			}
 
 		</style>
 	</head>
@@ -114,8 +117,9 @@
 			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 				<div class="panel panel-default">
 					<div class="panel-heading" role="tab" id="headingOne">
+						<span class="badge" style="background-color:#5CB85C;">1 </span>
 						<a role="button" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-							<span class="title-lg">① </span> <span class="title-sm">Select or Create Inquirer ID</span>
+							<span class="title-sm" style='padding-left:5px;'> Select or Create Inquirer ID</span>
 						</a>
 					</div>
 					<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
@@ -290,7 +294,8 @@
 				<div class="panel panel-default">
 					<div class="panel-heading" role="tab" id="headingOne">
 						<a class="collapsed" role="button" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-							<span class="title-lg">② </span> <span class="title-sm">Add New Inquiry</span>
+							<span class="badge" style="background-color:#5CB85C;">2 </span>
+							<span class="title-sm" style='padding-left:5px;'>Add New Inquiry</span>
 						</a>
 					</div>
 					<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">

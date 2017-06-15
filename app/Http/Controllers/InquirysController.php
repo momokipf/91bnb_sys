@@ -149,7 +149,7 @@ class InquirysController extends Controller
                     $query->where('inquirerWechatID','LIKE',$inquirerinfo['inquirerWechatID']);
                 });
         }
-        $ret = $querybuilder->get();
+        $ret = $querybuilder->with('roomType')->with('quirer')->get();
         return response($ret)
                 ->header('Content-Type', 'json');
     }
