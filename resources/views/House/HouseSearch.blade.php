@@ -263,9 +263,9 @@
                     <div class="row">
                         <div class="col-sm-12">
                             @if(isset($Query) && (isset($Query->share)&&$Query->share==-1))
-                                <input type="radio" id="rentShare" name="rentShareWhole" value="-1" checked> Rent Share
+                                <input type="radio" id="rentShare" name="rentShareWhole" value="-1" checked> Shared
                             @else
-                                <input type="radio" id="rentShare" name="rentShareWhole" value="-1"> Rent Share
+                                <input type="radio" id="rentShare" name="rentShareWhole" value="-1"> Shared
                             @endif
                         </div>
                     </div>
@@ -331,19 +331,17 @@
 
                 <div class="tab-pane fade" id="aboutCondition">
                     <div class="row">
-                        <div class="col-sm-5">
-                            <label>Number of Rooms</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">Range from</span>
-                                @if(!isset($Query)&&isset($Query->rooms))
-                                <input class="form-control input-sm" type="text" id="numOfRoomsFrom" name="numOfRoomsFrom" value="{{$Query->number}}">
-                                @else
-                                <input class="form-control input-sm" type="text" id="numOfRoomsFrom" name="numOfRoomsFrom">
-                                @endif
-                                <span class="input-group-addon">to</span>
-                                <input class="form-control input-sm" type="text" id="numOfRoomsTo" name="numOfRoomsTo">
-                                <span class="input-group-addon">Rooms Per House</span>
-                            </div>
+                        <label>Number of Rooms</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">Range from</span>
+                            @if(!isset($Query)&&isset($Query->rooms))
+                            <input class="form-control input-sm" type="text" id="numOfRoomsFrom" name="numOfRoomsFrom" value="{{$Query->number}}">
+                            @else
+                            <input class="form-control input-sm" type="text" id="numOfRoomsFrom" name="numOfRoomsFrom" value=1 >
+                            @endif
+                            <span class="input-group-addon">to</span>
+                            <input class="form-control input-sm" type="text" id="numOfRoomsTo" name="numOfRoomsTo">
+                            <span class="input-group-addon">Rooms Per House</span>
                         </div>
                     </div>
 
@@ -698,10 +696,14 @@
                     <th style="min-width:50px;">Number of Rooms</th>
                     <th style="min-width:50px;">Number of Baths</th>
 
+                    <th style="min-width:170px;">Owner Name</th>
+                    <th style="min-width:170px;">Owner Phone Number</th>
+                    <th style="min-width:150px;">WeChat Name</th>
+
                     <th style="min-width:100px;">House Type</th>
-                    <th style="min-width:100px;">Price per Month</th>
+<!--                     <th style="min-width:100px;">Price per Month</th>
                     <th style="min-width:100px;">Price per Day</th>
-                    <th style="min-width:150px;">Next Available Date</th>
+                    <th style="min-width:150px;">Next Available Date</th> -->
 
                     <th style="min-width:100px;">Minimum Stay Term</th>
                     <th style="min-width:100px;">Whole/Share</th>
@@ -874,8 +876,9 @@ src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAAIAQT72
     var itemsToShow = [
         'numberID', 'state', 'city', 'houseAddress',
         'numOfRooms', 'numOfBaths',
-        'houseType','costMonthPrice', 'costDayPrice', 'nextAvailableDate',
-        'minStayTerm','rentShared',
+        'OwnerName', 'ownerUsPhoneNumber','ownerWechatUserName',
+        //'costMonthPrice', 'costDayPrice', 'nextAvailableDate',
+        'houseType','minStayTerm','rentShared',
         // ,'OwnerName', 'ownerUsPhoneNumber', 'ownerWechatUserName','ownerWechatID'
     ];
     var infowindow ;
@@ -1049,8 +1052,7 @@ $(document).ready(function() {
                 if(map){
                     deleteMarkers();
                 }
-
-                // if(search_geo){
+                //alert(JSON.stringify(data));
 
                 var houses = data.houses;
                 if(houses){
@@ -1085,19 +1087,6 @@ $(document).ready(function() {
                             var numberID = houses[i].numberID;
                             for(var j =0 ; j< itemsToShow.length;++j){
 
-                                // if(j==0){
-                                //     rowhtml += "<td class='left'>";
-                                // }
-                                // if(j==itemsToShow.length-1){
-                                //     rowhtml += "<td class='right'>";
-                                // }
-
-                                if(!houses[i][itemsToShow[j]]){
-                                    rowhtml += "<td>N/A</td>";
-                                    continue;
-                                }
-
-
                                 if(itemsToShow[j]=='numberID'){
                                     rowhtml += "<td><a href='#map_div' onclick = 'makeMarkerBounce("+i+");' >" + 
                                                 numberID + "</a></td>";
@@ -1105,8 +1094,15 @@ $(document).ready(function() {
                                 else if(itemsToShow[j] == 'OwnerName'){
                                     rowhtml +=  "<td>"+houses[i].first + ' ' + houses[i].last + "</td>";
                                 }
-                                else 
+                                else if(itemsToShow[j] == 'ownerWechatUserName' ){
+                                    rowhtml += "<td title='Wechat ID: " + houses[i]['ownerWechatID']+"'>"+houses[i][itemsToShow[j]] +"</td>";
+                                }
+                                else if(!houses[i][itemsToShow[j]]){
+                                    rowhtml += "<td>N/A</td>";
+                                }
+                                else{
                                     rowhtml += "<td>"+houses[i][itemsToShow[j]] + "</td>"; 
+                                }
                                 //console.log(rowhtml);
                             }
 

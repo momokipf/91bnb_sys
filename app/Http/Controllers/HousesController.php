@@ -182,9 +182,15 @@ class HousesController extends Controller
     	$radius = $request->input('milesrange',2);
 
     	$numOfRoomsFrom = $request->input('numOfRoomsFrom');
+    	if(!$numOfRoomsFrom){
+    		$numOfRoomsFrom = 1;
+    	}
     	$numOfRoomsTo = $request->input('numOfRoomsTo');
-    	$rentShared = $request->input('rentShareWhole');
+    	if(!$numOfRoomsTo){
+    		$numOfRoomsTo = 10;
+    	}
 
+    	$rentShared = $request->input('rentShareWhole');
 
     	$target_pt = null;
     	$search_geo = null;
@@ -242,7 +248,7 @@ class HousesController extends Controller
 		$fields = array('r.numberID', 'fullHouseID', 'state', 'city', 'houseAddress','numOfRooms', 'numOfBaths','houseType','r.houseOwnerID','latitude','longitude',//basic information
                      'costMonthPrice', 'costDayPrice',//price information
                      'nextAvailableDate', 'minStayTerm','minStayUnit', 'rentShared',//available information
-                     'first', 'last', 'ownerUsPhoneNumber', 'ownerWechatUserName','ownerWechatID','first','last','ownerCompanyName');
+                     'first', 'last', 'ownerUsPhoneNumber', 'ownerWechatUserName','ownerWechatID','ownerCompanyName');
 		Log::info($target_pt);
 		if(isset($target_pt))
     	{
@@ -259,24 +265,11 @@ class HousesController extends Controller
     		if($rentShared!=0){
     			$housebuilder = $housebuilder->where('rentShared','=',$rentShared);
     		}
+
+    		$housebuilder = $housebuilder->whereBetween('numOfRooms',[$numOfRoomsFrom,$numOfRoomsTo]);
+
     		$housebuilder = $housebuilder
     							->orderBy(DB::raw($circlesql));
-
-    		if(isset($numOfRoomsFrom))
-    		{
-    			$housesql = $housesql->whereRaw('numOfRooms >='.$numOfRoomsFrom);
-    		}
-    		if(isset($numOfRoomsTo))
-    		{
-    			$housesql = $housesql->whereRaw('numOfRooms <='.$numOfRoomsTo);
-    		}
-
-
-    		//$houses = collect(['houses'=>$housebuilder->get()]);
-
-
-    		//$data = collect(['houses'=>$houses],['geo_center'=>$search_geo]);
-
 
     		return response()
     			->json(['houses'=>$housebuilder->get(),
