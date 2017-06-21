@@ -98,7 +98,7 @@
 			        <ul class="dropdown-menu">
 			          <li><a href="/housesearchindex">House Search</a></li>
 			          <li><a href="/house/add">Add New House</a></li>
-			          <li><a href="/house/modifyHouse2.php">Modify/Update House</a></li>
+			          <li><a href="/house/modify">Modify/Update House</a></li>
 			          <li><a href="#">Extract All Houses</a></li>
 			    	</ul>
 			    </li>

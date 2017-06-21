@@ -169,8 +169,9 @@ class HousesController extends Controller
 
     public function modifyHouse($numberID) {
     	Log::info($numberID);
-    	$house = House::where('numberID', $numberID)
+    	$house = House::where('numberID', $numberID)->first();
     	return view('/house/modifyHouse')
+    			->with('house', $house)
     			->with('rep',Auth::user());
     }
 

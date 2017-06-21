@@ -104,7 +104,7 @@
     <div class="table-responsive">
       <div id="modal"></div>
       <table border='1' style="text-align:center" class="table table-bordered table-hover">
-       <tr style="text-align:center">
+       <thead style="text-align:center">
 
          <th style="min-width:70px;">Priority</th>
          <th style="min-width:90px;">Name</th>
@@ -130,7 +130,7 @@
          <th style="min-width:130px;">Add Follow Up</th>
          <th style="min-width:150px;">Show All Follow Up</th>
          <th style="min-width:130px;">Show Detail</th>
-       </tr>
+       </thead>
 
         <tbody id="mytable">
             @foreach($Hotquerys as $query)

@@ -151,41 +151,41 @@
 		<div class="tab-content">
 			<div class="tab-pane fade in active" id="house">
 				<div class='row'>
-                    <div class='col-sm-3'>
-                        <label>House ID</label>
-                        <input class='form-control input-sm' value='".$fullHouseID."' readonly>
-                    </div>
+					<div class='col-sm-3'>
+						<label>House ID</label>
+						<input class='form-control input-sm' value="{{$house->fullHouseID}}" readonly>
+					</div>
 
-                    <div class='col-sm-2'>
-                        <label>House Owner ID</label>
-                        <input name='houseOwnerID' value='".$row['houseOwnerID']."' class='form-control input-sm'>
-                    </div>
+					<div class='col-sm-2'>
+						<label>House Owner ID</label>
+						<input name='houseOwnerID' value="{{$house->houseOwnerID}}" class='form-control input-sm'>
+					</div>
 
-                    <div class='col-sm-2'>
-                        <label>Date House Added</label>
-                        <input type='search' name='dateHouseAdded' value='".$newHouseAddedDate."' class='form-control input-sm'>
-                    </div>
-              	</div>
-
-
-
-              	<div class='row'>
-                    <div class='col-sm-2'>
-                        <label>House ID by Owner</label>
-                        <input type='text' name='houseIDByOwner' value='".$row['houseIDByOwner']."' class='form-control input-sm'>
-                    </div>
-
-                    <div class='col-sm-3'>
-                        <label>Representative with Owner</label>
-                        <select name='repWithOwner' class='form-control input-sm'>";
-                        printListRep($row['repWithOwner']);
-                   	</select>
-                    </div>
-              	</div>";
+					<div class='col-sm-2'>
+						<label>Date House Added</label>
+						<input type='search' name='dateHouseAdded' value="{{$house->dateHouseAdded}}" class='form-control input-sm'>
+					</div>
+				</div>
 
 
 
-         		<div class='row'>
+				<div class='row'>
+					<div class='col-sm-2'>
+						<label>House ID by Owner</label>
+						<input type='text' name='houseIDByOwner' value="{{$house->houseIDByOwner}}" class='form-control input-sm'>
+					</div>
+
+					<div class='col-sm-3'>
+						<label>Representative with Owner</label>
+						<select name='repWithOwner' class='form-control input-sm'>";
+						printListRep($row['repWithOwner']);
+					</select>
+					</div>
+				</div>";
+
+
+
+				<div class='row'>
 					<div class='col-sm-2'>
 						<label>Country</label>
 						<select class='form-control input-sm' type='text' name='country' id='country'>";
@@ -193,89 +193,89 @@
 						</select>
 					</div>
 
-                    <div class='col-sm-2'>
-                        <label>State or Province</label>
-                        <select id='state' name='state' class='form-control input-sm'>";
-                    	</select>
-                    </div>
+					<div class='col-sm-2'>
+						<label>State or Province</label>
+						<select id='state' name='state' class='form-control input-sm'>";
+						</select>
+					</div>
 
-                    <div class='col-sm-2'>
-                        <label>City</label>
+					<div class='col-sm-2'>
+						<label>City</label>
 						<select id='city' name='city' class='form-control input-sm'>";
 													
-                  		</select>
-                    </div>
-              	</div>
+						</select>
+					</div>
+				</div>
 
 
-         		<div class='row'>
+				<div class='row'>
 					<div class='col-sm-2'>
 							<label>Region</label>
-							<input class='form-control input-sm' type='text' name='region' value=".$row['region'].">
+							<input class='form-control input-sm' type='text' name='region' value="{{$house->region}}">
 					</div>
 
 					<div class='col-sm-4'>
 							<label>House Address</label>
-							<input type='text' name='houseAddress' id='houseAddress' onFocus='initialize()' value='".$row['houseAddress']."' class='form-control input-sm'>
+							<input type='text' name='houseAddress' id='houseAddress' onFocus='initialize()' value="{{$house->houseAddress}}" class='form-control input-sm'>
 					</div>
 
-                    <div class='col-sm-2'>
-                        <label>Zip</label>
-                        <input class='form-control input-sm' type='text' name='houseZip' value=".$row['houseZip'].">
-                    </div>
-              	</div>
+					<div class='col-sm-2'>
+						<label>Zip</label>
+						<input class='form-control input-sm' type='text' name='houseZip' value="{{$house->houseZip}}">
+					</div>
+				</div>
 
-         		<div class='row'>
-                    <div class='col-sm-2'>
-                        <label>House Type</label>
-						<select class='form-control input-sm' id='houseType' name='houseType'>";
-	    				</select>
+				<div class='row'>
+					<div class='col-sm-2'>
+						<label>House Type</label>
+						<select class='form-control input-sm' id='houseType' name='houseType'>
+						</select>
 					</div>
 
 					<div class='col-sm-2' id='houseTypeOtherDiv'>
-	                    <label>House Type Other</label>
-	                    <input type='text' name='houseTypeOther' id='houseTypeOther' class='form-control input-sm' value=".$row['houseTypeOther']." >
-	                </div>
-
-                    <div class='col-sm-2'>
-                        <label>Size</label>
-                        <div class='input-group'>
-                            <input name='size' value=".$row['size']." class='form-control input-sm'>
-                            <span class='input-group-addon'>Sq.ft.</span>
-                        </div>
-                    </div>
-              	</div>
-
-
-
-         		<div class='row'>
-                    <div class='col-sm-2'>
-                        <label>Number of Rooms</label>
-                        <input name='numOfRooms' value=".$row['numOfRooms']." class='form-control input-sm'>
-                    </div>
-
-                    <div class='col-sm-2'>
-                        <label>Number of Baths</label>
-                        <input name='numOfBaths' value=".$row['numOfBaths']." class='form-control input-sm'>
-                    </div>
-
-                    <div class='col-sm-2'>
-                        <label>Number of Beds</label>
-                        <input name='numOfBeds' value=".$row['numOfBeds']." class='form-control input-sm'>
-                    </div>
+						<label>House Type Other</label>
+						<input type='text' name='houseTypeOther' id='houseTypeOther' class='form-control input-sm' value="{{$house->houseTypeOther}}" >
+					</div>
 
 					<div class='col-sm-2'>
-					   <label>Max Number of Guests</label>
-					   <input name='maxNumOfGuests' value=".$row['maxNumOfGuests']." class='form-control input-sm'>
+						<label>Size</label>
+						<div class='input-group'>
+							<input name='size' value="{{$house->size}}" class='form-control input-sm'>
+							<span class='input-group-addon'>Sq.ft.</span>
+						</div>
 					</div>
-              	</div>
+				</div>
 
-		 		<div class='row'>
-		 			<div class='col-sm-8'>
-		 				<label>On Other Website</label>
-           				<input type=\"text\" name=\"onOtherWebsite\" class=\"form-control input-sm\" value=".$row['onOtherWebsite'].">
-        			</div>
-        		</div>
+
+
+				<div class='row'>
+					<div class='col-sm-2'>
+						<label>Number of Rooms</label>
+						<input name='numOfRooms' value="{{$house->numOfRooms}}" class='form-control input-sm'>
+					</div>
+
+					<div class='col-sm-2'>
+						<label>Number of Baths</label>
+						<input name='numOfBaths' value="{{$house->numOfBaths}}" class='form-control input-sm'>
+					</div>
+
+					<div class='col-sm-2'>
+						<label>Number of Beds</label>
+						<input name='numOfBeds' value="{{$house->numOfBeds}}" class='form-control input-sm'>
+					</div>
+
+					<div class='col-sm-3'>
+					   <label>Max Number of Guests</label>
+					   <input name='maxNumOfGuests' value="{{$house->maxNumOfGuests}}" class='form-control input-sm'>
+					</div>
+				</div>
+
+				<div class='row'>
+					<div class='col-sm-8'>
+						<label>On Other Website</label>
+						<input type="text" name="onOtherWebsite" class="form-control input-sm" value="{{$house->onOtherWebsite}}">
+					</div>
+				</div>
 			</div>
 
 			<div class="tab-pane fade" id="condition">
