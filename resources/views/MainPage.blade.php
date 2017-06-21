@@ -581,7 +581,7 @@
                         <div class="my-title"><h5>House</h5></div>
                         <a href="/housesearchindex"><h6>House Search</h6></a>
                         <a href="/house/add"><h6>Add New House</h6></a>
-                        <a href="/house/modifyHouse2.php"><h6>Modify/Update Houses</h6></a>
+                        <a href="/house/modify"><h6>Modify/Update Houses</h6></a>
                         <a id="extAllHouse" href=""><h6>Extract All Houses</h6></a>
                       </div>
                 </div>

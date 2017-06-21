@@ -192,48 +192,48 @@
 											@endforeach
 										</ul> -->
 									</div>
-									<div class='row'>
+									<div class='row' style='margin-bottom:5px;'>
 										<div class='col-sm-5 control-label'><span style="color:red">*</span>Representative User Name: </div>
-										<div class='col-sm-7'><input type='search' name="repUserName" id='UserName' autocomplete='off' ></div>
+										<div class='col-sm-4'><input class="form-control input-sm" type='text' name="repUserName" id='UserName' autocomplete='off' ></div>
 									</div>
-									<div class='row'>
+									<div class='row' style='margin-bottom:5px;'>
 										<div class='col-sm-5 control-label'><span style="color:red">*</span>Representative Password: </div>
-										<div class='col-sm-7'><input type='search' name="password" id='Password' autocomplete='off' ></div>
+										<div class='col-sm-4'><input class="form-control input-sm" type='password' name="password" id='Password' autocomplete='off' ></div>
 									</div>
 									<!-- <div class='row'>
 										<div class='col-sm-5'>Representative Name: </div>
 										<div class='col-sm-7'><input type='search' name="repName" id='repName' autocomplete='off' ></div>
 									</div> -->
-									<div class='row'>
+									<div class='row' style='margin-bottom:5px;'>
 										<div class='col-sm-5 control-label'>Representative Priority: </div>
-										<div class='col-sm-7'>
-											<select id='repPriority' name="repPriority">
+										<div class='col-sm-4'>
+											<select class="form-control input-sm" id='repPriority' name="repPriority">
 												<option value=1 selected>1</option><option value=2>2</option><option value=3>3</option><option value=4>4</option><option value=5>5</option>
 											</select>
 										</div>
 									</div>
-									<div class='row'>
+									<div class='row' style='margin-bottom:5px;'>
 										<div class='col-sm-5 control-label'>Representative Position: </div>
-										<div class='col-sm-7'>
-											<select id='repPosition' name="repPosition">
+										<div class='col-sm-4'>
+											<select class="form-control input-sm" id='repPosition' name="repPosition">
 												<option value='Admin' selected>Admin</option><option value='ACCT'>ACCT</option><option value='BD'>BD</option><option value='IT'>IT</option><option value='Marketing'>Marketing</option><option value='Temp'>Temp</option>
 											</select>
 										</div>
 									</div>
-									<div class='row'>
+									<div class='row' style='margin-bottom:5px;'>
 										<hr>
 									</div>
 									<!-- <div class='row'>
 										<div class='col-sm-5'>Employee ID: </div>
 										<div class='col-sm-7'><input type='search' name="employeeID" id='employeeID' ></div>
 									</div> -->
-									<div class='row'>
+									<div class='row' style='margin-bottom:5px;'>
 										<div class='col-sm-5 control-label'>Rep First Name: </div>
-										<div class='col-sm-7'><input type='search' name="repFirstName" id='repFirstName' autocomplete='off' ></div>
+										<div class='col-sm-4'><input class="form-control input-sm" type='text' name="repFirstName" id='repFirstName' autocomplete='off' ></div>
 									</div>
-									<div class='row'>
+									<div class='row' style='margin-bottom:5px;'>
 										<div class='col-sm-5 control-label'>Rep Last Name: </div>
-										<div class='col-sm-7'><input type='search' name="repLastName" id='repLastName' autocomplete='off' ></div>
+										<div class='col-sm-4'><input class="form-control input-sm" type='text' name="repLastName" id='repLastName' autocomplete='off' ></div>
 									</div>
 								</div>
 								<div class="modal-footer">

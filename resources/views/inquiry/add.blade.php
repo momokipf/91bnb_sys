@@ -56,6 +56,10 @@
 				font-size: 25px; 
 				background-color: #5CB85C;
 			}
+			.inactiveLink {
+				pointer-events: none;
+				cursor: default;
+			}
 			hr {
 				-moz-border-bottom-colors: none;
 				-moz-border-image: none;
@@ -99,7 +103,10 @@
 					<!-- navbar right -->
 					<ul class="nav navbar-nav navbar-right">
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{$Rep->repUserName}}<span class="caret"></span></a>
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+								<span class="glyphicon glyphicon-user"></span>
+								{{$Rep->repUserName}}<span class="caret"></span>
+							</a>
 							<ul class="dropdown-menu">
 								<li><a href="#">Profile</a></li>
 								<li><a href="#">Change Password</a></li>
@@ -117,7 +124,7 @@
 			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 				<div class="panel panel-default">
 					<div class="panel-heading" role="tab" id="headingOne">
-						<span class="badge" style="background-color:#5CB85C;">1 </span>
+						<span class="badge" style="background-color:#5CB85C;">1</span>
 						<a role="button" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
 							<span class="title-sm" style='padding-left:5px;'> Select or Create Inquirer ID</span>
 						</a>
@@ -293,13 +300,13 @@
 
 				<div class="panel panel-default">
 					<div class="panel-heading" role="tab" id="headingOne">
-						<a class="collapsed" role="button" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-							<span class="badge" style="background-color:#5CB85C;">2 </span>
+						<span class="badge" style="background-color:#5CB85C;">2</span>
+						<a id='link2' class="collapsed inactiveLink" role="button" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
 							<span class="title-sm" style='padding-left:5px;'>Add New Inquiry</span>
 						</a>
 					</div>
 					<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-      					<div class="panel-body">
+						<div class="panel-body">
 							<form action="#" method="post" id="adjustLineSpacing" name="toshowhousepage">
 								{{ csrf_field() }}
 								<!-- <div class="well"> -->
@@ -698,6 +705,7 @@
 			// $('#collapseTwo').collapse({toggle: false});
 			$('#collapseOne').collapse('hide');
 			$('#collapseTwo').collapse('show');
+			$("#link2").removeClass('inactiveLink');
 		}
 
 		function vieweffect_2(){
