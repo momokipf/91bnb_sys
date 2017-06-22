@@ -18,11 +18,20 @@ class House extends Model
 
 	protected $hidden = ['location'];
 
+    protected $fillable =['houseID','fullHouseID','houseOwnerID','dateHouseAdded','houseIDByOwner',
+                          'houseAddress','country','state','city','houseZip','longitude','latitude',
+                          'houseType','houseTypeOther','size','numOfRooms','numOfBaths','numOfBeds',
+                          'maxNumOfGuests','onOtherWebsite'];
+
 	//protected $visible =['country','state','city','fullHouseID','houseAddress','longitude','latitude'];
 
     /* primaryKey keyword*/
 
     protected $primaryKey = 'numberID';
+
+    // protected $events = [
+    //     'creating' => 
+    // ];
 
     public $timestamps = false;
 
@@ -36,6 +45,9 @@ class House extends Model
     	return $this->hasOne('App\Houseprice','numberID');
     }
 
+    public function houserooms(){
+        return $this->hasMany('App\Houseroom','numberID');
+    }
     public function houseavailability(){
         return $this->hasOne('App\Houseavailability','numberID');
     }
@@ -61,7 +73,7 @@ class House extends Model
     	if($excludeDeleted)
     	{
 	    	foreach($this->geofields as $column){
-	    		$raw .= ' astext('.$column.') as cus_' .$column.' '; 
+	    		$raw .= ' astext('.$column.')';//    as cus_' .$column.' '; 
 	    	}
 	    }
 	    return parent::newQuery($excludeDeleted)->addSelect('*',DB::raw($raw));

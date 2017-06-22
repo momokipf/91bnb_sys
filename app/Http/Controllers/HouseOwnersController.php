@@ -12,6 +12,9 @@ use App\HouseOwner;
 class HouseOwnersController extends Controller
 {
     //
+
+    private $searchFields = array('first','last','ownerWechatID','ownerWechatUserName');
+
 	public function __construct() {
 		$this->middleware('auth');
 	}
@@ -42,4 +45,31 @@ class HouseOwnersController extends Controller
     				->with('houseowner',$owner);
     }
 
+
+    public function search(Request $request){
+        $houseownerSearchField = $request->only($this->searchFields);
+        Log::info($houseownerSearchField);
+        $querybuilder = null;
+
+
+        foreach($this->searchFields as $field){
+            if(!$houseownerSearchField[$field]){
+                continue;
+            }
+            if(!$querybuilder){
+                $querybuilder = HouseOwner::where($field,'LIKE',$houseownerSearchField[$field]);
+            }
+            else{
+                $querybuilder = $querybuilder->orwhere($field,'LIKE',$houseownerSearchField[$field]);
+            }
+        }
+
+        $similarowner = $querybuilder->get();
+
+        if($request->ajax() || $request->wantsJson()){
+            return response($similarowner)
+                        ->header('Content','json');
+        }
+
+    }
 }

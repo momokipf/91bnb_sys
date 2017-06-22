@@ -16,6 +16,7 @@ class ResourceController extends Controller
 						   "countries"=>"countryList",
 						   "houseTypes"=>"houseTypeList",
 						   "roomTypes"=>"roomTypeList",
+						   "bedTypes"=>"bedTypeList",
 						   "China"=>"Country_State/China_StateList",
 						   "United States"=>"Country_State/UnitedStates_StateList",
 						   "United Kingdom"=>"Country_State/UnitedKingdom_StateList",

@@ -27,16 +27,16 @@ function loadOpt()
 
 		});
 
-		$.get("/resource/roomTypes",function(data,status){
-				$('#room1Type').empty();
-				$('#room2Type').empty();
-				for(i=0;i<data.length;++i){
-					var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-					$('#room1Type').append(option);
-					$('#room2Type').append("<option>" + data[i] + "</option>");
-				}
+		// $.get("/resource/roomTypes",function(data,status){
+		// 		$('#room1Type').empty();
+		// 		$('#room2Type').empty();
+		// 		for(i=0;i<data.length;++i){
+		// 			var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+		// 			$('#room1Type').append(option);
+		// 			$('#room2Type').append("<option>" + data[i] + "</option>");
+		// 		}
 
-		});
+		// });
 
 		$.get("/resource/houseTypes",function(data,status){
 				$('#houseType').empty();
@@ -66,7 +66,19 @@ function converttimetosql(str){
 }
 
 
+(function($) {
+    $.fn.changeElementType = function(newType) {
+        var attrs = {};
 
+        $.each(this[0].attributes, function(idx, attr) {
+            attrs[attr.nodeName] = attr.nodeValue;
+        });
+
+        var newelement = $("<" + newType + "/>", attrs).append($(this).contents());
+    	this.replaceWith(newelement);
+    		return newelement;
+    }
+})(jQuery);
 
 
 

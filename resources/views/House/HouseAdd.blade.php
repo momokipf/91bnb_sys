@@ -22,7 +22,6 @@
 		<script src="../js/bootstrap-formhelpers-phone.js"></script>
 		<script src="{{asset('js/util.js')}}"></script>
         <link rel="stylesheet" href	="../css/self.css">
-		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCpF-_i-utIH6cZl94zpu4C5vx_FBDDI9s&libraries=places&language=en"></script>
 		<style type="text/css">
 			body {
 				background-color: white;
@@ -83,7 +82,7 @@
 			<div class="well">
 				<h4>Existing house owner?</h4>
 				<form id="search_form",style="margin-bottom:0;" onsubmit="return false;">
-					{{ csrf_field() }}
+					{{ csrf_field()}}
 					<div class="row">
 						<div class="col-sm-2">
 	                        <label>First Name</label>
@@ -221,7 +220,9 @@
 					</div>
 				</div>
 			</div>
-
+			<div>
+			<p id = 'ErrorMsg'></p>
+			</div>
 			<div class="container">
 				<ul class="nav nav-tabs">
 			        <li class="active"><a data-toggle="tab" href="#home">House</a></li>
@@ -231,7 +232,8 @@
 			        <li><a data-toggle="tab" href="#menu4">Room (Optional)</a></li>
 				</ul>
 
-				<form action = "newHouseSaver.php" method = "post" id="adjustLineSpacing" onsubmit="return Check(this);">
+				<form  id="houseinfoform" >
+					{{ csrf_field()}}
 					<div class="tab-content">
 						<div id="home" class="tab-pane fade in active">
 			            <br>
@@ -242,7 +244,7 @@
 								</div>
 								<div class="col-sm-2">
 						            <label>Date House Added</label>
-						            <input type="search" name="dateHouseAdded" class="form-control input-sm" disabled value=<?php echo date("m/d/Y");?> >
+						            <input type="search" name="dateHouseAdded" id="dateHouseAdded" class="form-control input-sm" value=<?php echo date("m/d/Y");?> >
 						        </div>
 						        <div class="col-sm-2">
 				                    <label>House ID by Owner</label>
@@ -254,37 +256,30 @@
 				                </div>
 				            </div>
 
-							<div class="row">
-								<div class="col-sm-2">
+				            <div class="row">
+				            	<div class="col-sm-2">
 								<label>Country<span style='color:red'>*</span></label>
-								<select type="text" name="country" id="hotcountry" class="form-control input-sm Country">
-								</select>
+									<input id="country" name="country" class="form-control input-sm Country" list="hotcountry">
+									<span id = "validity"></span> 
+									<!-- <select type="text" name="country" id="hotcountry" class="form-control input-sm Country">
+									</select> -->
+									<datalist id="hotcountry">
+									</datalist>
 								</div>
+				            </div>
 
-								<div class="col-sm-2">
-									<label>State or Province<span style='color:red'>*</span></label>
-									<select id="state" name="state" class="form-control input-sm">
-										<option selected>Please Select State</option>
-									</select>
-								</div>
-
-								<div class="col-sm-2">
-									<label>City<span style='color:red'>*</span></label>
-										<select name="city" id="city" class="form-control input-sm">
-										<option selected>Please Select City</option>
-										</select>
-								</div>
+							<div class="row" hidden>
+								<input id="state" name="state">
+                                <input id="city" name="city">
+                                <input id="route" name="route">
+                                <input id="address" diabled>
 							</div>
 
 							<div class="row">
-								<div class="col-sm-2">
-								<label>Region</label>
-								<input type="text" name="region" class="form-control input-sm" maxlength="10">
-								</div>
 
 								<div class="col-sm-4">
 										<label>House Address</label>
-										<input type="text" name="houseAddress" id = "houseAddress" onFocus="initialize()" class="form-control input-sm">
+										<input type="text" name="houseAddress" id = "houseAddress" class="form-control input-sm" placeholder="Enter and address,neighborhood,city">
 								</div>
 
 								<div class="col-sm-2">
@@ -317,22 +312,22 @@
 							<div class="row">
 				                <div class="col-sm-2">
 				                    <label>Num of Rooms</label>
-				                    <input type="number" name="numOfRooms" class="form-control input-sm">
+				                    <input type="number" name="numOfRooms" class="form-control input-sm" value = 0 min="0">
 				                </div>
 
 				                <div class="col-sm-2">
 				                    <label>Num of Baths</label>
-				                    <input type="number" name="numOfBaths" class="form-control input-sm">
+				                    <input type="number" name="numOfBaths" class="form-control input-sm" value = 0 min="0">
 				                </div>
 
 				                <div class="col-sm-2">
 				                    <label>Num of Beds</label>
-				                    <input type="number" name="numOfBeds" class="form-control input-sm">
+				                    <input type="number" name="numOfBeds" class="form-control input-sm" value = 0 min="0">
 				                </div>
 
 				                <div class="col-sm-2">
 				                    <label>Max Num of Guests</label>
-				                    <input type="number" name="maxNumOfGuests" class="form-control input-sm">
+				                    <input type="number" name="maxNumOfGuests" class="form-control input-sm" value=0 min="0">
 				                </div>
 
 							</div>
@@ -345,10 +340,10 @@
 							</div>
 
 							<div class="row">
-								<div class="col-lg-6">
+								<div class="col-sm-6">
 									<a class="btn btn-primary btnPrevious" style="width:100px">Previous</a>
 								</div>
-								<div class="col-lg-6">
+								<div class="col-sm-6">
 									<a class="btn btn-primary pull-right btnNext" style="width:100px">&nbsp;&nbsp;Next&nbsp;&nbsp;</a>
 								</div>
 
@@ -574,10 +569,10 @@
 				            </div>
 
 							<div class="row">
-								<div class="col-lg-6">
+								<div class="col-sm-6">
 									<a class="btn btn-primary btnPrevious" style="width:100px">Previous</a>
 								</div>
-								<div class="col-lg-6">
+								<div class="col-sm-6">
 									<a class="btn btn-primary pull-right btnNext" style="width:100px">&nbsp;&nbsp;Next&nbsp;&nbsp;</a>
 								</div>
 
@@ -748,7 +743,7 @@
 						</div>
 
 						<div class="row">
-							<div class="col-sm=2">
+							<div class="col-sm-2">
 								<label>Retail Day Price</label>
 								<div class="input-group">
 									<span class="input-group-addon">$</span>
@@ -818,31 +813,126 @@
 						</div>
 
 						<div class="row">
+							<div class="col-sm-6">
+								<a class="btn btn-primary btnPrevious" style="width:100px">Previous</a>
+							</div>
+							<div class="col-sm-6">
+								<a class="btn btn-primary pull-right btnNext" style="width:100px">&nbsp;&nbsp;Next&nbsp;&nbsp;</a>
+							</div>
+
+						</div>
+
+							
+					</div>
+
+					<div id="menu4" class="tab-pane fade">
+					<!-- beginning of table HOUSEROOM -->
+						<div id = "roomsdiv">
+
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<br>
+								<div class="row">
+									<button class="btn btn-primary btn-sm" type="button" id="addRoom">Add a Room</button>
+									<button class="btn btn-default btn-sm" type="button" id="removeRoom">Remove a Room</button>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
 							<div class="col-lg-6">
 								<a class="btn btn-primary btnPrevious" style="width:100px">Previous</a>
 							</div>
 							<div class="col-lg-6">
 								<a class="btn btn-primary pull-right btnNext" style="width:100px">&nbsp;&nbsp;Next&nbsp;&nbsp;</a>
 							</div>
-
+						</div>
+						<hr>
+						<div style="text-align:center; margin-bottom:10px;">
+							<button class="btn btn-primary btn-md" id="btnConfirm"  style="width:200px;" type="button" >Submit</button>
 						</div>
 					</div>
-
-					<div id="menu4" class="tab-pane fade">
-					<!-- beginning of table HOUSEROOM -->
-						<br>
-
-					</div>
 				</form>
-				<p id = 'ErrorMsg'></p>
 			</div>
 		</div>
 	</body>
-
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCpF-_i-utIH6cZl94zpu4C5vx_FBDDI9s&libraries=places&language=en&callback=initialize"></script>
 	<script>
+
+		var autocomplete;
+		var search_geo;
+		var componentForm = {
+	        //street_number: 'short_name',
+	        route: 'long_name',
+	        locality: 'long_name',
+	        administrative_area_level_1: 'long_name',
+	        country: 'long_name',
+	        postal_code: 'short_name'
+	    };
+
+	    var componentMap ={
+	    	route: 'route',
+	    	locality: 'city',
+	    	administrative_area_level_1: 'state',
+	    	country: 'country',
+	    	postal_code: 'houseZip'
+	    }
+
+	    var roomtype,bedtype;
+	    function initAutoComplete(){
+	    	var options = {
+	    		componentRestrictions: {country: "us"}
+	    	}
+
+	    	autocomplete = new google.maps.places.Autocomplete(
+	    		(document.getElementById('houseAddress')),
+	    		options);
+	    	autocomplete.addListener('place_changed',geolocate);
+	    }
+
+	    function initialize(){
+	    	initAutoComplete();
+	    }
+
+	    function geolocate(){
+	        var place = autocomplete.getPlace();
+	        //console.log(JSON.stringify(place));
+	        if(place){
+	            for(var i = 0 ;i < place.address_components.length;i++){
+	                var addressType = place.address_components[i].types[0];
+	                if(componentForm[addressType]){
+	                    var val = place.address_components[i][componentForm[addressType]];
+	                    if(!document.getElementById(componentMap[addressType]).value){
+	                    	document.getElementById(componentMap[addressType]).value = val;
+	                	}
+	                	else if(document.getElementById(componentMap[addressType]).value!=val){
+	                		document.getElementById(componentMap[addressType]).value = val;
+	                		alert("there is conflict on "+componentMap[addressType]+'\n Autocorrected');
+	                	}
+	                }
+	            }
+	            //document.getElementById('address').value = document.getElementById('houseAddress').value;
+	            search_geo = place.geometry;
+	        }
+	        else {
+	            alert("something wrong");
+	        }
+
+	    }
+
+	    function getisocontrycode(country){
+	    	var countrydict = {
+	    		'China': 'CN',
+	    		'United States':'US',
+	    		'United Kingdom':'UK',
+	    	}
+	    		return countrydict[country];
+	    }
+
 		$(document).ready(function(){
 			$("#search_form").submit(function(){
-				var toSend = $(this).serialize();
+				var toSend = $(this).serializeArray();
 				$.ajax({
 					type:"post",
 					dataType: "json",
@@ -867,7 +957,7 @@
 										"</tr>"
 						for(i = 0 ;i<data.length;++i)
 						{
-							htmlcont += "<tr><td data-dismiss='modal' style='cursor:pointer; text-decoration:underline; color:blue;' onclick ='$(\'#inquirerID\').val("+data[i].houseOwnerID+");'>Select</td>"+
+							htmlcont += "<tr><td data-dismiss='modal' style='cursor:pointer; text-decoration:underline; color:blue;' onclick='$(\"#houseOwnerID\").val( "+ data[i].houseOwnerID+ ")'>Select</td>"+
 										    "<td>"+data[i].first+"</td>"+
 										    "<td>"+data[i].last +"</td>"+
 										    "<td>"+data[i].ownerWechatID+"</td>"+
@@ -880,7 +970,69 @@
 					}
 
 				});
+
+
 			});
+			$('#btnConfirm').click(function(){
+				//
+				if(check()){
+					var toSend = $('#houseinfoform').serializeArray();
+					toSend.push({'name':'dateHouseAdded','value':converttimetosql($('#dateHouseAdded').val())});
+					if(search_geo){
+						var location = search_geo['location'];
+			            toSend.push({'name':'search_latitude','value':location['lat']});
+			            toSend.push({'name':'search_longitude','value':location['lng']});
+					}
+					toSend.push({'name':'room_num','value':document.getElementById('roomsdiv').childElementCount});
+					$.post({
+						type:"POST",
+						url:"/house/add",
+						data:$.param(toSend),
+						datatype:'json',
+						success: function(data){
+							$("#ErrorMsg").html("");
+						}
+					});
+				}
+			});
+
+			$('#addRoom').click(function(){
+				// var htmlstr = "<div class='well' ";
+				var count = document.getElementById('roomsdiv').childElementCount+1;
+				var htmlstr = "<div class='well' style='background-color:white;margin-bottom:30px' id=room"+count+">";
+				htmlstr += "<h4>Room "+count+"</h4><div class='row'><div class='col-sm-2'><label>Room ID</label>" + 
+						   "<input readonly type='number' class='form-control input-sm' name='roomID_"+count+"' value="+count+"></div>"+
+						   "<div class='col-sm-2'><label>Room Type</label>" +
+						   "<select class='form-control input-sm' name='roomType_"+count+"' id='roomType_"+count+" '>"+roomtype+"</select></div></div>"+
+						   "<div class='row'><div class='col-sm-2'><label>Bed Type</label><select class='form-control input-sm' name='roomBedType_"+count+"' id='roomType_"+count+"'>"+bedtype+"</select></div>"+
+						   "<div class='col-sm-2' id='roomBedTypeotherdiv_"+count+"'  style='visibility:hidden;'><label>Bed Type Other</label>"+
+						   "<input name='roomBedTypeOther_"+count+"' id='roomBedTypeOther_"+count+"' 'text' class='form-control input-sm'></div>"+
+						   "<div class='col-sm-2'><label>Max Guests number</label><input name='maxGuestsnum_"+count+"' id='maxGuestsnum_"+count+"' type='number' class='form-control input-sm' min='0'></div></div>"+
+						   "<div class=row><div class='col-sm-2'><label>Cost Day Price</label><div class='input-group'><span class='input-group-addon'>$</span>"+
+						   "<input type='number' name='roomCostDayPrice_"+count+"' min='0' class='form-control input-sm'><span class='input-group-addon'>USD</span></div></div>"+
+						   "<div class='col-sm-2'><label>Cost Week Price</label><div class='input-group'><span class='input-group-addon'>$</span>"+
+						   "<input type='number' name='roomCostWeekPrice_"+count+"' class='form-control input-sm' min='0'><span class='input-group-addon'>USD</span></div></div>"+
+						   "<div class='col-sm-2'><label>Cost Month Price</label><div class='input-group'><span class='input-group-addon'>$</span>"+
+						   "<input type='number' name='roomCostMonthPrice_"+count+"' class='form-control input-sm' min='0'><span class='input-group-addon'>USD</span></div></div></div>"+
+
+						   "<div class='row'><div class='col-sm-2'><label>Cost Utility</label><div class='input-group'><span class='input-group-addon'>$</span>"+
+						   "<input type='number' name='roomCostUtility_"+count+"' class='form-control input-sm' min='0'><span class='input-group-addon'>USD</span></div></div>"+
+						   "<div class='col-sm-4'><label>Utility Note</laebl><textarea class='form-control' rows='4' cols='50' name='utilityNote_"+count+"' placeholder='What&#39s included? Ex: Wi-Fi, Electricity, Water, Gas...'></textarea></div></div>"+
+ 						   "<div class='row'><div class='col-sm-2'><label>Cleaning Fee</label><div class='input-group'><span class='input-group-addon'>$</span>"+
+ 						   "<input type='number' name='roomCostCleaning_"+count+"' class='form-control input-sm' min='0'><span class='input-group-addon'>USD</span></div></div>"+
+ 						   "<div class='col-sm-2'><label>Cost Security Deposit</label><div class='input-group'><span class='input-group-addon'>$</span>"+
+ 						   "<input type='number' name='roomCostSecurityDeposit_"+count+"' class='form-control input-sm'><span class='input-group-addon'>USD</span></div></div></div>"+
+						   "</div>";
+				$('#roomsdiv').append(htmlstr);
+			});
+
+			$('#removeRoom').click(function(){
+				if(document.getElementById("roomsdiv").childElementCount>0){
+					var allroomchild = document.getElementById("roomsdiv");
+					allroomchild.removeChild(allroomchild.lastChild);
+				}
+			});
+
 			$.get("/resource/countryCode",function(data,status){
 				$('.PhoneCountry').empty();
 				for(i=0;i<data.length;++i){
@@ -899,40 +1051,72 @@
 			});
 
 			loadOpt();
+			$.get("/resource/roomTypes",function(data,status){
+				roomtype = "";
+				for(i=0;i<data.length;++i){
+					// var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+					// $('#room1Type').append(option);
+					// $('#room2Type').append("<option>" + data[i] + "</option>");
+					var option = "<option> "+data[i]+"</option>";
+					roomtype += option;
+				}
+			});
+
+			$.get("/resource/bedTypes",function(data,status){
+				bedtype = "";
+				for(i=0;i<data.length;++i){
+					// var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+					// $('#room1Type').append(option);
+					// $('#room2Type').append("<option>" + data[i] + "</option>");
+					var option = "<option> "+data[i]+"</option>";
+					bedtype += option;
+				}
+			});
 		});
 
 		
-		$('#hotcountry').change(function(){
+		// ToDO: if the isocode 
+
+
+		$('#country').change(function(){
 			var country = $(this).val().trim();
-			if(country == "Other"){
-				// choose contry from other list
-			}
-			else{
-				$.get("/resource/"+country , function(data,status){
-					$('#state').empty();
-					for(i=0;i<data.length;++i){
-						var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-						$('#state').append(option);
-					}
-				});
+			var isocode = getisocontrycode(country);
+			if(isocode){
+				autocomplete.setComponentRestrictions({'country':isocode});
 			}
 		});
 
-		$('#state').change(function(){
-			var country = $('#hotcountry').val().trim();
-			var state = $(this).val().replace(/\s/g, '').trim();
-			if(state == "Other"){
-			}
-			else{
-				$.get("/resource/"+country+'/'+state,function(data,status){
-					$('#city').empty();
-					for(i=0;i<data.length;++i){
-						var option = data[i];
-						$('#city').append(option);
-					}
-				});
-			}
+
+		$('.btnNext').click(function(){
+			$('.nav-tabs > .active').next('li').find('a').trigger('click');
 		});
+
+		$('.btnPrevious').click(function(){
+			$('.nav-tabs > .active').prev('li').find('a').trigger('click');
+		});
+
+		function check(){
+			if($("#houseOwnerID").val() == ""){
+				$("#ErrorMsg").html("House Owner ID cannot be empty.");
+
+				return false;
+			}
+
+			if($("#houseAddress").val() == ""){
+				$("#ErrorMsg").html("Please input a valid home address");
+				return false;
+			}
+
+			if($('#houseZip').val()==""){
+				$('#ErrorMsg').html("please enter a valid zip code");
+				return false;
+			}
+			return true;
+			// if($("#houseZip").val() == ""){
+			// 	$("#ErrorMsg").html("Please input a valid zip code");
+			// 	return false;
+			// }
+		}
 
 	</script>
 

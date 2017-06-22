@@ -54,16 +54,11 @@ Route::post('inquirer/add', 'InquirersController@store');
 Route::get('housesearchindex','HousesController@searchindex');
 Route::get('house/info/{id}','HousesController@showhouse');
 Route::get('house/add','HousesController@addindex');
+Route::post('house/add','HousesController@store');
 Route::post('house/search','HousesController@search');
 
 Route::get('houseowner/{id}/{house?}','HouseOwnersController@ownerinfo');
-Route::post('houseowner/search',function(){
-	$ret = collect([['houseOwnerID'=>'5','first'=>'Jay','last'=>'Chou','ownerWechatUserName'=>'jaywechat']]);
-	Log::info(response($ret)
-			->header('Content-Type','json'));
-	return response($ret)
-			->header('Content-Type','json');
-});
+Route::post('houseowner/search','HouseOwnersController@search');
 
 Route::get('representatives', 'RepresentativesController@showAll');
 Route::post('representatives/update', 'RepresentativesController@update');

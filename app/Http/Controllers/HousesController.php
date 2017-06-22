@@ -10,14 +10,17 @@ use Illuminate\Support\Facades\DB;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Client;
 
+
+use Validator;
 use View;
 
 use App\House;
 use App\Houseavailability;
 
 
-define("GOOGLE_KEY","AIzaSyAAIAQT72snLXj_BITkOc5TMZjpTrzbYRw");
 
+define("GOOGLE_KEY","AIzaSyAAIAQT72snLXj_BITkOc5TMZjpTrzbYRw");
+define("FULL_HOUSE_ID_TITLE","91bnb_");
 
 class HousesController extends Controller
 {
@@ -153,6 +156,109 @@ class HousesController extends Controller
     	}
     }
 
+    public function store(Request $request){
+    	//Log::info($request->all());
+    	$input = $request->all();
+    	//Log::info($input);
+    	$validator= Validator::make($input,[
+    		'houseOwnerID' => 'bail|required',
+    		'houseAddress' => 'required',
+    		'houseZip' => 'max:5',
+    		]);
+    	if($validator->fails())
+    	{
+    		return ;
+    	}
+
+    	//$houseAddress = $input['houseAddress'];
+    	$search_longitude = $request->input('search_longitude',null);
+    	$search_latitude = $request->input('search_latitude',null);
+
+
+    	$houseowner = \App\Houseowner::find($input['houseOwnerID']);
+    	if($houseowner){
+    		$houseid = House::where('country','=',$input['country'])
+    						  ->where('state','=',$input['state'])
+    						  ->where('city','=',$input['city'])
+    						  ->count();
+    		if($houseid){
+    			$houseid++;
+    		}
+    		else{
+    			$houseid =1;
+    		} 
+
+    		$fullHouseID = FULL_HOUSE_ID_TITLE.$this->state_abbr($input['state']).'_'.str_replace(' ','',$input['city']).'_'.sprintf('%04d',$houseid);
+    		$point = $input['search_longitude'].',' .$input['search_latitude'];
+    		$newhouse = new House([
+    			'houseID' => $houseid,
+    			'fullHouseID' => $fullHouseID,
+    			'houseOwnerID' => $input['houseOwnerID'],
+    			'dateHouseAdded' => $input['dateHouseAdded'],
+    			'houseIDByOwner' => $input['houseIDByOwner'],
+    			'houseAddress' => $input['houseAddress'],
+    			'country' => $input['country'],
+    			'state' => $input['state'],
+    			'city' => $input['city'],
+    			'houseZip' => $input['houseZip'],
+    			'longitude' =>sprintf('%F',$input['search_longitude']),
+    			'latitude' => sprintf('%F',$input['search_latitude']),
+    			'houseType' => $input['houseType'],
+    			'houseTypeOther' =>$input['houseType'],
+    			'location' => $point,
+    			//repwithOwner
+    			'size' => $input['size'],
+    			'numOfRooms' => $input['numOfRooms'],
+    			'numOfBaths' => $input['numOfBaths'],
+    			'numOfBeds' => $input['numOfBeds'],
+    			'maxNumOfGuests' => $input['maxNumOfGuests'],
+    			'onOtherWebsite' => $input['onOtherWebsite'],
+    			//repWithGuest
+    			]);
+
+     		$newhouse->setLocationAttribute($point);
+			$room_num = $input['room_num'];   
+			$newrooms = array();
+
+			for($i = 1 ;$i <= $room_num; $i++)
+			{
+				//$roomtypefield = 'roomType_'.($i+1);
+				//$roominput = $request->only
+				$newroom = new \App\Houseroom();
+				$newroom->roomID = $i;
+				$newroom->roomType = $input['roomType_'.$i];
+				$newroom->roomBedType = $input['roomBedType_'.$i];
+				$newroom->roomBedTypeOther = $input['roomBedTypeOther_'.$i];
+				$newroom->roomGuestMax = $input['maxGuestsnum_'.$i];
+				$newroom->roomCostDayPrice = $input['roomCostDayPrice_'.$i];
+				$newroom->roomCostWeekPrice = $input['roomCostWeekPrice_'.$i];
+				$newroom->roomCostMonthPrice = $input['roomCostMonthPrice_'.$i];
+				$newroom->roomCostUtility = $input['roomCostUtility_'.$i];
+				$newroom->utilityNote = $input['utilityNote_'.$i];
+				$newroom->roomCostCleaning = $input['roomCostCleaning_'.$i];
+				$newroom->roomCostSecurityDeposit = $input['roomCostSecurityDeposit_'.$i];
+				Log::info($newroom);
+				array_push($newrooms,$newroom);
+			}
+			//Log::info($newrooms);
+			$priceinput = $request->only(\App\Houseprice::$fields); 
+			$conditioninput = $request->only(\App\Housingcondition::$fields);
+    		$newhouseprice = new \App\Houseprice($priceinput);  //\App\Houseprice::create($priceinput);
+    		$newhousecond = new \App\Housingcondition($conditioninput);
+
+    		// $newhouseAvailability = new Houseavailability([
+
+    		// 	]);
+    		$newhouse->save();
+    		$newhouse->houseprice()->save($newhouseprice);
+    		$newhouse->housingcondition()->save($newhousecond);
+    		$newhouse->houserooms()->saveMany($newrooms);
+
+
+    	}
+    }
+
+
     public function addindex(Request $request)
     {
     	return view('House/HouseAdd')
@@ -279,6 +385,12 @@ class HousesController extends Controller
 
 
     }
+
+    /*
+	TODO: make it more robusted and maybe combine with the reverse.
+
+
+    */
     private function getState($abbreviate)
     {
     	if(!$abbreviate)
@@ -437,6 +549,62 @@ class HousesController extends Controller
 		default:
 			return $abbreviate;
     	}
+    }
+
+    private function state_abbr($name){
+    	$states = array(
+			'Alabama'=>'AL',
+			'Alaska'=>'AK',
+			'Arizona'=>'AZ',
+			'Arkansas'=>'AR',
+			'California'=>'CA',
+			'Colorado'=>'CO',
+			'Connecticut'=>'CT',
+			'Delaware'=>'DE',
+			'Florida'=>'FL',
+			'Georgia'=>'GA',
+			'Hawaii'=>'HI',
+			'Idaho'=>'ID',
+			'Illinois'=>'IL',
+			'Indiana'=>'IN',
+			'Iowa'=>'IA',
+			'Kansas'=>'KS',
+			'Kentucky'=>'KY',
+			'Louisiana'=>'LA',
+			'Maine'=>'ME',
+			'Maryland'=>'MD',
+			'Massachusetts'=>'MA',
+			'Michigan'=>'MI',
+			'Minnesota'=>'MN',
+			'Mississippi'=>'MS',
+			'Missouri'=>'MO',
+			'Montana'=>'MT',
+			'Nebraska'=>'NE',
+			'Nevada'=>'NV',
+			'New Hampshire'=>'NH',
+			'New Jersey'=>'NJ',
+			'New Mexico'=>'NM',
+			'New York'=>'NY',
+			'North Carolina'=>'NC',
+			'North Dakota'=>'ND',
+			'Ohio'=>'OH',
+			'Oklahoma'=>'OK',
+			'Oregon'=>'OR',
+			'Pennsylvania'=>'PA',
+			'Rhode Island'=>'RI',
+			'South Carolina'=>'SC',
+			'South Dakota'=>'SD',
+			'Tennessee'=>'TN',
+			'Texas'=>'TX',
+			'Utah'=>'UT',
+			'Vermont'=>'VT',
+			'Virginia'=>'VA',
+			'Washington'=>'WA',
+			'West Virginia'=>'WV',
+			'Wisconsin'=>'WI',
+			'Wyoming'=>'WY'
+			);
+		return $states[$name];
     }
 
 }
