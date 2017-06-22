@@ -130,7 +130,7 @@ class HousesController extends Controller
 	}
 
 	public function modify() {
-        return view('house.modify')
+        return view('House.modify')
                 ->with('rep',Auth::user());
     }
 
@@ -173,7 +173,7 @@ class HousesController extends Controller
     public function modifyHouse($numberID) {
     	Log::info($numberID);
     	$house = House::where('numberID', $numberID)->first();
-    	return view('house.modifyHouse')
+    	return view('House.modifyHouse')
     			->with('house', $house)
     			->with('rep',Auth::user());
     }
