@@ -132,55 +132,52 @@
 					<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
 					<!-- <div class="row"> -->
 						<div class="panel-body">
-						<div class="col-sm-6">
-							<h5>Existing Inquirer?</h5>
-							<form id="search_form" class="form-horizontal"  onsubmit="return false;">
-								{{ csrf_field() }}
-								<div class="form-group">
-									<label class="col-sm-4 control-label">First Name</label>
+							<div class="col-sm-6">
+								<h5>Existing Inquirer?</h5>
+								<form id="search_form" class="form-horizontal"  onsubmit="return false;">
+									{{ csrf_field() }}
+									<div class="form-group">
+										<label class="col-sm-4 control-label">First Name</label>
 										<div class="col-sm-6">
-										  <input type="search" class="form-control input-sm" name="inquirerFirst" placeholder="First Name">
+											<input type="search" class="form-control input-sm" name="inquirerFirst" placeholder="First Name">
 										</div>
-								</div>
-								<div class="form-group">
+									</div>
+									<div class="form-group">
 										<label class="col-sm-4 control-label">Last Name</label>
 										<div class="col-sm-6">
-										  <input type="search" class="form-control input-sm" name="inquirerLast" placeholder="Last Name">
+											<input type="search" class="form-control input-sm" name="inquirerLast" placeholder="Last Name">
 										</div>
-								</div>
-								<div class="form-group">
+									</div>
+									<div class="form-group">
 										<label class="col-sm-4 control-label">WeChat ID</label>
 										<div class="col-sm-6">
-										  <input type="search" class="form-control input-sm" name="inquirerWechatID" placeholder="Wechat ID">
+											<input type="search" class="form-control input-sm" name="inquirerWechatID" placeholder="Wechat ID">
 										</div>
-								</div>
-								<div class="form-group">
+									</div>
+									<div class="form-group">
 										<label class="col-sm-4 control-label">WeChat Username</label>
 										<div class="col-sm-6">
-										  <input type="search" class="form-control input-sm" name="inquirerWechatUserName" placeholder="Wechat Name">
+											<input type="search" class="form-control input-sm" name="inquirerWechatUserName" placeholder="Wechat Name">
 										</div>
-								</div>
-								<div class="form-group">
+									</div>
+									<div class="form-group">
 										<label class="col-sm-4 control-label">Taobao Username</label>
 										<div class="col-sm-6">
-										  <input type="search" class="form-control input-sm" name="inquirerTaobaoUserName" placeholder="Taobao Username">
+											<input type="search" class="form-control input-sm" name="inquirerTaobaoUserName" placeholder="Taobao Username">
 										</div>
-								</div> <!-- button get -->
+									</div> <!-- button get -->
 
-						<div class="form-group">
-								<div class="col-sm-6 col-sm-offset-4">
-									<button class="btn btn-primary btn-sm" type ="submit">Search</button>
-									<!-- clear input by refresh page -->
-									<button class="btn btn-warning btn-sm" type="reset">Clear</button>   
-
-
-								</div>
-							</form>
-						</div>
-						<div class="col-sm-6">
-							<h5>New inquirer?</h5>
-								<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addInquirerFieldModal"  onclick="$('#similarResult').empty(); $('#inquirerSubmitBtn').show(); $('#inquirerStillSubmitBtn').hide();">Add New Inquirer</button> 
-						</div>
+									<div class="col-sm-6 col-sm-offset-4">
+										<button class="btn btn-primary btn-sm" type ="submit">Search</button>
+										<!-- clear input by refresh page -->
+										<button class="btn btn-warning btn-sm" type="reset">Clear</button>   
+									</div>
+								</form>
+							</div>
+							<div class="col-sm-6">
+								<h5>New inquirer?</h5>
+									<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addInquirerFieldModal"  onclick="$('#similarResult').empty(); $('#inquirerSubmitBtn').show(); $('#inquirerStillSubmitBtn').hide();">Add New Inquirer</button> 
+							</div>
 						</div>
 					</div>
 
