@@ -98,7 +98,7 @@
 			        <ul class="dropdown-menu">
 			          <li><a href="/housesearchindex"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> House Search</a></li>
 			          <li><a href="/house/add"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add New House</a></li>
-			          <li><a href="/house/modifyHouse2.php"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Modify/Update House</a></li>
+			          <li><a href="/house/modify"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Modify/Update House</a></li>
 			          <li><a href="#"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Extract All Houses</a></li>
 			    	</ul>
 			    </li>
