@@ -43,11 +43,11 @@
 				      <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin
 				      <span class="caret"></span></a>
 				      <ul class="dropdown-menu">
-				        <li><a href="/representatives">Representatives</a></li>
-				        <li><a href="#">User Log</a></li>
-				        <li><a href="#">Accounting</a></li>
-				        <li><a href="report/houseReport">House Reporting</a></li>
-				        <li><a href="#">Inquiry Reporting</a></li>
+				        <li><a href="/representatives"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Representatives</a></li>
+				        <li><a href="#"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> User Log</a></li>
+				        <li><a href="#"><span class="glyphicon glyphicon-usd" aria-hidden="true"></span> Accounting</a></li>
+				        <li><a href="/report/houseReport"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> House Reporting</a></li>
+				        <li><a href="#"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Inquiry Reporting</a></li>
 				      </ul>
 				  </li>
 
@@ -58,8 +58,8 @@
 				      <span class="caret"></span></a>
 				      <ul class="dropdown-menu">
 				        <li><a href="#">Accounting</a></li>
-				        <li><a href="report/houseReport">House Reporting</a></li>
-				        <li><a href="#">Inquiry Reporting</a></li>
+				        <li><a href="/report/houseReport"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> House Reporting</a></li>
+				        <li><a href="#"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Inquiry Reporting</a></li>
 				      </ul>
 				  </li>
 
@@ -70,14 +70,14 @@
 			        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Inquiry
 			        <span class="caret"></span></a>
 			        <ul class="dropdown-menu">
-			          <li><a href="/inquiry/add">Add New Inquiry</a></li>
+			          <li><a href="/inquiry/add"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add New Inquiry</a></li>
 			          @if($Rep->repPriority<=3)
-			          <li><a href="/inquiry/search">Search/Modify/Follow Up</a></li>
+			          <li><a href="/inquiry/search"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search/Modify/Follow Up</a></li>
 			          @if(!($Rep->repPriority==3))
-			          <li><a id="extAllInquiry" download>Ectract All Inquiries</a></li>
+			          <li><a id="extAllInquiry" download><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Extract All Inquiries</a></li>
 			          @endif
                       @endif
-			          <li><a href="inquiry/passdue">Pass Due Log</a></li>
+			          <li><a href="/inquiry/passdue"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Pass Due Log</a></li>
 			    	</ul>
 			    </li>
 			    <!-- Inquirer -->
@@ -86,9 +86,9 @@
 			        <span class="caret"></span></a>
 			        <ul class="dropdown-menu">
 			          @if($Rep->repPriority<=3)
-			          <li><a href="inquirer/searchAndModify">Search/Modify Inquirer</a></li>
+			          <li><a href="/inquirer/searchAndModify"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search/Modify Inquirer</a></li>
 			          @endif
-			          <li><a href="inquirer/showAll">Show All Inquirers</a></li>
+			          <li><a href="/inquirer/showAll"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Show All Inquirers</a></li>
 			    	</ul>
 			    </li>
 			    <!-- House -->
@@ -96,10 +96,10 @@
 			        <a class="dropdown-toggle" data-toggle="dropdown" href="#">House
 			        <span class="caret"></span></a>
 			        <ul class="dropdown-menu">
-			          <li><a href="/housesearchindex">House Search</a></li>
-			          <li><a href="/house/add">Add New House</a></li>
-			          <li><a href="/house/modify">Modify/Update House</a></li>
-			          <li><a href="#">Extract All Houses</a></li>
+			          <li><a href="/housesearchindex"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> House Search</a></li>
+			          <li><a href="/house/add"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add New House</a></li>
+			          <li><a href="/house/modifyHouse2.php"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Modify/Update House</a></li>
+			          <li><a href="#"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Extract All Houses</a></li>
 			    	</ul>
 			    </li>
 
@@ -110,10 +110,10 @@
 	                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 	                      <span class="glyphicon glyphicon-user"></span><span id='username'>{{$Rep->repUserName}}</span><span class="caret"></span></a>
 	                  <ul class="dropdown-menu">
-	                    <li><a href="#">Profile</a></li>
-	                    <li><a href="#">Change Password</a></li>
+	                    <li><a href="#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Profile</a></li>
+	                    <li><a href="#"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Change Password</a></li>
 	                    <li role="separator" class="divider"></li>
-	                    <li><a href="/logout">Log Out</a></li>
+	                    <li><a href="/logout"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> Log Out</a></li>
 	                  </ul>
 	                </li>
 	          </ul>
