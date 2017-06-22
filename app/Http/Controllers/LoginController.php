@@ -57,7 +57,7 @@ class LoginController extends Controller
 
 
     public function show(){
-        return View::make('login');
+        return View::make('Login');
     }
 
     public function login(Request $request){

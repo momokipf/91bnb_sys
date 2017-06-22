@@ -26,14 +26,14 @@ class InquirersController extends Controller
 		else {
 			$inquirers = Inquirer::paginate(10);
 		}
-		return view('inquirer.showAll')
+		return view('inquirer.ShowAll')
 				->with('rep', $rep)
 				->with('inquirers', $inquirers);
 	}
 
 	public function searchAndModify() {
 		$rep = Auth::user();
-		return view('inquirer.searchAndModify')
+		return view('inquirer.SearchAndModify')
 				->with('rep', $rep)
 				->with('success', 0);
 	}

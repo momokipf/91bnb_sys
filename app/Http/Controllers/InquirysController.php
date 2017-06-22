@@ -35,7 +35,7 @@ class InquirysController extends Controller
 
         // $allreps = array_flatten($allreps);
 
-    	return view('inquiry/add')
+    	return view('inquiry.Add')
                  ->with('Allreps',$allreps)
                  ->with('Rep',Auth::user());
     }
@@ -99,7 +99,7 @@ class InquirysController extends Controller
     public function searchIndex()
     {
 
-        return view('inquiry/search')
+        return view('inquiry.Search')
                 //->with('Allreps',$allreps)
                 ->with('Rep',Auth::user());
     }

@@ -22,7 +22,7 @@ class HouseOwnersController extends Controller
     public function ownerinfo(Request $request, $ownerid,$forhouse = null)
     {
 
-    	$owner = HouseOwner::find($ownerid);
+    	$owner = Houseowner::find($ownerid);
         Log::info($forhouse);
 		if ($request->ajax() || $request->wantsJson())
 		{
@@ -40,7 +40,7 @@ class HouseOwnersController extends Controller
             }
     	}
     	else 
-    		return view('House.Houseowner')
+    		return view('house.Houseowner')
     				->with('Rep',Auth::user())
     				->with('houseowner',$owner);
     }
@@ -57,7 +57,7 @@ class HouseOwnersController extends Controller
                 continue;
             }
             if(!$querybuilder){
-                $querybuilder = HouseOwner::where($field,'LIKE',$houseownerSearchField[$field]);
+                $querybuilder = Houseowner::where($field,'LIKE',$houseownerSearchField[$field]);
             }
             else{
                 $querybuilder = $querybuilder->orwhere($field,'LIKE',$houseownerSearchField[$field]);

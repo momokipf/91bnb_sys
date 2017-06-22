@@ -130,7 +130,7 @@ class HousesController extends Controller
 	}
 
 	public function modify() {
-        return view('House.modify')
+        return view('house.Modify')
                 ->with('rep',Auth::user());
     }
 
@@ -173,7 +173,7 @@ class HousesController extends Controller
     public function modifyHouse($numberID) {
     	Log::info($numberID);
     	$house = House::where('numberID', $numberID)->first();
-    	return view('House.modifyHouse')
+    	return view('House.ModifyHouse')
     			->with('house', $house)
     			->with('rep',Auth::user());
     }
@@ -182,7 +182,7 @@ class HousesController extends Controller
     public function searchindex(Request $request)
     {
     	//$fakequery = App\Inquiry::find(114);
-    	return view('House/HouseSearch')
+    	return view('house.HouseSearch')
     			//->with('Query',$fakequery)
     			->with('Rep',Auth::user());
     }
@@ -318,7 +318,7 @@ class HousesController extends Controller
 
     public function addindex(Request $request)
     {
-    	return view('House/HouseAdd')
+    	return view('house.HouseAdd')
     			->with('Rep',Auth::user());
     }
 
