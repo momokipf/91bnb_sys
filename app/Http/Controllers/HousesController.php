@@ -16,6 +16,7 @@ use View;
 
 use App\House;
 use App\Houseavailability;
+use App\Houseowner;
 
 
 
@@ -31,6 +32,12 @@ class HousesController extends Controller
 	public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    public function report(Request $request)
+    {
+        return view('/report/houseReport')
+                ->with('rep',Auth::user());
     }
 
     public function reportingSearch(Request $request) {
@@ -121,6 +128,56 @@ class HousesController extends Controller
 		// Log::info($city_count);
 		return $city_count;
 	}
+
+	public function modify() {
+        return view('/house/modify')
+                ->with('rep',Auth::user());
+    }
+
+    public function searchByAddress(Request $request) {
+    	$input = $request->all();
+        $sql = "ST_Distance_Sphere(location, POINT(".$input['longitude'].','.$input['latitude']."))";
+        // $result = DB::table('house')->whereRaw($sql.'<'.$input['milesrange']*1000)->first();
+        $result = House::whereRaw($sql.'<'.$input['milesrange']*1000)->with('houseowner')->get();
+        // Log::info($result);
+        return response($result)->header('Content-Type', 'json');
+    }
+
+    public function searchByID(Request $request) {
+    	$input = $request->all();
+    	$result = House::where('fullHouseID', $input['fullHouseID'])->with('houseowner')->get();
+    	// Log::info($result);
+    	return response($result)->header('Content-Type', 'json');
+    }
+
+    public function searchOwner(Request $request) {
+    	$input = $request->all();
+    	Log::info($input);
+    	$result = new Houseowner;
+    	foreach ($input as $key => $value) {
+    		if ($key != '_token' && $value != null) {
+    			$result = $result->where($key, 'like', '%'.$value.'%');
+    		}
+    	}
+    	$result = $result->get();
+    	return response($result)->header('Content-Type', 'json');
+    }
+
+    public function searchByOwner(Request $request) {
+    	$input = $request->all();
+    	$result = House::where('houseOwnerID', $input['id'])->with('houseowner')->get();
+    	Log::info($result);
+    	return response($result)->header('Content-Type', 'json');
+    }
+
+    public function modifyHouse($numberID) {
+    	Log::info($numberID);
+    	$house = House::where('numberID', $numberID)->first();
+    	return view('/house/modifyHouse')
+    			->with('house', $house)
+    			->with('rep',Auth::user());
+    }
+
 
     public function searchindex(Request $request)
     {
@@ -263,12 +320,6 @@ class HousesController extends Controller
     {
     	return view('House/HouseAdd')
     			->with('Rep',Auth::user());
-    }
-
-    public function report(Request $request)
-    {
-        return view('/report/houseReport')
-                ->with('rep',Auth::user());
     }
 
     public function search(Request $request)
