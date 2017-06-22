@@ -74,9 +74,10 @@ class InquirysController extends Controller
         $id = Inquiry::insertGetId($input);
 
         $data = $request->all();
+        Log::info($data);
         $room = array();
         for ($i = 1; $i <= 2; $i++) {
-            if ($data["room".$i."Type"] != null) {
+            if (array_key_exists("room".$i."Type", $data) && $data["room".$i."Type"] != null) {
                 $room["inquiryID"] = $id;
                 $room["roomID"] = $i;
                 $room["roomType"] = $data["room".$i."Type"];

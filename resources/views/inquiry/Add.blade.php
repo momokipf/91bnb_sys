@@ -126,7 +126,7 @@
 					<div class="panel-heading" role="tab" id="headingOne">
 						<span class="badge" style="background-color:#5CB85C;">1</span>
 						<a role="button" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-							<span class="title-sm" style='padding-left:5px;'> Select or Create Inquirer ID</span>
+							<span class="title-sm" style='padding-left:5px;'> Select or Create Inquirer</span>
 						</a>
 					</div>
 					<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">

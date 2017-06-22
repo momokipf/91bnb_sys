@@ -150,19 +150,6 @@ class HousesController extends Controller
     	return response($result)->header('Content-Type', 'json');
     }
 
-    public function searchOwner(Request $request) {
-    	$input = $request->all();
-    	Log::info($input);
-    	$result = new Houseowner;
-    	foreach ($input as $key => $value) {
-    		if ($key != '_token' && $value != null) {
-    			$result = $result->where($key, 'like', '%'.$value.'%');
-    		}
-    	}
-    	$result = $result->get();
-    	return response($result)->header('Content-Type', 'json');
-    }
-
     public function searchByOwner(Request $request) {
     	$input = $request->all();
     	$result = House::where('houseOwnerID', $input['id'])->with('houseowner')->get();

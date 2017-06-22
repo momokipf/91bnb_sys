@@ -180,7 +180,8 @@
 					console.log(toSend);
 					$.ajax({
 						type:"POST",
-						url:"/house/searchOwner",
+						url:"/houseowner/search",
+						// url:"/house/searchOwner",
 						data:$.param(toSend),
 						datatype:'json',
 						success: function(data) {

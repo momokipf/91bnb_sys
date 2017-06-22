@@ -49,19 +49,13 @@ class HouseOwnersController extends Controller
     public function search(Request $request){
         $houseownerSearchField = $request->only($this->searchFields);
         Log::info($houseownerSearchField);
-        $querybuilder = null;
 
-
+        $querybuilder = new Houseowner;
         foreach($this->searchFields as $field){
             if(!$houseownerSearchField[$field]){
                 continue;
             }
-            if(!$querybuilder){
-                $querybuilder = Houseowner::where($field,'LIKE',$houseownerSearchField[$field]);
-            }
-            else{
-                $querybuilder = $querybuilder->orwhere($field,'LIKE',$houseownerSearchField[$field]);
-            }
+            $querybuilder = $querybuilder->orwhere($field,'LIKE',"%".$houseownerSearchField[$field]."%");
         }
 
         $similarowner = $querybuilder->get();
