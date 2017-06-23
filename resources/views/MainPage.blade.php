@@ -73,14 +73,14 @@
         -webkit-appearance: searchfield-cancel-button;
       }
 
-             .table-bordered tr,
+/*             .table-bordered tr,
              .table-bordered td {
                 border: 1px solid #5D5F60 !important;
              }
             .my-title {
                 color: gray;
                 height: 20px;
-            }
+            }*/
             .table-bordered th{
                 text-align: center;
             }
@@ -221,10 +221,7 @@
               <!-- taobao user name -->
               <td>{{$query->quirer->inquirerTaobaoUserName}}</td>
                 
-              
-              
-              
-              
+              <!-- email -->
               <td>{{$query->quirer->inquirerEmail}}</td>
 
 

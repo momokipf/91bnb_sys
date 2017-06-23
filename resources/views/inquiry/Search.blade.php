@@ -1,179 +1,86 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>Search/Modify/Add Follow up Inquiry</title>
+@extends('navbar')
+@section('title', 'Search/Modify/Add Follow up Inquiry')
 
-		<meta name="csrf-token" content="{{ csrf_token() }}" />
-        <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="{{asset('css/bootstrap.css')}}">
+@section('head')
 
-        <link rel="stylesheet" href="{{asset('css/self.css')}}">
-
-        <link rel="stylesheet" href="{{asset('css/loader.css')}}">
-
-		<link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
-
-		<style>
-			body{
-          background-color:black;
-					background-image: url(../img/bg_la2.jpg);
-        	background-size: cover;
-        	background-repeat: no-repeat;
-			}
-			input[type="search"]::-webkit-search-cancel-button{
-				-webkit-appearance: searchfield-cancel-button;
-			}
-			.glyphicon.glyphicon-time{
-    		font-size: 25px;
-			}
-      .myWidth {
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+	<!-- bootstrap -->
+	<!-- <link rel="stylesheet" href="../css/bootstrap.min.css"> -->
+	<!-- <link rel="stylesheet" href="../css/self.css"> -->
+	<style>
+		body{
+	  background-color:black;
+				background-image: url('/img/bg_la2.jpg');
+		background-size: cover;
+		background-repeat: no-repeat;
+		}
+		input[type="search"]::-webkit-search-cancel-button{
+			-webkit-appearance: searchfield-cancel-button;
+		}
+		.glyphicon.glyphicon-time{
+		font-size: 25px;
+		}
+	  .myWidth {
 				width: 50px;
-      }
-      .trans{
+	  }
+	  .trans{
 			  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#3f000000',endColorstr='#3f000000');
 			  background-color:rgba(255, 255, 255, 0.7)
-      }
-      .table-bordered th,
-      .table-bordered td {
-          border: 1px solid black !important;
-      }
+	  }
+	  .table-bordered th,
+	  .table-bordered td {
+	      border: 1px solid black !important;
+	  }
 
-		</style>
-</head>
-<body>
-	<!-- Fixed navbar -->
-	<nav class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" style="padding-top:5px;"><img src="../img/icon.png" class="img-rounded img-responsive" width="45px" height="45px" alt=""></a>
-				<a class="navbar-brand" href="MainPage">91bnb Manage System</a>
-			</div>
+	</style>
+@endsection
 
-		<div id="navbar" class="navbar-collapse collapse">
-		<!-- navbar left -->
-			<ul class="nav navbar-nav">
-				<li><a href="/MainPage">Home</a></li>
-				<li class="active"><a>Search Inquiry</a></li>
-			</ul>
-		<!-- navbar right -->
-			<ul class="nav navbar-nav navbar-right">
-				<li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-				<span class="glyphicon glyphicon-user"></span><span id='username'>{{$Rep->repUserName}}</span><span class="caret"></span></a>
-			<ul class="dropdown-menu">
-				<li><a href="#">Profile</a></li>
-				<li><a href="#">Change Password</a></li>
-				<li role="separator" class="divider"></li>
-				<li><a href="/logout">Log Out</a></li>
-			</ul>
-				</li>
-			</ul>
-
-		</div><!--/.nav-collapse -->
-		</div><!--/ container -->
-	</nav>
-
+@section('content')
 	<div class='content container' style="margin-top:80px">
 		<div class='well trans' style="margin-top:10px">
 			<h3 class="text-center" style="margin-bottom:30px;">Search Inquiry</h3>
-			<!--<div id='nav_test'>
-				<ul class='nav nav-pills nav-justified'>
-					<li class="active"><a data-toggle="tab" href="#searchbyID">Search By Inquirier Info</a></li>
-					<li><a data-toggle="tab" href="#searchByinquier">Search By Inquiry ID</a></li>
-					<li><a data-toggle="tab" href="#searchbyDate">Search By Date</a></li>
-				</ul> 
-				<div class="tab-content">
-					<div id="searchbyID" class="tab-pane fade in active">
-						<div class="row">
-						<div class="col-lg-3 col-md-3 col-sm-3">
-							<label for="InquiryID">Inquiry ID</label>
-							<div class="input-group"><span class="input-group-addon">IQ#
-							</span><input type="search" class="form-control input-sm" id="InquiryID" name='inquiryID' placeholder="Inquiry ID">
-							</div>
-						</div>
-					</div>
-					</div>
-					<div id="searchByinquier" class="tab-pane fade">
-						<div class="row">
-							<div class="col-lg-3 col-md-3 col-sm-3">
-								<label for="">Inquirer First Name</label>
-								<input type="search" class="form-control input-sm" id="searchInquirerFirst" name='inquirerFirst' placeholder="First Name">
-							</div>
-							<div class="col-lg-3 col-md-3 col-sm-3">
-								<label for="searchInquirerLast">Inquirer Last Name</label>
-								<input type="search" class="form-control input-sm" id="searchInquirerLast" name='inquirerLast' placeholder="Last Name">
-							</div>
-							<div class="col-lg-3 col-md-3 col-sm-3">
-								<label for="searchInquirerWechatID">Inquirer Wechat ID</label>
-								<input type="search" class="form-control input-sm" id="searchInquirerWechatID" name='inquirerWechatID' placeholder="Wechat ID">
-							</div>
-							<div class="col-lg-3 col-md-3 col-sm-3">
-								<label for="WechatName">Wechat Name</label>
-								<input type="text" class="form-control input-sm" id="WechatName">
-							</div>
-						</div>
-					</div>
-					<div id="searchbyDate" class="tab-pane fade">
-						<h3>Menu 2</h3>
-						<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-					</div>
-
-				</div>
-				<br>
-
-				<div class="text-center">
-					<BUTTON type='button' class="btn btn-success" id='searchInquirySubmit' onclick='filterInquiry();'>Search</BUTTON>&nbsp&nbsp
-					<BUTTON type='button' class="btn btn-primary" onclick="location.reload();">Reset</BUTTON>
-				</div>
-			</div> -->
-			<form id = 'inquiryinfo' action='search/result' method='GET'>
-				{{ csrf_field() }}
+			<form id = 'inquiryinfo' action='/inquiry/search/result' method='GET'>
+				<!-- {{ csrf_field() }} -->
 				<div class="col-lg-3 col-md-3 col-sm-3">
 					<label for="">Inquirer First Name</label>
-					<input type="search" class="form-control input-sm" id="searchInquirerFirst" name='inquirerFirst' placeholder="First Name">
+					<input type="search" class="form-control input-sm" id="searchInquirerFirst" name='inquirerFirst' placeholder="First Name" value="{{ app('request')->input('inquirerFirst') }}">
 				</div>
 				<div class="col-lg-3 col-md-3 col-sm-3">
 					<label for="searchInquirerLast">Inquirer Last Name</label>
-					<input type="search" class="form-control input-sm" id="searchInquirerLast" name='inquirerLast' placeholder="Last Name">
+					<input type="search" class="form-control input-sm" id="searchInquirerLast" name='inquirerLast' placeholder="Last Name" value="{{ app('request')->input('inquirerLast') }}">
 				</div>
 
 				<div class="col-lg-3 col-md-3 col-sm-3">
 					<label for="searchInquirerWechatID">Inquirer Wechat ID</label>
-					<input type="search" class="form-control input-sm" id="searchInquirerWechatID" name='inquirerWechatID' placeholder="Wechat ID">
+					<input type="search" class="form-control input-sm" id="searchInquirerWechatID" name='inquirerWechatID' placeholder="Wechat ID" value="{{ app('request')->input('inquirerWechatID') }}">
 				</div>
 
 				<div class="col-lg-3 col-md-3 col-sm-3">
 					<label for="InquiryID">Inquiry ID</label>
-					<div class="input-group"><span class="input-group-addon">IQ#</span><input type="search" class="form-control input-sm" id="inquiryID" name='inquiryID' placeholder="Inquiry ID"></div>
+					<div class="input-group"><span class="input-group-addon">IQ#</span><input type="search" class="form-control input-sm" id="inquiryID" name='inquiryID' placeholder="Inquiry ID" value="{{ app('request')->input('inquiryID') }}"></div>
 				</div>
 
 				<div class="row" style="margin-top:15px;">
 					<div class="col-sm-12">
 						<div class="col-lg-3 col-md-3 col-sm-3">
 							<label>Inquiry Date</label>
-							<input name="inquiryDate" class="form-control input-sm" id="inquiryDate" type="search" placeholder="mm/dd/yyyy">
+							<input name="inquiryDate" class="form-control input-sm" id="inquiryDate" type="search" placeholder="mm/dd/yyyy" value="{{ app('request')->input('inquiryDate') }}">
 							<input type="hidden" name = 'inquiryDate' id = 'altinquiryDate'> 
 						</div>
 						<div class="col-lg-3 col-md-3 col-sm-3">
 							<label>Inquiry Date Range From </label>
-							<input type="search" class="form-control input-sm" id="inquiryDateFrom" name="inquiryDateFrom" placeholder="mm/dd/yyyy">
+							<input type="search" class="form-control input-sm" id="inquiryDateFrom" name="inquiryDateFrom" placeholder="mm/dd/yyyy" value="{{ app('request')->input('inquiryDateFrom') }}">
 							<input type="hidden" name='inquiryDateFrom' id='altinquiryDateFrom'>
 						</div>
 
 						<div class="col-lg-3 col-md-3 col-sm-3">
 							<label>Inquiry Date Range To </label>
-							<input type="search" class="form-control input-sm" id="inquiryDateTo" name="inquiryDateTo" placeholder="mm/dd/yyyy">
+							<input type="search" class="form-control input-sm" id="inquiryDateTo" name="inquiryDateTo" placeholder="mm/dd/yyyy" value="{{ app('request')->input('inquiryDateTo') }}">
 							<input type="hidden" name = 'inquiryDateTo' id = 'altinquiryDateTo'> 
 						</div>
 						<div class="col-lg-3 col-md-3 col-sm-3">
 							<label>Checkin Date Range</label>
-							<input type="search" class="form-control input-sm" id="CheckinDateFrom" name="CheckinDateFrom" placeholder="mm/dd/yyyy">
+							<input type="search" class="form-control input-sm" id="CheckinDateFrom" name="CheckinDateFrom" placeholder="mm/dd/yyyy" value="{{ app('request')->input('CheckinDateFrom') }}">
 							<input type="hidden" name = 'CheckinDateFrom' id = 'altCheckinDateFrom'> 
 						</div>
 					</div>
@@ -195,19 +102,19 @@
 						</div>
 						<div class="col-lg-3 col-md-3 col-sm-3">
 							<label for="InquiryCity">Inquiry City</label>
-							<input type="text" class="form-control input-sm" id="InquiryCity">
+							<input type="text" class="form-control input-sm" name="InquiryCity" id="InquiryCity" value="{{ app('request')->input('InquiryCity') }}">
 						</div>
 						<div class="col-lg-3 col-md-3 col-sm-3">
 							<label for="WechatName">Wechat Name</label>
-							<input type="text" class="form-control input-sm" id="WechatName">
+							<input type="text" class="form-control input-sm" id="WechatName" name="WechatName" value="{{ app('request')->input('WechatName') }}">
 						</div>
 					</div>
 				</div>
 				<br>
 
 				<div class="text-center">
-					<BUTTON type='button' class="btn btn-success" id='searchInquirySubmit' onclick='filterInquiry();'>Search</BUTTON>&nbsp&nbsp
-					<BUTTON type='button' class="btn btn-primary" onclick="location.reload();">Reset</BUTTON>
+					<BUTTON type='submit' form="inquiryinfo" class="btn btn-success" id='searchInquirySubmit' onclick='filterInquiry();'>Search</BUTTON>&nbsp&nbsp
+					<a href="/inquiry/search"><BUTTON type='button' class="btn btn-primary" >Reset</BUTTON></a>
 				</div>
 				<br>
 				<div style="text-align:center;">
@@ -218,6 +125,468 @@
 		</div>
 		<hr>
 	</div>
+
+	@isset($hotquerys)
+
+	<div class='content container'>
+		<div class="well trans">
+			<div class="table-responsive">	
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>Pass</th>
+							<th>Priority</th>
+							<th>Inquiry ID</th>
+							<th>Name</th>
+							<th>City</th>
+							<th>Rooms</th>
+							<th>Whole/Share</th>
+							<th>Adults</th>
+							<th>Kids</th>
+							<th>Pregnant</th>
+							<th>Check In</th>
+							<th>Check Out</th>
+							<th>WeChat Name</th>
+							<th>TaoBao User name</th>
+							<th>Email</th>
+							<th>Modify</th>
+							<th>Add Follow Up</th>
+							<th>Show All Follow Up</th>
+							<th>Show Detail</th>
+
+						</tr>
+					</thead>	
+					<tbody>
+						@foreach($hotquerys as $query )
+						<tr>
+							<!-- pass -->
+							<td>
+							</td>
+							<!-- priority -->
+							<td>
+								@if($query->inquiryPriorityLevel ==1)
+				                <font id='image_{{$loop->index}}' color='red'>
+				                  <i class='fa fa-star' aria-hidden='true'></i>
+				                </font>
+				                @elseif($query->inquiryPriorityLevel ==2)
+				                <font id='image_{{$loop->index}}' color='orange'>
+				                  <i class='fa fa-star' aria-hidden='true'></i>
+				                </font>
+				                @elseif($query->inquiryPriorityLevel ==3)
+				                <font id='image_{{$loop->index}}' color='green'>
+				                  <i class='fa fa-star' aria-hidden='true'></i>
+				                </font>
+				                @elseif($query->inquiryPriorityLevel ==4)
+				                <font id='image_{{$loop->index}}' color='blue'>
+				                  <i class='fa fa-star' aria-hidden='true'></i>
+				                </font>
+				                @elseif($query->inquiryPriorityLevel ==5)
+				                <font id='image_{{$loop->index}}' color='grey'>
+				                  <i class='fa fa-star' aria-hidden='true'></i>
+				                </font>
+				                @endif
+							</td>
+							<!-- Inquiry ID -->
+							<td>{{$query->inquiryID}}</td>
+							<!-- name -->
+							<td>{{$query->quirer->inquirerFirst}} {{$query->quirer->inquirerLast}}</td>
+							<!-- city -->
+							<td>
+								@if($query->city=='')
+					            N/A
+					            @else
+					            {{$query->city}}
+					            @endif
+							</td>
+							<!-- rooms -->
+							<td>
+								@if($query->rooms)
+			                  	{{$query->rooms}}
+			                  	@else
+			                   	Not Specific
+			                  	@endif
+							</td>
+							<!-- whole/share -->
+							<td>
+								@if($query->share==1)
+				                Share
+				                @elseif($query->share==0)
+				                Whole
+				                @elseif($query->share==-1)
+				                Either
+				                @endif
+							</td>
+							<!-- adults -->
+							<td>{{$query->numOfAdult}}</td>
+							<!-- kids -->
+							<td>{{$query->numOfChildren}}</td>
+							<!-- pregnant -->
+							<td>
+								@if($query->pregnancy==0)
+				                N/A
+				                @elseif($query->pregnancy==1)
+				                Yes
+				                @else
+				                No
+				                @endif
+							</td>
+							<!-- check in -->
+							<td>{{str_replace('-','/',$query->checkIn)}}</td>
+							<!-- check out -->
+							<td>{{str_replace('-','/',$query->checkOut)}}</td>
+							<!-- wechat name -->
+							<td>
+								<a href="#" data-toggle="tooltip" data-placement="top" title="{{$query->quirer->inquirerWechatID}}">{{$query->quirer->inquirerWechatUserName}}</a>
+							</td>
+							<!-- taobao user name -->
+							<td>{{$query->quirer->inquirerTaobaoUserName}}</td>
+							<!-- email -->
+							<td>{{$query->quirer->inquirerEmail}}</td>
+							
+							<!-- if priority is not enough -->
+							@if($Rep->repPriority >=2)  
+				            <td></td><td></td>
+				            @else 
+				            <!-- modify -->
+			                <td><button type='button' class='btn btn-primary btn-sm' id='modify' onclick="bootbox_test()"><span class='glyphicon glyphicon-edit'></span> Modify</button></td>
+			                <!-- add follow up -->
+			                <td><button type='button' class='btn btn-primary btn-sm' id='addfollowup' onclick='addFollowUp({{$query->inquiryID}})'><span class='glyphicon glyphicon-plus'></span> Add Follow Up</button></td>
+
+    			            @endif 
+
+
+							<!-- show all follow up -->
+			                <td><button type='button' class='btn btn-primary btn-sm' data-toggle="modal" data-target='#myModal_{{$loop->index}}'><span class='glyphicon glyphicon-eye-open'></span> Show All Follow Up</button></td>
+
+			                <!-- show detail -->
+			                <td>
+			                	<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target='#myDetail_{{$loop->index}}'><span class="glyphicon glyphicon-list-alt"></span> Show Detail</button>
+			                	
+			                	<!-- Show detail model -->
+				                <div class='modal fade' id='myDetail_{{$loop->index}}' style='text-align:center;' role='dialog'>
+				                  <div class="modal-dialog modal-md">
+				                    <div class="modal-content">
+				                      <div class="modal-header">
+				                        <button type="button" class="close" data-dismiss="modal">&times;</button> 
+				                        <h4 class="modal-title"><p>Detail</p></h4>
+				                      </div>
+				                      <div class="modal-body" style="height: 400px; overflow-y: auto;">
+				                        <table style="text-align:center" class="table table-striped">
+				                          <thead>
+				                            <tr>
+				                              <th>Title</th>
+				                              <th>Data</th>
+				                            </tr>
+				                          </thead>
+				                          <tbody>
+				                            <tr>
+				                              <td>Rep. Name</td>
+				                              <td>{{$query->represent->repFirstName.' '.$query->represent->repLastName}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>RepID</td>
+				                              <td>{{$query->represent->repID}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>Inquiry ID</td>
+				                              <td>IQ#{{$query->inquiryID}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>Priority Level</td>
+				                              <td>{{$query->inquiryPriorityLevel ==1}}
+				                              &nbsp
+				                              @if($query->inquiryPriorityLevel ==1)
+				                                <font id='image_{{$loop->index}}' color='red'>
+				                              @elseif($query->inquiryPriorityLevel ==2)
+				                                <font id='image_{{$loop->index}}' color='orange'>
+				                              @elseif($query->inquiryPriorityLevel ==3)
+				                                <font id='image_{{$loop->index}}' color='green'>
+				                              @elseif($query->inquiryPriorityLevel ==4)
+				                                <font id='image_{{$loop->index}}' color='blue'>
+				                              @elseif($query->inquiryPriorityLevel ==5)
+				                                <font id='image_{{$loop->index}}' color='grey'>
+				                              @endif
+				                                  <i class='fa fa-star' aria-hidden='true'></i>
+				                                </font>
+				                              </td>
+				                            </tr>
+				                            <tr>
+				                              <td>Inquiry Date</td>
+				                              <td>{{str_replace('-','/',$query->inquiryDate)}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>Inquiry Source</td>
+				                              <td>{{$query->inquirySource}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>Purpose</td>
+				                              <td>{{$query->purpose}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>Check In Date</td>
+				                              <td>{{str_replace('-','/',$query->checkIn)}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>Check Out Date</td>
+				                              <td>{{str_replace('-','/',$query->checkOut)}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>House ID</td>
+				                              <td>
+				                                @if($query->fullHouseID)
+				                                {{$query->fullHouseID}} 
+				                                @else
+				                                Not Specific
+				                                @endif
+				                              </td>
+				                            </tr>
+				                            <tr>
+				                              <td>Country</td>
+				                              <td>{{$query->country}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>State</td>
+				                              <td>
+				                                @php
+				                                if(file_exists(public_path('list/Country_State/'.str_replace(' ','',$query->country).'_StateList'))){
+				                                  echo($query->state);
+				                                }
+				                              @endphp
+				                              </td>
+				                            </tr>
+				                            <tr>
+				                              <td>City</td>
+				                              <td>
+				                                @php
+				                                if(file_exists(public_path('list/State_City/'.$query->state.'CityList'))){
+				                                  echo($query->city);
+				                                }
+				                                @endphp
+				                              </td>
+				                            </tr>
+				                            <tr>
+				                              <td># of Rooms</td>
+				                              <td>
+				                                @if($query->rooms)
+				                                  {{$query->rooms}}
+				                                @else
+				                                  Not Specific
+				                                @endif
+				                              </td>
+				                            </tr>
+				                            <tr>
+				                              <td>Whole/Share</td>
+				                              <td>
+				                                @if($query->share==1)
+				                                  Whole
+				                                @endif
+				                                  
+				                                @if($query->share==0)
+				                                  Either
+				                                @endif
+				                                   
+				                                @if($query->share==-1)
+				                                  Share
+				                                @endif
+				                              </td>
+				                            </tr>
+				                            <tr>
+				                              <td>House Type</td>
+				                              <td>{{$query->houseType}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>House Type Other</td>
+				                              <td>
+				                                @if($query->houseTypeOther)
+				                                {{$query->houseTypeOther}}
+				                                @endif
+				                              </td>
+				                            </tr>
+				                            <tr>
+				                              <td># of Adults</td>
+				                              <td>{{$query->numOfAdult}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td># of Kids</td>
+				                              <td>{{$query->numOfChildren}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>Kids Age</td>
+				                              <td>{{$query->childAge}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>Pregnant</td>
+				                              <td>
+				                                @if($query->pregnancy==0)
+				                                N/A
+				                                @elseif($query->pregnancy==-1)
+				                                No
+				                                @elseif($query->pregnancy==1)
+				                                Yes
+				                                @endif
+				                              </td>
+				                            </tr>
+				                            <tr>
+				                              <td>Budget Lower</td>
+				                              <td>{{$query->budgetLower}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>Budget Upper</td>
+				                              <td>{{$query->budgetUpper}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>Budget Unit</td>
+				                              <td>
+				                                @if($query->budgetUnit==1)
+				                                Per Day
+				                                @elseif($query->budgetUnit==0)
+				                                Per MOnth
+				                                @endif
+				                              </td>
+				                            </tr>
+				                            <tr>
+				                              <td>Have Pet</td>
+				                              <td>
+				                                @if($query->pet==0)
+				                                N/A
+				                                @elseif($query->pet==1)
+				                                Yes
+				                                @elseif($query->pet==-1)
+				                                No
+				                                @endif
+				                              </td>
+				                            </tr>
+				                            <tr>
+				                              <td>Pet Type</td>
+				                              <td>{{$query->petType}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>Special Note</td>
+				                              <td><{{$query->specialNote}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>Inquirer ID</td>
+				                              <td>{{$query->quirer->inquirerID}}</td>
+				                            </tr>
+
+				                            <tr>
+				                              <td>Inquirer First Name</td>
+				                              <td>{{$query->quirer->inquirerFirst}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>Inquirer Last Name</td>
+				                              <td>{{$query->quirer->inquirerLast}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>US Phone #</td>
+				                              <td>{{$query->quirer->inquirerUsPhoneNumber}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>Other Phone # Country</td>
+				                              <td>{{$query->quirer->inquirerPhoneCountry}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>Other Phone #</td>
+				                              <td>{{$query->quirer->inquirerPhoneUnmber}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>Email</td>
+				                              <td>{{$query->quirer->inquirerEmail}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>TaoBao User Name</td>
+				                              <td>{{$query->quirer->inquirerTaobaoUserName}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>WeChat Name</td>
+				                              <td>{{$query->quirer->inquirerWechatUserName}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>WeChat ID</td>
+				                              <td>{{$query->quirer->inquirerWechatID}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>Status</td>
+				                              <td>{{$query->quirer->inquirerStatus}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>Reason Of Decline</td>
+				                              <td><{{$query->reasonOfDecline}}/td>
+				                            </tr>
+				                            <tr>
+				                              <td>Note</td>
+				                              <td>{{$query->note}}</td>
+				                            </tr>
+				                            <tr>
+				                              <td>Comment</td>
+				                              <td>{{$query->comment}}</td>
+				                            </tr>
+
+				                          </tbody>
+				                        </table>
+				                      </div>
+				                      <div class="modal-footer">
+				                        
+				                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+				                      </div>
+				                    </div>
+				                    
+				                  </div>
+				                </div>
+			                </td>
+						</tr>
+						
+						<!--followUp Modal-->
+			            <div class='modal fade' id='myModal_{{$loop->index}}' style='text-align:center;' role='dialog'>
+			            <div class="modal-dialog modal-md">
+			              <div class="modal-content">
+			                <div class="modal-header">
+			                  <button type="button" class="close" data-dismiss="modal">&times;</button> 
+			                  <h4 class="modal-title"><p>Inquiry Follow Up History of Customer: Fan Pang</p><p>(Inquiry ID: {{$query->inquiryID}})</p></h4></div>
+			                  <div class="modal-body">
+			                    @if($query->getfollowup->count()==0)
+			                      <p>No Prior Follow Up Information</p>
+			                    @else
+			                      @foreach($query->getfollowup as $follow)
+			                        <div class="panel panel-default">
+			                          <div class="panel-heading">Follow Up {{$follow->followupID}} </div>
+			                            <ul class="list-group">
+			                              <li class="list-group-item">Follow Up Date: {{str_replace('-','/',$follow->followupDate)}} </li>
+			                              <li class="list-group-item">Follow Up Status:  {{$follow->followupStatus}}</li>
+			                            </ul>
+			                        </div>
+			                      @endforeach
+			                    @endif
+			                    <div class="panel panel-default" d='followup_{{$loop->index}}'  hidden>
+
+			                    </div>
+
+			            
+			                  </div>
+			                  <div class="modal-footer">
+			                    <button type="button" class="btn btn-primary btn-sm" onclick='addFollowUp({{$loop->index}})' >Add Follow Up</button>
+			                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+			                  </div>
+			                </div>
+			              </div>
+			            </div>
+
+						@endforeach
+
+					
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class='page' id='pagination' style='text-align: right;'>
+			{{$hotquerys->links()}}
+		</div>
+	</div>
+
+	
+	@endisset
 
 	<div class='content container' hidden>
 		<div class='well trans'>
@@ -296,8 +665,9 @@
 			</div>
 		</div>
 
-		<div class='page' id='pagination' style='text-align: right;'>
-		</div>
+	
+
+		
 
         <button id="extSearch" type='button' class="btn btn-success">Extract Search Results</button>
         <button id="extAll" type='button' class="btn btn-primary">Extract All Inquiries</button>
@@ -310,26 +680,18 @@
     	<div class = "loader"></div>
     	<div class ="loaderLabel text-center"><h4>Processing></h4><h4>Please Wait...</h4></div>
     </div>
+@endsection
 
-
+@section('script')
 	<script src="{{asset('js/jquery-1.11.3.js')}}"></script>
 	<!-- Bootstrap Latest compiled and minified JavaScript -->
 	<script src="{{asset('js/bootstrap.min.js')}}"></script>
-
 	<script src="{{asset('js/util.js')}}"></script>
-
 	<script src="{{asset('js/jquery.maskedinput.min.js')}}"></script>
-
 	<script src="{{asset('js/bootbox.min.js')}}"></script>
-
 
 	<!-- jquery ui -->
 	<script src="{{asset('js/jquery-ui.js')}}"></script>
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
-
-	<!-- bootstrap -->
-	<!-- <link rel="stylesheet" href="../css/bootstrap.min.css"> -->
-	<!-- <link rel="stylesheet" href="../css/self.css"> -->
 
 	<script>
 
@@ -367,9 +729,11 @@
 		}
 
 	</script>
-
-
 	<script type="text/javascript">
+		$(document).ready(function(){
+		    $('[data-toggle="tooltip"]').tooltip();   
+		});
+
 		$(document).ready(function(){
 			$("#inquiryDate").datepicker({
 	          dateFormat: "mm/dd/yy",
@@ -407,6 +771,24 @@
 		});
 
 	</script>
+@endsection
+
+
+<!DOCTYPE html>
+<html>
+<body>
+	
+	
+
+
+
+
+
+
+	
+
+
+	
 
 
 </body>
