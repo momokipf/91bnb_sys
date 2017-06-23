@@ -124,7 +124,7 @@
 			$(document).ready(function() {
 				$('#address_search').submit(function() {
 					var toSend = $('#address_search').serializeArray();
-
+					
 					if(loc){
 						toSend.push({'name':'latitude','value':loc['lat']});
 						toSend.push({'name':'longitude','value':loc['lng']});
