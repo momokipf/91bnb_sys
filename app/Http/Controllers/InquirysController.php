@@ -109,16 +109,25 @@ class InquirysController extends Controller
 
     public function search(Request $request)
     {
+        $itemsEachPage = 10;
+        // find by inquiry ID
         $inquiryid = $request->input('inquiryID');
         if($inquiryid)
         {
-            $inquiry = Inquiry::find($inquiryid);
+            $inquiry = Inquiry::where('InquiryID','=',$inquiryid);
             if($inquiry)
             {
-                return response($inquiry)->header('Content-Type', 'json');
+                //return response($inquiry)->header('Content-Type', 'json');
+                $hotquerys = $inquiry->paginate($itemsEachPage);
+                //dd($hotquerys);
+                return view('inquiry.Search') 
+                    ->with('hotquerys',$hotquerys)
+                    ->with('Rep',Auth::user());
+
             }
         }
 
+        // find by other data
         $inquirysearchField = $request->only('inquiryDate','inquiryDateFrom','inquiryDateTo','inquiryPriorityLevel','inquirycity');
         $querybuilder = null;
         $rep = Auth::user();
@@ -149,9 +158,17 @@ class InquirysController extends Controller
                     $query->where('inquirerWechatID','LIKE',$inquirerinfo['inquirerWechatID']);
                 });
         }
-        $ret = $querybuilder->with('roomType')->with('quirer')->get();
-        return response($ret)
-                ->header('Content-Type', 'json');
+        
+        //$hotquerys = $querybuilder->with('roomType')->with('quirer')->get();
+        $hotquerys = $querybuilder->with('roomType')->with('quirer')->paginate($itemsEachPage);
+        
+
+        return view('inquiry.Search') 
+                    ->with('hotquerys',$hotquerys)
+                    ->with('Rep',Auth::user());
+                
+        // return response($hotquerys)
+        //         ->header('Content-Type', 'json');
     }
 
     // public function result(Request $request){

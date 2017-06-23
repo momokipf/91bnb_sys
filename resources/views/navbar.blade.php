@@ -13,6 +13,11 @@
     <link rel="stylesheet" href="{{asset('css/self.css')}}">
     <link rel="stylesheet" href="{{asset('css/loader.css')}}">
     <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
+    <style type="text/css">
+    	.dropdown:hover .dropdown-menu{
+    		display: block;
+    	}
+    </style>
 
     @yield('head')
 
