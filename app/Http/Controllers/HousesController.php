@@ -234,12 +234,13 @@ class HousesController extends Controller
 
     	$houseowner = \App\Houseowner::find($input['houseOwnerID']);
     	if($houseowner){
-    		$houseid = House::where('country','=',$input['country'])
+    		$previousHighestID = House::where('country','=',$input['country'])
     						  ->where('state','=',$input['state'])
     						  ->where('city','=',$input['city'])
-    						  ->count();
-    		if($houseid){
-    			$houseid++;
+    						  ->orderBy('fullHouseID','desc')->first();
+    						  
+    		if($previousHighestID){
+    			$houseid = explode('_',$previousHighestID)[3]+1;
     		}
     		else{
     			$houseid =1;

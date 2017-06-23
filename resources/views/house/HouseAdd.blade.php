@@ -131,7 +131,7 @@
 		        <h4>New house owner?</h4>
 		        <div class="row">
 		            <div class="col-sm-2">
-		                <button data-toggle="modal" data-target="#new_house_owner_modal" class="btn btn-primary btn-sm" onclick="$('#similarResult').empty(); $('#ownerSubmitBtn').show();" type="button">Add New House Owner</button>
+		                <button data-toggle="modal" data-target="#new_house_owner_modal" class="btn btn-primary btn-sm" onclick="$('#similarResult').empty(); $('#ownerSubmitBtn').show();$('#ownerStillSubmitBtn').hide()" type="button">Add New House Owner</button>
 		            </div>
 		        </div>
 			</div>
@@ -146,6 +146,7 @@
 						</div>
 						<div class="modal-body">
 							<form class="form-horizontal" method='post' id='new_house_owner_form'>
+								{{ csrf_field()}}
 								<div class="row">
                                     <div class="col-sm-4 control-label"><span style="color:red">*</span>First Name:
                                     </div>
@@ -214,7 +215,8 @@
 				            <div id="similarResult"></div>
 				        </div>
 				        <div class="modal-footer">
-				        	<button class="btn btn-primary" onclick="findSimilarOwners();" type="button" id="ownerSubmitBtn">Submit</button>
+				        	<button class="btn btn-primary" onclick="findSimilarOwners()" type="button" id="ownerSubmitBtn">Submit</button>
+				        	<button class="btn btn-primary" type="button" id="ownerStillSubmitBtn" onclick='$("#new_house_owner_form").submit();return false;' style="display:none">Still submit</button>
 							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 						</div>
 					</div>
@@ -627,7 +629,7 @@
 
 								<div class="col-sm-2">
 									<label>Minimum Stay Term</label>
-									<input type="number" name="minStayTerm" class="form-control input-sm">
+									<input type="number" name="minStayTerm" class="form-control input-sm" value = 1>
 								</div>
 							</div>
 
@@ -679,7 +681,7 @@
 								<label>Cost Day Price</label>
 								<div class="input-group">
 									<span class="input-group-addon">$</span>
-									<input type="number" name="costDayPrice" class="form-control input-sm">
+									<input type="number" name="costDayPrice" class="form-control input-sm" value = '0' step='100'>
 								</div>
 							</div>
 
@@ -687,7 +689,7 @@
 								<label>Cost Week Price</label>
 								<div class="input-group">
 									<span class="input-group-addon">$</span>
-									<input type="number" name="costWeekPrice" class="form-control input-sm">
+									<input type="number" name="costWeekPrice" class="form-control input-sm" value ='0' step ='100'>
 								</div>
 							</div>
 
@@ -695,7 +697,7 @@
 								<label>Cost Month Price</label>
 								<div class="input-group">
 									<span class="input-group-addon">$</span>
-									<input type="number" name="costMonthPrice" class="form-control input-sm">
+									<input type="number" name="costMonthPrice" class="form-control input-sm" value ='0' step='1000'>
 								</div>
 							</div>
 						</div>
@@ -705,7 +707,7 @@
 								<label>Cost Utility</label>
 								<div class="input-group">
 								<span class="input-group-addon">$</span>
-								<input type="number" name="costUtility" class="form-control input-sm">
+								<input type="number" name="costUtility" class="form-control input-sm" value ='0' step='10'>
 								</div>
 							</div>
 						</div>
@@ -722,7 +724,7 @@
 								<label>Cost Cleaning</label>
 								<div class="input-group">
 									<span class="input-group-addon">$</span>
-									<input type="number" name="costCleaning" class="form-control input-sm">
+									<input type="number" name="costCleaning" class="form-control input-sm" value='0' step='10'>
 								</div>
 							</div>
 
@@ -730,7 +732,7 @@
 								<label>Cost Security Deposit</label>
 								<div class="input-group">
 									<span class="input-group-addon">$</span>
-									<input type="number" name="costSecurityDeposit" class="form-control input-sm">
+									<input type="number" name="costSecurityDeposit" class="form-control input-sm" value ='0' step='10'>
 								</div>
 							</div>
 						</div>
@@ -747,7 +749,7 @@
 								<label>Retail Day Price</label>
 								<div class="input-group">
 									<span class="input-group-addon">$</span>
-									<input type="number" name="retailDayPrice" class="form-control input-sm">
+									<input type="number" name="retailDayPrice" class="form-control input-sm" value='0' step= '10'>
 								</div>
 							</div>
 
@@ -755,7 +757,7 @@
 								<label>Retail Week Price</label>
 								<div class="input-group">
 									<span class="input-group-addon">$</span>
-									<input type="number" name="retailWeekPrice" class="form-control input-sm">
+									<input type="number" name="retailWeekPrice" class="form-control input-sm" value='0' step= '10'>
 								</div>
 							</div>
 
@@ -763,7 +765,7 @@
 								<label>Retail Month Price</label>
 								<div class="input-group">
 									<span class="input-group-addon">$</span>
-									<input type="number" name="retailMonthPrice" class="form-control input-sm">
+									<input type="number" name="retailMonthPrice" class="form-control input-sm" value='0' step= '100'>
 								</div>
 							</div>
 						</div>
@@ -771,9 +773,8 @@
 							<div class="col-sm-2">
 								<label>Retail Utility</label>
 								<div class="input-group">
-									<!--    <span class="input-group-addon">$</span>
-									<input type="number" name="retailUtility" class="form-control input-sm"> -->                     
-									<input type="text" name="retailUtility" class="form-control input-sm">
+									<span class="input-group-addon">$</span>
+									<input type="number" name="retailUtility" class="form-control input-sm" value='0' step= '10'>                     
 								</div>
 							</div>
 
@@ -781,7 +782,7 @@
 								<label>Retail Cleaning</label>
 								<div class="input-group">
 									<span class="input-group-addon">$</span>
-									<input type="number" name="retailCleaning" class="form-control input-sm">
+									<input type="number" name="retailCleaning" class="form-control input-sm" value='0' step= '10'>
 								</div>
 							</div>
 
@@ -789,7 +790,7 @@
 								<label>Retail Security Deposit</label>
 								<div class="input-group">
 									<span class="input-group-addon">$</span>
-									<input type="number" name="retailSecurityDeposit" class="form-control input-sm">
+									<input type="number" name="retailSecurityDeposit" class="form-control input-sm" value='0' step= '10'> 
 								</div>
 							</div>
 						</div>
@@ -798,7 +799,7 @@
                 			<div class="col-sm-2">
                     			<label>Upsell Percent</label>
                     				<div class="input-group">
-                          				<input type="number" name="upsellPercent" class="form-control input-sm">
+                          				<input type="number" name="upsellPercent" class="form-control input-sm" value='0' step= '10'>
                           				<span class="input-group-addon">%</span>
                     				</div>
                 			</div>
@@ -806,7 +807,7 @@
 							<div class="col-sm-2">
 								<label>TOT Percent</label>
 								<div class="input-group">
-									<input type="number" name="totpercent" class="form-control input-sm">
+									<input type="number" name="totpercent" class="form-control input-sm" >
 									<span class="input-group-addon">%</span>
 								</div>
 							</div>
@@ -931,12 +932,13 @@
 	    }
 
 		$(document).ready(function(){
+			loadOpt();
 			$("#search_form").submit(function(){
 				var toSend = $(this).serializeArray();
 				$.ajax({
 					type:"post",
 					dataType: "json",
-					url:'/houseowner/search',
+					url:'/houseowner/search/similar',
 					data: toSend,
 					success: function(data){
 						
@@ -955,18 +957,18 @@
 										"<th style='min-width:160px;'>WeChat Username</th>"+
 										"<th style='min-width:50px;'>ID</td>"+
 										"</tr>"
-						for(i = 0 ;i<data.length;++i)
-						{
-							htmlcont += "<tr><td data-dismiss='modal' style='cursor:pointer; text-decoration:underline; color:blue;' onclick='$(\"#houseOwnerID\").val( "+ data[i].houseOwnerID+ ")'>Select</td>"+
-										    "<td>"+data[i].first+"</td>"+
-										    "<td>"+data[i].last +"</td>"+
-										    "<td>"+data[i].ownerWechatID+"</td>"+
-										    "<td>"+data[i].ownerWechatUserName+"</td>"+
-										    "<td>"+data[i].houseOwnerID+"</td></tr>";
-						}
-						htmlcont += "</table></div>";
-						}
-						$("#display_search_result").html(htmlcont);
+							for(i = 0 ;i<data.length;++i)
+							{
+								htmlcont += "<tr><td data-dismiss='modal' style='cursor:pointer; text-decoration:underline; color:blue;' onclick='$(\"#houseOwnerID\").val( "+ data[i].houseOwnerID+ ")'>Select</td>"+
+											    "<td>"+data[i].first+"</td>"+
+											    "<td>"+data[i].last +"</td>"+
+											    "<td>"+data[i].ownerWechatID+"</td>"+
+											    "<td>"+data[i].ownerWechatUserName+"</td>"+
+											    "<td>"+data[i].houseOwnerID+"</td></tr>";
+							}
+							htmlcont += "</table></div>";
+							}
+							$("#display_search_result").html(htmlcont);
 					}
 
 				});
@@ -996,6 +998,51 @@
 				}
 			});
 
+			$("#new_house_owner_form").submit(function(){
+				var toSend = $(this).serialize();//ownerWechatID=XXXX
+				$.ajax({
+					type: "POST",
+					dataType: "json",//data type expected from server
+					url: "/houseowner/add",
+					data: toSend,
+					success: function(data) {
+						//alert(JSON.stringify(data));
+						if(data.duplicate){
+							bootbox.dialog({
+								message:"Failed to add new house owner. ",
+								title: "Fialed: Existing same owner",
+								buttons: {
+									main: {
+										label: "OK",
+										className: "btn-primary"
+									}
+								}
+							});
+						}
+						else{
+							houseOwner = data.owner;
+							$("#houseOwnerID").val(houseOwner.houseOwnerID);
+							$('#new_house_owner_modal').modal('toggle');
+							bootbox.dialog({
+								message:"Succussfully added new house owner. ID: " + houseOwner.houseOwnerID,
+								title: "Confirmation",
+								buttons: {
+									main: {
+										label: "OK",
+										className: "btn-primary"
+									}
+								}
+							});
+						}
+					}
+					,
+					error: function (xhr, ajaxOptions, thrownError) {
+						alert("Failed to add new house owner.");
+					}
+				});
+				return false;
+			});
+
 			$('#addRoom').click(function(){
 				// var htmlstr = "<div class='well' ";
 				var count = document.getElementById('roomsdiv').childElementCount+1;
@@ -1003,25 +1050,30 @@
 				htmlstr += "<h4>Room "+count+"</h4><div class='row'><div class='col-sm-2'><label>Room ID</label>" + 
 						   "<input readonly type='number' class='form-control input-sm' name='roomID_"+count+"' value="+count+"></div>"+
 						   "<div class='col-sm-2'><label>Room Type</label>" +
-						   "<select class='form-control input-sm' name='roomType_"+count+"' id='roomType_"+count+" '>"+roomtype+"</select></div></div>"+
-						   "<div class='row'><div class='col-sm-2'><label>Bed Type</label><select class='form-control input-sm' name='roomBedType_"+count+"' id='roomType_"+count+"'>"+bedtype+"</select></div>"+
-						   "<div class='col-sm-2' id='roomBedTypeotherdiv_"+count+"'  style='visibility:hidden;'><label>Bed Type Other</label>"+
-						   "<input name='roomBedTypeOther_"+count+"' id='roomBedTypeOther_"+count+"' 'text' class='form-control input-sm'></div>"+
-						   "<div class='col-sm-2'><label>Max Guests number</label><input name='maxGuestsnum_"+count+"' id='maxGuestsnum_"+count+"' type='number' class='form-control input-sm' min='0'></div></div>"+
+						   "<select class='form-control input-sm' name='roomType_"+count+"' id='roomType_"+count+" ' onchange='roomtypechange(this)'>"+roomtype+"</select></div>"+
+
+						   "<div class='col-sm-2' id='roomTypeOtherDiv_"+count+"' hidden><label>Room Type Other</label>"+
+						   "<input name='roomTypeOther_"+count+"'  type='text' class='form-control input-sm' ></div></div>"+
+
+						   "<div class='row'><div class='col-sm-2'><label>Bed Type</label><select class='form-control input-sm' name='roomBedType_"+count+"'id='roomBedType_"+count+"' onchange='bedtypechange(this)'>"+bedtype+"</select></div>"+
+						   "<div class='col-sm-2' id='roomBedTypeotherdiv_"+count+"' hidden><label>Bed Type Other</label>"+
+						   "<input name='roomBedTypeOther_"+count+"' id='roomBedTypeOther_"+count+"' type='text' class='form-control input-sm'></div>"+
+
+						   "<div class='col-sm-2'><label>Max Guests number</label><input name='maxGuestsnum_"+count+"' id='maxGuestsnum_"+count+"' type='number' class='form-control input-sm' value='0' min='1'></div></div>"+
 						   "<div class=row><div class='col-sm-2'><label>Cost Day Price</label><div class='input-group'><span class='input-group-addon'>$</span>"+
-						   "<input type='number' name='roomCostDayPrice_"+count+"' min='0' class='form-control input-sm'><span class='input-group-addon'>USD</span></div></div>"+
+						   "<input type='number' name='roomCostDayPrice_"+count+"' min='0' value='0' class='form-control input-sm'><span class='input-group-addon'>USD</span></div></div>"+
 						   "<div class='col-sm-2'><label>Cost Week Price</label><div class='input-group'><span class='input-group-addon'>$</span>"+
-						   "<input type='number' name='roomCostWeekPrice_"+count+"' class='form-control input-sm' min='0'><span class='input-group-addon'>USD</span></div></div>"+
+						   "<input type='number' name='roomCostWeekPrice_"+count+"' class='form-control input-sm' value='0' min='0'><span class='input-group-addon'>USD</span></div></div>"+
 						   "<div class='col-sm-2'><label>Cost Month Price</label><div class='input-group'><span class='input-group-addon'>$</span>"+
-						   "<input type='number' name='roomCostMonthPrice_"+count+"' class='form-control input-sm' min='0'><span class='input-group-addon'>USD</span></div></div></div>"+
+						   "<input type='number' name='roomCostMonthPrice_"+count+"' class='form-control input-sm' value='0' min='0'><span class='input-group-addon'>USD</span></div></div></div>"+
 
 						   "<div class='row'><div class='col-sm-2'><label>Cost Utility</label><div class='input-group'><span class='input-group-addon'>$</span>"+
-						   "<input type='number' name='roomCostUtility_"+count+"' class='form-control input-sm' min='0'><span class='input-group-addon'>USD</span></div></div>"+
+						   "<input type='number' name='roomCostUtility_"+count+"' class='form-control input-sm' value='0' min='0'><span class='input-group-addon'>USD</span></div></div>"+
 						   "<div class='col-sm-4'><label>Utility Note</laebl><textarea class='form-control' rows='4' cols='50' name='utilityNote_"+count+"' placeholder='What&#39s included? Ex: Wi-Fi, Electricity, Water, Gas...'></textarea></div></div>"+
  						   "<div class='row'><div class='col-sm-2'><label>Cleaning Fee</label><div class='input-group'><span class='input-group-addon'>$</span>"+
- 						   "<input type='number' name='roomCostCleaning_"+count+"' class='form-control input-sm' min='0'><span class='input-group-addon'>USD</span></div></div>"+
+ 						   "<input type='number' name='roomCostCleaning_"+count+"' class='form-control input-sm' value='0' min='0'><span class='input-group-addon'>USD</span></div></div>"+
  						   "<div class='col-sm-2'><label>Cost Security Deposit</label><div class='input-group'><span class='input-group-addon'>$</span>"+
- 						   "<input type='number' name='roomCostSecurityDeposit_"+count+"' class='form-control input-sm'><span class='input-group-addon'>USD</span></div></div></div>"+
+ 						   "<input type='number' name='roomCostSecurityDeposit_"+count+"' class='form-control input-sm' value='0' min='0' ><span class='input-group-addon'>USD</span></div></div></div>"+
 						   "</div>";
 				$('#roomsdiv').append(htmlstr);
 			});
@@ -1032,6 +1084,28 @@
 					allroomchild.removeChild(allroomchild.lastChild);
 				}
 			});
+
+
+
+			// ToDO: if the isocode 
+
+
+			$('#country').change(function(){
+				var country = $(this).val().trim();
+				var isocode = getisocontrycode(country);
+				if(isocode){
+					autocomplete.setComponentRestrictions({'country':isocode});
+				}
+			});
+
+			$('.btnNext').click(function(){
+				$('.nav-tabs > .active').next('li').find('a').trigger('click');
+			});
+
+			$('.btnPrevious').click(function(){
+				$('.nav-tabs > .active').prev('li').find('a').trigger('click');
+			});
+
 
 			$.get("/resource/countryCode",function(data,status){
 				$('.PhoneCountry').empty();
@@ -1050,7 +1124,6 @@
 				}
 			});
 
-			loadOpt();
 			$.get("/resource/roomTypes",function(data,status){
 				roomtype = "";
 				for(i=0;i<data.length;++i){
@@ -1072,28 +1145,81 @@
 					bedtype += option;
 				}
 			});
+
+
 		});
 
-		
-		// ToDO: if the isocode 
-
-
-		$('#country').change(function(){
-			var country = $(this).val().trim();
-			var isocode = getisocontrycode(country);
-			if(isocode){
-				autocomplete.setComponentRestrictions({'country':isocode});
+	
+		function roomtypechange(ele){
+			var count = ele.id.split('_')[1];
+			if(ele.value=='Other'){
+				$('#roomTypeOtherDiv_'+count).show();
 			}
-		});
+			else{
+				$('#roomTypeOtherDiv_'+count).hide();
+			}
+		}
+
+		function bedtypechange(ele){
+			//alert(ele.id+" change");
+			var count = ele.id.split('_')[1];
+			if(ele.value=='Other'){
+				$('#roomBedTypeotherdiv_'+count).show();
+			}
+			else{
+				$('#roomBedTypeotherdiv_'+count).hide();
+			}
+		}
 
 
-		$('.btnNext').click(function(){
-			$('.nav-tabs > .active').next('li').find('a').trigger('click');
-		});
+		//TODO: This can be integrated with the sarch reaction function
 
-		$('.btnPrevious').click(function(){
-			$('.nav-tabs > .active').prev('li').find('a').trigger('click');
-		});
+		function findSimilarOwners(){
+			$("#similarResult").empty();
+			var toSend = $("#new_house_owner_form").serialize();//ownerWechatID=XXXX
+			$.ajax({
+				type:"post",
+				dataType: "json",
+				url:'/houseowner/search/similar',
+				data: toSend,
+				success: function(data) {
+					//alert(JSON.stringify(data));
+					var htmlcont = "";
+					if (data.length==0) {//no similar results found
+						$("#new_house_owner_form").submit();
+					} else {
+						htmlcont += "<div style='overflow:auto'>"+
+									"<table class='table table-striped table-bordered'>"+
+									"<tr>"+
+									"<th></th>"+
+									"<th style='min-width:100px;'>First Name</th>"+
+									"<th style='min-width:100px;'>Last Name</th>"+
+									"<th style='min-width:100px;'>WeChat ID</th>"+
+									"<th style='min-width:160px;'>WeChat Username</th>"+
+									"<th style='min-width:50px;'>ID</td>"+
+									"</tr>"
+						for(i = 0 ;i<data.length;++i)
+						{
+							htmlcont += "<tr><td data-dismiss='modal' style='cursor:pointer; text-decoration:underline; color:blue;' onclick='$(\"#houseOwnerID\").val( "+ data[i].houseOwnerID+ ")'>Select</td>"+
+										    "<td>"+data[i].first+"</td>"+
+										    "<td>"+data[i].last +"</td>"+
+										    "<td>"+data[i].ownerWechatID+"</td>"+
+										    "<td>"+data[i].ownerWechatUserName+"</td>"+
+										    "<td>"+data[i].houseOwnerID+"</td></tr>";
+						}
+						htmlcont += "</table></div>";
+
+						$("#similarResult").html(htmlcont);
+						$('#ownerSubmitBtn').hide();
+						$('#ownerStillSubmitBtn').show();
+					}
+				}
+				,
+				error: function (xhr, ajaxOptions, thrownError) {
+					alert("Something's wrong, try again later.");
+				}
+			});
+		}
 
 		function check(){
 			if($("#houseOwnerID").val() == ""){

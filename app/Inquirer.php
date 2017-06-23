@@ -55,15 +55,26 @@ class Inquirer extends Model
         return $res;
     }
 
-
+    /*
+    * Find similar inquirer in database
+    * @para $keypair: is a array of key-value pairs that need to match in database
+    *       $andOr: 1."AND" 2."OR"
+    * Author: Moki
+    * Patch: Yichen, ,moki(06-22-2017)
+    */
     public function scopeFindSimilar($query,$keypair,$andOr){
 
-        $wheresql = "";
         foreach($keypair as $attributes=>$value){
-            $wheresql .= ((strcmp($wheresql,"")==0)? "":$andOr." ").$attributes." like '%".$value."%' "; 
+            if(!$value)
+                continue;
+            if($andOr=='AND'){
+                $query->where($attributes,'LIKE','%'.$value.'%');
+            }
+            else if($andOr=='OR'){
+                $query->orwhere($attributes,'LIKE','%'.$value).'%';
+            }
         }
-        //Log::info($wheresql);
-        return $query-> whereRaw(DB::raw("$wheresql"));
+        return $query;
     }
 
 
