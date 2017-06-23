@@ -162,7 +162,7 @@
 						success: function(data) {
 							html = "";
 							for (i = 0; i < data.length; i++) {
-								html += '<tr><td><button class="btn btn-primary btn-sm">Modify</button></td>';
+								html += "<tr><td><button class='btn btn-primary btn-sm' onclick=window.location.href='modify/" + data[i].numberID + "'>Modify</button></td>";
 								html += '<td>' +  data[i].fullHouseID+ '</td>';
 								html += '<td>' +  data[i].houseAddress+ '</td>';
 								html += '<td>' +  data[i].city+ '</td>';
@@ -218,7 +218,7 @@
 					success: function(data) {
 						html = "";
 						for (i = 0; i < data.length; i++) {
-								html += "<tr><td><button class='btn btn-primary btn-sm'>Modify</button></td>";
+								html += "<tr><td><button class='btn btn-primary btn-sm' onclick=window.location.href='modify/" + data[i].numberID + "'>Modify</button></td>";
 								html += '<td>' +  data[i].fullHouseID+ '</td>';
 								html += '<td>' +  data[i].houseAddress+ '</td>';
 								html += '<td>' +  data[i].city+ '</td>';
