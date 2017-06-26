@@ -15,7 +15,7 @@
 
 		<!-- bootstrap -->
 		<link rel="stylesheet" href="../css/bootstrap.min.css">
-
+		<link rel="stylesheet" href="{{asset('css/animate.css')}}">
 		<script src="../js/bootstrap.min.js"></script>
 
 		<!-- bootstrap phone (local file) -->
@@ -153,156 +153,9 @@
 								</div>
 
 								<div class="row">
-<!-- head -->
-				                    <!-- <div class="col-sm-4 control-label">Company Name:</div>
-				                    <div class="col-sm-4"><input class="form-control input-sm" type='text' name='ownerCompanyName'></div>
-				                </div>
 
-				                <div class="row">
-				                    <div class="col-sm-4 control-label">U.S. Phone Number:</div>
-				                    <div class="col-sm-4"><input class="form-control input-sm bfh-phone" type='text' data-format="(ddd) ddd-dddd" name='ownerUsPhoneNumber'></div>
-				                </div>
-
-				                <div class="row">
-                    				<div class="col-sm-4 control-label">Other Phone Country:</div>
-                    				<div class="col-sm-4">
-                      					<select class="form-control input-sm PhoneCountry" type='text' name='ownerPhone2Country' >
-                      					</select>
-                      				</div>
-                      			</div>
-                      			<div class="row">
-				                    <div class="col-sm-4 control-label">Phone 2 Number:</div>
-				                    <div class="col-sm-4"><input class="form-control input-sm" type='text' name='ownerPhone2Number'></div>
-				                </div>
-				                <div class="row">
-				                    <div class="col-sm-4 control-label">Email:</div>
-				                    <div class="col-sm-4"><input class="form-control input-sm" type='text' name='ownerEmail'></div>
-				                </div>
-				                <div class="row">
-				                    <div class="col-sm-4 control-label">WeChat Username:</div>
-				                    <div class="col-sm-4"><input class="form-control input-sm" type='text' name='ownerWechatUserName'></div>
-				                </div>
-				                <div class="row">
-				                    <div class="col-sm-4 control-label">WeChat ID:</div>
-				                    <div class="col-sm-4"><input class="form-control input-sm" type='text' name='ownerWechatID'></div>
-				                </div>
-				                <div class="row">
-				                    <div class="col-sm-4 control-label">Other ID:</div>
-				                    <div class="col-sm-4"><input class="form-control input-sm" type='text' name='ownerOtherID'></div>
-				                </div>
-				                <div class="row">
-				                    <div class="col-sm-4 control-label">Bank Account Name:</div>
-				                    <div class="col-sm-4"><input class="form-control input-sm" type='text' name='bankAccountName'></div>
-				                </div>
-				                <div class="row">
-				                    <div class="col-sm-4 control-label">Bank Name:</div>
-				                    <div class="col-sm-4"><input class="form-control input-sm" type='text' name='bankName'></div>
-				                </div>
-				                <div class="row">
-				                    <div class="col-sm-4 control-label">Bank Account Routing Number:</div>
-				                    <div class="col-sm-4"><input class="form-control input-sm" type='text' name='bankRountingNumber'></div>
-				                </div>
-				                <div class="row">
-				                    <div class="col-sm-4 control-label">Bank Account Number:</div>
-				                    <div class="col-sm-4"><input class="form-control input-sm" type='text' name='bankAccountNumber'></div>
-				                </div>
-				            </form>
-				            <div id="similarResult"></div>
-				        </div>
-				        <div class="modal-footer">
-				        	<button class="btn btn-primary" onclick="findSimilarOwners()" type="button" id="ownerSubmitBtn">Submit</button>
-				        	<button class="btn btn-primary" type="button" id="ownerStillSubmitBtn" onclick='$("#new_house_owner_form").submit();return false;' style="display:none">Still submit</button>
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div>
-			<p id = 'ErrorMsg'></p>
-			</div>
-			<div class="container">
-				<ul class="nav nav-tabs">
-			        <li class="active"><a data-toggle="tab" href="#home">House</a></li>
-			        <li><a data-toggle="tab" href="#menu1">Condition</a></li>
-			        <li><a data-toggle="tab" href="#menu2">Availability</a></li>
-			        <li><a data-toggle="tab" href="#menu3">Price</a></li>
-			        <li><a data-toggle="tab" href="#menu4">Room (Optional)</a></li>
-				</ul>
-
-				<form  id="houseinfoform" >
-					{{ csrf_field()}}
-					<div class="tab-content">
-						<div id="home" class="tab-pane fade in active">
-			            <br>
-							<div class="row">
-								<div class="col-sm-2">
-									<label>House Owner ID (Select)<span style='color:red'>*</span></label>
-									<input readonly class="form-control input-sm" type="text" name="houseOwnerID" required="required" id="houseOwnerID">
-								</div>
-								<div class="col-sm-2">
-						            <label>Date House Added</label>
-						            <input type="search" name="dateHouseAdded" id="dateHouseAdded" class="form-control input-sm" value=<?php echo date("m/d/Y");?> >
-						        </div>
-						        <div class="col-sm-2">
-				                    <label>House ID by Owner</label>
-				                    <input type="text" name="houseIDByOwner" class="form-control input-sm">
-				                </div>
-				                <div class="col-sm-2">
-				                    <label>Representative ID</label>
-				                </div>
-				            </div>
-
-				            <div class="row">
-				            	<div class="col-sm-2">
-								<label>Country<span style='color:red'>*</span></label>
-									<input id="country" name="country" class="form-control input-sm Country" list="hotcountry">
-									<span id = "validity"></span> 
-
-									<datalist id="hotcountry">
-									</datalist>
-								</div>
-				            </div>
-
-							<div class="row" hidden>
-								<input id="state" name="state">
-                                <input id="city" name="city">
-                                <input id="route" name="route">
-                                <input id="address" diabled>
-							</div>
-
-							<div class="row">
-
-								<div class="col-sm-4">
-										<label>House Address</label>
-										<input type="text" name="houseAddress" id = "houseAddress" class="form-control input-sm" placeholder="Enter and address,neighborhood,city">
-								</div>
-
-								<div class="col-sm-2">
-									<label>Zip</label>
-									<input type="text" name="houseZip" id = "houseZip" class="form-control input-sm" maxlength="5">
-								</div>
-							</div>
-
-							<div class="row">
-								 <div class="col-sm-2">
-                    				<label>House Type</label>
-                    				<select name = "houseType" id="houseType" class="form-control input-sm">
-									</select>
-                				</div>
-
-                				<div class="col-sm-2" style="display:none;" id="houseTypeOtherDiv">
-				                    <label>House Type Other</label>
-				                    <input type="text" name="houseTypeOther" id="houseTypeOther" class="form-control input-sm">
-				                </div>
-
-								<div class="col-sm-2">
-									<label>Size</label>
-									<div class="input-group">
-										<input type="number" name="size" class="form-control input-sm">
-										<span class="input-group-addon">Sq.ft.</span>  -->
-<!-- ======= -->
 				                    <div class="col-sm-2">
-								        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#search_result_modal" type="submit" >Search</button>
+								        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#search_result_modal" id='forbounce' type="submit" >Search</button>
 				                        <button class="btn btn-warning btn-sm" type="reset">Clear</button>
 				                    </div>
 				                </div>
@@ -326,250 +179,7 @@
 							</div>
 
 							<hr>
-<!-- HEAD -->
-				           <!--  <h5>Additional Note</h5>
-						    <div class="row">
-				                <div class="col-sm-6">
-				                    <textarea name="additionalNote" ROWS=10 COLS=100 class="form-control input-sm"></textarea>
-				                </div>
-				            </div>
 
-							<div class="row">
-								<div class="col-sm-6">
-									<a class="btn btn-primary btnPrevious" style="width:100px">Previous</a>
-								</div>
-								<div class="col-sm-6">
-									<a class="btn btn-primary pull-right btnNext" style="width:100px">&nbsp;&nbsp;Next&nbsp;&nbsp;</a>
-								</div>
-
-							</div>
-						</div> -->
-
-						 <!--end of table HOUSINGCONDITION -->
-						 <!-- beginning of table HOUSEAVAILABILITY -->
-
-						 <!-- <div id="menu2" class="tab-pane fade panel-padding">
-				            <div class="row">
-				                <div class="col-sm-2">
-				                    <label>Whole/Share</label>
-				                    <select name="rentShared" class="form-control input-sm">
-				                        <option value = 0 >Either</option>
-				                        <option value = 1 >Whole</option>
-				                        <option value = -1 >Share</option>
-				                    </select>
-				                </div>
-				            </div>
-
-				            <div class="row">
-								<div class="col-sm-2">
-									<label>Availability</label>
-									<select name="availability" id="availability" class="form-control input-sm">
-									<option value = 1 >Yes</option>
-									<option value = 0 >Yes, but not now</option>
-									<option value = -1 selected>No</option>
-									</select>
-								</div>
-
-								<div class="col-sm-2" id="nextAvailableDateDiv" style="display:none;">
-									<label>Next Available Date</label>
-									<input type="search" name="nextAvailableDate" id="nextAvailableDate" class="form-control input-sm" placeholder="mm/dd/yyyy">
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-sm-2">
-									<label>Minimum Stay Unit</label>
-									<select name="minStayUnit" class="form-control input-sm">
-										<option value = "Day" >Day</option>
-										<option value = "Week" >Week</option>
-										<option value = "Month" >Month</option>
-										<option value = "Year" >Year</option>
-									</select>
-								</div>
-
-								<div class="col-sm-2">
-									<label>Minimum Stay Term</label>
-									<input type="number" name="minStayTerm" class="form-control input-sm" value = 1>
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-sm-2">
-									<label>Allow Cooking</label>
-									<select name="allowCooking" class="form-control input-sm">
-									<option value = 0 >N/A</option>
-									<option value = 2 >Occasional</option>
-									<option value = 1 >Yes</option>
-									<option value = -1 >No</option>
-									</select>
-								</div>
-
-								<div class="col-sm-2">
-									<label>Furnished</label>
-									<select name="furnished" class="form-control input-sm">
-										<option value = 0 >N/A</option>
-										<option value = 2 >Simple</option>
-										<option value = 1 >Yes</option>
-										<option value = -1 >No</option>
-									</select>
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-sm-4">
-									<label>Availability Note</label>
-									<textarea class="form-control" rows="4" cols="50" name="availabilityNote"></textarea>
-								</div>               
-							</div>
-
-							<div class="row">
-								<div class="col-lg-6">
-									<a class="btn btn-primary btnPrevious" style="width:100px">Previous</a>
-								</div>
-								<div class="col-lg-6">
-									<a class="btn btn-primary pull-right btnNext" style="width:100px">&nbsp;&nbsp;Next&nbsp;&nbsp;</a>
-								</div>
-							</div>
-
-						</div> -->
-					<!--end of table HOUSEAVAILABILITY -->
-
-					<!-- <div id="menu3" class="tab-pane fade panel-padding">
- -->						<!-- beginning of table HOUSEPRICE -->
-						<!-- <div class="row">
-							<div class="col-sm-2">
-								<label>Cost Day Price</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input type="number" name="costDayPrice" class="form-control input-sm" value = '0' step='100'>
-								</div>
-							</div>
-
-							<div class="col-sm-2">
-								<label>Cost Week Price</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input type="number" name="costWeekPrice" class="form-control input-sm" value ='0' step ='100'>
-								</div>
-							</div>
-
-							<div class="col-sm-2">
-								<label>Cost Month Price</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input type="number" name="costMonthPrice" class="form-control input-sm" value ='0' step='1000'>
-								</div>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-sm-2">
-								<label>Cost Utility</label>
-								<div class="input-group">
-								<span class="input-group-addon">$</span>
-								<input type="number" name="costUtility" class="form-control input-sm" value ='0' step='10'>
-								</div>
-							</div>
-						</div>
-
-						<div class="row">
-			                <div class="col-sm-4">
-			                    <label>Utility Note</label>
-			                    <textarea class="form-control" rows="4" cols="50" name="utilityNote" placeholder="What's included? Ex: Wi-Fi, Electricity, Water, Gas..."></textarea>
-			                </div>
-			            </div>
-
-			            <div class="row">
-			            	<div class="col-sm-2">
-								<label>Cost Cleaning</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input type="number" name="costCleaning" class="form-control input-sm" value='0' step='10'>
-								</div>
-							</div>
-
-							<div class="col-sm-2">
-								<label>Cost Security Deposit</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input type="number" name="costSecurityDeposit" class="form-control input-sm" value ='0' step='10'>
-								</div>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Cost Note</label>
-								<textarea class="form-control" rows="4" cols="50" name="costNote"></textarea>
-							</div>               
-						</div>
-
-						<div class="row">
-							<div class="col-sm-2">
-								<label>Retail Day Price</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input type="number" name="retailDayPrice" class="form-control input-sm" value='0' step= '10'>
-								</div>
-							</div>
-
-							<div class="col-sm-2">
-								<label>Retail Week Price</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input type="number" name="retailWeekPrice" class="form-control input-sm" value='0' step= '10'>
-								</div>
-							</div>
-
-							<div class="col-sm-2">
-								<label>Retail Month Price</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input type="number" name="retailMonthPrice" class="form-control input-sm" value='0' step= '100'>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-2">
-								<label>Retail Utility</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input type="number" name="retailUtility" class="form-control input-sm" value='0' step= '10'>                     
-								</div>
-							</div>
-
-							<div class="col-sm-2">
-								<label>Retail Cleaning</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input type="number" name="retailCleaning" class="form-control input-sm" value='0' step= '10'>
-								</div>
-							</div>
-
-							<div class="col-sm-2">
-								<label>Retail Security Deposit</label>
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-									<input type="number" name="retailSecurityDeposit" class="form-control input-sm" value='0' step= '10'> 
-								</div>
-							</div>
-						</div>
-
-						<div class="row">
-                			<div class="col-sm-2">
-                    			<label>Upsell Percent</label>
-                    				<div class="input-group">
-                          				<input type="number" name="upsellPercent" class="form-control input-sm" value='0' step= '10'>
-                          				<span class="input-group-addon">%</span>
-                    				</div>
-                			</div>
-
-							<div class="col-sm-2">
-								<label>TOT Percent</label>
-								<div class="input-group">
-									<input type="number" name="totpercent" class="form-control input-sm" >
-									<span class="input-group-addon">%</span> -->
-<!-- ======= -->
 					        <h4>New house owner?</h4>
 					        <div class="row">
 					            <div class="col-sm-2">
@@ -1310,6 +920,26 @@
 						</div>
 					</div>
 				</div>
+
+				<div class="modal fade" id="house_A_result_modal" role="dialog" >
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title">Information</h4>
+							</div>
+							<div class="modal-body">
+								<p id="house_A_display"></p>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal" onclick="$('#house_A_result_modal').toggle();location.reload(true);">Add another one</button>
+								<a href="/MainPage" class="btn btn-info" role="button">MainPage</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
 			</div>
 		</div>
 	</body>
@@ -1453,7 +1083,16 @@
 						data:$.param(toSend),
 						datatype:'json',
 						success: function(data){
-							$("#ErrorMsg").html("");
+							// $("#ErrorMsg").html("");
+							console.log(data);
+							if(data.status=='success'){
+								var str = "House ID: "+ data.houseinfo.fullHouseID + " has been stored.";  
+								$('#house_A_display').text(str);
+							}
+							else{
+
+							}
+							$('#house_A_result_modal').modal();
 						}
 					});
 				}
@@ -1608,6 +1247,7 @@
 			});
 
 
+			$('#forbounce').animateCss('bounce 1s infinite');
 		});
 
 	

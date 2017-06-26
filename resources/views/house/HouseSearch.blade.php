@@ -25,6 +25,7 @@
                 <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
                 <link rel="stylesheet" href="{{asset('css/priceswitch.css')}}">
                 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+                <link rel="stylesheet" href="{{asset('css/animate.css')}}">
                 <script src="{{asset('js/util.js')}}"></script>
               <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
               <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
@@ -860,6 +861,15 @@ src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAAIAQT72
 </script>
 <script>
 
+    $.fn.extend({
+    animateCss: function (animationName) {
+        var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+        this.addClass('animated ' + animationName).one(animationEnd, function() {
+            $(this).removeClass('animated ' + animationName);
+        });
+    }
+    });
+
     var autocomplete; 
     var search_geo;
     var map;
@@ -1141,7 +1151,7 @@ $(document).ready(function() {
     {
         html = "<div>"+
                 "<h4>" + title + "</h4><h5>No:"+ id + " </h5><p>Address:" + addr + "<br>"+
-                "<a href='#house_"+id+"   'onclick=''>View Details</a></p></div>";
+                "<a href='#house_"+id+"' onclick=\"$('#house_"+id+"\').animateCss('bounce 1s')\";>View Details</a></p></div>";
         infowindow.setContent(html);
     }
 

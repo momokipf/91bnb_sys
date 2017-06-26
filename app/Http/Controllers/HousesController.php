@@ -200,6 +200,14 @@ class HousesController extends Controller
     	}
     }
 
+
+    /** 
+	  * @desc this function will store all information related to House
+	  * including house price, house condition and house rooms.
+	  * @author Moki mokipang@91bnb.com
+	  * @required all
+	*/
+
     public function store(Request $request){
     	//Log::info($request->all());
     	$input = $request->all();
@@ -291,15 +299,28 @@ class HousesController extends Controller
     		$newhouseprice = new \App\Houseprice($priceinput);  //\App\Houseprice::create($priceinput);
     		$newhousecond = new \App\Housingcondition($conditioninput);
 
-    		// $newhouseAvailability = new Houseavailability([
-
-    		// 	]);
-    		$newhouse->save();
-    		$newhouse->houseprice()->save($newhouseprice);
-    		$newhouse->housingcondition()->save($newhousecond);
-    		$newhouse->houserooms()->saveMany($newrooms);
+    		/*TODO: add house availability table funciton
+    		* 
+    		*
+			*/
 
 
+    		// try{
+    		// $newhouse->save();
+    		// $newhouse->houseprice()->save($newhouseprice);
+    		// $newhouse->housingcondition()->save($newhousecond);
+    		// $newhouse->houserooms()->saveMany($newrooms);
+    		// }
+    		// catch(\Illuminate\Database\QueryException $ex){
+					    			
+    		// }
+
+    		if($request->ajax() || $request->wantsJson()){
+    			Log::info("Send json back to client ".$newhouse);
+    			return response()
+    					->json(['status'=>'success','houseinfo'=>$newhouse])
+    					->header('Content','json');
+    		}
     	}
     }
 
