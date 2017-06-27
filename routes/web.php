@@ -55,7 +55,7 @@ Route::get('housesearchindex','HousesController@searchindex');
 Route::get('house/info/{id}','HousesController@showhouse');
 Route::get('house/add','HousesController@addindex');
 Route::post('house/add','HousesController@store');
-Route::post('house/search','HousesController@search');
+Route::get('house/search','HousesController@search');
 Route::get('house/modify','HousesController@modify');
 Route::post('house/searchByAddress','HousesController@searchByAddress');
 Route::post('house/searchByID','HousesController@searchByID');

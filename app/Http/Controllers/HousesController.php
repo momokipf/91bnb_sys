@@ -334,7 +334,10 @@ class HousesController extends Controller
     public function search(Request $request)
     {
     	Log::info($request->all());
-    	$httpclient = new Client(['base_uri'=>'https://maps.googleapis.com/','timeout'=>2.0]);
+    	$httpclient = new Client(['base_uri'=>'https://maps.googleapis.com/','timeout'=>5.0]);
+
+    	$houseid = $request->input('houseID');
+    	$ownerid = $request->input('houseOwnerID');
 
     	$zipcode = $request->input('zipcode');
     	$houseAddress = $request->input('houseAddress');
@@ -343,8 +346,8 @@ class HousesController extends Controller
     	$state = $this->getState($request->input('state'));
     	$city = $request->input('city');
 
-    	$road_1 = $request->input('crossroadA');
-    	$road_2 = $request->input('crossroadB');
+    	// $road_1 = $request->input('crossroadA');
+    	// $road_2 = $request->input('crossroadB');
     	$radius = $request->input('milesrange',2);
 
     	$numOfRoomsFrom = $request->input('numOfRoomsFrom');
@@ -360,6 +363,34 @@ class HousesController extends Controller
 
     	$target_pt = null;
     	$search_geo = null;
+
+
+		if($houseid){
+    		$house = House::where('fullHouseID','=',$houseid)->first();
+    		Log::info($house);
+    		if($house){
+    			$search_geo = collect(['location'=>collect(['lat'=>$house->latitude,'lng'=>$house->longitude])]);
+    			return response()
+    				->json(['houses'=>array($house),
+    					 'geo_center'=>$search_geo
+    				]);
+    		}
+    	}
+    	if($ownerid){
+    		$houses = Houseowner::find($ownerid)->houses()->get();
+    		if($houses){
+    			$search_geo = collect(['location'=>collect(['lat'=>$houses[0]->latitude,'lng'=>$houses[0]->longitude])]);
+    			// Log::info(response()
+    			// 	->json(['houses'=>$houses,
+    			// 		 'geo_center'=>$search_geo
+    			// 	]));
+    			return response()
+    				->json(['houses'=>$houses,
+    					 'geo_center'=>$search_geo
+    				]);
+    		}
+    	}
+
     	if($request->input('search_latitude')&&$request->input('search_longitude'))
     	{
     		$target_pt = collect(['latitude'=>$request->input('search_latitude'),'longitude'=>$request->input('search_longitude')]);
