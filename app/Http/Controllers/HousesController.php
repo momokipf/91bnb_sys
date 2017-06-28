@@ -162,7 +162,7 @@ class HousesController extends Controller
     	$house = House::where('numberID', $numberID)->first();
     	return view('house.ModifyHouse')
     			->with('house', $house)
-    			->with('rep',Auth::user());
+    			->with('Rep',Auth::user());
     }
 
 
