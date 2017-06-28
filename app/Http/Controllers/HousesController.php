@@ -200,6 +200,14 @@ class HousesController extends Controller
     	}
     }
 
+
+    /** 
+	  * @desc this function will store all information related to House
+	  * including house price, house condition and house rooms.
+	  * @author Moki mokipang@91bnb.com
+	  * @required all
+	*/
+
     public function store(Request $request){
     	//Log::info($request->all());
     	$input = $request->all();
@@ -221,12 +229,13 @@ class HousesController extends Controller
 
     	$houseowner = \App\Houseowner::find($input['houseOwnerID']);
     	if($houseowner){
-    		$houseid = House::where('country','=',$input['country'])
+    		$previousHighestID = House::where('country','=',$input['country'])
     						  ->where('state','=',$input['state'])
     						  ->where('city','=',$input['city'])
-    						  ->count();
-    		if($houseid){
-    			$houseid++;
+    						  ->orderBy('fullHouseID','desc')->first();
+    						  
+    		if($previousHighestID){
+    			$houseid = explode('_',$previousHighestID)[3]+1;
     		}
     		else{
     			$houseid =1;
@@ -290,15 +299,28 @@ class HousesController extends Controller
     		$newhouseprice = new \App\Houseprice($priceinput);  //\App\Houseprice::create($priceinput);
     		$newhousecond = new \App\Housingcondition($conditioninput);
 
-    		// $newhouseAvailability = new Houseavailability([
-
-    		// 	]);
-    		$newhouse->save();
-    		$newhouse->houseprice()->save($newhouseprice);
-    		$newhouse->housingcondition()->save($newhousecond);
-    		$newhouse->houserooms()->saveMany($newrooms);
+    		/*TODO: add house availability table funciton
+    		* 
+    		*
+			*/
 
 
+    		// try{
+    		// $newhouse->save();
+    		// $newhouse->houseprice()->save($newhouseprice);
+    		// $newhouse->housingcondition()->save($newhousecond);
+    		// $newhouse->houserooms()->saveMany($newrooms);
+    		// }
+    		// catch(\Illuminate\Database\QueryException $ex){
+					    			
+    		// }
+
+    		if($request->ajax() || $request->wantsJson()){
+    			Log::info("Send json back to client ".$newhouse);
+    			return response()
+    					->json(['status'=>'success','houseinfo'=>$newhouse])
+    					->header('Content','json');
+    		}
     	}
     }
 
@@ -312,7 +334,10 @@ class HousesController extends Controller
     public function search(Request $request)
     {
     	Log::info($request->all());
-    	$httpclient = new Client(['base_uri'=>'https://maps.googleapis.com/','timeout'=>2.0]);
+    	$httpclient = new Client(['base_uri'=>'https://maps.googleapis.com/','timeout'=>5.0]);
+
+    	$houseid = $request->input('houseID');
+    	$ownerid = $request->input('houseOwnerID');
 
     	$zipcode = $request->input('zipcode');
     	$houseAddress = $request->input('houseAddress');
@@ -321,8 +346,8 @@ class HousesController extends Controller
     	$state = $this->getState($request->input('state'));
     	$city = $request->input('city');
 
-    	$road_1 = $request->input('crossroadA');
-    	$road_2 = $request->input('crossroadB');
+    	// $road_1 = $request->input('crossroadA');
+    	// $road_2 = $request->input('crossroadB');
     	$radius = $request->input('milesrange',2);
 
     	$numOfRoomsFrom = $request->input('numOfRoomsFrom');
@@ -338,6 +363,34 @@ class HousesController extends Controller
 
     	$target_pt = null;
     	$search_geo = null;
+
+
+		if($houseid){
+    		$house = House::where('fullHouseID','=',$houseid)->first();
+    		Log::info($house);
+    		if($house){
+    			$search_geo = collect(['location'=>collect(['lat'=>$house->latitude,'lng'=>$house->longitude])]);
+    			return response()
+    				->json(['houses'=>array($house),
+    					 'geo_center'=>$search_geo
+    				]);
+    		}
+    	}
+    	if($ownerid){
+    		$houses = Houseowner::find($ownerid)->houses()->get();
+    		if($houses){
+    			$search_geo = collect(['location'=>collect(['lat'=>$houses[0]->latitude,'lng'=>$houses[0]->longitude])]);
+    			// Log::info(response()
+    			// 	->json(['houses'=>$houses,
+    			// 		 'geo_center'=>$search_geo
+    			// 	]));
+    			return response()
+    				->json(['houses'=>$houses,
+    					 'geo_center'=>$search_geo
+    				]);
+    		}
+    	}
+
     	if($request->input('search_latitude')&&$request->input('search_longitude'))
     	{
     		$target_pt = collect(['latitude'=>$request->input('search_latitude'),'longitude'=>$request->input('search_longitude')]);

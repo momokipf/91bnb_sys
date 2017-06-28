@@ -45,24 +45,88 @@ class HouseOwnersController extends Controller
     				->with('houseowner',$owner);
     }
 
-
-    public function search(Request $request){
+    /*
+    * Search houseowner 
+    * @para $keypair: is a array of key-value pairs that need to match in database
+    *       $andOr: 1."AND" 2."OR"
+    * Author: Moki
+    * 
+    */
+    public function search(Request $request,$similar=null){
         $houseownerSearchField = $request->only($this->searchFields);
         Log::info($houseownerSearchField);
+        $querybuilder = null;
 
-        $querybuilder = new Houseowner;
-        foreach($this->searchFields as $field){
-            if(!$houseownerSearchField[$field]){
-                continue;
-            }
-            $querybuilder = $querybuilder->orwhere($field,'LIKE',"%".$houseownerSearchField[$field]."%");
+        // foreach($this->searchFields as $field){
+        //     if(!$houseownerSearchField[$field]){
+        //         continue;
+        //     }
+        //     if(!$querybuilder){
+        //         $querybuilder = Houseowner::where($field,'LIKE',$houseownerSearchField[$field]);
+        //     }
+        //     else{
+        //         $querybuilder = $querybuilder->orwhere($field,'LIKE',$houseownerSearchField[$field]);
+        //     }
+        // }
+
+        if($similar){
+            Log::info("similar has been set".$similar);
+            $querybuilder = Houseowner::FindSimilar($houseownerSearchField,'OR');
         }
+        else{
+            Log::info("similar has not been set");
+            $querybuilder = Houseowner::FindSimilar($houseownerSearchField,'AND');
+        }   
 
         $similarowner = $querybuilder->get();
 
         if($request->ajax() || $request->wantsJson()){
             return response($similarowner)
                         ->header('Content','json');
+        }
+
+    }
+
+    public function store(Request $request){
+        Log::info($request->all());
+        $houseownerSearchField = $request->only($this->searchFields);
+        $isduplicate = !(Houseowner::FindSimilar($houseownerSearchField,'AND')->count()==0);
+        $houseownerSearchField = $request->only($this->searchFields);
+        if($isduplicate==TRUE){
+            $duplicateRecords = Houseowner::FindSimilar($houseownerSearchField,'AND')->get();
+            if($request->ajax() || $request->wantsJson()){
+                return response()
+                    ->json(['duplicate'=>$isduplicate,'owner'=>$duplicateRecords])
+                    ->header('Content','json');
+            }
+        }
+        else{
+            $input = $request->all();
+            $usPhoneNumber = preg_replace("/[^0-9,.]/", "", $_POST['ownerUsPhoneNumber']);
+            $usPhoneNumber = "(".substr($usPhoneNumber,0,3).")".substr($usPhoneNumber,3,3)."-".substr($usPhoneNumber,6,4);
+            $newowner = new \App\Houseowner([
+                'first' => $input['first'],
+                'last' => $input['last'],
+                'ownerCompanyName' => $input['ownerCompanyName'],
+                'ownerUsPhoneNumber' => $usPhoneNumber,
+                'ownerPhone2Country' => $input['ownerPhone2Country'],
+                'ownerPhone2Number' => $input['ownerPhone2Number'],
+                'ownerEmail' => $input['ownerEmail'],
+                'ownerWechatUserName' => $input['ownerWechatUserName'],
+                'ownerWechatID' => $input['ownerWechatID'],
+                'ownerOtherID' => $input['ownerOtherID'],
+                'bankAccountName' => $input['bankAccountName'],
+                'bankName'=> $input['bankName'],
+                'bankRountingNumber'=> $input['bankRountingNumber'],
+                'bankAccountNumber' => $input['bankAccountNumber'],
+                ]);
+            Log::info($newowner);
+            $newowner->save();
+            if($request->ajax() || $request->wantsJson()){
+                return response()
+                    ->json(['duplicate'=>$isduplicate,'owner'=>$newowner])
+                    ->header('Content','json');
+            }
         }
 
     }

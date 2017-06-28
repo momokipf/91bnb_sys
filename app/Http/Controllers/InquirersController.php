@@ -39,7 +39,7 @@ class InquirersController extends Controller
 	}
 
 	public function searchForModify(Request $request,$similar = null){
-		Log::info($request->all());
+		//Log::info($request->all());
 		$search = Inquirer::searchablefield($request->all());
 		if($search->isEmpty())
 		{
