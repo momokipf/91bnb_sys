@@ -275,7 +275,8 @@
 					<div class='row'>
 						<div class='col-sm-3'>
 							<label>House ID</label>
-							<input class='form-control input-sm' value="{{$house->fullHouseID}}" readonly>
+							<input class='form-control input-sm' name="fullHouseID" value="{{$house->fullHouseID}}" readonly>
+							<input class='form-control input-sm' type="hidden" name="numberID" value="{{$house->numberID}}">
 						</div>
 
 						<div class='col-sm-2'>
@@ -385,6 +386,8 @@
 				</div>
 
 				<div class="tab-pane fade" id="condition">
+					<fieldset>
+						<!-- <legend>123</legend> -->
 					<h5>Guests Info</h5>
 					<div class="row">
 						<div class="col-sm-2">
@@ -449,6 +452,8 @@
 							@endif
 						</div>
 					</div>
+
+					</fieldset>
 
 					<hr>
 
