@@ -61,6 +61,7 @@ Route::post('house/searchByAddress','HousesController@searchByAddress');
 Route::post('house/searchByID','HousesController@searchByID');
 Route::post('house/searchByOwner','HousesController@searchByOwner');
 Route::get('house/modify/{numberID}','HousesController@modifyHouse');
+Route::post('house/modify/store','HousesController@update');
 
 
 
