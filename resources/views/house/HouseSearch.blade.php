@@ -204,6 +204,7 @@
             }
             function doload(){
                 changeswitchview();
+                
             }
         </script>
 
@@ -653,7 +654,8 @@
                     <th style="min-width:100px;">Minimum Stay Term</th>
                     <th style="min-width:100px;">Whole/Share</th>
                     <th style="min-width:150px;">View House info</th>
-                    <th style="min-width:159px;">View Owner info</th>
+                    <th style="min-width:150px;">View Owner info</th>
+                    <th style="min-width:100px;">Modify</th>
                     <!--<th style="min-width:170px;">Owner Phone Number</th>
                     <th style="min-width:170px;">Owner Name</th>
                     <th style="min-width:150px;">WeChat Name</th>
@@ -1051,6 +1053,7 @@ $(document).ready(function() {
                             //rowhtml += "<td><a onclick=' retrieveHouseInfo("+numberID+");' > View House Info</td>";
                             rowhtml += "<td><button type='button' class='btm btn-info' onclick='retrieveHouseInfo("+houses[i].numberID+");resultSM.toHousePage("+i+")'>"+"View House Info"+"</button></td>";
                             rowhtml += "<td><button type='button' class='btm btn-info' onclick='resultSM.toOwnerPage("+i+")'>View Owner Info</button></td>";
+                            rowhtml += "<td><button type='button' class='btm btn-info' href='MainPage'>Modify</button></td>"
                             attachHouseOwnerDiv(houses[i],i);
 
                             rowhtml += "</tr>";

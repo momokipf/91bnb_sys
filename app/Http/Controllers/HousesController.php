@@ -169,9 +169,18 @@ class HousesController extends Controller
     public function searchindex(Request $request)
     {
     	//$fakequery = App\Inquiry::find(114);
-    	return view('house.HouseSearch')
+    	return view('house.HouseSearchindex')
     			//->with('Query',$fakequery)
     			->with('Rep',Auth::user());
+    }
+
+    public function searchpage(Request $request)
+    {
+    	$input = $request->all();
+    	Log::info($input);
+    	return view('house.Housetmp')
+    			->with('Rep',Auth::user());
+
     }
 
     //Different Reaction based on request 
@@ -219,9 +228,21 @@ class HousesController extends Controller
     		]);
     	if($validator->fails())
     	{
-    		return ;
+    		if($request->ajax()||$request->wantsJson()){
+    			return response()
+    					->json(['status'=>'input error']);
+    		}
     	}
 
+
+    	// $houseAddress = $request->input('houseAddress');
+
+    	// if(!$houseAddress){
+    	// 	return ;
+    	// }
+    	// else{
+
+    	// }
     	//$houseAddress = $input['houseAddress'];
     	$search_longitude = $request->input('search_longitude',null);
     	$search_latitude = $request->input('search_latitude',null);
@@ -380,10 +401,7 @@ class HousesController extends Controller
     		$houses = Houseowner::find($ownerid)->houses()->get();
     		if($houses){
     			$search_geo = collect(['location'=>collect(['lat'=>$houses[0]->latitude,'lng'=>$houses[0]->longitude])]);
-    			// Log::info(response()
-    			// 	->json(['houses'=>$houses,
-    			// 		 'geo_center'=>$search_geo
-    			// 	]));
+
     			return response()
     				->json(['houses'=>$houses,
     					 'geo_center'=>$search_geo
@@ -467,6 +485,7 @@ class HousesController extends Controller
 
     		$housebuilder = $housebuilder
     							->orderBy(DB::raw($circlesql));
+
 
     		return response()
     			->json(['houses'=>$housebuilder->get(),

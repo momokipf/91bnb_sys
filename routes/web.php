@@ -52,10 +52,14 @@ Route::post('inquirer/add', 'InquirersController@store');
 
 
 Route::get('housesearchindex','HousesController@searchindex');
+Route::get('houses/results','HousesController@searchpage');
+Route::get('houses/realsearch','HousesController@search');
+
+
 Route::get('house/info/{id}','HousesController@showhouse');
 Route::get('house/add','HousesController@addindex');
 Route::post('house/add','HousesController@store');
-Route::get('house/search','HousesController@search');
+Route::post('house/search','HousesController@search');
 Route::get('house/modify','HousesController@modify');
 Route::post('house/searchByAddress','HousesController@searchByAddress');
 Route::post('house/searchByID','HousesController@searchByID');
