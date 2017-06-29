@@ -102,10 +102,10 @@
 				}
 
 				autocomplete = new google.maps.places.Autocomplete(document.getElementById('houseAddress'), options);
-				autocomplete.addListener('place_changed',geolocate);
+				autocomplete.addListener('place_changed',fillInAddress);
 			}
 
-			function geolocate(){
+			function fillInAddress(){
 				var place = autocomplete.getPlace();
 				//console.log(JSON.stringify(place));
 				if(place){
@@ -295,7 +295,7 @@
 				<div class="row gap">
 					<div class="col-sm-6">
 						<label>House Address</label>
-						<input class="form-control input-sm"  type="text" id="houseAddress" name="houseAddress" placeholder="Enter and address,neighborhood,city" >
+						<input class="form-control input-sm"  type="text" id="houseAddress" name="houseAddress" placeholder="Enter address,neighborhood,city" >
 					</div>
 
 					<div class="col-sm-2">

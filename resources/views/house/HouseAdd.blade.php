@@ -303,8 +303,8 @@
 									<div id="home" class="tab-pane fade in active">
 						            	<br>
 										<div class="row">
-											<div class="col-sm-2">
-												<label>House Owner ID<span style='color:red'>*</span></label>
+											<div class="col-sm-3">
+												<label>House Owner ID (Select)<span style='color:red'>*</span></label>
 												<input readonly class="form-control input-sm" type="text" name="houseOwnerID" required="required" id="houseOwnerID">
 											</div>
 											<div class="col-sm-2">
