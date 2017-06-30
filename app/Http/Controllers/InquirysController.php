@@ -171,6 +171,17 @@ class InquirysController extends Controller
         //         ->header('Content-Type', 'json');
     }
 
+
+    public function modifyinquiry($inquiryID) {
+        $allreps = Representative::GetValuesinField('repName')->get();
+        Log::info($inquiryID);
+        $inquiry = Inquiry::where('inquiryID', $inquiryID)->with('represent')->first();
+        return view('inquiry.ModifyInquiry')
+                ->with('Allreps',$allreps)
+                ->with('inquiry', $inquiry)
+                ->with('Rep',Auth::user());
+    }
+
     // public function result(Request $request){
 
 
