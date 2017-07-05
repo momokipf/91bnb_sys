@@ -1,253 +1,199 @@
-<!doctype html>
-<html lang="{{ config('app.locale') }}">
-	<head>
-		<title>Show All Representatives</title>
+@extends('navbar')
+@section('title', 'Representatives')
 
-		<meta charset="utf-8" />
-		<meta name="csrf-token" content="{{ csrf_token() }}">
-		<!--  Bootstrap CSS  -->
-		<!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="{{asset('css/bootstrap.css')}}">
+@section('head')
+	<link rel="stylesheet" href="{{asset('css/bootstrap.css')}}">
+	<style>
+		body{
+/*       	font-family: "Serif";*/
+			background-image: url(../img/bg_sf2.jpg);
+			background-size: cover;
+		}
+		input[type="search"]::-webkit-search-cancel-button{
+			-webkit-appearance: searchfield-cancel-button;
+		}
+		.glyphicon.glyphicon-time{
+			font-size: 25px;
+		}
+		.table-bordered tr,
+			.table-bordered td {
+			border: 1px solid #C1C1C1 !important;
+		}
+		.trans{
+			filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#3f000000',endColorstr='#3f000000');
+			background-color:rgba(255, 255, 255, 0.78)
+		}
+	</style>
+@endsection
 
-		<!--  Defined CSS  -->
-		<link rel="stylesheet" href="{{asset('css/self.css')}}">
-		<link rel="stylesheet" href="{{asset('css/loader.css')}}">
-		<link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
+@section('content')
 
-		<script type="text/javascript" src="{{ asset('js/jquery-1.11.3.js') }}"></script>
-		<script src="{{ asset('js/bootstrap.min.js')}}"></script>
-		<script src="{{ asset('js/bootstrap-formhelpers-phone.js')}}"></script>
-		<script src="{{ asset('js/bootbox.min.js')}}"></script>
+	<div class='content container' style='margin-top:50px;'>
+		<div class='well trans' style='margin-top:10px;'>
+			<h3 style="text-align:center;">
+				Represenataives
+			</h3>
+			<div class="table-responsive">
+				<table style='text-align:center;' class='table table-bordered'>
+					<tr>
+						<th style="min-width:110px;">Active or Not</th>
+						<th>Modify</th>
+						<th>Active</th>
+						<th>Rep UserName</th>
+						<th>Rep Password</th>
+						<!-- <th>Rep Name</th> -->
+						<th style="min-width:100px;">Rep Priority</th>
+						<th>Rep Position</th>
+						<!-- <th>Employee ID</th> -->
+						<th>Rep FirstName</th>
+						<th>Rep LastName</th>
+					</tr>
 
-		<style>
-			body{
-	/*       	font-family: "Serif";*/
-				background-image: url(../img/bg_sf2.jpg);
-				background-size: cover;
-			}
-			input[type="search"]::-webkit-search-cancel-button{
-				-webkit-appearance: searchfield-cancel-button;
-			}
-			.glyphicon.glyphicon-time{
-				font-size: 25px;
-			}
-			.table-bordered tr,
-				.table-bordered td {
-				border: 1px solid #C1C1C1 !important;
-			}
-			.trans{
-				filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#3f000000',endColorstr='#3f000000');
-				background-color:rgba(255, 255, 255, 0.78)
-			}
-		</style>
-	</head>
+					<tbody id="mytable">
+						@foreach ($reps as $thisrep)
+							<tr style='text-align:center;'>
+								@if ($thisrep->active == 1)
+									<td><i class="glyphicon glyphicon-time" style="color:green"></i></td>
+								@else
+									<td><i class="glyphicon glyphicon-time" style="color:grey"></i></td>
+								@endif
+								<td>
+									<button type='button' class='btn btn-primary btn-sm' onclick='modifyRow({{$thisrep->repID}})'>
+										<span class='glyphicon glyphicon-edit'></span>
+										Modify
+									</button>
+								</td>
+								@if ($thisrep->active == 1)
+									<td><select id='active{{$thisrep->repID}}'><option value=1 selected>Yes</option><option value=0>No</option></td>
+								@else
+									<td><select id='active{{$thisrep->repID}}'><option value=1>Yes</option><option value=0 selected>No</option></td>
+								@endif
+								<td><input type='text' id='repUserName{{$thisrep->repID}}' value={{ $thisrep->repUserName }}></td>
+								<td><input type='password' id='repPassword{{$thisrep->repID}}' value="******"></td>
+								<!-- <td><input type='text' id='repName{{$thisrep->repID}}' value={{ $thisrep->repName }}></td> -->
+								<td style="min-width:100px;">
+									<select id='repPriority{{$thisrep->repID}}'>
+										@for ($i = 1; $i <= 5; $i++)
+											@if ($thisrep->repPriority == $i)
+												<option value="{{$i}}" selected>{{$i}}</option>
+											@else
+												<option value="{{$i}}">{{$i}}</option>
+											@endif
+										@endfor
+									</select>
+								</td>
+								<td>
+									<select id='repPosition{{$thisrep->repID}}'>
+										@foreach (["Admin", "ACCT", "BD", "IT", "Marketing", "Temp"] as $position)
+											@if ($thisrep->repPosition == $position)
+												<option value="{{$position}}" selected>{{$position}}</option>
+											@else
+												<option value="{{$position}}">{{$position}}</option>
+											@endif
+										@endforeach
+									</select>
+								</td>
+								<!-- <td><input type='text' id='employeeID{{$thisrep->repID}}' value={{ $thisrep->employeeID }}></td> -->
+								<td><input type='text' id='repFirstName{{$thisrep->repID}}' value={{ $thisrep->repFirstName }}></td>
+								<td><input type='text' id='repLastName{{$thisrep->repID}}' value={{ $thisrep->repLastName }}></td>
+							</tr>
+						@endforeach
+					</tbody>
+				</table>
+			</div>
 
-	<body>
-		<!-- Fixed navbar -->
-		<nav class="navbar navbar-inverse navbar-fixed-top">
-			<div class="container">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a class="navbar-brand" style="padding-top:5px;"><img src="{{asset('img/icon.png')}}" class="img-rounded img-responsive" width="45px" height="45px" alt=""></a>
-					<a class="navbar-brand" href="/MainPage">91bnb Manage System</a>
-				</div>
+			<div align="center">
+				{{ $reps->links() }}
+			</div>
 
-				<div id="navbar" class="navbar-collapse collapse">
-					<!-- navbar left -->
-					<ul class="nav navbar-nav">
-						<li><a href="/MainPage">Home</a></li>
-						<li class="active"><a>Representatives</a></li>
-					</ul>
-					<!-- navbar right -->
-					<ul class="nav navbar-nav navbar-right">
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-								<span class="glyphicon glyphicon-user"></span>
-								<span id="username"> {{$rep->repUserName}} </span>
-								<span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu">
-								<li><a href="#">Profile</a></li>
-								<li><a href="#">Change Password</a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="/logout">Log Out</a></li>
-							</ul>
-						</li>
-					</ul>
-				</div><!--/.nav-collapse -->
+			<div style='padding:10px;'>
+				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+					<span class='glyphicon glyphicon-plus'></span>
+					New Representatives
+				</button>
+			</div>
 
-			</div><!--/ container -->
-		</nav>
-
-		<div class='content container' style='margin-top:50px;'>
-			<div class='well trans' style='margin-top:10px;'>
-				<h3 style="text-align:center;">
-					Represenataives
-				</h3>
-				<div class="table-responsive">
-					<table style='text-align:center;' class='table table-bordered'>
-						<tr>
-							<th style="min-width:110px;">Active or Not</th>
-							<th>Modify</th>
-							<th>Active</th>
-							<th>Rep UserName</th>
-							<th>Rep Password</th>
-							<!-- <th>Rep Name</th> -->
-							<th style="min-width:100px;">Rep Priority</th>
-							<th>Rep Position</th>
-							<!-- <th>Employee ID</th> -->
-							<th>Rep FirstName</th>
-							<th>Rep LastName</th>
-						</tr>
-
-						<tbody id="mytable">
-							@foreach ($reps as $thisrep)
-								<tr style='text-align:center;'>
-									@if ($thisrep->active == 1)
-										<td><i class="glyphicon glyphicon-time" style="color:green"></i></td>
-									@else
-										<td><i class="glyphicon glyphicon-time" style="color:grey"></i></td>
-									@endif
-									<td>
-										<button type='button' class='btn btn-primary btn-sm' onclick='modifyRow({{$thisrep->repID}})'>
-											<span class='glyphicon glyphicon-edit'></span>
-											Modify
-										</button>
-									</td>
-									@if ($thisrep->active == 1)
-										<td><select id='active{{$thisrep->repID}}'><option value=1 selected>Yes</option><option value=0>No</option></td>
-									@else
-										<td><select id='active{{$thisrep->repID}}'><option value=1>Yes</option><option value=0 selected>No</option></td>
-									@endif
-									<td><input type='text' id='repUserName{{$thisrep->repID}}' value={{ $thisrep->repUserName }}></td>
-									<td><input type='password' id='repPassword{{$thisrep->repID}}' value="******"></td>
-									<!-- <td><input type='text' id='repName{{$thisrep->repID}}' value={{ $thisrep->repName }}></td> -->
-									<td style="min-width:100px;">
-										<select id='repPriority{{$thisrep->repID}}'>
-											@for ($i = 1; $i <= 5; $i++)
-												@if ($thisrep->repPriority == $i)
-													<option value="{{$i}}" selected>{{$i}}</option>
-												@else
-													<option value="{{$i}}">{{$i}}</option>
-												@endif
-											@endfor
+			<!------------------------- modal fade of add representative form -------------->
+			<form onsubmit='return false;' method='POST' id="addForm" class='form-horizontal'>
+			<!-- <form method='POST' id="addForm" class='form-horizontal' action='/representatives/add'> -->
+				{{ csrf_field() }}
+				<div class='modal fade' id='myModal' role='dialog'>
+					<div class="modal-dialog modal-md">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title">
+									<span style='color:#337AB7' class='glyphicon glyphicon-plus'></span> Add New Representative
+								</h4>
+							</div>
+							<div class="modal-body">
+								<div class="alert alert-danger" id='errorDiv' style="display:none">
+									<!-- <strong>Whoops!</strong> There were some problems with your input.
+									<br/>
+									<ul>
+										@foreach($errors->all() as $error)
+										<li>{{ $error }}</li>
+										@endforeach
+									</ul> -->
+								</div>
+								<div class='row' style='margin-bottom:5px;'>
+									<div class='col-sm-5 control-label'><span style="color:red">*</span>Representative User Name: </div>
+									<div class='col-sm-4'><input class="form-control input-sm" type='text' name="repUserName" id='UserName' autocomplete='off' ></div>
+								</div>
+								<div class='row' style='margin-bottom:5px;'>
+									<div class='col-sm-5 control-label'><span style="color:red">*</span>Representative Password: </div>
+									<div class='col-sm-4'><input class="form-control input-sm" type='password' name="password" id='Password' autocomplete='off' ></div>
+								</div>
+								<!-- <div class='row'>
+									<div class='col-sm-5'>Representative Name: </div>
+									<div class='col-sm-7'><input type='search' name="repName" id='repName' autocomplete='off' ></div>
+								</div> -->
+								<div class='row' style='margin-bottom:5px;'>
+									<div class='col-sm-5 control-label'>Representative Priority: </div>
+									<div class='col-sm-4'>
+										<select class="form-control input-sm" id='repPriority' name="repPriority">
+											<option value=1 selected>1</option><option value=2>2</option><option value=3>3</option><option value=4>4</option><option value=5>5</option>
 										</select>
-									</td>
-									<td>
-										<select id='repPosition{{$thisrep->repID}}'>
-											@foreach (["Admin", "ACCT", "BD", "IT", "Marketing", "Temp"] as $position)
-												@if ($thisrep->repPosition == $position)
-													<option value="{{$position}}" selected>{{$position}}</option>
-												@else
-													<option value="{{$position}}">{{$position}}</option>
-												@endif
-											@endforeach
+									</div>
+								</div>
+								<div class='row' style='margin-bottom:5px;'>
+									<div class='col-sm-5 control-label'>Representative Position: </div>
+									<div class='col-sm-4'>
+										<select class="form-control input-sm" id='repPosition' name="repPosition">
+											<option value='Admin' selected>Admin</option><option value='ACCT'>ACCT</option><option value='BD'>BD</option><option value='IT'>IT</option><option value='Marketing'>Marketing</option><option value='Temp'>Temp</option>
 										</select>
-									</td>
-									<!-- <td><input type='text' id='employeeID{{$thisrep->repID}}' value={{ $thisrep->employeeID }}></td> -->
-									<td><input type='text' id='repFirstName{{$thisrep->repID}}' value={{ $thisrep->repFirstName }}></td>
-									<td><input type='text' id='repLastName{{$thisrep->repID}}' value={{ $thisrep->repLastName }}></td>
-								</tr>
-							@endforeach
-						</tbody>
-					</table>
-				</div>
-
-				<div align="center">
-					{{ $reps->links() }}
-				</div>
-
-				<div style='padding:10px;'>
-					<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-						<span class='glyphicon glyphicon-plus'></span>
-						New Representatives
-					</button>
-				</div>
-
-				<!------------------------- modal fade of add representative form -------------->
-				<form onsubmit='return false;' method='POST' id="addForm" class='form-horizontal'>
-				<!-- <form method='POST' id="addForm" class='form-horizontal' action='/representatives/add'> -->
-					{{ csrf_field() }}
-					<div class='modal fade' id='myModal' role='dialog'>
-						<div class="modal-dialog modal-md">
-							<div class="modal-content">
-								<div class="modal-header">
-									<button type="button" class="close" data-dismiss="modal">&times;</button>
-									<h4 class="modal-title">
-										<span style='color:#337AB7' class='glyphicon glyphicon-plus'></span> Add New Representative
-									</h4>
-								</div>
-								<div class="modal-body">
-									<div class="alert alert-danger" id='errorDiv' style="display:none">
-										<!-- <strong>Whoops!</strong> There were some problems with your input.
-										<br/>
-										<ul>
-											@foreach($errors->all() as $error)
-											<li>{{ $error }}</li>
-											@endforeach
-										</ul> -->
-									</div>
-									<div class='row' style='margin-bottom:5px;'>
-										<div class='col-sm-5 control-label'><span style="color:red">*</span>Representative User Name: </div>
-										<div class='col-sm-4'><input class="form-control input-sm" type='text' name="repUserName" id='UserName' autocomplete='off' ></div>
-									</div>
-									<div class='row' style='margin-bottom:5px;'>
-										<div class='col-sm-5 control-label'><span style="color:red">*</span>Representative Password: </div>
-										<div class='col-sm-4'><input class="form-control input-sm" type='password' name="password" id='Password' autocomplete='off' ></div>
-									</div>
-									<!-- <div class='row'>
-										<div class='col-sm-5'>Representative Name: </div>
-										<div class='col-sm-7'><input type='search' name="repName" id='repName' autocomplete='off' ></div>
-									</div> -->
-									<div class='row' style='margin-bottom:5px;'>
-										<div class='col-sm-5 control-label'>Representative Priority: </div>
-										<div class='col-sm-4'>
-											<select class="form-control input-sm" id='repPriority' name="repPriority">
-												<option value=1 selected>1</option><option value=2>2</option><option value=3>3</option><option value=4>4</option><option value=5>5</option>
-											</select>
-										</div>
-									</div>
-									<div class='row' style='margin-bottom:5px;'>
-										<div class='col-sm-5 control-label'>Representative Position: </div>
-										<div class='col-sm-4'>
-											<select class="form-control input-sm" id='repPosition' name="repPosition">
-												<option value='Admin' selected>Admin</option><option value='ACCT'>ACCT</option><option value='BD'>BD</option><option value='IT'>IT</option><option value='Marketing'>Marketing</option><option value='Temp'>Temp</option>
-											</select>
-										</div>
-									</div>
-									<div class='row' style='margin-bottom:5px;'>
-										<hr>
-									</div>
-									<!-- <div class='row'>
-										<div class='col-sm-5'>Employee ID: </div>
-										<div class='col-sm-7'><input type='search' name="employeeID" id='employeeID' ></div>
-									</div> -->
-									<div class='row' style='margin-bottom:5px;'>
-										<div class='col-sm-5 control-label'>Rep First Name: </div>
-										<div class='col-sm-4'><input class="form-control input-sm" type='text' name="repFirstName" id='repFirstName' autocomplete='off' ></div>
-									</div>
-									<div class='row' style='margin-bottom:5px;'>
-										<div class='col-sm-5 control-label'>Rep Last Name: </div>
-										<div class='col-sm-4'><input class="form-control input-sm" type='text' name="repLastName" id='repLastName' autocomplete='off' ></div>
 									</div>
 								</div>
-								<div class="modal-footer">
-									<button type='submit' class='btn btn-primary'>Submit</button>
-									<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+								<div class='row' style='margin-bottom:5px;'>
+									<hr>
 								</div>
+								<!-- <div class='row'>
+									<div class='col-sm-5'>Employee ID: </div>
+									<div class='col-sm-7'><input type='search' name="employeeID" id='employeeID' ></div>
+								</div> -->
+								<div class='row' style='margin-bottom:5px;'>
+									<div class='col-sm-5 control-label'>Rep First Name: </div>
+									<div class='col-sm-4'><input class="form-control input-sm" type='text' name="repFirstName" id='repFirstName' autocomplete='off' ></div>
+								</div>
+								<div class='row' style='margin-bottom:5px;'>
+									<div class='col-sm-5 control-label'>Rep Last Name: </div>
+									<div class='col-sm-4'><input class="form-control input-sm" type='text' name="repLastName" id='repLastName' autocomplete='off' ></div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type='submit' class='btn btn-primary'>Submit</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 							</div>
 						</div>
 					</div>
-				</form>
-			</div>
+				</div>
+			</form>
 		</div>
+	</div>
+@endsection
 
-	</body>
+@section('script')
+	<script type="text/javascript" src="{{ asset('js/jquery-1.11.3.js') }}"></script>
 	<script>
 		function modifyRow(repID) {
 			bootbox.dialog({
@@ -363,4 +309,7 @@
 			});
 		});
 	</script>
-</html>
+
+
+@endsection
+
