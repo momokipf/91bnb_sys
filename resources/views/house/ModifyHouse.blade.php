@@ -186,8 +186,17 @@
 					// var option = $("<option></option>").attr("value", data[i]).text(data[i]);
 					// $('#room1Type').append(option);
 					// $('#room2Type').append("<option>" + data[i] + "</option>");
-					var option = "<option> "+data[i]+"</option>";
+					var option = "<option value='" + data[i] + "'> "+data[i]+"</option>";
 					roomtype += option;
+				}
+				var room = "{{$house->houserooms}}";
+				room = room.replace(/&quot;/g, '"');
+				room = JSON.parse(room);
+				// console.log(room);
+
+				for (var i = 1; i <= $("#roomsdiv").children().length; i++) {
+					$("#roomType_"+i).html(roomtype);
+					$("#roomType_"+i).val(room[0].roomType);
 				}
 			});
 
@@ -197,8 +206,15 @@
 					// var option = $("<option></option>").attr("value", data[i]).text(data[i]);
 					// $('#room1Type').append(option);
 					// $('#room2Type').append("<option>" + data[i] + "</option>");
-					var option = "<option> "+data[i]+"</option>";
+					var option = "<option value='" + data[i] + "'> "+data[i]+"</option>";
 					bedtype += option;
+				}
+				var room = "{{$house->houserooms}}";
+				bedT = room.replace(/&quot;/g, '"');
+				bedT = JSON.parse(bedT);
+				for (var i = 1; i <= $("#roomsdiv").children().length; i++) {
+					$("#roomBedType_"+i).html(bedtype);
+					$("#roomBedType_"+i).val(bedT[0].roomBedType);
 				}
 			});
 
@@ -209,8 +225,8 @@
 						   "<input readonly type='number' class='form-control input-sm' name='roomID_"+count+"' value="+count+"></div>"+
 						   "<div class='col-sm-2'><label>Room Type</label>" +
 						   "<select class='form-control input-sm' name='roomType_"+count+"' id='roomType_"+count+" '>"+roomtype+"</select></div></div>"+
-						   "<div class='row'><div class='col-sm-2'><label>Bed Type</label><select class='form-control input-sm' name='roomBedType_"+count+"' id='roomType_"+count+"'>"+bedtype+"</select></div>"+
-						   "<div class='col-sm-2' id='roomBedTypeotherdiv_"+count+"'  style='visibility:hidden;'><label>Bed Type Other</label>"+
+						   "<div class='row'><div class='col-sm-2'><label>Bed Type</label><select class='form-control input-sm' name='roomBedType_"+count+"' id='roomBedType_"+count+"'>"+bedtype+"</select></div>"+
+						   "<div class='col-sm-2' id='roomBedTypeotherdiv_"+count+"'><label>Bed Type Other</label>"+
 						   "<input name='roomBedTypeOther_"+count+"' id='roomBedTypeOther_"+count+"' 'text' class='form-control input-sm'></div>"+
 						   "<div class='col-sm-2'><label>Max Guests number</label><input name='maxGuestsnum_"+count+"' id='maxGuestsnum_"+count+"' type='number' class='form-control input-sm' min='0'></div></div>"+
 						   "<div class=row><div class='col-sm-2'><label>Cost Day Price</label><div class='input-group'><span class='input-group-addon'>$</span>"+
@@ -232,7 +248,7 @@
 			});
 
 			$('#removeRoom').click(function(){
-				$("#roomsdiv div:last-child").remove();
+				$("#roomsdiv").children().last().remove();
 			});
 
 			$('#modifyForm').submit(function() {
@@ -275,7 +291,8 @@
 					<div class='row'>
 						<div class='col-sm-3'>
 							<label>House ID</label>
-							<input class='form-control input-sm' value="{{$house->fullHouseID}}" readonly>
+							<input class='form-control input-sm' name="fullHouseID" value="{{$house->fullHouseID}}" readonly>
+							<input class='form-control input-sm' type="hidden" name="numberID" value="{{$house->numberID}}">
 						</div>
 
 						<div class='col-sm-2'>
@@ -385,6 +402,8 @@
 				</div>
 
 				<div class="tab-pane fade" id="condition">
+					<fieldset>
+						<!-- <legend>123</legend> -->
 					<h5>Guests Info</h5>
 					<div class="row">
 						<div class="col-sm-2">
@@ -449,6 +468,8 @@
 							@endif
 						</div>
 					</div>
+
+					</fieldset>
 
 					<hr>
 
@@ -853,8 +874,98 @@
 				</div>
 
 				<div class="tab-pane fade" id="room">
-					<div id = "roomsdiv"></div>
+					<div id = "roomsdiv">
+						@for ($i = 1; $i <= count($house->houserooms); $i++)
+							<div class='well' style='background-color:white;margin-bottom:30px' id="room{{$i}}">
+								<h4>Room {{$i}}</h4>
+								<div class='row'>
+									<div class='col-sm-2'>
+										<label>Room ID</label>
+										<input readonly type='number' class='form-control input-sm' name="roomID_{{$i}}" value="{{$i}}">
+									</div>
+									<div class='col-sm-2'>
+										<label>Room Type</label>
+										<select class='form-control input-sm' name="roomType_{{$i}}" id="roomType_{{$i}}">
+										</select>
+									</div>
+								</div>
+								<div class='row'>
+									<div class='col-sm-2'>
+										<label>Bed Type</label>
+										<select class='form-control input-sm' name="roomBedType_{{$i}}" id="roomBedType_{{$i}}">
+										</select>
+									</div>
+									<div class='col-sm-2' id="roomBedTypeotherdiv_{{$i}}">
+										<label>Bed Type Other</label>
+										<input name="roomBedTypeOther_{{$i}}" id="roomBedTypeOther{{$i}}" 'text' class='form-control input-sm' value="{{$house->houserooms[$i-1]->roomBedTypeOther}}">
+									</div>
+									<div class='col-sm-2'>
+										<label>Max Guests number</label>
+										<input name="maxGuestsnum_{{$i}}" id="maxGuestsnum_{{$i}}" type='number' class='form-control input-sm' min='0' value="{{$house->houserooms[$i-1]->roomGuestMax}}">
+									</div>
+								</div>
+								<div class='row'>
+									<div class='col-sm-2'>
+										<label>Cost Day Price</label>
+										<div class='input-group'>
+											<span class='input-group-addon'>$</span>
+											<input type='number' name="roomCostDayPrice_{{$i}}" min='0' class='form-control input-sm' value="{{$house->houserooms[$i-1]->roomCostDayPrice}}">
+											<span class='input-group-addon'>USD</span>
+										</div>
+									</div>
+									<div class='col-sm-2'>
+										<label>Cost Week Price</label>
+										<div class='input-group'>
+											<span class='input-group-addon'>$</span>
+											<input type='number' name="roomCostWeekPrice_{{$i}}" class='form-control input-sm' min='0' value="{{$house->houserooms[$i-1]->roomCostWeekPrice}}">
+											<span class='input-group-addon'>USD</span>
+										</div>
+									</div>
+									<div class='col-sm-2'>
+										<label>Cost Month Price</label>
+										<div class='input-group'>
+											<span class='input-group-addon'>$</span>
+											<input type='number' name="roomCostMonthPrice_{{$i}}" class='form-control input-sm' min='0' value="{{$house->houserooms[$i-1]->roomCostMonthPrice}}">
+											<span class='input-group-addon'>USD</span>
+										</div>
+									</div>
+								</div>
 
+								<div class='row'>
+									<div class='col-sm-2'>
+										<label>Cost Utility</label>
+										<div class='input-group'>
+											<span class='input-group-addon'>$</span>
+											<input type='number' name="roomCostUtility_{{$i}}" class='form-control input-sm' min='0' value="{{$house->houserooms[$i-1]->roomCostUtility}}">
+											<span class='input-group-addon'>USD</span>
+										</div>
+									</div>
+									<div class='col-sm-4'>
+										<label>Utility Note</laebl>
+										<textarea class='form-control' rows='4' cols='50' name="utilityNote_{{$i}}" placeholder='What&#39s included? Ex: Wi-Fi, Electricity, Water, Gas...'>{{$house->houserooms[$i-1]->utilityNote}}</textarea>
+									</div>
+								</div>
+								<div class='row'>
+									<div class='col-sm-2'>
+										<label>Cleaning Fee</label>
+										<div class='input-group'>
+											<span class='input-group-addon'>$</span>
+											<input type='number' name="roomCostCleaning_{{$i}}" class='form-control input-sm' min='0' value="{{$house->houserooms[$i-1]->roomCostCleaning}}">
+											<span class='input-group-addon'>USD</span>
+										</div>
+									</div>
+									<div class='col-sm-2'>
+										<label>Cost Security Deposit</label>
+										<div class='input-group'>
+											<span class='input-group-addon'>$</span>
+											<input type='number' name="roomCostSecurityDeposit_{{$i}}" class='form-control input-sm' value="{{$house->houserooms[$i-1]->roomCostSecurityDeposit}}">
+											<span class='input-group-addon'>USD</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						@endfor
+					</div>
 					<br>
 					<div class="row">
 						<div class="col-sm-3">

@@ -127,7 +127,6 @@
          <th>Email</th>
 
          <th>Modify</th>
-         <th style="min-width:130px;">Add Follow Up</th>
          <th style="min-width:150px;">Show All Follow Up</th>
          <th style="min-width:130px;">Show Detail</th>
        </thead>
@@ -227,17 +226,19 @@
 
               @if($Rep->repPriority >=2)  
                 <!-- To Do :: Add handler function in JS -->
-                <td></td><td></td>
+                <td></td>
               @else 
                 <!-- modify -->
-                <td><button type='button' class='btn btn-primary btn-sm' id='modify' onclick="bootbox_test()"><span class='glyphicon glyphicon-edit'></span> Modify</button></td>
-                <!-- add follow up -->
-                <td><button type='button' class='btn btn-primary btn-sm' id='addfollowup' onclick='addFollowUp({{$query->inquiryID}})'><span class='glyphicon glyphicon-plus'></span> Add Follow Up</button></td>
+                <td><a href="/inquiry/search/modify/{{$query->inquiryID}}"><button type='button' class='btn btn-primary btn-sm' id='modify' onclick="bootbox_test()"><span class='glyphicon glyphicon-edit'></span> Modify</button></a></td>
+                
 
               @endif  
 
               <!-- show all follow up -->
-              <td><button type='button' class='btn btn-primary btn-sm' data-toggle="modal" data-target='#myModal_{{$loop->index}}'><span class='glyphicon glyphicon-eye-open'></span> Show All Follow Up</button></td>
+              <td>
+                <button type='button' class='btn btn-primary btn-sm' data-toggle="modal" data-target='#myModal_{{$loop->index}}'><span class='glyphicon glyphicon-eye-open'></span> Show All Follow Up</button>
+                
+              </td>
 
               <!-- show detail -->
               <td><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target='#myDetail_{{$loop->index}}'><span class="glyphicon glyphicon-list-alt"></span> Show Detail</button>
@@ -518,56 +519,68 @@
             </tr>
 
 
-
             <!--followUp Modal-->
             <div class='modal fade' id='myModal_{{$loop->index}}' style='text-align:center;' role='dialog'>
-            <div class="modal-dialog modal-md">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">&times;</button> 
-                  <h4 class="modal-title"><p>Inquiry Follow Up History of Customer: Fan Pang</p><p>(Inquiry ID: {{$query->inquiryID}})</p></h4></div>
+              <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button> 
+                    <h4 class="modal-title">
+                      <p>Inquiry Follow Up History of Customer: {{$query->quirer->inquirerFirst}} {{$query->quirer->inquirerLast}}</p>
+                      <p>(Inquiry ID: {{$query->inquiryID}})</p>
+                    </h4>
+                  </div>
                   <div class="modal-body">
                     @if($query->getfollowup->count()==0)
-                      <p>No Prior Follow Up Information</p>
+                    <p>No Prior Follow Up Information</p>
                     @else
-                      @foreach($query->getfollowup as $follow)
-                        <div class="panel panel-default">
-                          <div class="panel-heading">Follow Up {{$follow->followupID}} </div>
-                            <ul class="list-group">
-                              <li class="list-group-item">Follow Up Date: {{str_replace('-','/',$follow->followupDate)}} </li>
-                              <li class="list-group-item">Follow Up Status:  {{$follow->followupStatus}}</li>
-                            </ul>
-                        </div>
-                      @endforeach
-                    @endif
-                    <div class="panel panel-default" d='followup_{{$loop->index}}'  hidden>
-
+                    @foreach($query->getfollowup as $follow)
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        Follow Up {{$follow->followupID}} 
+                      </div>
+                      <ul class="list-group">
+                        <li class="list-group-item">Date: {{str_replace('-','/',$follow->followupDate)}} </li>
+                        <li class="list-group-item">Status:  {{$follow->followupStatus}}</li>
+                      </ul>
                     </div>
-
-            
+                      
+                    @endforeach
+                    @endif
+                    <!-- add follow up form -->
+                    <div id='followup_{{$loop->index}}' style="display: none;">
+                      <form id="followupform_{{$loop->index}}" action='MainPage/addfollow' method='POST'>  
+                        {{ csrf_field() }}
+                        <input id='inquiryID' name='inquiryID' type='search' value="{{$query->inquiryID}}" hidden>
+                        <div class="panel panel-default">
+                          <div class="panel-heading">
+                            New Follow Up  
+                          </div>
+                          <ul class="list-group">
+                            <li class="list-group-item">
+                              Date: <input type="text" id="datepicker" name="followupDate" value='{{date("Y-m-d")}}'>
+                            </li>
+                            <li class="list-group-item">Status: <input type="text" name="followupStatus" value=""></li>
+                          </ul>
+                        </div>
+                      </form>
+                      <button class="btn btn-primary btn-sm" type="submit" form="followupform_{{$loop->index}}">Save</button>
+                    </div>
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn-sm" onclick='addFollowUp({{$loop->index}})' >Add Follow Up</button>
+                    <button type='button' class='btn btn-primary btn-sm' id='addfollowup_{{$loop->index}}' onclick='showAddfollowUp("{{$query->inquiryID}}","addfollowup_{{$loop->index}}","followup_{{$loop->index}}")'>Add Follow Up</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 
                   </div>
                 </div>
               </div>
             </div>
-
-
-            @endforeach 
- 
-
+            @endforeach
         </tbody>
        </table>
     </div>
 
-
-
-
-
-        <div class='well' id='followup' hidden>
+        <div class='well'>
                 <div class='input-group'>
                   <form id='addFollowupForm' action='MainPage/addfollow' method='POST' hidden>
                     {{ csrf_field() }}
@@ -704,6 +717,20 @@ $(document).ready(function(){
       }
       });
     }
+
+    // show add follow up
+    function showAddfollowUp(inquiryID, btnID,divID){
+      if(document.getElementById(divID).style.display =='none'){
+
+        document.getElementById(divID).style.display = "block";
+        document.getElementById(btnID).innerHTML = 'cancel follow up';        
+      }else{
+        document.getElementById(divID).style.display = "none";
+        document.getElementById(btnID).innerHTML = 'Add Follow Up';
+      }
+
+    }
+
     // for test
     function addFollowUp(rowNum){
       document.getElementById('addFollowupForm').style.display = 'block';
@@ -711,6 +738,12 @@ $(document).ready(function(){
       document.getElementById('inquiryID').value = rowNum;//document.getElementById('inquiryID').innerHTML;
     }
 
+
+    // for datepicker
+    $( function() {
+      $( "#datepicker" ).datepicker();
+        dateFormat: "mm/dd/yy"
+    } );
 
 
     $(document).ready(function(){

@@ -150,7 +150,6 @@
 							<th>TaoBao User name</th>
 							<th>Email</th>
 							<th>Modify</th>
-							<th>Add Follow Up</th>
 							<th>Show All Follow Up</th>
 							<th>Show Detail</th>
 
@@ -248,9 +247,7 @@
 				            <td></td><td></td>
 				            @else 
 				            <!-- modify -->
-			                <td><button type='button' class='btn btn-primary btn-sm' id='modify' onclick="bootbox_test()"><span class='glyphicon glyphicon-edit'></span> Modify</button></td>
-			                <!-- add follow up -->
-			                <td><button type='button' class='btn btn-primary btn-sm' id='addfollowup' onclick='addFollowUp({{$query->inquiryID}})'><span class='glyphicon glyphicon-plus'></span> Add Follow Up</button></td>
+			                <td><a href="/inquiry/search/modify/{{$query->inquiryID}}"><button type='button' class='btn btn-primary btn-sm' id='modify' onclick="bootbox_test()"><span class='glyphicon glyphicon-edit'></span> Modify</button></a></td>
 
     			            @endif 
 
@@ -539,33 +536,54 @@
 						
 						<!--followUp Modal-->
 			            <div class='modal fade' id='myModal_{{$loop->index}}' style='text-align:center;' role='dialog'>
-			            <div class="modal-dialog modal-md">
-			              <div class="modal-content">
-			                <div class="modal-header">
-			                  <button type="button" class="close" data-dismiss="modal">&times;</button> 
-			                  <h4 class="modal-title"><p>Inquiry Follow Up History of Customer: Fan Pang</p><p>(Inquiry ID: {{$query->inquiryID}})</p></h4></div>
+			              <div class="modal-dialog modal-md">
+			                <div class="modal-content">
+			                  <div class="modal-header">
+			                    <button type="button" class="close" data-dismiss="modal">&times;</button> 
+			                    <h4 class="modal-title">
+			                      <p>Inquiry Follow Up History of Customer: {{$query->quirer->inquirerFirst}} {{$query->quirer->inquirerLast}}</p>
+			                      <p>(Inquiry ID: {{$query->inquiryID}})</p>
+			                    </h4>
+			                  </div>
 			                  <div class="modal-body">
 			                    @if($query->getfollowup->count()==0)
-			                      <p>No Prior Follow Up Information</p>
+			                    <p>No Prior Follow Up Information</p>
 			                    @else
-			                      @foreach($query->getfollowup as $follow)
-			                        <div class="panel panel-default">
-			                          <div class="panel-heading">Follow Up {{$follow->followupID}} </div>
-			                            <ul class="list-group">
-			                              <li class="list-group-item">Follow Up Date: {{str_replace('-','/',$follow->followupDate)}} </li>
-			                              <li class="list-group-item">Follow Up Status:  {{$follow->followupStatus}}</li>
-			                            </ul>
-			                        </div>
-			                      @endforeach
-			                    @endif
-			                    <div class="panel panel-default" d='followup_{{$loop->index}}'  hidden>
-
+			                    @foreach($query->getfollowup as $follow)
+			                    <div class="panel panel-default">
+			                      <div class="panel-heading">
+			                        Follow Up {{$follow->followupID}} 
+			                      </div>
+			                      <ul class="list-group">
+			                        <li class="list-group-item">Date: {{str_replace('-','/',$follow->followupDate)}} </li>
+			                        <li class="list-group-item">Status:  {{$follow->followupStatus}}</li>
+			                      </ul>
 			                    </div>
-
-			            
+			                      
+			                    @endforeach
+			                    @endif
+			                    <!-- add follow up form -->
+			                    <div id='followup_{{$loop->index}}' style="display: none;">
+			                      <form id="followupform_{{$loop->index}}" action='addfollow' method='POST'>  
+			                        {{ csrf_field() }}
+			                        <input id='inquiryID' name='inquiryID' type='search' value="{{$query->inquiryID}}" hidden>
+			                        <div class="panel panel-default">
+			                          <div class="panel-heading">
+			                            New Follow Up  
+			                          </div>
+			                          <ul class="list-group">
+			                            <li class="list-group-item">
+			                              Date: <input type="text" id="datepicker" name="followupDate" value='{{date("Y-m-d")}}'>
+			                            </li>
+			                            <li class="list-group-item">Status: <input type="text" name="followupStatus" value=""></li>
+			                          </ul>
+			                        </div>
+			                      </form>
+			                      <button class="btn btn-primary btn-sm" type="submit" form="followupform_{{$loop->index}}">Save</button>
+			                    </div>
 			                  </div>
 			                  <div class="modal-footer">
-			                    <button type="button" class="btn btn-primary btn-sm" onclick='addFollowUp({{$loop->index}})' >Add Follow Up</button>
+			                    <button type='button' class='btn btn-primary btn-sm' id='addfollowup_{{$loop->index}}' onclick='showAddfollowUp("{{$query->inquiryID}}","addfollowup_{{$loop->index}}","followup_{{$loop->index}}")'>Add Follow Up</button>
 			                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 
 			                  </div>
@@ -587,86 +605,6 @@
 
 	
 	@endisset
-
-	<div class='content container' hidden>
-		<div class='well trans'>
-			<div class="table-responsive">
-				<div id='modal'></div>
-				<table id="searchtable" style='text-align:center;' class='table table-bordered'>
-					<tr style='text-align:center;'>
-						<td style="min-width:130px;">Pass Due or Not</td>
-						<td>Modify</td>
-						<td style="min-width:130px;">Add Follow Up</td>
-						<td style="min-width:150px;">Show All Follow Up</td>
-						<td style="min-width:100px;">Rep. Name</td>
-						<td>RepID</td>
-						<td style="min-width:80px;">Inquiry ID</td>
-						<td style="min-width:110px;">Priority Level</td>
-						<td style="min-width:130px;">Inquiry Date</td>
-						<td style="min-width:130px;">Inquiry Source</td>
-						<td style="min-width:160px;">Inquiry Source Other</td>
-						<td style="min-width:100px;">Purpose</td>
-						<td style="min-width:130px;">Purpose Other</td>
-						<td style="min-width:150px;">Check In Date</td>
-						<td style="min-width:150px;">Check Out Date</td>
-						<td style="min-width:100px;">House ID</td>
-						<td>Country</td>
-						<td>State</td>
-						<td>City</td>
-						<td style="min-width:100px;">City Other</td>
-						<td style="min-width:130px;"># of Rooms</td>
-						<td>Whole/Share</td>
-						<td style="min-width:130px;">House Type</td>
-						<td style="min-width:130px;">House Type Other</td>
-						<td style="min-width:130px;">Room 1 Type</td>
-						<td style="min-width:150px;">Room 1 Type Other</td>
-						<td style="min-width:130px;">Room 2 Type</td>
-						<td style="min-width:150px;">Room 2 Type Other</td>
-						<td style="min-width:130px;">Room 3 Type</td>
-						<td style="min-width:150px;">Room 3 Type Other</td>
-						<td style="min-width:150px;"># of Adults</d>
-						<td style="min-width:150px;"># of Kids</td>
-						<td style="min-width:150px;">Kids Age</td>
-						<td>Pregnant</td>
-						<td style="min-width:130px;">Budget Lower</td>
-						<td style="min-width:130px;">Budget Upper</td>
-            			<td style="min-width:130px;">Budget Unit</td>
-						<td style="min-width:130px;">Have Pet</td>
-						<td style="min-width:130px;">Pet Type</td>
-						<td style="min-width:130px;">Special Note</td>
-						<td style="min-width:100px;">Inquirer ID</td>
-						<td style="min-width:160px;">Inquirer First Name</td>
-						<td style="min-width:160px;">Inquirer Last Name</td>
-						<td style="min-width:160px;">US Phone #</td>
-						<td style="min-width:350px;">Other Phone # Country</td>
-						<td style="min-width:160px;">Other Phone #</td>
-						<td>Email</td>
-						<td style="min-width:150px;">TaoBao User Name</td>
-						<td style="min-width:130px;">WeChat Name</td>
-						<td style="min-width:130px;">WeChat ID</td>
-						<td style="min-width:180px;">Status</td>
-						<td style="min-width:200px;">Reason Of Decline</td>
-						<td style="min-width:200px;">Note</td>
-						<td style="min-width:200px;">Comment</td>
-					</tr>
-					<tbody id='mytable'></tbody>
-				</table>
-			</div>
-
-			<div class='well' id='followup' hidden>
-				<div class='input-group'>
-				<form id='addFollowupForm' action='addFollowup.php' method='GET' hidden>
-					<p>Inquiry ID: <input id='inquiryID' name='inquiryID' type='search'/></p>
-					<p>Follow Up Date: <input id='followupDate' name='followupDate' type='date' value='<?php echo date("Y-m-d")?>'></p>
-					<p>Follow Up Status: <input id='followupStatus' name='followupStatus' type='search' size=130></p>
-					<input type='submit' class="btn btn-default" id='addFollowupSubmit' name='addFollowupFromDisplay' value='Submit'>
-					<button type='button' class="btn btn-default" onclick='document.getElementById("addFollowupForm").style.display="none";document.getElementById("followup").style.display="none";'>Hide</button>
-				</form>
-			</div>
-		</div>
-
-	
-
 		
 
         <button id="extSearch" type='button' class="btn btn-success">Extract Search Results</button>
@@ -694,6 +632,19 @@
 	<script src="{{asset('js/jquery-ui.js')}}"></script>
 
 	<script>
+
+		// show add follow up
+	    function showAddfollowUp(inquiryID, btnID,divID){
+	      if(document.getElementById(divID).style.display =='none'){
+
+	        document.getElementById(divID).style.display = "block";
+	        document.getElementById(btnID).innerHTML = 'cancel follow up';        
+	      }else{
+	        document.getElementById(divID).style.display = "none";
+	        document.getElementById(btnID).innerHTML = 'Add Follow Up';
+	      }
+
+	    }
 
 
 		function filterInquiry(){

@@ -32,7 +32,10 @@ Route::get('resource/{country}/{state}','ResourceController@getCity');
 Route::get('inquiry/add','InquirysController@addIndex');
 Route::post('inquiry/add','InquirysController@store');
 Route::get('inquiry/search','InquirysController@searchIndex');
+Route::get('inquiry/search/modify/{inquiryID}','InquirysController@modifyinquiry');
 Route::get('inquiry/search/result','InquirysController@search');
+Route::post('inquiry/search/addfollow','FollowUpController@store');
+
 
 Route::get('inquiry/{post}','InquirysController@show');
 
