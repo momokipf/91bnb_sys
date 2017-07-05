@@ -182,6 +182,10 @@ class InquirysController extends Controller
                 ->with('Rep',Auth::user());
     }
 
+    public function update(Request $request){
+        Log::info($request->all());
+    }
+
     // public function result(Request $request){
 
 

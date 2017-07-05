@@ -395,7 +395,7 @@
 										<div class="col-lg-3">
 											<div>
 												<label>Purpose</label>
-												<select id="Purpose" class="form-control" name="Purpose">
+												<select id="Purpose" class="form-control Purpose" name="Purpose">
 												</select>
 											</div>
 										</div>

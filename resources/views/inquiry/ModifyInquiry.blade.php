@@ -5,7 +5,7 @@
 @endsection
 @section('content')
 	<div class="container" style="margin-top:70px;">
-		<form method="post" id="modifyForm">
+		<form method="post" id="modifyForm" action="update">
 			{{csrf_field()}}
 			<ul class="nav nav-tabs">
 				<li class="active"><a data-toggle="tab" href="#basic">Basic</a></li>
@@ -53,8 +53,10 @@
 						<div class="col-lg-2">
 							<div>
 								<label>Country</label>
-								<select name = "country" type = "search" id="country" class="form-control country">
-								</select>
+								<input list="country" name="country" value="{{$inquiry->country}}">
+								<datalist id="country" class="country"></datalist>
+<!-- 								<select name = "country" type = "search" id="country" class="form-control Country">
+								</select> -->
 							</div>
 						</div>
 						<div class="col-lg-2">
@@ -85,28 +87,28 @@
 						<div class="col-lg-2">
 							<div>
 								<label>Source</label>
-								<select id="inquirySource" class="form-control" name="inquirySource">
+								<select id="inquirySource" class="form-control" name="inquirySource" value="{{$inquiry->inquirySource}}">
 								</select>
 							</div>
 						</div>
 						<div class="col-lg-2">
-							<div style="display:none;" id="inquirySourceOtherDiv">
+							<div id="inquirySourceOtherDiv">
 								<label>Source Other</label>
-								<input id="inquirySourceOther" class="form-control" name="inquirySourceOther" placeholder="Enter Source">
+								<input id="inquirySourceOther" class="form-control" name="inquirySourceOther" placeholder="Enter Source" value="{{$inquiry->inquirySourceOther}}">
 							</div>
 						</div>
 						<div class="col-lg-2">
 							<div>
 								<label>Purpose</label>
-								<select id="Purpose" class="form-control" name="Purpose">
+								<select id="Purpose" class="form-control Purpose" name="Purpose">
 								</select>
 							</div>
 						</div>
 
 						<div class="col-lg-2">
-							<div style="display:none;" id="PurposeOtherDiv">
+							<div id="PurposeOtherDiv">
 								<label>Purpose Other</label>
-								<input id="PurposeOther" class="form-control" name="PurposeOther" placeholder="Enter Purpose">
+								<input id="PurposeOther" class="form-control" name="PurposeOther" placeholder="Enter Purpose" value="{{$inquiry->purposeOther}}">
 							</div>
 						</div>
 					</div>
@@ -147,9 +149,9 @@
 							<div>
 								<label>Whole/Share</label>
 								<SELECT id='share' name='share' class="form-control">
-								<OPTION value =  0>Either</OPTION>
-								<OPTION value =  -1>Share</OPTION>
-								<OPTION value = 1>Whole</OPTION>
+								<OPTION value =  0  @if($inquiry->share ==0) selected @endif>Either</OPTION>
+								<OPTION value =  -1 @if($inquiry->share ==-1)selected @endif>Share</OPTION>
+								<OPTION value = 1   @if($inquiry->share ==1) selected @endif>Whole</OPTION>
 								</SELECT>
 							</div>
 						</div>
@@ -164,9 +166,9 @@
 						</div>
 
 						<div class="col-lg-3">
-							<div id="houseTypeOtherDiv" style="display:none;">
+							<div id="houseTypeOtherDiv">
 								<label>House Type Other</label>
-								<input id = "houseTypeOther" name = "houseTypeOther" class="form-control" placeholder="Enter House Type">
+								<input id = "houseTypeOther" name = "houseTypeOther" class="form-control" placeholder="Enter House Type" value="{{$inquiry->houseTypeOther}}">
 							</div>
 						</div>
 					</div>
@@ -183,15 +185,14 @@
 							<div id='room1TypeDiv'>
 								<label>Room 1 Type</label>
 								<select name = "room1Type" id="room1Type" class="form-control">
-								<?//php listtoselect("../list/roomTypeList"); ?>
 								</select>
 							</div>
 						</div>
 
 						<div class="col-lg-2">
-							<div id="room1TypeOtherDiv" style="display:none;">
+							<div id="room1TypeOtherDiv">
 								<label>Room 1 Type Other</label>
-								<input name = "room1TypeOther" type = "search" id="room1TypeOther" class="form-control" placeholder="Enter Room Type">
+								<input name = "room1TypeOther" type = "search" id="room1TypeOther" class="form-control" placeholder="Enter Room Type" value="{{$inquiry->room1TypeOther}}">
 							</div>
 						</div>
 
@@ -199,15 +200,14 @@
 							<div id='room2TypeDiv'>
 								<label>Room 2 Type</label>
 								<select name = "room2Type" id="room2Type" class="form-control">
-								<?//php listtoselect("../list/roomTypeList"); ?>
 								</select>
 							</div>
 						</div>
 
 						<div class="col-lg-2">
-							<div id="room2TypeOtherDiv" style="display:none;">
+							<div id="room2TypeOtherDiv">
 								<label>Room 2 Type Other</label>
-								<input name = "room2TypeOther" type = "search" id="room2TypeOther" class="form-control" placeholder="Enter Room Type">
+								<input name = "room2TypeOther" type = "search" id="room2TypeOther" class="form-control" placeholder="Enter Room Type" value="{{$inquiry->room2TypeOther}}">
 							</div>
 						</div>
 					</div>
@@ -237,8 +237,8 @@
 							<div>
 								<label>Baby</label>
 								<SELECT name="hasBaby" id="hasBaby" class="form-control">
-								<OPTION value =  1>Yes</OPTION>
-								<OPTION value =  0 selected>No</OPTION>
+								<OPTION value = 1 @if($inquiry->hasBaby ==1) selected @endif>Yes</OPTION>
+								<OPTION value = 0 @if($inquiry->hasBaby ==0) selected @endif>No</OPTION>
 								</SELECT>
 							</div>
 						</div>
@@ -249,9 +249,9 @@
 							<div>
 								<label>Pregnant</label>
 								<SELECT id='pregnancy' name='pregnancy' class="form-control">
-								<OPTION value =  0>N/A</OPTION>
-								<OPTION value =  1>Yes</OPTION>
-								<OPTION value = -1>No</OPTION>
+								<OPTION value = 0 @if($inquiry->pregnancy ==0) selected @endif>N/A</OPTION>
+								<OPTION value = 1 @if($inquiry->pregnancy ==1) selected @endif>Yes</OPTION>
+								<OPTION value =-1 @if($inquiry->pregnancy ==-1) selected @endif>No</OPTION>
 								</SELECT>
 							</div>
 						</div>
@@ -260,15 +260,15 @@
 							<div>
 								<label>Pets</label>
 								<SELECT id='pet' name='pet' class="form-control">
-								<OPTION value =  0>N/A</OPTION>
-								<OPTION value =  1>Yes</OPTION>
-								<OPTION value = -1>No</OPTION>
+								<OPTION value = 0 @if($inquiry->pet == 0) selected @endif>N/A</OPTION>
+								<OPTION value = 1 @if($inquiry->pet == 1) selected @endif>Yes</OPTION>
+								<OPTION value =-1 @if($inquiry->pet == -1) selected @endif>No</OPTION>
 								</SELECT>
 							</div>
 						</div>
 
 						<div class="col-lg-2">
-							<div id="petTypeDiv" style="display:none;">
+							<div id="petTypeDiv">
 								<label>Pet Type</label>
 								<input name="petType" type = "search" id="petType" class="form-control">
 							</div>
@@ -292,8 +292,8 @@
 							<div>
 								<label>Budget Unit</label>
 								<select name = "budgetUnit" id="budgetUnit" class="form-control">
-								<option value="0">Per Day</option>
-								<option value="1">Per Month</option>
+								<option value="0" @if($inquiry->budgetUnit == 0) selected @endif>Per Day</option>
+								<option value="1" @if($inquiry->budgetUnit == 1) selected @endif>Per Month</option>
 								</select>
 							</div>
 						</div>
@@ -320,30 +320,78 @@
 @endsection
 
 @section('script')
+	
+
 	<script type="text/javascript">
+		// load util.js
+		loadOpt();
+		load_saving_data();
+		//load_saving_data();
+		//load_saving_data();
+
+		window.onload = function(){
+			console.log("{{$inquiry->inquirySource}}");
+			document.getElementById("inquirySource").value = "{{$inquiry->inquirySource}}";
+			document.getElementById("Purpose").value = "{{$inquiry->purpose}}";
+			document.getElementById("houseType").value = "{{$inquiry->houseType}}";
+			document.getElementById("room1Type").value = "{{$inquiry->room1Type}}";
+			document.getElementById("room2Type").value = "{{$inquiry->room2Type}}";
+			console.log("{{$inquiry->inquirySource}}");
+		}
+
+		function load_saving_data(){
+			document.getElementById("inquirySource").value = "{{$inquiry->inquirySource}}";
+			document.getElementById("Purpose").value = "{{$inquiry->purpose}}";
+			document.getElementById("houseType").value = "{{$inquiry->houseType}}";
+			document.getElementById("room1Type").value = "{{$inquiry->room1Type}}";
+			document.getElementById("room2Type").value = "{{$inquiry->room2Type}}";
+
+		}
+
+		$(document).ready(function() {
+		    $("#inquirySource").value = "{{$inquiry->inquirySource}}";
+		    $("#Purpose").value = "{{$inquiry->purpose}}";
+		});
+
+		// console.log("{{$inquiry->inquirySource}}");
+		
+		// console.log("{{$inquiry->inquirySource}}");
+		
+
+
+
+		// set default saving value
+		// document.getElementById("state").value = "{{$inquiry->state}}";
+		// document.getElementById("city").value = "{{$inquiry->city}}";
+				
+
+
 		$("#inquiryDate").datepicker({
-			  dateFormat: "mm/dd/yy",
+			  dateFormat: "mm-dd-yy",
 			  maxDate: 0
 			});
-			$("#inquiryDate").datepicker("setDate", new Date());
+		$("#inquiryDate").datepicker("setDate", new Date());
 
-			$('#checkIn').datepicker({
-			  dateFormat: "mm/dd/yy",
-			  beforeShow: function () {
-			  $('#checkIn').datepicker('option', 'minDate', 0);
-			  }
-			});
+		$('#checkIn').datepicker({
+		  dateFormat: "mm-dd-yy",
+		  beforeShow: function () {
+		  $('#checkIn').datepicker('option', 'minDate', 0);
+		  }
+		});
 
-			$('#checkOut').datepicker({
-			  dateFormat: "mm/dd/yy",
-			  beforeShow: function () {
-				var checkIn = $('#checkIn').datepicker("getDate");
-				if(checkIn){
-					checkIn.setDate(checkIn.getDate() + 1);
-					$('#checkOut').datepicker('option', 'minDate', checkIn);
-				}
-			  }
-			});
+		$('#checkOut').datepicker({
+		  dateFormat: "mm-dd-yy",
+		  beforeShow: function () {
+			var checkIn = $('#checkIn').datepicker("getDate");
+			if(checkIn){
+				checkIn.setDate(checkIn.getDate() + 1);
+				$('#checkOut').datepicker('option', 'minDate', checkIn);
+			}
+		  }
+		});
+
+
+
 	</script>
 
 
