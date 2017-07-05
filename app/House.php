@@ -4,9 +4,23 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+
+use App\Events\HouseDelete;
+
+use App\Observers\HouseObserver;
 use DB;
+
+
+
+define("FULL_HOUSE_ID_TITLE","91bnb_");
+
 class House extends Model
 {
+
+    public function __construct(array $attributes = array())
+    {
+        parent::__construct($attributes);
+    }
     /*
     *connected database table's name 
     *
@@ -19,7 +33,7 @@ class House extends Model
 	protected $hidden = ['location'];
 
     protected $fillable =['houseID','fullHouseID','houseOwnerID','dateHouseAdded','houseIDByOwner',
-                          'houseAddress','country','state','city','houseZip','longitude','latitude',
+                          'region','houseAddress','country','state','city','houseZip','longitude','latitude',
                           'houseType','houseTypeOther','size','numOfRooms','numOfBaths','numOfBeds',
                           'maxNumOfGuests','onOtherWebsite'];
 
@@ -29,12 +43,25 @@ class House extends Model
 
     protected $primaryKey = 'numberID';
 
+    // protected $events =[
+    //     'deleted' => HouseDelete::class;
+    // ];
+
+
+    public static $fields = ['houseID','fullHouseID','houseOwnerID','dateHouseAdded','houseIDByOwner',
+                              'region','houseAddress','country','state','city','houseZip','longitude','latitude',
+                              'houseType','houseTypeOther','size','numOfRooms','numOfBaths','numOfBeds',
+                              'maxNumOfGuests','onOtherWebsite'];
     // protected $events = [
-    //     'creating' => 
+    //     'deleted' =>  HouseDelete::class,
     // ];
 
     public $timestamps = false;
 
+    // public static function boot(){
+    //     parent::boot();
+    //     House::observe(new HouseObserver());
+    // }
 
     //Table relationship
     public function houseowner(){
@@ -55,6 +82,22 @@ class House extends Model
         return $this->hasOne('App\Housingcondition','numberID');
     }
 
+    public function setHouseID(){
+        $previousHighestID = House::where('country','=',$this->country)
+                              ->where('state','=',$this->state)
+                              ->where('city','=',$this->city)
+                              ->orderBy('fullHouseID','desc')->first();
+
+        if($previousHighestID){
+            $houseid = explode('_',$previousHighestID)[3]+1;
+        }
+        else{
+            $houseid =1;
+        } 
+        $this->houseID = $houseid;
+
+        $this->fullHouseID = FULL_HOUSE_ID_TITLE.$this->state_abbr($this->state).'_'.str_replace(' ','',$this->city).'_'.sprintf('%04d',$this->houseID);
+    }
 
     public function setLocationAttribute($value){
     	$this->attributes['location'] = DB::raw("POINT($value)");
@@ -123,4 +166,60 @@ class House extends Model
 
 
 	*/
+
+    private function state_abbr($name){
+        $states = array(
+            'Alabama'=>'AL',
+            'Alaska'=>'AK',
+            'Arizona'=>'AZ',
+            'Arkansas'=>'AR',
+            'California'=>'CA',
+            'Colorado'=>'CO',
+            'Connecticut'=>'CT',
+            'Delaware'=>'DE',
+            'Florida'=>'FL',
+            'Georgia'=>'GA',
+            'Hawaii'=>'HI',
+            'Idaho'=>'ID',
+            'Illinois'=>'IL',
+            'Indiana'=>'IN',
+            'Iowa'=>'IA',
+            'Kansas'=>'KS',
+            'Kentucky'=>'KY',
+            'Louisiana'=>'LA',
+            'Maine'=>'ME',
+            'Maryland'=>'MD',
+            'Massachusetts'=>'MA',
+            'Michigan'=>'MI',
+            'Minnesota'=>'MN',
+            'Mississippi'=>'MS',
+            'Missouri'=>'MO',
+            'Montana'=>'MT',
+            'Nebraska'=>'NE',
+            'Nevada'=>'NV',
+            'New Hampshire'=>'NH',
+            'New Jersey'=>'NJ',
+            'New Mexico'=>'NM',
+            'New York'=>'NY',
+            'North Carolina'=>'NC',
+            'North Dakota'=>'ND',
+            'Ohio'=>'OH',
+            'Oklahoma'=>'OK',
+            'Oregon'=>'OR',
+            'Pennsylvania'=>'PA',
+            'Rhode Island'=>'RI',
+            'South Carolina'=>'SC',
+            'South Dakota'=>'SD',
+            'Tennessee'=>'TN',
+            'Texas'=>'TX',
+            'Utah'=>'UT',
+            'Vermont'=>'VT',
+            'Virginia'=>'VA',
+            'Washington'=>'WA',
+            'West Virginia'=>'WV',
+            'Wisconsin'=>'WI',
+            'Wyoming'=>'WY'
+            );
+        return $states[$name];
+    }
 }

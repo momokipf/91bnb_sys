@@ -38,6 +38,16 @@ class Houseowner extends Model
     }
 
 
+    public function addHouse($houseinput){
+        $newhouse = new House($houseinput);
+        $newhouse->setHouseID();
+        $point = $houseinput['longitude'].',' .$houseinput['latitude'];
+        $newhouse->setLocationAttribute($point);
+        $this->houses()->save($newhouse);
+        return $newhouse;
+    }
+
+
     /*
     * Find similar houseowner in database
     * @para $keypair: is a array of key-value pairs that need to match in database
@@ -59,5 +69,6 @@ class Houseowner extends Model
         }
         return $query;
     }
+
 
 }

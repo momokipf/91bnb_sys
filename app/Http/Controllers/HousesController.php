@@ -21,7 +21,6 @@ use App\Houseowner;
 
 
 define("GOOGLE_KEY","AIzaSyAAIAQT72snLXj_BITkOc5TMZjpTrzbYRw");
-define("FULL_HOUSE_ID_TITLE","91bnb_");
 
 class HousesController extends Controller
 {
@@ -123,6 +122,14 @@ class HousesController extends Controller
 				->with('count', $count);
 	}
 
+    /*
+    * Moki
+    * Comment:  This function should be included in House Modal.
+    *           The design goal of controler is light weighted controller, heavy modal.
+    *           Same comment applys for function searchByAddress, searchByID, searchByID
+    * Author: Yichen
+    * 
+    */
 	public function getCityCount($state) {
 		$city_count = House::where('state', $state)->select('city', DB::raw('count(*) as count'))->groupBy('city')->get();
 		// Log::info($city_count);
@@ -164,11 +171,6 @@ class HousesController extends Controller
     			->with('house', $house)
     			->with('Rep',Auth::user());
     }
-
-	public function update(Request $request) {
-		Log::info($request->all());
-	}
-
 
     public function searchindex(Request $request)
     {
@@ -225,79 +227,88 @@ class HousesController extends Controller
     	//Log::info($request->all());
     	$input = $request->all();
     	//Log::info($input);
+
     	$validator= Validator::make($input,[
     		'houseOwnerID' => 'bail|required',
     		'houseAddress' => 'required',
     		'houseZip' => 'max:5',
+            'country' => 'required',
+            'state' => 'required',
+            'city' => 'required',
     		]);
-    	if($validator->fails())
-    	{
-    		if($request->ajax()||$request->wantsJson()){
-    			return response()
-    					->json(['status'=>'input error']);
-    		}
-    	}
+
+        if($validator->fails())
+        {
+            Log::info("here?");
+            if($request->ajax()||$request->wantsJson()){
+                return response()
+                        ->json(['status'=>'input error']);
+            }
+        }
+        $zipcode = $request->input('zipcode');
+        $houseAddress = $request->input('houseAddress');
+
+        $country = $request->input('country');
+        $state = $this->getState($request->input('state'));
+        $city = $request->input('city');
 
 
-    	// $houseAddress = $request->input('houseAddress');
 
-    	// if(!$houseAddress){
-    	// 	return ;
-    	// }
-    	// else{
 
-    	// }
-    	//$houseAddress = $input['houseAddress'];
-    	$search_longitude = $request->input('search_longitude',null);
-    	$search_latitude = $request->input('search_latitude',null);
+        $httpclient = new Client(['base_uri'=>'https://maps.googleapis.com/','timeout'=>5.0]);
+        $query_addr=$houseAddress.($country?','.$country:' ').($state?','.$state:' ').($city?','.$city:' ').','.$zipcode;
+        $response =$httpclient->request('GET','maps/api/geocode/json?',['query'=>['address'=>$query_addr,'key'=>GOOGLE_KEY]]);
+        if($response->getStatusCode()=='200')
+        {
+            $obj = json_decode($response->getBody());
+            $status = $obj->status;
+            if($status=='OK')
+            {
+                //$target_pt = $obj->{'results'}[0]->{'geometry'}->{'location'}->{'lat'}.','.$obj->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
 
+                $search_geo = collect($obj->{'results'}[0]->{'geometry'});
+                //$target_pt = collect(['latitude'=>$obj->{'results'}[0]->{'geometry'}->{'location'}->{'lat'},'longitude'=>$obj->{'results'}[0]->{'geometry'}->{'location'}->{'lng'}]);
+                $search_longitude = $obj->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
+                $search_latitude = $obj->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
+                //$isExact = $obj->{'results'}[0]->{'geometry'}->{'location_type'};
+            }
+            // else if($status=='ZERO_RESULTS')
+            // {
+
+            // }
+            // else if($status=='OVER_QUERY_LIMIT')
+            // {
+
+            // }
+            else{
+                if($request->ajax()||$request->wantsJson()){
+                return response()
+                        ->json(['status'=>$status]);
+                }
+            }
+        }
+        else
+        {
+            if($request->ajax()||$request->wantsJson()){
+                return response()
+                        ->json(['status'=>$response->getReasonPhrase]);
+            }
+
+        }
+        Log::info($search_longitude.'   '.$search_latitude);
 
     	$houseowner = \App\Houseowner::find($input['houseOwnerID']);
+
     	if($houseowner){
-    		$previousHighestID = House::where('country','=',$input['country'])
-    						  ->where('state','=',$input['state'])
-    						  ->where('city','=',$input['city'])
-    						  ->orderBy('fullHouseID','desc')->first();
-    						  
-    		if($previousHighestID){
-    			$houseid = explode('_',$previousHighestID)[3]+1;
-    		}
-    		else{
-    			$houseid =1;
-    		} 
 
-    		$fullHouseID = FULL_HOUSE_ID_TITLE.$this->state_abbr($input['state']).'_'.str_replace(' ','',$input['city']).'_'.sprintf('%04d',$houseid);
-    		$point = $input['search_longitude'].',' .$input['search_latitude'];
-    		$newhouse = new House([
-    			'houseID' => $houseid,
-    			'fullHouseID' => $fullHouseID,
-    			'houseOwnerID' => $input['houseOwnerID'],
-    			'dateHouseAdded' => $input['dateHouseAdded'],
-    			'houseIDByOwner' => $input['houseIDByOwner'],
-    			'houseAddress' => $input['houseAddress'],
-    			'country' => $input['country'],
-    			'state' => $input['state'],
-    			'city' => $input['city'],
-    			'houseZip' => $input['houseZip'],
-    			'longitude' =>sprintf('%F',$input['search_longitude']),
-    			'latitude' => sprintf('%F',$input['search_latitude']),
-    			'houseType' => $input['houseType'],
-    			'houseTypeOther' =>$input['houseType'],
-    			'location' => $point,
-    			//repwithOwner
-    			'size' => $input['size'],
-    			'numOfRooms' => $input['numOfRooms'],
-    			'numOfBaths' => $input['numOfBaths'],
-    			'numOfBeds' => $input['numOfBeds'],
-    			'maxNumOfGuests' => $input['maxNumOfGuests'],
-    			'onOtherWebsite' => $input['onOtherWebsite'],
-    			//repWithGuest
-    			]);
+            $houseinput = $request->only(\App\House::$fields);  
+            $houseinput['longitude'] = $search_longitude;
+            $houseinput['latitude'] = $search_latitude;
+            Log::info($houseinput);
+            $newhouse = $houseowner->addHouse($houseinput);
 
-     		$newhouse->setLocationAttribute($point);
 			$room_num = $input['room_num'];   
 			$newrooms = array();
-
 			for($i = 1 ;$i <= $room_num; $i++)
 			{
 				//$roomtypefield = 'roomType_'.($i+1);
@@ -315,13 +326,12 @@ class HousesController extends Controller
 				$newroom->utilityNote = $input['utilityNote_'.$i];
 				$newroom->roomCostCleaning = $input['roomCostCleaning_'.$i];
 				$newroom->roomCostSecurityDeposit = $input['roomCostSecurityDeposit_'.$i];
-				Log::info($newroom);
 				array_push($newrooms,$newroom);
 			}
-			//Log::info($newrooms);
+
 			$priceinput = $request->only(\App\Houseprice::$fields); 
 			$conditioninput = $request->only(\App\Housingcondition::$fields);
-    		$newhouseprice = new \App\Houseprice($priceinput);  //\App\Houseprice::create($priceinput);
+    		$newhouseprice = new \App\Houseprice($priceinput);  
     		$newhousecond = new \App\Housingcondition($conditioninput);
 
     		/*TODO: add house availability table funciton
@@ -329,26 +339,73 @@ class HousesController extends Controller
     		*
 			*/
 
-
-    		// try{
-    		// $newhouse->save();
-    		// $newhouse->houseprice()->save($newhouseprice);
-    		// $newhouse->housingcondition()->save($newhousecond);
-    		// $newhouse->houserooms()->saveMany($newrooms);
-    		// }
-    		// catch(\Illuminate\Database\QueryException $ex){
-					    			
-    		// }
+    		try{
+        		$newhouse->houseprice()->save($newhouseprice);
+        		$newhouse->housingcondition()->save($newhousecond);
+        		$newhouse->houserooms()->saveMany($newrooms);
+    		}
+    		catch(\Illuminate\Database\QueryException $ex){
+                 Log::error("QueryException has been found, need to be handled");
+                 /*
+                 * Need to found a elegant way to do cascade delete;
+                 * one on boot
+                 */   			
+                 $newhouse->delete();
+    		}
 
     		if($request->ajax() || $request->wantsJson()){
-    			Log::info("Send json back to client ".$newhouse);
-    			return response()
-    					->json(['status'=>'success','houseinfo'=>$newhouse])
-    					->header('Content','json');
+    			//Log::info("Send json back to client ".$newhouse);
+    			// return response()
+    			// 		->json(['status'=>'success','houseinfo'=>$newhouse])
+    			// 		->header('Content','json');
+                return ;
     		}
     	}
     }
 
+    public function update(Request $request) {
+        Log::info($request->all());
+        $fullhouseid = $request->input('fullHouseID');
+        $house = House::where('fullHouseID','=',$fullhouseid);
+        if($house){
+            $houseinput = $request->only(House::$fields); 
+            $priceinput = $request->only(\App\Houseprice::$fields);
+            $conditioninput = $request->only(\App\Housingcondition::$fields);
+            foreach($houseinput as $key=>$value){
+                if($value){
+                    $house[$key] = $value;
+                }
+            }
+            $point = $input['longitude'].',' .$input['latitude'];
+            $house->setLocationAttribute($point);
+            $houseprice = $house->houseprice();
+            if($houseprice){
+                foreach($priceinput as $field=>$value){
+                    if($value){
+                        $houseprice[$key] = $value;
+                    }
+                }
+            }
+            //else handler
+
+            $housecond = $house->housingcondition();
+            if($housecond){
+                foreach($conditioninput as $field=>$value){
+                    if($value){
+                        $conditioninput[$key] = $value;
+                    }
+                }
+            }
+
+            $house->save();
+            $houseprice->save();
+            $conditioninput->save();
+
+        }
+        else{
+
+        }
+    }
 
     public function addindex(Request $request)
     {
@@ -371,8 +428,6 @@ class HousesController extends Controller
     	$state = $this->getState($request->input('state'));
     	$city = $request->input('city');
 
-    	// $road_1 = $request->input('crossroadA');
-    	// $road_2 = $request->input('crossroadB');
     	$radius = $request->input('milesrange',2);
 
     	$numOfRoomsFrom = $request->input('numOfRoomsFrom');
@@ -388,7 +443,6 @@ class HousesController extends Controller
 
     	$target_pt = null;
     	$search_geo = null;
-
 
 		if($houseid){
     		$house = House::where('fullHouseID','=',$houseid)->first();
@@ -460,7 +514,7 @@ class HousesController extends Controller
 			}
 			else
 			{
-				Log::info($response->getStatusCode());
+				Log::info($response->getReasonPhrase());
 			}
 		}
 
@@ -499,6 +553,7 @@ class HousesController extends Controller
 
 
     }
+
 
     /*
 	TODO: make it more robusted and maybe combine with the reverse.

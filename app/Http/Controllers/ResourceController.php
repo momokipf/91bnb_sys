@@ -101,6 +101,6 @@ class ResourceController extends Controller
 		// Log::info($content);
 		return response($content)
 				->header('Cache-Control', 'max-stale[3600]')
-				->header('Content-Type', 'json');
+				->header('Content-Type', 'text');
 	}
 }

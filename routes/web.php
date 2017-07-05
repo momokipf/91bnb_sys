@@ -26,6 +26,8 @@ Route::get('logout','LoginController@logout');
 
 Route::get('resource/{typename}','ResourceController@getlist');
 Route::get('resource/{country}/{state}','ResourceController@getCity');
+//Route::get()
+
 
 Route::get('inquiry/add','InquirysController@addIndex');
 Route::post('inquiry/add','InquirysController@store');
