@@ -316,82 +316,41 @@
 
 								<div class="row">
 									<div class="col-lg-3">
-										<div>
-											<label>Country</label>
-											<select name = "country" type = "search" id="country" class="form-control country">
-											</select>
-										</div>
+										<label>Country<span style='color:red;'>*</span></label>
+										<!-- <select name = "country" type = "search" id="country" class="form-control country">
+										</select> -->
+										<input id="country" name="country" class="form-control input-sm" onchange="georesponse(this)" list="countrylist">
+										<datalist id="countrylist" class="country">
+										</datalist>
 									</div>
 
-<<<<<<< HEAD
-									<div class="row">
-										<div class="col-lg-3">
-											<label>Country<span style='color:red;'>*</span></label>
-											<!-- <select name = "country" type = "search" id="country" class="form-control country">
-											</select> -->
-											<input id="country" name="country" class="form-control input-sm" onchange="georesponse(this)" list="countrylist">
-											<datalist id="countrylist" class="country">
-											</datalist>
-=======
 									<div class="col-lg-3">
-										<div>
-											<label>State or Province</label>
-											<select id="state" name="state" class="form-control">
-											<option selected>Select State</option>
-											</select>
->>>>>>> 14325c3b61ffbb8babaabedb39de543d12ba0a56
-										</div>
+										<label>State or Province<span style='color:red;'>*</span></label>
+										<!-- <select id="state" name="state" class="form-control">
+										<option selected>Select State</option>
+										</select> -->
+										<input id="state" name="state" class="form-control input-sm" onchange="georesponse(this)" list="statelist">
+										<datalist id="statelist">
+										<datalist>
 									</div>
 
-<<<<<<< HEAD
-										<div class="col-lg-3">
-											<label>State<span style='color:red;'>*</span></label>
-											<!-- <select id="state" name="state" class="form-control">
-											<option selected>Select State</option>
-											</select> -->
-											<input id="state" name="state" class="form-control input-sm" onchange="georesponse(this)" list="statelist">
-											<datalist id="statelist">
-											<datalist>
-=======
 									<div class="col-lg-3">
-										<div>
-											<label>City</label>
-											<select name="city" id="city" class="form-control">
+											<label>City<span stype='color:red;'>*</span></label>
+											<!-- <select name="city" id="city" class="form-control">
 											<option selected>Select City</option>
-											</select>
->>>>>>> 14325c3b61ffbb8babaabedb39de543d12ba0a56
-										</div>
+											</select> -->
+											<input id= "city" name="city" class="form-control input-sm" list="citylist">
+											<span id = "validity"></span>
+											<datalist id="citylist">
+											</datalist>
 									</div>
-
-<<<<<<< HEAD
-										<div class="col-lg-3">
-											<div>
-												<label>City<span stype='color:red;'>*</span></label>
-												<!-- <select name="city" id="city" class="form-control">
-												<option selected>Select City</option>
-												</select> -->
-												<input id= "city" name="city" class="form-control input-sm" list="citylist">
-												<span id = "validity"></span>
-												<datalist id="citylist">
-												</datalist>
-											</div>
-=======
 									<div class="col-lg-3">
-										<div>
-											<label>City Other</label>
-											<input name="cityOther" id="cityOther" class="form-control" type="search">
->>>>>>> 14325c3b61ffbb8babaabedb39de543d12ba0a56
-										</div>
+										<label>City Other</label>
+										<input name="cityOther" id="cityOther" class="form-control" type="search">
 									</div>
 								</div>
 
-<<<<<<< HEAD
-										<div class="col-lg-3" style="display:none;">
-											<div>
-												<label>City Other</label>
-												<input name="cityOther" id="cityOther" class="form-control" type="search">
-											</div>
-=======
+
 								<div class="row">
 									<div class="col-lg-3">
 										<div>
@@ -404,7 +363,6 @@
 										<div style="display:none;" id="inquirySourceOtherDiv">
 											<label>Source Other</label>
 											<input id="inquirySourceOther" class="form-control" name="inquirySourceOther" placeholder="Enter Source">
->>>>>>> 14325c3b61ffbb8babaabedb39de543d12ba0a56
 										</div>
 									</div>
 
@@ -505,113 +463,31 @@
 
 								<div id="roomTypeDiv">
 									<div class="row">
-										<div class="col-lg-3">
-											<div id='room1TypeDiv' style="display:none;">
-												<label>Room 1 Type</label>
-												<select name = "room1Type" id="room1Type" class="form-control">
-												<?//php listtoselect("../list/roomTypeList"); ?>
-												</select>
-											</div>
+										<div class="col-lg-3" id='room1TypeDiv' style="display:none;">
+											<label>Room 1 Type</label>
+											<select name = "room1Type" id="room1Type" class="form-control roomType">
+											</select>
 										</div>
 
-										<div class="col-lg-3">
-											<div id="room1TypeOtherDiv" style="display:none;">
-												<label>Room 1 Type Other</label>
-												<input name = "room1TypeOther" type = "search" id="room1TypeOther" class="form-control" placeholder="Enter Room Type">
-											</div>
+										<div class="col-lg-3" id="room1TypeOtherDiv" style="display:none;">
+											<label>Room 1 Type Other</label>
+											<input name = "room1TypeOther" type = "search" id="room1TypeOther" class="form-control" placeholder="Enter Room Type">
 										</div>
 
-										<div class="col-lg-3">
-											<div id='room2TypeDiv' style="display:none;">
-												<label>Room 2 Type</label>
-												<select name = "room2Type" id="room2Type" class="form-control">
-												<?//php listtoselect("../list/roomTypeList"); ?>
-												</select>
-											</div>
+										<div class="col-lg-3" id='room2TypeDiv' style="display:none;">
+											<label>Room 2 Type</label>
+											<select name = "room2Type" id="room2Type" class="form-control roomType">
+											</select>
 										</div>
 
-										<div class="col-lg-3">
-											<div id="room2TypeOtherDiv" style="display:none;">
-												<label>Room 2 Type Other</label>
-												<input name = "room2TypeOther" type = "search" id="room2TypeOther" class="form-control" placeholder="Enter Room Type">
-											</div>
+										<div class="col-lg-3" id="room2TypeOtherDiv" style="display:none;">
+											<label>Room 2 Type Other</label>
+											<input name = "room2TypeOther" type = "search" id="room2TypeOther" class="form-control" placeholder="Enter Room Type">
 										</div>
 
 									</div>
 
-									<!-- <div class="row">
-										<div class="col-lg-3">
-											<div>
-												<label>Room 2 Type</label>
-												<select name = "room2Type" id="room2Type" class="form-control">
-												<?//php listtoselect("../list/roomTypeList"); ?>
-												</select>
-											</div>
-										</div>
-
-										<div class="col-lg-3">
-											<div id="room2TypeOtherDiv" style="display:none;">
-												<label>Room 2 Type Other</label>
-												<input name = "room2TypeOther" type = "search" id="room2TypeOther" class="form-control" placeholder="Enter Room Type">
-											</div>
-										</div>
-									</div>
-
-<<<<<<< HEAD
-									<div id="roomTypeDiv">
-										<div class="row">
-											<div class="col-lg-3" id='room1TypeDiv' style="display:none;">
-												<div >
-													<label>Room 1 Type</label>
-													<select name = "room1Type" id="room1Type" class="form-control roomType">
-													<?//php listtoselect("../list/roomTypeList"); ?>
-													</select>
-												</div>
-=======
-									<div class="row">
-										<div class="col-lg-3">
-											<div>
-												<label>Room 3 Type</label>
-												<select name = "room3Type" id="room3Type" class="form-control">
-												<?//php listtoselect("../list/roomTypeList"); ?>
-												</select>
->>>>>>> 14325c3b61ffbb8babaabedb39de543d12ba0a56
-											</div>
-										</div>
-
-<<<<<<< HEAD
-											<div class="col-lg-3" id="room1TypeOtherDiv" style="display:none;min-height: 0px;">
-												<div>
-													<label>Room 1 Type Other</label>
-													<input name = "room1TypeOther" type = "search" id="room1TypeOther" class="form-control" placeholder="Enter Room Type">
-												</div>
-=======
-										<div class="col-lg-3">
-											<div id="room3TypeOtherDiv" style="display:none;">
-												<label>Room 3 Type Other</label>
-												<input name = "room3TypeOther" type = "search" id="room3TypeOther" class="form-control" placeholder="Enter Room Type">
->>>>>>> 14325c3b61ffbb8babaabedb39de543d12ba0a56
-											</div>
-										</div>
-									</div> -->
 								</div>
-
-<<<<<<< HEAD
-											<div class="col-lg-3"  id='room2TypeDiv' style="display:none;">
-												<div >
-													<label>Room 2 Type</label>
-													<select name = "room2Type" id="room2Type" class="form-control roomType">
-													<?//php listtoselect("../list/roomTypeList"); ?>
-													</select>
-												</div>
-											</div>
-
-											<div class="col-lg-3" id="room2TypeOtherDiv" style="display:none;min-height: 0px;">
-												<div>
-													<label>Room 2 Type Other</label>
-													<input name = "room2TypeOther" type = "search" id="room2TypeOther" class="form-control" placeholder="Enter Room Type">
-												</div>
-=======
 
 								<div id="residentInfo">
 									<div class="row">
@@ -619,7 +495,6 @@
 											<div>
 												<label>Number of Adult</label>
 												<input name="numOfAdult" type = "number" size = "1" min="0" id="numOfAdult" class="form-control">
->>>>>>> 14325c3b61ffbb8babaabedb39de543d12ba0a56
 											</div>
 										</div>
 
@@ -753,19 +628,11 @@
 			</div>
 		</div>
 
-<<<<<<< HEAD
-		</div>  <!-- end of well container -->
-		<div class="" style="height:5%"></div>
-	</div>
-	<div id="loadele"></div>
-</body>
-=======
 	</div>  <!-- end of well container -->
-	<div class="" style="height:5%"></div>
-@endsection
->>>>>>> 14325c3b61ffbb8babaabedb39de543d12ba0a56
+	<div id="loadele"></div>
+	@endsection
 
-@section('script')
+	@section('script')
 	<script>
 
 		function loadList(type,element){
