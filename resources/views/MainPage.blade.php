@@ -229,7 +229,7 @@
                 <td></td>
               @else 
                 <!-- modify -->
-                <td><a href="/inquiry/search/modify/{{$query->inquiryID}}"><button type='button' class='btn btn-primary btn-sm' id='modify' onclick="bootbox_test()"><span class='glyphicon glyphicon-edit'></span> Modify</button></a></td>
+                <td><a href="/inquiry/search/modify/{{$query->inquiryID}}"><button type='button' class='btn btn-primary btn-sm' id='modify'><span class='glyphicon glyphicon-edit'></span> Modify</button></a></td>
                 
 
               @endif  

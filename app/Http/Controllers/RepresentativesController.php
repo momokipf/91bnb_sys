@@ -28,7 +28,7 @@ class RepresentativesController extends Controller
 		$reps = Representative::paginate(10);
 
 		return view('rep.showAll')
-				->with('rep', $rep)
+				->with('Rep', $rep)
 				->with('reps', $reps);
 	}
 
