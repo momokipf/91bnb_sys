@@ -48,6 +48,14 @@ class InquirysController extends Controller
     	return $inquiry;
     }
 
+    /** 
+      * @desc:
+      * @parameter
+      * @return:         
+      * @author: Moki Yichen(patch_1) 
+      * @required
+    */
+
     public function store(Request $request)
     {
         $input = $request->all();
@@ -63,37 +71,39 @@ class InquirysController extends Controller
         {
             return $validator->errors();
         }
-        $input["repID"] = Representative::where('repUserName', $input['repWithOwner'])->first()->repID;
-        unset($input['_token']);
-        unset($input['repWithOwner']);
-        unset($input["room1Type"]);
-        unset($input["room1TypeOther"]);
-        unset($input["room2Type"]);
-        unset($input["room2TypeOther"]);
-        Log::info($input);
-        $id = Inquiry::insertGetId($input);
 
-        $data = $request->all();
-        $room = array();
-        for ($i = 1; $i <= 2; $i++) {
-            if ($data["room".$i."Type"] != null) {
-                $room["inquiryID"] = $id;
-                $room["roomID"] = $i;
-                $room["roomType"] = $data["room".$i."Type"];
-                $room["roomTypeOther"] = $data["room".$i."TypeOther"];
-                Log::info($room);
-                RoomRequirement::insert($room);
-            }
-        }
+        // $input["repID"] = Representative::where('repUserName', $input['repWithOwner'])->first()->repID;
+        // unset($input['_token']);
+        // unset($input['repWithOwner']);
+        // unset($input["room1Type"]);
+        // unset($input["room1TypeOther"]);
+        // unset($input["room2Type"]);
+        // unset($input["room2TypeOther"]);
+        // Log::info($input);
+        // $id = Inquiry::insertGetId($input);
 
-        // if($input["repID"] == Auth::user()->repID)
-        // {
-        //     $newquiry = new Inquiry($input);
-        //     Log::info($newquiry);
-        //     $inquirer = Inquirer::find($input["inquirerID"]);
-        //     $inquirer->queries()->save($newquiry);
+        // $data = $request->all();
+        // $room = array();
+        // for ($i = 1; $i <= 2; $i++) {
+        //     if ($data["room".$i."Type"] != null) {
+        //         $room["inquiryID"] = $id;
+        //         $room["roomID"] = $i;
+        //         $room["roomType"] = $data["room".$i."Type"];
+        //         $room["roomTypeOther"] = $data["room".$i."TypeOther"];
+        //         Log::info($room);
+        //         RoomRequirement::insert($room);
+        //     }
         // }
-        return "{}";
+
+        $input["repID"] = Representative::where('repUserName', $input['repWithOwner'])->first()->repID;
+        $newinquiry = new Inquiry($input);
+        Log::info($newinquiry);
+        $inquirer = Inquirer::find($input["inquirerID"]);
+        $inquirer->queries()->save($newinquiry);
+
+        if($request->ajax()||$request->wantsJson()){
+            return response()->json(['status'=>'success']);
+        }
     }
 
     public function searchIndex()

@@ -42,9 +42,33 @@
 				border-bottom: 1px solid #ddd;
 				border-radius: 0px 0px 5px 5px;
 			}
+
+			#loadele{
+				display:    none;
+			    position:   fixed;
+			    z-index:    1000;
+			    top:        0;
+			    left:       0;
+			    height:     100%;
+			    width:      100%;
+			    background: rgba( 255, 255, 255, .8 ) 
+                url('http://sampsonresume.com/labs/pIkfp.gif') 
+                50% 50% 
+                no-repeat;
+			}
+
+			#loadele.loading{
+				overflow:hidden;
+				display:block;
+			}
+
+			#loadele.loading .modal{
+				display:block;
+			}
 			#adjustLineSpacing div, #new_house_owner_form div {
 				margin-bottom: 5px;
 			}
+
             label { font-weight: normal}
             .gap-top { margin-top: 15px;}
             .panel-padding { padding: 20px;}
@@ -322,21 +346,38 @@
 							            </div>
 
 							            <div class="row">
-							            	<div class="col-sm-2">
-											<label>Country<span style='color:red'>*</span></label>
-												<input id="country" name="country" class="form-control input-sm Country" list="hotcountry">
+							            	<div class="col-sm-3">
+											<label>Country<span style='color:red;'>*</span></label>
+												<input id="country" name="country" class="form-control input-sm Country" onchange="georesponse(this)" list="hotcountry">
 												<span id = "validity"></span> 
 												<!-- <select type="text" name="country" id="hotcountry" class="form-control input-sm Country">
 												</select> -->
 												<datalist id="hotcountry">
 												</datalist>
 											</div>
+											<div class="col-sm-3">
+											<label>State<span style='color:red;'>*</span></label>
+												<input id = "state" name="state" class="form-control input-sm" onchange="georesponse(this)" list="statelist">
+												<span id = "validity"></span>
+												<datalist id="statelist">
+												</datalist>
+											</div>
+											<div class="col-sm-3">
+												<label>City<span stype='color:red;'>*</span></label>
+												<input id= "city" name="city" class="form-control input-sm" list="citylist">
+												<span id = "validity"></span>
+												<datalist id="citylist">
+												</datalist>
+											</div>
+
 							            </div>
 
 										<div class="row" hidden>
-											<input id="state" name="state">
-			                                <input id="city" name="city">
+											<!-- <input id="state" name="state"> -->
 			                                <input id="route" name="route">
+			                                <input id="room_num" name="room_num">
+<!-- 			                                <input id="search_latitude" name="search_latitude">
+			                                <input id="search_longitude" name="search_longitude"> -->
 			                                <input id="address" diabled>
 										</div>
 
@@ -938,10 +979,10 @@
 						</div>
 					</div>
 				</div>
-
-
 			</div>
 		</div>
+		<div class="modal" id="loadele"></div>
+
 	</body>
 	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCpF-_i-utIH6cZl94zpu4C5vx_FBDDI9s&libraries=places&language=en&callback=initialize"></script>
 	<script>
@@ -1083,7 +1124,6 @@
 						data:$.param(toSend),
 						datatype:'json',
 						success: function(data){
-							// $("#ErrorMsg").html("");
 							console.log(data);
 							if(data.status=='success'){
 								var str = "House ID: "+ data.houseinfo.fullHouseID + " has been stored.";  
@@ -1092,9 +1132,11 @@
 							else{
 
 							}
+							$('#loadele').removeClass("loading");
 							$('#house_A_result_modal').modal();
 						}
 					});
+					$('#loadele').addClass("loading");
 				}
 			});
 
@@ -1185,19 +1227,8 @@
 				}
 			});
 
-
-
 			// ToDO: if the isocode 
-
-
-			$('#country').change(function(){
-				var country = $(this).val().trim();
-				var isocode = getisocontrycode(country);
-				if(isocode){
-					autocomplete.setComponentRestrictions({'country':isocode});
-				}
-			});
-
+			
 			$('.btnNext').click(function(){
 				$('.nav-tabs > .active').next('li').find('a').trigger('click');
 			});
@@ -1215,6 +1246,7 @@
 				}
 			});
 
+
 			$.get("/resource/hotcountry",function(data,status){
 				$('#hotcountry').empty();
 				for(i=0;i<data.length;++i){
@@ -1223,6 +1255,7 @@
 					$('#hotcountry').append(option);
 				}
 			});
+
 
 			$.get("/resource/roomTypes",function(data,status){
 				roomtype = "";
@@ -1322,10 +1355,92 @@
 			});
 		}
 
+		function georesponse(elem){
+			var value = $(elem).val();
+			var optionFound = false;
+			var datalist = $(elem)[0].list;
+			for(var i=0;i<datalist.options.length;i++){
+				if(value==datalist.options[i].value){
+					optionFound = true;
+					break;
+				}
+			}
+
+			if(!optionFound){
+				$(elem)[0].setCustomValidity('Please select a valid value.');
+					return;
+			}
+
+			//var url = "/resource/";
+			if(elem===$('#country')[0]){
+				//url += value.trim();
+				$.get({
+					url:"/resource/"+value,
+					type:"GET",
+					success: function(data){
+						$('#statelist').empty;
+						for(var i=0;i<data.length;++i){
+							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+							$('#statelist').append(option);
+						}
+					},
+					error: function(jqXHR,error){
+						errorhandler(jqXHR);
+					}
+				});
+			}
+			else if(elem===$('#state')[0]){
+				$.get({
+					url:"/resource/"+$('#country').val()+'/'+value,
+					type:"GET",
+					success:function(data){
+							$('#citylist').empty;
+							$('#citylist').html(data);
+						},
+					error: function(jqXHR,error){
+						alert();
+						errorhandler(jqXHR);
+					}
+
+				});	
+			}
+			else{
+			}
+
+		}
+
+		function errorhandler(jqXHR){
+				bootbox.dialog({
+                    message:jqXHR.statusText,
+                    title: "Error",
+                    buttons: {
+                        main: {
+                            label: "OK",
+                            className: "btn-primary"
+                        }
+                    }
+                });
+			}
+
 		function check(){
 			if($("#houseOwnerID").val() == ""){
 				$("#ErrorMsg").html("House Owner ID cannot be empty.");
 
+				return false;
+			}
+
+			if($('.country').val()==""){
+				$('#ErrorMsg').html("Country Field country cannot be empty");
+				return false;
+			}
+
+			if($('#state').val()==""){
+				$('#ErrorMsg').html("State Field cannot be empty");
+				return false;
+			}
+
+			if($('#city').val()==""){
+				$('#ErrorMsg').html("City Field cannot be empty");
 				return false;
 			}
 
@@ -1338,6 +1453,7 @@
 				$('#ErrorMsg').html("please enter a valid zip code");
 				return false;
 			}
+
 			return true;
 			// if($("#houseZip").val() == ""){
 			// 	$("#ErrorMsg").html("Please input a valid zip code");

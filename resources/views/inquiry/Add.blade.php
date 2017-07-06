@@ -76,6 +76,25 @@
 				-webkit-appearance: searchfield-cancel-button;
 			}
 
+			#loadele{
+				display:    none;
+			    position:   fixed;
+			    z-index:    1000;
+			    top:        0;
+			    left:       0;
+			    height:     100%;
+			    width:      100%;
+			    background: rgba( 255, 255, 255, .8 ) 
+                url('http://sampsonresume.com/labs/pIkfp.gif') 
+                50% 50% 
+                no-repeat;
+			}
+
+			#loadele.loading{
+				overflow:hidden;
+				display:block;
+			}
+
 		</style>
 	</head>
 
@@ -344,32 +363,38 @@
 
 									<div class="row">
 										<div class="col-lg-3">
-											<div>
-												<label>Country</label>
-												<select name = "country" type = "search" id="country" class="form-control country">
-												</select>
-											</div>
+											<label>Country<span style='color:red;'>*</span></label>
+											<!-- <select name = "country" type = "search" id="country" class="form-control country">
+											</select> -->
+											<input id="country" name="country" class="form-control input-sm" onchange="georesponse(this)" list="countrylist">
+											<datalist id="countrylist" class="country">
+											</datalist>
+										</div>
+
+										<div class="col-lg-3">
+											<label>State<span style='color:red;'>*</span></label>
+											<!-- <select id="state" name="state" class="form-control">
+											<option selected>Select State</option>
+											</select> -->
+											<input id="state" name="state" class="form-control input-sm" onchange="georesponse(this)" list="statelist">
+											<datalist id="statelist">
+											<datalist>
 										</div>
 
 										<div class="col-lg-3">
 											<div>
-												<label>State or Province</label>
-												<select id="state" name="state" class="form-control">
-												<option selected>Select State</option>
-												</select>
-											</div>
-										</div>
-
-										<div class="col-lg-3">
-											<div>
-												<label>City</label>
-												<select name="city" id="city" class="form-control">
+												<label>City<span stype='color:red;'>*</span></label>
+												<!-- <select name="city" id="city" class="form-control">
 												<option selected>Select City</option>
-												</select>
+												</select> -->
+												<input id= "city" name="city" class="form-control input-sm" list="citylist">
+												<span id = "validity"></span>
+												<datalist id="citylist">
+												</datalist>
 											</div>
 										</div>
 
-										<div class="col-lg-3">
+										<div class="col-lg-3" style="display:none;">
 											<div>
 												<label>City Other</label>
 												<input name="cityOther" id="cityOther" class="form-control" type="search">
@@ -489,33 +514,33 @@
 
 									<div id="roomTypeDiv">
 										<div class="row">
-											<div class="col-lg-3">
-												<div id='room1TypeDiv' style="display:none;">
+											<div class="col-lg-3" id='room1TypeDiv' style="display:none;">
+												<div >
 													<label>Room 1 Type</label>
-													<select name = "room1Type" id="room1Type" class="form-control">
+													<select name = "room1Type" id="room1Type" class="form-control roomType">
 													<?//php listtoselect("../list/roomTypeList"); ?>
 													</select>
 												</div>
 											</div>
 
-											<div class="col-lg-3">
-												<div id="room1TypeOtherDiv" style="display:none;">
+											<div class="col-lg-3" id="room1TypeOtherDiv" style="display:none;min-height: 0px;">
+												<div>
 													<label>Room 1 Type Other</label>
 													<input name = "room1TypeOther" type = "search" id="room1TypeOther" class="form-control" placeholder="Enter Room Type">
 												</div>
 											</div>
 
-											<div class="col-lg-3">
-												<div id='room2TypeDiv' style="display:none;">
+											<div class="col-lg-3"  id='room2TypeDiv' style="display:none;">
+												<div >
 													<label>Room 2 Type</label>
-													<select name = "room2Type" id="room2Type" class="form-control">
+													<select name = "room2Type" id="room2Type" class="form-control roomType">
 													<?//php listtoselect("../list/roomTypeList"); ?>
 													</select>
 												</div>
 											</div>
 
-											<div class="col-lg-3">
-												<div id="room2TypeOtherDiv" style="display:none;">
+											<div class="col-lg-3" id="room2TypeOtherDiv" style="display:none;min-height: 0px;">
+												<div>
 													<label>Room 2 Type Other</label>
 													<input name = "room2TypeOther" type = "search" id="room2TypeOther" class="form-control" placeholder="Enter Room Type">
 												</div>
@@ -677,11 +702,33 @@
 						</div>
 					</div>
 				</div>
+
+
+			</div>
+
+			<div class="modal fade" id="inquiry_modal" role="dialog" >
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Information</h4>
+						</div>
+						<div class="modal-body">
+							<p id="inquiry_display"></p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal" onclick="$('#inquiry_modal').toggle();location.reload(true);">Add another one</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal" onclick="$('#inquiry_modal').toggle();location.reload(true);HousePair();" > House Pair</button>
+							<a href="/MainPage" class="btn btn-info" role="button">MainPage</a>
+						</div>
+					</div>
+				</div>
 			</div>
 
 		</div>  <!-- end of well container -->
 		<div class="" style="height:5%"></div>
 	</div>
+	<div id="loadele"></div>
 </body>
 
 	<script>
@@ -764,27 +811,8 @@
 				data: toSend,
 				cache:false,
 				success: function(data){
-					console.log(data);
-					// console.log(Object.keys(data));
-					if (Object.keys(data).length === 0) {
-						bootbox.dialog({
-							message: 'The inquiry is successfully added',
-							title: 'Success',
-							buttons: {
-							  success: {
-								  label: 'OK',
-								  className: 'btn-primary'
-							  }
-							}
-						});
-						$('#adjustLineSpacing')[0].reset();
-						vieweffect_2();
-					}
-					else {
-						m = [];
-						for (var each in data) {
-							m.push(data[each] + " ");
-						}
+					$('#loadele').removeClass("loading");
+					if(data.length==0||data.status=="error"){
 						bootbox.dialog({
 							message: m,
 							title: 'Error',
@@ -796,8 +824,13 @@
 							}
 						});
 					}
+					else{
+						$('#inquiry_modal').modal();
+						vieweffect_2();
+					}
 				},
 				error : function(xhr, ajaxOptions, thrownError){
+					$('#loadele').removeClass("loading");
 					bootbox.dialog({
 						message: "Something's wrong, try again later.",
 						title: 'Error',
@@ -810,6 +843,7 @@
 					});
 				}
 			});
+			$('#loadele').addClass("loading");
 		}
 	</script>
 
@@ -973,31 +1007,31 @@
 			});
 
 
-			$("#country").change(function(){
-				if($(this).val().length!=0){
-					var countryfile = $(this).val().replace(' ','');
-					$.get("/resource/"+countryfile,function(data,status){
-					$('#state').empty();
-					for(i=0;i<data.length;++i){
-						var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-						$('#state').append(option);
-					}
-					});
-				}
-			});
+			// $("#country").change(function(){
+			// 	if($(this).val().length!=0){
+			// 		var countryfile = $(this).val().replace(' ','');
+			// 		$.get("/resource/"+countryfile,function(data,status){
+			// 		$('#state').empty();
+			// 		for(i=0;i<data.length;++i){
+			// 			var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+			// 			$('#state').append(option);
+			// 		}
+			// 		});
+			// 	}
+			// });
 
-			$('#state').change(function(){
-				if($(this).val().length!=0){
-					var cityfile = $("#country").val().replace(' ','')+"_"+$(this).val().replace(' ','');
-					$.get("/resource/"+cityfile,function(data,status){
-					$('#city').empty();
-					for(i=0;i<data.length;++i){
-						var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-						$('#city').append(option);
-					}
-					});
-				}
-			});
+			// $('#state').change(function(){
+			// 	if($(this).val().length!=0){
+			// 		var cityfile = $("#country").val().replace(' ','')+"_"+$(this).val().replace(' ','');
+			// 		$.get("/resource/"+cityfile,function(data,status){
+			// 		$('#city').empty();
+			// 		for(i=0;i<data.length;++i){
+			// 			var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+			// 			$('#city').append(option);
+			// 		}
+			// 		});
+			// 	}
+			// });
 
 			$.ajax({
 				type: "GET",
@@ -1088,6 +1122,7 @@
 							bootbox.dialog({
 								message: "Successfully added new inquirer. ID: " + data,
 								title: "Confirmation",
+
 								buttons: {
 									main: {
 										label: "OK",
@@ -1125,6 +1160,64 @@
 	</script>	
 
 	<script>
+		function georesponse(elem){
+			var value = $(elem).val();
+			var optionFound = false;
+			var datalist = $(elem)[0].list;
+			for(var i=0;i<datalist.options.length;i++){
+				if(value==datalist.options[i].value){
+					optionFound = true;
+					break;
+				}
+			}
+
+			if(!optionFound){
+				$(elem)[0].setCustomValidity('Please select a valid value.');
+					return;
+			}
+
+			//var url = "/resource/";
+			if(elem===$('#country')[0]){
+				//url += value.trim();
+				$.get({
+					url:"/resource/"+value,
+					type:"GET",
+					success: function(data){
+						$('#statelist').empty;
+						for(var i=0;i<data.length;++i){
+							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+							$('#statelist').append(option);
+						}
+					},
+					error: function(jqXHR,error){
+						errorhandler(jqXHR);
+					}
+				});
+			}
+			else if(elem===$('#state')[0]){
+				$.get({
+					url:"/resource/"+$('#country').val()+'/'+value,
+					type:"GET",
+					success:function(data){
+							$('#citylist').empty;
+							$('#citylist').html(data);
+						},
+					error: function(jqXHR,error){
+						alert();
+						errorhandler(jqXHR);
+					}
+
+				});	
+			}
+			else{
+				if(ele.value=="Other"){
+					$('#cityOther').parent.show();
+				}
+			}
+
+		}
+
+
 		function findSimilarInquirers(){
 			$("#similarResult").empty();
 			var toSend = $("#new_inquirer_form").serialize();
@@ -1189,6 +1282,16 @@
 					});
 				}
 			});
+		}
+
+		function HousePair(){
+			var data={};
+			data['country'] = $('#country').val();
+			data['state'] = $('#state').val();
+			data['city'] = $('#city').val();
+			var para = $.param(data);
+			console.log(para);
+			window.location.replace("/houses/results?"+para);
 		}
 	</script>
 

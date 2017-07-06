@@ -18,15 +18,10 @@ function loadOpt()
 				}
 
 		});
-		$.get("/resource/countries",function(data,status){
-				$('.country').empty();
-				for(i=0;i<data.length;++i){
-					var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-					$('.country').append(option);
-				}
 
-		});
 
+		$('.country').load("/list/countryListOption");
+		$('.roomType').load("/list/roomTypeListOption");
 		// $.get("/resource/roomTypes",function(data,status){
 		// 		$('#room1Type').empty();
 		// 		$('#room2Type').empty();

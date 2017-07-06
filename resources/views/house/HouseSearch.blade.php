@@ -989,7 +989,7 @@ $(document).ready(function() {
 
         $.ajax({
             type:"GET",
-            url:"/house/search",
+            url:"/houses/realsearch",
             data:$.param(toSend),
             datatype:'json',
             success: function(data){

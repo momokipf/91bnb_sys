@@ -52,6 +52,10 @@ class Inquiry extends Model
 
     //protected static $searchable = ['inquiryID','repID','inquiryDate','checkIn','checkOut','inquiryPriorityLevel'];
 
+    public function getfillable(){
+        return $this->fillable;
+    }
+
     //Table relationship
     public function getfollowup(){
     	return $this->hasMany('App\InquiryFollow','inquiryID');

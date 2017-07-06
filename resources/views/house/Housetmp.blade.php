@@ -30,7 +30,35 @@
               <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
               <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
 	    @php
+            function checkKey(&$arr){
+                if(!array_key_exists('houseAddress', $arr)){
+                    $arr['houseAddress']=NULL;
+                }
+                if(!array_key_exists("country",$arr)){
+                    $arr['country']=NULL;
+                }
+                if(!array_key_exists("state",$arr)){
+                    $arr['state']=NULL;
+                }
+                if(!array_key_exists('city', $arr)){
+                    $arr['city']=NULL;
+                }
+                if(!array_key_exists('zipcode', $arr)){
+                    $arr['zipcode'] = NULL;
+                }
+                if(!array_key_exists('search_latitude', $arr)){
+                    $arr['search_latitude']=NULL;
+                }
+                if(!array_key_exists('search_longitude', $arr)){
+                    $arr['search_longitude']=NULL;
+                }
+                if(!array_key_exists('milesrange', $arr)){
+                    $arr['milesrange']=5;
+                }
+            }
+
             parse_str($_SERVER['QUERY_STRING'], $parameter);
+            checkKey($parameter);
         @endphp
 
 		<style>
@@ -79,7 +107,6 @@
                 font-size: 16px;
             }
             .search input { 
-                width: 250px;
                   height: 32px;
 
                   background: #fcfcfc;
@@ -237,7 +264,7 @@
                 <span class="icon-bar"></span>
               </button>
               <a class="navbar-brand" style="padding-top:5px;"><img src="../img/icon.png" class="img-rounded img-responsive" width="45px" height="45px" alt=""></a>
-              <a class="navbar-brand" href="mainPage">91bnb Manage System</a>
+              <a class="navbar-brand" href="/MainPage">91bnb Manage System</a>
         </div>
 
     <div id="navbar" class="navbar-collapse collapse">
@@ -272,7 +299,7 @@
 <div class="container-fluid" style="margin-top:70px;width:100%;height:100%">
     <div class="row equal" id="searchbar"> 
         <form id="houseSearchForm">   
-            <div class="col-sm-3">
+            <div class="col-sm-4">
                 <div class="search">
                     <span class="fa fa-search"></span>
                     <input class="form-control input-sm" type="text" id="houseAddress" name="houseAddress" value="{{$parameter['houseAddress']}}"
@@ -348,6 +375,40 @@ src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAAIAQT72
     
     */
     function loadDatafromServer(){
+        if(!$('#houseSearchForm').find('input[name="search_latitude"]').val()||!$('#houseSearchForm').find('input[name="search_longitude"]').val()){
+            var houseaddress = $('#houseAddress').val();
+            if(!houseaddress){
+                houseaddress = $('#country').val()+' '+$('#administrative_area_level_1').val()+' '+$('#locality').val();
+            }
+            console.log(houseaddress);
+            $.ajax({
+                url:'https://maps.googleapis.com/maps/api/geocode/json?',
+                type:'GET',
+                data: {'address':houseaddress, 'key':'AIzaSyCpF-_i-utIH6cZl94zpu4C5vx_FBDDI9s'},
+                datatype:'json',
+                success: function(data){
+                    if(data.results.length==0){
+
+                    }
+                    else{
+                        var longitude=data.results[0].geometry.location.lng;
+                        var latitude =data.results[0].geometry.location.lat;
+                        $('#houseSearchForm').find('input[name="search_latitude"]').val(latitude);
+                        $('#houseSearchForm').find('input[name="search_longitude"]').val(longitude);
+                    }
+                    realsearch()
+                },
+                error: function(){
+
+                }
+            });
+        }
+        else{
+            realsearch();
+        }
+    }
+
+    function realsearch(){
         var toSend = $('#houseSearchForm').serializeArray();
         $.ajax({
         type:"GET",
@@ -359,7 +420,6 @@ src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAAIAQT72
                 deleteMarkers();
             }
             //alert(JSON.stringify(data));
-
             var houses = data.houses;
             if(houses){
                 var tablehtml = "";
