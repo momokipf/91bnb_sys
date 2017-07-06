@@ -1,36 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>House Search</title>
-		<meta name="csrf-token" content="{{ csrf_token() }}" />
-		<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+@extends('navbar')
+@section('title', 'House Search')
 
-		<!-- jquery -->
-		<script src="{{asset('js/jquery.min.js')}}"></script>
-
-
-		<!-- bootstrap -->
-		<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
-
-		<script src="{{asset('js/bootstrap.min.js')}}"></script>
-
-		<!-- bootstrap phone (local file) -->
-		<script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
-
-		<!-- alert box -->
-		<script src="{{asset('js/bootbox.min.js')}}"></script>
-		<link rel="stylesheet" href="{{asset('css/self.css')}}">
-		<link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
-		<link rel="stylesheet" href="{{asset('css/priceswitch.css')}}">
-		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
-		<link rel="stylesheet" href="{{asset('css/animate.css')}}">
-		<script src="{{asset('js/util.js')}}"></script>
-		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-		<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
-	<style>
-		html {width:100%; height:100%;}
-		body { line-height: 100%; line-height: 100%; width:100%; height:100%;}
+@section('head')
+    <link rel="stylesheet" href="{{asset('css/priceswitch.css')}}">
+    <link rel="stylesheet" href="{{asset('css/animate.css')}}">
+    <style>
+        html {width:100%; height:100%;}
+        body { line-height: 100%; line-height: 100%; width:100%; height:100%;}
         .marginMe { padding-left: 2%; padding-right: 2%; }
         .row { margin-bottom: 15px;}
         .my-left {margin-left: 15px;}
@@ -64,133 +40,23 @@
             content:"I know";
         }
         .searchdiv{
-        	margin: auto;
-        	width:60%;
+            margin: auto;
+            width:60%;
         }
         .searchtypediv{
             /*margin-left: 5px;*/
             border-left: 4px solid red;
             background-color: WhiteSmoke;
         }
-	</style>
-	<script>
-		var autocomlete;
-		var componentForm = {
-            //street_number: 'short_name',
-            route: 'long_name',
-            locality: 'long_name',
-            administrative_area_level_1: 'short_name',
-            country: 'short_name',
-            postal_code: 'short_name'
-        };
-        var itemsToShow = [
-            'numberID', 'state', 'city', 'houseAddress',
-            'numOfRooms', 'numOfBaths',
-            'OwnerName', 'ownerUsPhoneNumber','ownerWechatUserName',
-            //'costMonthPrice', 'costDayPrice', 'nextAvailableDate',
-            'houseType','minStayTerm','rentShared',
-            // ,'OwnerName', 'ownerUsPhoneNumber', 'ownerWechatUserName','ownerWechatID'
-        ];		
-        function initAutoComplete(){
-            var options = {
-            // bounds: new google.maps.LatLngBounds(southwest, northeast),
-            componentRestrictions: {country: "us"}//Make the range fixed
-            }
+    </style>
+@endsection
 
-            autocomplete = new google.maps.places.Autocomplete(
-                (document.getElementById('houseAddress')),
-                options);
-            autocomplete.addListener('place_changed',geolocate);
-        }
+@section('inbody', ' class=marginMe onload=doload()')
 
-        function initialize(){
-            //initMap();
-            initAutoComplete();
-        }
-        function geolocate(){
-            var place = autocomplete.getPlace();
-            //console.log(JSON.stringify(place));
-            if(place){
-                for(var i = 0 ;i < place.address_components.length;i++){
-                    var addressType = place.address_components[i].types[0];
-                    if(componentForm[addressType]){
-                        var val = place.address_components[i][componentForm[addressType]];
-                        document.getElementById(addressType).value = val;
-                    }
-                }
-                search_geo = place.geometry;
-                document.getElementById('address').value = document.getElementById('houseAddress').value;
-                $('#search_latitude').val(search_geo['location']['lat']);
-                $('#search_longitude').val(search_geo['location']['lng']);
-
-            }
-            else {
-                alert("something wrong");
-            }
-        }
-		function changeswitchview(){
-            /*
-            *display the proper content based on the ownerknownswitch
-            */
-            if(document.getElementById("ownerknownswitch").checked){
-                $('#knowowneridDiv').show();
-                $('#dontknowowneridDiv').hide();
-            }
-            else{
-                $('#knowowneridDiv').hide();
-                $('#dontknowowneridDiv').show();
-            }
-        }
-        function doload(){
-            changeswitchview();
-        }
-	</script>
-</head>
-
-<body class="marginMe" onload="doload()">
-	<!-- Fixed navbar -->
-	<nav class="navbar navbar-inverse navbar-fixed-top">
-	  <div class="container">
-	        <div class="navbar-header">
-	              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-	                <span class="sr-only">Toggle navigation</span>
-	                <span class="icon-bar"></span>
-	                <span class="icon-bar"></span>
-	                <span class="icon-bar"></span>
-	              </button>
-	              <a class="navbar-brand" style="padding-top:5px;"><img src="../img/icon.png" class="img-rounded img-responsive" width="45px" height="45px" alt=""></a>
-	              <a class="navbar-brand" href="mainPage">91bnb Manage System</a>
-	        </div>
-
-	    <div id="navbar" class="navbar-collapse collapse">
-	          <!-- navbar left -->
-	          <ul class="nav navbar-nav">
-	            <li class=""><a href="/MainPage">Home</a></li>
-	            <li class="active"><a>House Search</a></li>
-	          </ul>
-	          <!-- navbar right -->
-	          <ul class="nav navbar-nav navbar-right">
-	              <li class="dropdown">
-	                  <a href="#" class=
-	                  "dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-	                      <span class="glyphicon glyphicon-user"></span>
-	                        {{$Rep->repUserName}}
-	                      <span class="caret"></span></a>
-	                  <ul class="dropdown-menu">
-	                    <li><a href="#">Profile</a></li>
-	                    <li><a href="#">Change Password</a></li>
-	                    <li role="separator" class="divider"></li>
-	                    <li><a href="/logout">Log Out</a></li>
-	                  </ul>
-	                </li>
-	          </ul>
-
-	    </div><!--/.nav-collapse -->
-	  </div><!--/ container -->
-	</nav>
-	<!-- Fixed navbar -->
-	<div class="searchdiv" style="margin-top:70px;">
-		<div class = "col-sm-12">
+@section('content')
+    <!-- Fixed navbar -->
+    <div class="searchdiv" style="margin-top:70px;">
+        <div class = "col-sm-12">
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#aboutLocation">Basic Search</a></li>
                 <!-- <li><a data-toggle="tab" href="#aboutdetail">aboutdetail</a></li> -->
@@ -207,26 +73,26 @@
                     <form id="houseSearchForm" action="/houses/results" method="GET">
                     <!-- {{csrf_field()}} -->
                         <div class="row">
-            				<div class="row">
-        						<div class="col-sm-4">
-        							<label>Inquerier ID</label>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Inquerier ID</label>
                                     @if(isset($inquirerID))
                                     <input class="form-control input-sm" type="text" id="inquirerID" name="inquirerID" value="{{$inquirerID}}" readonly>
                                     @else
                                     <input class="form-control input-sm" type="text" id="inquirerID" name="inquirerID" readonly>
                                     @endif
-        								
-        						</div>
+                                        
+                                </div>
 
-        						<div class="col-sm-4">
-        							<label>Representatives</label>
+                                <div class="col-sm-4">
+                                    <label>Representatives</label>
                                     @if(isset($searchrepID))
                                     <input class="form-control input-sm" type="text" id="repWithOwner" name="repWithOwner" value="{{$repID}}" readonly>
                                     @else
                                     <input class="form-control input-sm" type="text" id="repWithOwner" name="repWithOwner" readonly>
-        							@endif
-        						</div>
-            				</div>
+                                    @endif
+                                </div>
+                            </div>
                             <!-- <div clas="searchtype"> -->
                             <div class="row" hidden>
                                     <input name = "country"  id="country">
@@ -552,211 +418,302 @@
             </div>
         </div>
 
-	</div>
+    </div>
+@endsection
+
+@section('script')
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+    <script>
+        var autocomlete;
+        var componentForm = {
+            //street_number: 'short_name',
+            route: 'long_name',
+            locality: 'long_name',
+            administrative_area_level_1: 'short_name',
+            country: 'short_name',
+            postal_code: 'short_name'
+        };
+        var itemsToShow = [
+            'numberID', 'state', 'city', 'houseAddress',
+            'numOfRooms', 'numOfBaths',
+            'OwnerName', 'ownerUsPhoneNumber','ownerWechatUserName',
+            //'costMonthPrice', 'costDayPrice', 'nextAvailableDate',
+            'houseType','minStayTerm','rentShared',
+            // ,'OwnerName', 'ownerUsPhoneNumber', 'ownerWechatUserName','ownerWechatID'
+        ];      
+        function initAutoComplete(){
+            var options = {
+            // bounds: new google.maps.LatLngBounds(southwest, northeast),
+            componentRestrictions: {country: "us"}//Make the range fixed
+            }
+
+            autocomplete = new google.maps.places.Autocomplete(
+                (document.getElementById('houseAddress')),
+                options);
+            autocomplete.addListener('place_changed',geolocate);
+        }
+
+        function initialize(){
+            //initMap();
+            initAutoComplete();
+        }
+        function geolocate(){
+            var place = autocomplete.getPlace();
+            //console.log(JSON.stringify(place));
+            if(place){
+                for(var i = 0 ;i < place.address_components.length;i++){
+                    var addressType = place.address_components[i].types[0];
+                    if(componentForm[addressType]){
+                        var val = place.address_components[i][componentForm[addressType]];
+                        document.getElementById(addressType).value = val;
+                    }
+                }
+                search_geo = place.geometry;
+                document.getElementById('address').value = document.getElementById('houseAddress').value;
+                $('#search_latitude').val(search_geo['location']['lat']);
+                $('#search_longitude').val(search_geo['location']['lng']);
+
+            }
+            else {
+                alert("something wrong");
+            }
+        }
+        function changeswitchview(){
+            /*
+            *display the proper content based on the ownerknownswitch
+            */
+            if(document.getElementById("ownerknownswitch").checked){
+                $('#knowowneridDiv').show();
+                $('#dontknowowneridDiv').hide();
+            }
+            else{
+                $('#knowowneridDiv').hide();
+                $('#dontknowowneridDiv').show();
+            }
+        }
+        function doload(){
+            changeswitchview();
+        }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAAIAQT72snLXj_BITkOc5TMZjpTrzbYRw&language=en&callback=initialize">
+    </script>
+    <script>
+
+        $(document).ready(function(){
+            $("#ownersearch").click(function(){
+                var toSend = $('#adhouseSearchForm').serialize();
+                $.ajax({
+                    type:"POST",
+                    url:"/houseowner/search/similar",
+                    data:toSend,
+                    datatype:'json',
+                    success: function(data){
+                        var htmlcont = "";
+                        if(data.length==0){
+                            htmlcont = "<span style='color:red;'>No records found.</span>";
+                        }
+                        else{
+                            htmlcont += "<div style='overflow:auto'>"+
+                                        "<table class='table table-striped table-bordered'>"+
+                                        "<tr>"+
+                                        "<th></th>"+
+                                        "<th style='min-width:100px;'>First Name</th>"+
+                                        "<th style='min-width:100px;'>Last Name</th>"+
+                                        "<th style='min-width:100px;'>WeChat ID</th>"+
+                                        "<th style='min-width:160px;'>WeChat Username</th>"+
+                                        "<th style='min-width:50px;'>ID</td>"+
+                                        "</tr>"
+                        for(i = 0 ;i<data.length;++i)
+                        {
+                            htmlcont += "<tr><td data-dismiss='modal' style='cursor:pointer; text-decoration:underline; color:blue;' onclick=vieweffect(" + data[i].houseOwnerID + ")>Select</td>"+
+                                            "<td>"+data[i].first+"</td>"+
+                                            "<td>"+data[i].last +"</td>"+
+                                            "<td>"+data[i].ownerWechatID+"</td>"+
+                                            "<td>"+data[i].ownerWechatUserName+"</td>"+
+                                            "<td>"+data[i].houseOwnerID+"</td></tr>";
+                        }
+                        htmlcont += "</table></div>";
+                        }
+                        $("#display_search_result").html(htmlcont);
 
 
-	<script async defer
-	src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAAIAQT72snLXj_BITkOc5TMZjpTrzbYRw&language=en&callback=initialize">
-	</script>
-	<script>
+                    }
+                });
+            
+            });
+            /*
+            TODO:(1)add link to initialize a GET request to server to get house info
+                 (2)add link to initialize a GET request to server to get houseowner info
+            
+            */
+            $("#myBtn").click(function() {
 
-		$(document).ready(function(){
-			$("#ownersearch").click(function(){
-		        var toSend = $('#adhouseSearchForm').serialize();
-		        $.ajax({
-		            type:"POST",
-		            url:"/houseowner/search/similar",
-		            data:toSend,
-		            datatype:'json',
-		            success: function(data){
-		                var htmlcont = "";
-		                if(data.length==0){
-		                    htmlcont = "<span style='color:red;'>No records found.</span>";
-		                }
-		                else{
-		                    htmlcont += "<div style='overflow:auto'>"+
-		                                "<table class='table table-striped table-bordered'>"+
-		                                "<tr>"+
-		                                "<th></th>"+
-		                                "<th style='min-width:100px;'>First Name</th>"+
-		                                "<th style='min-width:100px;'>Last Name</th>"+
-		                                "<th style='min-width:100px;'>WeChat ID</th>"+
-		                                "<th style='min-width:160px;'>WeChat Username</th>"+
-		                                "<th style='min-width:50px;'>ID</td>"+
-		                                "</tr>"
-		                for(i = 0 ;i<data.length;++i)
-		                {
-		                    htmlcont += "<tr><td data-dismiss='modal' style='cursor:pointer; text-decoration:underline; color:blue;' onclick=vieweffect(" + data[i].houseOwnerID + ")>Select</td>"+
-		                                    "<td>"+data[i].first+"</td>"+
-		                                    "<td>"+data[i].last +"</td>"+
-		                                    "<td>"+data[i].ownerWechatID+"</td>"+
-		                                    "<td>"+data[i].ownerWechatUserName+"</td>"+
-		                                    "<td>"+data[i].houseOwnerID+"</td></tr>";
-		                }
-		                htmlcont += "</table></div>";
-		                }
-		                $("#display_search_result").html(htmlcont);
+                if(!houseSearchcheck()){
+                    return;
+                }
+                $('#houseSearchForm').submit();
+                // var toSend = $('#houseSearchForm').serializeArray();
+                // if($('#houseOwnerID').val()){
+                //     var houseownernode = document.getElementById('houseOwnerID');
+                //     toSend.push({'name':houseownernode.name,'value':houseownernode.value});
+                // }
+                // if($('#houseID').val()){
+                //     var houseidnode= document.getElementById('houseID');
+                //     toSend.push({'name':houseidnode.name,'value':houseidnode.value});
+                // }
+                // if(search_geo){
+                //     var location = search_geo['location'];
+                //     toSend.push({'name':'search_latitude','value':location['lat']});
+                //     toSend.push({'name':'search_longitude','value':location['lng']});
+                // }
 
+                // $.ajax({
+                //     type:"GET",
+                //     url:"/house/search",
+                //     data:$.param(toSend),
+                //     datatype:'json',
+                //     success: function(data){
+                //         if(map){
+                //             deleteMarkers();
+                //         }
+                //         //alert(JSON.stringify(data));
 
-		            }
-		        });
-			
-		    });
-		    /*
-		    TODO:(1)add link to initialize a GET request to server to get house info
-		         (2)add link to initialize a GET request to server to get houseowner info
-		    
-		    */
-		    $("#myBtn").click(function() {
+                //         var houses = data.houses;
+                //         if(houses){
+                //             var tablehtml = "";
+                //             if(houses.length>0){
 
-		        if(!houseSearchcheck()){
-		            return;
-		        }
-		        $('#houseSearchForm').submit();
-		        // var toSend = $('#houseSearchForm').serializeArray();
-		        // if($('#houseOwnerID').val()){
-		        //     var houseownernode = document.getElementById('houseOwnerID');
-		        //     toSend.push({'name':houseownernode.name,'value':houseownernode.value});
-		        // }
-		        // if($('#houseID').val()){
-		        //     var houseidnode= document.getElementById('houseID');
-		        //     toSend.push({'name':houseidnode.name,'value':houseidnode.value});
-		        // }
-		        // if(search_geo){
-		        //     var location = search_geo['location'];
-		        //     toSend.push({'name':'search_latitude','value':location['lat']});
-		        //     toSend.push({'name':'search_longitude','value':location['lng']});
-		        // }
+                //                 $("#showResult").show();
+                //                 resultSM = makeResuiltSM();
 
-		        // $.ajax({
-		        //     type:"GET",
-		        //     url:"/house/search",
-		        //     data:$.param(toSend),
-		        //     datatype:'json',
-		        //     success: function(data){
-		        //         if(map){
-		        //             deleteMarkers();
-		        //         }
-		        //         //alert(JSON.stringify(data));
+                //                 for(var i=0;i<houses.length;++i)
+                //                 {
+                //                     var loc = new google.maps.LatLng(houses[i].latitude,houses[i].longitude);
+                //                     var address = houses[i].houseAddress+','+houses[i].city+','+houses[i].state;
+                //                     var marker = new google.maps.Marker({
+                //                         position:loc,
+                //                         title: houses[i].fullHouseID,
+                //                         map:map
+                //                     });
 
-		        //         var houses = data.houses;
-		        //         if(houses){
-		        //             var tablehtml = "";
-		        //             if(houses.length>0){
+                //                     google.maps.event.addListener(marker,'click',infocallbackClosure(marker,houses[i].fullHouseID,houses[i].numberID,address,setinfohtml));
+                //                     housemarkers.push(marker);
+                //                     if (houses[i]['rentShared'] == '1') {
+                //                         houses[i]['rentShared'] = 'Whole';
+                //                     } else if (houses[i]['rentShared'] == '-1') {
+                //                         houses[i]['rentShared'] = 'Share';
+                //                     } else {
+                //                         houses[i]['rentShared'] = 'Either';
+                //                     }
+                //                     houses[i]['minStayTerm'] = houses[i]['minStayTerm'] + ' ' + houses[i]['minStayUnit'];
 
-		        //                 $("#showResult").show();
-		        //                 resultSM = makeResuiltSM();
+                //                     var rowhtml = "<tr id='house_" + houses[i]['numberID'] + "'>";
+                //                     var numberID = houses[i].numberID;
+                //                     for(var j =0 ; j< itemsToShow.length;++j){
 
-		        //                 for(var i=0;i<houses.length;++i)
-		        //                 {
-		        //                     var loc = new google.maps.LatLng(houses[i].latitude,houses[i].longitude);
-		        //                     var address = houses[i].houseAddress+','+houses[i].city+','+houses[i].state;
-		        //                     var marker = new google.maps.Marker({
-		        //                         position:loc,
-		        //                         title: houses[i].fullHouseID,
-		        //                         map:map
-		        //                     });
+                //                         if(itemsToShow[j]=='numberID'){
+                //                             rowhtml += "<td><a href='#map_div' onclick = 'makeMarkerBounce("+i+");' >" + 
+                //                                         numberID + "</a></td>";
+                //                         }
+                //                         else if(itemsToShow[j] == 'OwnerName'){
+                //                             rowhtml +=  "<td>"+houses[i].first + ' ' + houses[i].last + "</td>";
+                //                         }
+                //                         else if(itemsToShow[j] == 'ownerWechatUserName' ){
+                //                             rowhtml += "<td title='Wechat ID: " + houses[i]['ownerWechatID']+"'>"+houses[i][itemsToShow[j]] +"</td>";
+                //                         }
+                //                         else if(!houses[i][itemsToShow[j]]){
+                //                             rowhtml += "<td>N/A</td>";
+                //                         }
+                //                         else{
+                //                             rowhtml += "<td>"+houses[i][itemsToShow[j]] + "</td>"; 
+                //                         }
+                //                         //console.log(rowhtml);
+                //                     }
 
-		        //                     google.maps.event.addListener(marker,'click',infocallbackClosure(marker,houses[i].fullHouseID,houses[i].numberID,address,setinfohtml));
-		        //                     housemarkers.push(marker);
-		        //                     if (houses[i]['rentShared'] == '1') {
-		        //                         houses[i]['rentShared'] = 'Whole';
-		        //                     } else if (houses[i]['rentShared'] == '-1') {
-		        //                         houses[i]['rentShared'] = 'Share';
-		        //                     } else {
-		        //                         houses[i]['rentShared'] = 'Either';
-		        //                     }
-		        //                     houses[i]['minStayTerm'] = houses[i]['minStayTerm'] + ' ' + houses[i]['minStayUnit'];
+                //                     //rowhtml += "<td><a onclick=' retrieveHouseInfo("+numberID+");' > View House Info</td>";
+                //                     rowhtml += "<td><button type='button' class='btm btn-info' onclick='retrieveHouseInfo("+houses[i].numberID+");resultSM.toHousePage("+i+")'>"+"View House Info"+"</button></td>";
+                //                     rowhtml += "<td><button type='button' class='btm btn-info' onclick='resultSM.toOwnerPage("+i+")'>View Owner Info</button></td>";
+                //                     rowhtml += "<td><button type='button' class='btm btn-info' href='MainPage'>Modify</button></td>"
+                //                     attachHouseOwnerDiv(houses[i],i);
 
-		        //                     var rowhtml = "<tr id='house_" + houses[i]['numberID'] + "'>";
-		        //                     var numberID = houses[i].numberID;
-		        //                     for(var j =0 ; j< itemsToShow.length;++j){
+                //                     rowhtml += "</tr>";
+                //                     tablehtml += rowhtml;
+                //                 }
+                //                 showMarkers();
 
-		        //                         if(itemsToShow[j]=='numberID'){
-		        //                             rowhtml += "<td><a href='#map_div' onclick = 'makeMarkerBounce("+i+");' >" + 
-		        //                                         numberID + "</a></td>";
-		        //                         }
-		        //                         else if(itemsToShow[j] == 'OwnerName'){
-		        //                             rowhtml +=  "<td>"+houses[i].first + ' ' + houses[i].last + "</td>";
-		        //                         }
-		        //                         else if(itemsToShow[j] == 'ownerWechatUserName' ){
-		        //                             rowhtml += "<td title='Wechat ID: " + houses[i]['ownerWechatID']+"'>"+houses[i][itemsToShow[j]] +"</td>";
-		        //                         }
-		        //                         else if(!houses[i][itemsToShow[j]]){
-		        //                             rowhtml += "<td>N/A</td>";
-		        //                         }
-		        //                         else{
-		        //                             rowhtml += "<td>"+houses[i][itemsToShow[j]] + "</td>"; 
-		        //                         }
-		        //                         //console.log(rowhtml);
-		        //                     }
+                //                 $('#fillArea').html(tablehtml);
+                //             }
+                //             else
+                //             {
+                //                 $("#showResult").hide();
+                //                 // Notice that there is no result
+                //             }
+                //         }
 
-		        //                     //rowhtml += "<td><a onclick=' retrieveHouseInfo("+numberID+");' > View House Info</td>";
-		        //                     rowhtml += "<td><button type='button' class='btm btn-info' onclick='retrieveHouseInfo("+houses[i].numberID+");resultSM.toHousePage("+i+")'>"+"View House Info"+"</button></td>";
-		        //                     rowhtml += "<td><button type='button' class='btm btn-info' onclick='resultSM.toOwnerPage("+i+")'>View Owner Info</button></td>";
-		        //                     rowhtml += "<td><button type='button' class='btm btn-info' href='MainPage'>Modify</button></td>"
-		        //                     attachHouseOwnerDiv(houses[i],i);
+                //         if(search_geo){
+                //             mapMovecenter(search_geo);
+                //         }
+                //         else{
+                //             //alert(JSON.stringify(data.geo_center));
+                //             var loc = new google.maps.LatLng(data.geo_center.location.lat,data.geo_center.location.lng);
+                //             search_geo = {'location': loc};
+                //             mapMovecenter(search_geo);
+                //         }
 
-		        //                     rowhtml += "</tr>";
-		        //                     tablehtml += rowhtml;
-		        //                 }
-		        //                 showMarkers();
+                //         search_geo=null;
+                //     }
+                // });
+            });
+        });
+        
+        $('#ownerknownswitch').change(changeswitchview);
 
-		        //                 $('#fillArea').html(tablehtml);
-		        //             }
-		        //             else
-		        //             {
-		        //                 $("#showResult").hide();
-		        //                 // Notice that there is no result
-		        //             }
-		        //         }
+        function vieweffect(id) {
+            $('#houseOwnerID').val(id);
+            $('#ownerknownswitch').attr( "checked",true);
+            changeswitchview();
+        }
 
-		        //         if(search_geo){
-		        //             mapMovecenter(search_geo);
-		        //         }
-		        //         else{
-		        //             //alert(JSON.stringify(data.geo_center));
-		        //             var loc = new google.maps.LatLng(data.geo_center.location.lat,data.geo_center.location.lng);
-		        //             search_geo = {'location': loc};
-		        //             mapMovecenter(search_geo);
-		        //         }
+        function houseSearchcheck(){
+            if(!$('#houseAddress').val()){
+                if($('#houseID').val()||$('#houseOwnerID').val()){
+                    return true;
+                }
+                else {
+                    bootbox.dialog({
+                        message:"Please Enter House Address for searching",
+                        title: "Error",
+                        buttons: {
+                            main: {
+                                label: "OK",
+                                className: "btn-primary"
+                            }
+                        }
+                    });
+                    return false;
+                }
+            }
+            return true;
+        }
+    </script>
+@endsection
 
-		        //         search_geo=null;
-		        //     }
-		        // });
-		    });
-		});
+<!DOCTYPE html>
+<html>
+<head>
 		
-		$('#ownerknownswitch').change(changeswitchview);
+	
+	
+</head>
 
-		function vieweffect(id) {
-        	$('#houseOwnerID').val(id);
-        	$('#ownerknownswitch').attr( "checked",true);
-        	changeswitchview();
-    	}
+<body>
+	
+	
 
-    	function houseSearchcheck(){
-	        if(!$('#houseAddress').val()){
-	            if($('#houseID').val()||$('#houseOwnerID').val()){
-	                return true;
-	            }
-	            else {
-	                bootbox.dialog({
-	                    message:"Please Enter House Address for searching",
-	                    title: "Error",
-	                    buttons: {
-	                        main: {
-	                            label: "OK",
-	                            className: "btn-primary"
-	                        }
-	                    }
-	                });
-	                return false;
-	            }
-	        }
-	        return true;
-    	}
-	</script>
+
+	
 
 </body>
 </html>
