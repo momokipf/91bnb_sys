@@ -26,7 +26,7 @@
 	@yield('head')
 
 </head>
-<body>
+<body @yield('inbody')>
 
 	<!-- Fixed navbar -->
 	<nav class="navbar navbar-inverse navbar-fixed-top">

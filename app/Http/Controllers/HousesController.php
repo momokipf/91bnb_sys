@@ -138,7 +138,7 @@ class HousesController extends Controller
 
 	public function modify() {
         return view('house.Modify')
-                ->with('rep',Auth::user());
+                ->with('Rep',Auth::user());
     }
 
     public function searchByAddress(Request $request) {
