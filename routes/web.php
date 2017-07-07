@@ -34,8 +34,8 @@ Route::post('inquiry/add','InquirysController@store');
 Route::get('inquiry/search','InquirysController@searchIndex');
 Route::get('inquiry/search/modify/{inquiryID}','InquirysController@modifyinquiry');
 Route::get('inquiry/search/result','InquirysController@search');
+Route::post('inquiry/update/{inquiryID}','InquirysController@update');
 Route::post('inquiry/search/addfollow','FollowUpController@store');
-Route::post('inquiry/search/modify/{inquiryID}/update','FollowUpController@update');
 
 
 Route::get('inquiry/{post}','InquirysController@show');

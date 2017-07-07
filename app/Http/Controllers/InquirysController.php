@@ -192,8 +192,57 @@ class InquirysController extends Controller
                 ->with('Rep',Auth::user());
     }
 
-    public function update(Request $request){
+    public function update(Request $request, $inquiryID){
         Log::info($request->all());
+        $inquiry = Inquiry::find($inquiryID);
+        if(!$inquiry){
+            //Invalid ID 
+        }
+        else{
+            //$inquiry->houseOwnerID = $request->input('houseOwnerID');
+            $inquiry->repID = $request->input('repWithOwner');
+            $inquiry->inquiryPriorityLevel = $request->input('inquiryPriorityLevel');
+            $inquiry->country = $request->input('country');
+            $inquiry->state = $request->input('state');
+            $inquiry->city = $request->input('city');
+            $inquiry->cityOther=$request->input('cityOther');
+            $inquiry->inquirySource = $request->input('inquirySource');
+            $inquiry->inquirySourceOther =$request->input('inquirySourceOther');
+            $inquiry->purpose = $request->input('purpose');
+            $inquiry->purposeOther =$request->input('purposeOther');
+            $inquiry->inquiryDate = $request->input('inquiryDate');
+            $inquiry->checkIn = $request->input('checkIn');
+            $inquiry->checkOut = $request->input('checkOut');
+            $inquiry->fullHouseID = $request->input('fullHouseID');
+            $inquiry->share = $request->input('share');
+            $inquiry->houseType = $request->input('HouseType');
+            $inquiry->houseTypeOther = $request->input('houseTypeOther');
+            $inquiry->rooms = $request->input('rooms');
+            $inquiry->room1Type =$request->input('room1Type');
+            $inquiry->room1TypeOther = $request->input('room1TypeOther');
+            $inquiry->room2Type = $request->input('room2Type');
+            $inquiry->room2TypeOther = $request->input('room2TypeOther');
+            $inquiry->numOfAdult = $request->input('numOfAdult');
+            $inquiry->numOfChildren = $request->input('numOfChildren');
+            $inquiry->childAge = $request->input('childAge');
+            $inquiry->hasBaby = $request->input('hasBaby');
+            $inquiry->pregnancy = $request->input('pregnancy');
+            $inquiry->pet = $request->input('pet');
+            $inquiry->petType = $request->input('petType');
+            $inquiry->budgetLower = $request->input('budgetLower');
+            $inquiry->budgetUpper = $request->input('budgetUpper');
+            $inquiry->budgetUnit = $request->input('budgetUnit');
+            $inquiry->specialNote = $request->input('specialNote');
+            $inquiry->save();
+            if($request->ajax()||$request->wantsJson){
+                return response()->json(['status'=>'success'])
+                            ->header('Content','json');
+            }
+
+            return $inquiry;
+        }
+
+
     }
 
     // public function result(Request $request){

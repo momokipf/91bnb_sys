@@ -5,7 +5,7 @@
 @endsection
 @section('content')
 	<div class="container" style="margin-top:70px;">
-		<form method="post" id="modifyForm" action="update">
+		<form method="post" id="modifyForm" action="/inquiry/update/{{$inquiry->inquiryID}}">
 			{{csrf_field()}}
 			<ul class="nav nav-tabs">
 				<li class="active"><a data-toggle="tab" href="#basic">Basic</a></li>
@@ -16,24 +16,24 @@
 				<div class="tab-pane fade in active" id="basic">
 					<div class='row'>
 						<!-- inquiry ID -->
-						<div class='col-sm-2'>
+						<div class='col-lg-2'>
 							<label>Inquiry ID</label>
-							<input name='inquiryID' value="{{$inquiry->inquiryID}}" class='form-control input-sm' disabled>
+							<input name='inquiryID' value="{{$inquiry->inquiryID}}" class='form-control input-sm' disable>
 						</div>
 						<!-- house owner ID -->
-						<div class='col-sm-2'>
+						<div class='col-lg-2'>
 							<label>House Owner ID</label>
-							<input name='houseOwnerID' value="DD" class='form-control input-sm' disabled>
+							<input name='houseOwnerID' value="DD" class='form-control input-sm' readonly>
 						</div>
 						<!-- representative -->
-						<div class='col-sm-3'>
+						<div class='col-lg-3'>
 							<label>Representative</label>
 							<select id="repID" class="form-control" name="repWithOwner">
 							@foreach ($Allreps as $repre)
 								@if ($repre->repUserName == $inquiry->represent->repUserName)
-									<option selected>{{$repre->repUserName}}</option>
+									<option selected value={{$repre->repID}}>{{$repre->repUserName}}</option>
 								@else
-									<option>{{$repre->repUserName}}</option>
+									<option value={{$repre->repID}}>{{$repre->repUserName}}</option>
 								@endif
 							@endforeach
 							</select>
@@ -160,45 +160,43 @@
 					</div>
 					<div class="row">
 						<div class="col-lg-3">
+							<label>Number of Rooms</label>
+							@if($inquiry->rooms)
+								<input type = "number" name = "rooms" id = "rooms" min="0" value="{{$inquiry->rooms}}" class="form-control"/>
+							@else
+								<input type = "number" name = "rooms" id = "rooms" min="0" value="0" class="form-control">
+							@endif
+						</div>
+						<div class="col-lg-3">
 							<div>
-								<label>Number of Rooms</label>
-								@if($inquiry->rooms)
-									<input type = "number" name = "rooms" id = "rooms" min="0" value="{{$inquiry->rooms}}" class="form-control"/>
-								@else
-									<input type = "number" name = "rooms" id = "rooms" min="0" value="0" class="form-control">
-								@endif
+								<label>Add room type (max 2)</label>
+								<button id='addRoomType' type="button" class="btn btn-primary form-control">+</button>
 							</div>
 						</div>
+
 					</div>
 					<div class="row">
-						<div class="col-lg-2">
-							<div id='room1TypeDiv'>
-								<label>Room 1 Type</label>
-								<select name = "room1Type" id="room1Type" class="form-control roomType">
-								</select>
-							</div>
+						<div class="col-lg-2" id='room1TypeDiv' style="display:none;">
+							<label>Room 1 Type</label>
+							<select name = "room1Type" id="room1Type" class="form-control roomType">
+							</select>
 						</div>
 
-						<div class="col-lg-2">
-							<div id="room1TypeOtherDiv">
-								<label>Room 1 Type Other</label>
-								<input name = "room1TypeOther" type = "search" id="room1TypeOther" class="form-control" placeholder="Enter Room Type" value="{{$inquiry->room1TypeOther}}">
-							</div>
+						<div class="col-lg-2" id="room1TypeOtherDiv" style="display:none;">
+							<label>Room 1 Type Other</label>
+							<input name = "room1TypeOther" type = "search" id="room1TypeOther" class="form-control" placeholder="Enter Room Type" value="{{$inquiry->room1TypeOther}}">
 						</div>
 
-						<div class="col-lg-2">
-							<div id='room2TypeDiv'>
-								<label>Room 2 Type</label>
-								<select name = "room2Type" id="room2Type" class="form-control roomType">
-								</select>
-							</div>
+						<div class="col-lg-2" id='room2TypeDiv' style="display:none;">
+							<label>Room 2 Type</label>
+							<select name = "room2Type" id="room2Type" class="form-control roomType">
+							</select>
+						
 						</div>
 
-						<div class="col-lg-2">
-							<div id="room2TypeOtherDiv">
-								<label>Room 2 Type Other</label>
-								<input name = "room2TypeOther" type = "search" id="room2TypeOther" class="form-control" placeholder="Enter Room Type" value="{{$inquiry->room2TypeOther}}">
-							</div>
+						<div class="col-lg-2" id="room2TypeOtherDiv" style="display:none;">
+							<label>Room 2 Type Other</label>
+							<input name = "room2TypeOther" type = "search" id="room2TypeOther" class="form-control" placeholder="Enter Room Type" value="{{$inquiry->room2TypeOther}}">
 						</div>
 					</div>
 					<div class="row">
@@ -393,6 +391,34 @@
 				$('#checkOut').datepicker('option', 'minDate', checkIn);
 			}
 		  }
+		});
+
+		$('#addRoomType').click(function() {
+			console.log($('#room1TypeDiv').css('display'));
+			if ($('#room1TypeDiv').css('display') != 'none') {
+				$('#room2TypeDiv').show();
+			}
+			else {
+				$('#room1TypeDiv').show();
+			}
+		});
+
+		$("#room1Type").change(function(){
+			if($(this).val().trim() == "Other"){
+				$("#room1TypeOtherDiv").show();
+			}else{
+				$("#room1TypeOtherDiv").hide();
+				$('#room1TypeOtherDiv').val('');//empty input
+			}
+		});
+
+		$("#room2Type").change(function(){
+			if($(this).val().trim() == "Other"){
+				$("#room2TypeOtherDiv").show();
+			}else{
+				$("#room2TypeOtherDiv").hide();
+				$('#room2TypeOtherDiv').val('');//empty input
+			}
 		});
 
 		function georesponse(elem){
