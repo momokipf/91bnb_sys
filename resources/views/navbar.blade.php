@@ -17,11 +17,19 @@
 
 
 	<style type="text/css">
+		body {
+		  padding-top: 65px;
+		}
+		@media (max-width: 992px) and (min-width: 768px) {
+		  body {
+		    padding-top: 120px;
+		  }
+		}
+
 		.dropdown:hover .dropdown-menu{
 			display: block;
 		}
 	</style>
-
 
 	@yield('head')
 

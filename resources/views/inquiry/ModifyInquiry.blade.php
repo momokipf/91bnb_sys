@@ -2,9 +2,10 @@
 @section('title', 'Modify Inquiry')
 
 @section('head')
+
 @endsection
 @section('content')
-	<div class="container" style="margin-top:70px;">
+	<div class="container">
 		<form method="post" id="modifyForm" action="update">
 			{{csrf_field()}}
 			<ul class="nav nav-tabs">

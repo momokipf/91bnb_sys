@@ -128,7 +128,7 @@
 @section('inbody', ' class=marginMe onload=doload()')
 
 @section('content')
-    <div class="container-fluid" style="margin-top:70px;width:100%;height:100%">
+    <div class="container-fluid" style="width:100%;height:100%">
         <div class="row equal" id="searchbar"> 
             <form id="houseSearchForm">   
                 <div class="col-sm-4">

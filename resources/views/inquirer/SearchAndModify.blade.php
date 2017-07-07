@@ -31,7 +31,7 @@
 @endsection
 
 @section('content')
-	<div class="container well" style="margin-top:70px;background-color:white;">
+	<div class="container well" style="background-color:white;">
 		<form method = "post" id="inquirer_search_form" onsubmit="return false">
 			{{ csrf_field() }}
 			<h4><span class="badge">1</span> Inquirer Filter</h4>

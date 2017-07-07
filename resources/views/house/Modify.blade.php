@@ -69,7 +69,7 @@
 @section('inbody', ' class=marginMe')
 
 @section('content')
-	<div class="container" style="margin-top:70px;">
+	<div class="container">
 		<ul class="nav nav-tabs">
 			<li class="active"><a data-toggle="tab" href="#address" onclick=hideDiv()>Search By Address</a></li>
 			<li><a data-toggle="tab" href="#houseID" onclick=hideDiv()>Search By House ID</a></li>

@@ -92,7 +92,7 @@
 @endsection
 
 @section('content')
-	<div class="container" style="margin-top:70px;">
+	<div class="container">
 		<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 			<div class="panel panel-default">
 				<div class="panel-heading" role="tab" id="headingOne">
