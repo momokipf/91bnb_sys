@@ -331,18 +331,18 @@
 										</select> -->
 										<input id="state" name="state" class="form-control input-sm" onchange="georesponse(this)" list="statelist">
 										<datalist id="statelist">
-										<datalist>
+										</datalist>
 									</div>
 
 									<div class="col-lg-3">
-											<label>City<span stype='color:red;'>*</span></label>
-											<!-- <select name="city" id="city" class="form-control">
-											<option selected>Select City</option>
-											</select> -->
-											<input id= "city" name="city" class="form-control input-sm" list="citylist">
-											<span id = "validity"></span>
-											<datalist id="citylist">
-											</datalist>
+										<label>City<span stype='color:red;'>*</span></label>
+										<!-- <select name="city" id="city" class="form-control">
+										<option selected>Select City</option>
+										</select> -->
+										<input id= "city" name="city" class="form-control input-sm" list="citylist">
+										<span id = "validity"></span>
+										<datalist id="citylist">
+										</datalist>
 									</div>
 									<div class="col-lg-3">
 										<label>City Other</label>
@@ -369,15 +369,15 @@
 									<div class="col-lg-3">
 										<div>
 											<label>Purpose</label>
-											<select id="Purpose" class="form-control Purpose" name="Purpose">
+											<select id="purpose" class="form-control purpose" name="purpose">
 											</select>
 										</div>
 									</div>
 
 									<div class="col-lg-3">
-										<div style="display:none;" id="PurposeOtherDiv">
+										<div style="display:none;" id="purposeOtherDiv">
 											<label>Purpose Other</label>
-											<input id="PurposeOther" class="form-control" name="PurposeOther" placeholder="Enter Purpose">
+											<input id="purposeOther" class="form-control" name="purposeOther" placeholder="Enter Purpose">
 										</div>
 									</div>
 								</div>
@@ -432,17 +432,15 @@
 									<div class="col-lg-3">
 										<div>
 											<label>House Type</label>
-											<select name = "houseType" id="houseType" class="form-control">
+											<select name = "houseType" id="houseType" class="form-control" onchange="houseTypechange">
 												<?//php listtoselect("../list/houseTypeList"); ?>
 											</select>
 										</div>
 									</div>
 
-									<div class="col-lg-3">
-										<div id="houseTypeOtherDiv" style="display:none;">
+									<div class="col-lg-3" id="houseTypeOtherDiv" style="display:none;">
 											<label>House Type Other</label>
 											<input id = "houseTypeOther" name = "houseTypeOther" class="form-control" placeholder="Enter House Type">
-										</div>
 									</div>
 								</div>
 
@@ -751,7 +749,8 @@
 
 	<script type="text/javascript">
 		$(document).ready(function(){
-			loadOpt();
+			loadOpt();// Load list
+			bindhandler();
 			$("#inquiryDate").datepicker({
 			  dateFormat: "mm/dd/yy",
 			  maxDate: 0
@@ -840,35 +839,6 @@
 						});
 					}
 				});
-			});
-
-
-			$("#inquirySource").change(function(){
-				if($(this).val().trim() == "Other"){
-					$("#inquirySourceOtherDiv").show();
-				}else{
-
-					$("#inquirySourceOtherDiv").hide();
-					$('#inquirySourceOther').val('');//empty input
-				}
-			});
-
-			$("#Purpose").change(function(){
-				if($(this).val().trim() == "Other"){
-					$("#PurposeOtherDiv").show();
-				}else{
-					$("#PurposeOtherDiv").hide();
-					$('#PurposeOtherDiv').val('');//empty input
-				}
-			});
-
-			$("#houseType").change(function(){
-				if($(this).val().trim() == "Other"){
-					$("#houseTypeOtherDiv").show();
-				}else{
-					$("#houseTypeOtherDiv").hide();
-					$('#houseTypeOtherDiv').val('');//empty input
-				}
 			});
 
 			$('#addRoomType').click(function() {
@@ -1055,71 +1025,12 @@
 				});
 			});
 
-			// Load list 
-			loadOpt();
 		});
 		
 	</script>	
 
 	<script>
-		function georesponse(elem){
-			var value = $(elem).val();
-			var optionFound = false;
-			var datalist = $(elem)[0].list;
-			for(var i=0;i<datalist.options.length;i++){
-				if(value==datalist.options[i].value){
-					optionFound = true;
-					break;
-				}
-			}
-
-			if(!optionFound){
-				$(elem)[0].setCustomValidity('Please select a valid value.');
-					return;
-			}
-
-			//var url = "/resource/";
-			if(elem===$('#country')[0]){
-				//url += value.trim();
-				$.get({
-					url:"/resource/"+value,
-					type:"GET",
-					success: function(data){
-						$('#statelist').empty;
-						for(var i=0;i<data.length;++i){
-							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-							$('#statelist').append(option);
-						}
-					},
-					error: function(jqXHR,error){
-						errorhandler(jqXHR);
-					}
-				});
-			}
-			else if(elem===$('#state')[0]){
-				$.get({
-					url:"/resource/"+$('#country').val()+'/'+value,
-					type:"GET",
-					success:function(data){
-							$('#citylist').empty;
-							$('#citylist').html(data);
-						},
-					error: function(jqXHR,error){
-						alert();
-						errorhandler(jqXHR);
-					}
-
-				});	
-			}
-			else{
-				if(ele.value=="Other"){
-					$('#cityOther').parent.show();
-				}
-			}
-
-		}
-
-
+		
 		function findSimilarInquirers(){
 			$("#similarResult").empty();
 			var toSend = $("#new_inquirer_form").serialize();
@@ -1184,6 +1095,64 @@
 					});
 				}
 			});
+		}
+
+
+		function georesponse(elem){
+			var value = $(elem).val();
+			var optionFound = false;
+			var datalist = $(elem)[0].list;
+			for(var i=0;i<datalist.options.length;i++){
+				if(value==datalist.options[i].value){
+					optionFound = true;
+					break;
+				}
+			}
+
+			if(!optionFound){
+				$(elem)[0].setCustomValidity('Please select a valid value.');
+					return;
+			}
+
+			//var url = "/resource/";
+			if(elem===$('#country')[0]){
+				//url += value.trim();
+				$.get({
+					url:"/resource/"+value,
+					type:"GET",
+					success: function(data){
+						$('#statelist').empty;
+						for(var i=0;i<data.length;++i){
+							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+							$('#statelist').append(option);
+						}
+					},
+					error: function(jqXHR,error){
+						errorhandler(jqXHR);
+					}
+				});
+			}
+			else if(elem===$('#state')[0]){
+				$.get({
+					url:"/resource/"+$('#country').val()+'/'+value,
+					type:"GET",
+					success:function(data){
+							$('#citylist').empty;
+							$('#citylist').html(data);
+						},
+					error: function(jqXHR,error){
+						alert();
+						errorhandler(jqXHR);
+					}
+
+				});	
+			}
+			else{
+				if(ele.value=="Other"){
+					$('#cityOther').parent.show();
+				}
+			}
+
 		}
 
 		function HousePair(){

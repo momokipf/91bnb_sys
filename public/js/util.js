@@ -1,55 +1,84 @@
 function loadOpt()
 {
-		$.get("/resource/inquirySource",function(data,status){
-					$('#inquirySource').empty();
-					for(i=0;i<data.length;++i){
-						var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-						$('#inquirySource').append(option);
-					}
-
-			});
-		//loadList("inquirySource",$('#inquirySource'));
-		// Load list 
-		$.get("/resource/purposes",function(data,status){
-				$('.Purpose').empty();
+	$.get("/resource/inquirySource",function(data,status){
+				$('#inquirySource').empty();
 				for(i=0;i<data.length;++i){
 					var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-					$('.Purpose').append(option);
+					$('#inquirySource').append(option);
 				}
 
 		});
+	//loadList("inquirySource",$('#inquirySource'));
+	// Load list 
+	$.get("/resource/purposes",function(data,status){
+			$('.purpose').empty();
+			for(i=0;i<data.length;++i){
+				var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+				$('.purpose').append(option);
+			}
+
+	});
 
 
-		$('.country').load("/list/countryListOption");
-		$('.roomType').load("/list/roomTypeListOption");
-		// $.get("/resource/roomTypes",function(data,status){
-		// 		$('#room1Type').empty();
-		// 		$('#room2Type').empty();
-		// 		for(i=0;i<data.length;++i){
-		// 			var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-		// 			$('#room1Type').append(option);
-		// 			$('#room2Type').append("<option>" + data[i] + "</option>");
-		// 		}
+	$('.country').load("/list/countryListOption");
+	$('.roomType').load("/list/roomTypeListOption");
 
-		$.get("/resource/houseTypes",function(data,status){
-				$('#houseType').empty();
-				for(i=0;i<data.length;++i){
-					var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-					$('#houseType').append(option);
-				}
+	$.get("/resource/houseTypes",function(data,status){
+			$('#houseType').empty();
+			for(i=0;i<data.length;++i){
+				var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+				$('#houseType').append(option);
+			}
 
-		});
+	});
 
-		$.get("/resource/countryCode",function(data,status){
-				$('.Phone').empty();
-				for(i=0;i<data.length;++i){
-					var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-					$('.Phone').append(option);
-				}
+	$.get("/resource/countryCode",function(data,status){
+			$('.Phone').empty();
+			for(i=0;i<data.length;++i){
+				var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+				$('.Phone').append(option);
+			}
 
-		});
+	});
 }
 
+function bindhandler(){
+	$('#houseType').change(function(){
+		if($(this).val().trim()=="Other"){
+			$('#houseTypeOtherDiv').show();
+		}
+		else{
+			$('#houseTypeOtherDiv').hide();
+			$('#houseTypeOther').val('');
+		}
+	});
+
+
+	$('#inquirySource').change(function(){
+		if($(this).val().trim()=="Other"){
+			$('#inquirySourceOtherDiv').show();
+		}
+		else{
+			$('#inquirySourceOtherDiv').hide();
+			$('#inquirySourceOther').val('');//empty input
+		}
+	});
+
+	$('#purpose').change(function(){
+		if($(this).val().trim()=="Other"){
+			$('#purposeOtherDiv').show();
+		}
+		else{
+			$('#purposeOtherDiv').hide();
+			$('#purposeOther').val('');
+		}
+	});
+}
+
+
+function sourcechange(ele){
+
+}
 
 function converttimetosql(str){
 	if(str=="")

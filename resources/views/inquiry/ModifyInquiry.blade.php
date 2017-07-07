@@ -51,29 +51,22 @@
 					</div>
 					<div class="row">
 						<div class="col-lg-2">
-							<div>
-								<label>Country</label>
-								<input list="country" name="country" value="{{$inquiry->country}}">
-								<datalist id="country" class="country"></datalist>
-<!-- 								<select name = "country" type = "search" id="country" class="form-control Country">
-								</select> -->
-							</div>
+							<label>Country<span style='color:red;'>*</span></label>
+							<input id="country" name="country" class="form-control input-sm" onchange="georesponse(this)" value="{{$inquiry->country}}" list="countrylist">
+							<datalist id="countrylist" class="country">
+							</datalist>
 						</div>
 						<div class="col-lg-2">
-							<div>
-								<label>State or Province</label>
-								<select id="state" name="state" class="form-control">
-								<option selected>Select State</option>
-								</select>
-							</div>
+							<label>State or Province<span style='color:red;'>*</span></label>
+							<input id="state" name="state" class="form-control input-sm" onchange="georesponse(this)" value="{{$inquiry->state}}" list="statelist">
+							<datalist id="statelist">
+							</datalist>
 						</div>
 						<div class="col-lg-2">
-							<div>
-								<label>City</label>
-								<select name="city" id="city" class="form-control">
-								<option selected>Select City</option>
-								</select>
-							</div>
+							<label>City<span stype='color:red;'>*</span></label>
+							<input id= "city" name="city" class="form-control input-sm" value="{{$inquiry->city}}" list="citylist">
+							<datalist id="citylist">
+							</datalist>
 						</div>
 						<div class="col-lg-3">
 							<div>
@@ -91,25 +84,21 @@
 								</select>
 							</div>
 						</div>
-						<div class="col-lg-2">
-							<div id="inquirySourceOtherDiv">
+						<div class="col-lg-2" id="inquirySourceOtherDiv" style="display:none;">
 								<label>Source Other</label>
 								<input id="inquirySourceOther" class="form-control" name="inquirySourceOther" placeholder="Enter Source" value="{{$inquiry->inquirySourceOther}}">
-							</div>
 						</div>
 						<div class="col-lg-2">
 							<div>
 								<label>Purpose</label>
-								<select id="Purpose" class="form-control Purpose" name="Purpose">
+								<select id="purpose" class="form-control purpose" name="purpose">
 								</select>
 							</div>
 						</div>
 
-						<div class="col-lg-2">
-							<div id="PurposeOtherDiv">
-								<label>Purpose Other</label>
-								<input id="PurposeOther" class="form-control" name="PurposeOther" placeholder="Enter Purpose" value="{{$inquiry->purposeOther}}">
-							</div>
+						<div class="col-lg-2" id="purposeOtherDiv" style="display:none;">
+							<label>Purpose Other</label>
+							<input id="purposeOther" class="form-control" name="purposeOther" placeholder="Enter Purpose" value="{{$inquiry->purposeOther}}">
 						</div>
 					</div>
 				</div>
@@ -160,23 +149,24 @@
 							<div>
 								<label>House Type</label>
 								<select name = "houseType" id="houseType" class="form-control">
-									<?//php listtoselect("../list/houseTypeList"); ?>
 								</select>
 							</div>
 						</div>
 
-						<div class="col-lg-3">
-							<div id="houseTypeOtherDiv">
-								<label>House Type Other</label>
-								<input id = "houseTypeOther" name = "houseTypeOther" class="form-control" placeholder="Enter House Type" value="{{$inquiry->houseTypeOther}}">
-							</div>
+						<div class="col-lg-3" id="houseTypeOtherDiv" style="display:none;">
+							<label>House Type Other</label>
+							<input id = "houseTypeOther" name = "houseTypeOther" class="form-control" placeholder="Enter House Type" value="{{$inquiry->houseTypeOther}}">
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-lg-3">
 							<div>
 								<label>Number of Rooms</label>
-								<input type = "number" name = "rooms" id = "rooms" min="0" value="{{$inquiry->rooms}}" class="form-control"/>
+								@if($inquiry->rooms)
+									<input type = "number" name = "rooms" id = "rooms" min="0" value="{{$inquiry->rooms}}" class="form-control"/>
+								@else
+									<input type = "number" name = "rooms" id = "rooms" min="0" value="0" class="form-control">
+								@endif
 							</div>
 						</div>
 					</div>
@@ -184,7 +174,7 @@
 						<div class="col-lg-2">
 							<div id='room1TypeDiv'>
 								<label>Room 1 Type</label>
-								<select name = "room1Type" id="room1Type" class="form-control">
+								<select name = "room1Type" id="room1Type" class="form-control roomType">
 								</select>
 							</div>
 						</div>
@@ -199,7 +189,7 @@
 						<div class="col-lg-2">
 							<div id='room2TypeDiv'>
 								<label>Room 2 Type</label>
-								<select name = "room2Type" id="room2Type" class="form-control">
+								<select name = "room2Type" id="room2Type" class="form-control roomType">
 								</select>
 							</div>
 						</div>
@@ -215,21 +205,33 @@
 						<div class="col-lg-2">
 							<div>
 								<label>Number of Adult</label>
-								<input name="numOfAdult" type = "number" size = "1" min="0" id="numOfAdult" class="form-control" value="{{$inquiry->numOfAdult}}">
+								@if($inquiry->numOfAdult)
+									<input name="numOfAdult" type = "number" size = "1" min="0" id="numOfAdult" class="form-control" value="{{$inquiry->numOfAdult}}">
+								@else
+									<input name="numOfAdult" type = "number" size = "1" min="0" id="numOfAdult" class="form-control" value="0">
+								@endif
 							</div>
 						</div>
 
 						<div class="col-lg-2">
 							<div>
 								<label>Number of Kids</label>
-								<input name="numOfChildren" type = "number" size = "1" min="0" id="numOfChildren" class="form-control" value="{{$inquiry->numOfChildren}}">
+								@if($inquiry->numOfChildren)
+									<input name="numOfChildren" type = "number" size = "1" min="0" id="numOfChildren" class="form-control" value="{{$inquiry->numOfChildren}}">
+								@else
+									<input name="numOfChildren" type = "number" size = "1" min="0" id="numOfChildren" class="form-control" value="0">
+								@endif
 							</div>
 						</div>
 
 						<div class="col-lg-2">
 							<div>
 								<label>Kids Age</label>
-								<input name="childAge" type = "search" id="childAge" class="form-control" value="{{$inquiry->childAge}}">
+								@if($inquiry->childAge)
+									<input name="childAge" type = "search" id="childAge" class="form-control" value="{{$inquiry->childAge}}">
+								@else 
+									<input name="childAge" type = "search" id="childAge" class="form-control" value="0">
+								@endif
 							</div>
 						</div>
 
@@ -324,7 +326,6 @@
 
 	<script type="text/javascript">
 		// load util.js
-		loadOpt();
 		load_saving_data();
 		//load_saving_data();
 		//load_saving_data();
@@ -332,7 +333,7 @@
 		window.onload = function(){
 			console.log("{{$inquiry->inquirySource}}");
 			document.getElementById("inquirySource").value = "{{$inquiry->inquirySource}}";
-			document.getElementById("Purpose").value = "{{$inquiry->purpose}}";
+			document.getElementById("purpose").value = "{{$inquiry->purpose}}";
 			document.getElementById("houseType").value = "{{$inquiry->houseType}}";
 			document.getElementById("room1Type").value = "{{$inquiry->room1Type}}";
 			document.getElementById("room2Type").value = "{{$inquiry->room2Type}}";
@@ -341,7 +342,7 @@
 
 		function load_saving_data(){
 			document.getElementById("inquirySource").value = "{{$inquiry->inquirySource}}";
-			document.getElementById("Purpose").value = "{{$inquiry->purpose}}";
+			document.getElementById("purpose").value = "{{$inquiry->purpose}}";
 			document.getElementById("houseType").value = "{{$inquiry->houseType}}";
 			document.getElementById("room1Type").value = "{{$inquiry->room1Type}}";
 			document.getElementById("room2Type").value = "{{$inquiry->room2Type}}";
@@ -349,8 +350,12 @@
 		}
 
 		$(document).ready(function() {
+			loadOpt();
+			loadDataList();
+			bindhandler();
 		    $("#inquirySource").value = "{{$inquiry->inquirySource}}";
 		    $("#Purpose").value = "{{$inquiry->purpose}}";
+
 		});
 
 		// console.log("{{$inquiry->inquirySource}}");
@@ -390,7 +395,103 @@
 		  }
 		});
 
+		function georesponse(elem){
+			var value = $(elem).val();
+			var optionFound = false;
+			var datalist = $(elem)[0].list;
+			for(var i=0;i<datalist.options.length;i++){
+				if(value==datalist.options[i].value){
+					optionFound = true;
+					break;
+				}
+			}
 
+			if(!optionFound){
+				$(elem)[0].setCustomValidity('Please select a valid value.');
+					return;
+			}
+
+			//var url = "/resource/";
+			if(elem===$('#country')[0]){
+				//url += value.trim();
+				$('#state').val("");
+				$('#city').val("");
+				if(value){
+					$.get({
+						url:"/resource/"+value,
+						type:"GET",
+						success: function(data){
+							$('#statelist').empty;
+							for(var i=0;i<data.length;++i){
+								var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+								$('#statelist').append(option);
+							}
+						},
+						error: function(jqXHR,error){
+							errorhandler(jqXHR);
+						}
+					});
+				}
+			}
+			else if(elem===$('#state')[0]){
+				$('#city').val("");
+				$.get({
+					url:"/resource/"+$('#country').val()+'/'+value,
+					type:"GET",
+					success:function(data){
+							$('#citylist').empty;
+							$('#citylist').html(data);
+						},
+					error: function(jqXHR,error){
+						alert();
+						errorhandler(jqXHR);
+					}
+
+				});	
+			}
+			else{
+				if(ele.value=="Other"){
+					$('#cityOther').parent.show();
+				}
+			}
+
+		}
+
+		function loadDataList(){
+			if($('#country').val()){
+				var value = $('#country').val();
+				$.get({
+					url:"/resource/"+value,
+					type:"GET",
+					success: function(data){
+						$('#statelist').empty;
+						for(var i=0;i<data.length;++i){
+							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+							$('#statelist').append(option);
+						}
+					},
+					error: function(jqXHR,error){
+						errorhandler(jqXHR);
+					}
+				});
+				if($('#state').val()){
+					var value = $('#state').val();
+					$.get({
+						url:"/resource/"+$('#country').val()+'/'+value,
+						type:"GET",
+						success:function(data){
+								$('#citylist').empty;
+								$('#citylist').html(data);
+							},
+						error: function(jqXHR,error){
+							alert();
+							errorhandler(jqXHR);
+						}
+
+					});
+				}
+			}	
+		}
 
 	</script>
 
