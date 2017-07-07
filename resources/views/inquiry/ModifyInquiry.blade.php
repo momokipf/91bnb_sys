@@ -325,18 +325,24 @@
 
 	<script type="text/javascript">
 		// load util.js
-		load_saving_data();
 		//load_saving_data();
 		//load_saving_data();
+		//load_saving_data();
+		// var inquirySource = "{{$inquiry->inquirySource}}";
+		// var purpose = "{{$inquiry->purpose}}";
+		// var room1Type = "{{$inquiry->room1Type}}";
+		// var room2Type = "{{$inquiry->room2Type}}";
+
+		var predataset = {'inquirySource':"{{$inquiry->inquirySource}}",'purpose':"{{$inquiry->purpose}}",
+						  'houseType':"{{$inquiry->houseType}}",
+							};
 
 		window.onload = function(){
-			console.log("{{$inquiry->inquirySource}}");
 			document.getElementById("inquirySource").value = "{{$inquiry->inquirySource}}";
 			document.getElementById("purpose").value = "{{$inquiry->purpose}}";
 			document.getElementById("houseType").value = "{{$inquiry->houseType}}";
 			document.getElementById("room1Type").value = "{{$inquiry->room1Type}}";
 			document.getElementById("room2Type").value = "{{$inquiry->room2Type}}";
-			console.log("{{$inquiry->inquirySource}}");
 		}
 
 		function load_saving_data(){
@@ -352,9 +358,6 @@
 			loadOpt();
 			loadDataList();
 			bindhandler();
-		    $("#inquirySource").value = "{{$inquiry->inquirySource}}";
-		    $("#Purpose").value = "{{$inquiry->purpose}}";
-
 		});
 
 		// console.log("{{$inquiry->inquirySource}}");

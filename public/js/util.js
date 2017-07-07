@@ -4,9 +4,11 @@ function loadOpt()
 				$('#inquirySource').empty();
 				for(i=0;i<data.length;++i){
 					var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+					if(typeof predataset !="undefined"&&predataset&&predataset['inquirySource']&&data[i]==predataset['inquirySource']){
+						option[0].selected="true";
+					}
 					$('#inquirySource').append(option);
 				}
-
 		});
 	//loadList("inquirySource",$('#inquirySource'));
 	// Load list 
@@ -14,6 +16,9 @@ function loadOpt()
 			$('.purpose').empty();
 			for(i=0;i<data.length;++i){
 				var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+				if(typeof predataset !="undefined"&&predataset&&predataset['purpose']&&data[i]==predataset['purpose']){
+					option[0].selected="true";
+				}
 				$('.purpose').append(option);
 			}
 
@@ -21,12 +26,17 @@ function loadOpt()
 
 
 	$('.country').load("/list/countryListOption");
-	$('.roomType').load("/list/roomTypeListOption");
+	$('.roomType').load("/list/roomTypeListOption",function(){
+
+	});
 
 	$.get("/resource/houseTypes",function(data,status){
 			$('#houseType').empty();
 			for(i=0;i<data.length;++i){
 				var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+				if(typeof predataset !="undefined"&&predataset&&predataset['houseType']&&data[i]==predataset['houseType']){
+					option[0].selected="true";
+				}
 				$('#houseType').append(option);
 			}
 
