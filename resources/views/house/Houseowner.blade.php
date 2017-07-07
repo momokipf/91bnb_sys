@@ -26,7 +26,7 @@
 @section('inbody','class=marginMe')
 
 @section('content')
-	<div class="col-sm-6" id="ownerinfo" style="margin-top:60px;overflow:auto;margin-bottom:100px;margin-bottom:60px;">
+	<div class="col-sm-6" id="ownerinfo" style="overflow:auto;margin-bottom:100px;margin-bottom:60px;">
 			<!-- <div class="row"> -->
 		@if(isset($houseowner))
 		<table class="table table-bordered table-striped text-center" style="font-size:12px;">

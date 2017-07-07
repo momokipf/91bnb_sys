@@ -96,7 +96,7 @@
 
 
 @section('content')
-<div class='content container' style='margin-top:70px;'>
+<div class='content container'>
     <h4><B><I>Hello {{$Rep->repFirstName}} </I></B></h4> 
     <span>Follow Up Closely of All Listed HOT Inquiries</span>
 

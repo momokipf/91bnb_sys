@@ -28,7 +28,7 @@
 
 @section('content')
 
-	<div class='content container' style='margin-top:50px;'>
+	<div class='content container'>
 		<div class='well trans' style='margin-top:10px;'>
 			<h3 style="text-align:center;">
 				Represenataives

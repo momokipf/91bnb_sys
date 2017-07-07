@@ -2,6 +2,7 @@
 @section('title', 'Modify Inquiry')
 
 @section('head')
+
 @endsection
 @section('content')
 	<div class="container" style="margin-top:70px;">

@@ -85,7 +85,7 @@
 @endsection
 @section('inbody', ' class=marginMe onload=doload()')
 @section('content')
-    <div class="container-fluid" style="margin-top:70px;width:100%;height:100%">
+    <div class="container-fluid" style="width:100%;height:100%">
         <div class="row equal">
             <div class = "col-sm-6">
                 <ul class="nav nav-tabs">

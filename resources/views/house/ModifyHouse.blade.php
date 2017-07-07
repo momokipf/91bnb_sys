@@ -275,7 +275,7 @@
 
 @section('content')
 
-	<div class="container" style="margin-top:70px;">
+	<div class="container">
 		<form method = "post" id="modifyForm" onsubmit='return false;'>
 			{{csrf_field()}}
 			<ul class="nav nav-tabs">

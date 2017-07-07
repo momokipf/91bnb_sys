@@ -35,7 +35,7 @@
 		}
 	?>
 
-	<div class="container" style="margin-top:60px;">
+	<div class="container">
 		<div class="well trans" style="margin-top:10px;">
 			<h3 style="text-align:center;">Show All Inquirers</h3>
 			<div class='table-responsive' style="text-align:center;">
