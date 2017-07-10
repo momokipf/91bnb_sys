@@ -163,10 +163,180 @@
                 </div>
             </div>
             <div class="col-sm-6">
-
+                <table id="housedisplay" style="width:100%;hight:800px;">
+                </table>
             </div>
         </div>
 
+        <div class="" id="showResult" style="width='100%';margin-top:60px;display:none" >
+            <div class="row" id="back_menu" sytle="visibility:hidden">
+                <!-- <button><p><i class="arrow left" ></i>Back</p></button> -->
+                <a class="previous" onclick="resultSM.toTablePage()" >&laquo; Previous</a>
+            </div>
+            <table id="housestable" class="table table-bordered table-striped text-center" style="font-size:12px;">
+                <thead>
+                    <tr>
+                        <th style="min-width:50px;">Number ID</th>
+                        <!-- <th style="min-width:100px;">House ID</th> -->
+                        <th style="min-width:100px;">State</th>
+                        <th style="min-width:100px;">City</th>
+                        <th style="min-width:150px;">House Address</th>
+                        <th style="min-width:50px;">Number of Rooms</th>
+                        <th style="min-width:50px;">Number of Baths</th>
+
+                        <th style="min-width:170px;">Owner Name</th>
+                        <th style="min-width:170px;">Owner Phone Number</th>
+                        <th style="min-width:150px;">WeChat Name</th>
+
+                        <th style="min-width:100px;">House Type</th>
+    <!--                     <th style="min-width:100px;">Price per Month</th>
+                        <th style="min-width:100px;">Price per Day</th>
+                        <th style="min-width:150px;">Next Available Date</th> -->
+
+                        <th style="min-width:100px;">Minimum Stay Term</th>
+                        <th style="min-width:100px;">Whole/Share</th>
+                        <th style="min-width:150px;">View House info</th>
+                        <th style="min-width:150px;">View Owner info</th>
+                        <th style="min-width:100px;">Modify</th>
+                        <!--<th style="min-width:170px;">Owner Phone Number</th>
+                        <th style="min-width:170px;">Owner Name</th>
+                        <th style="min-width:150px;">WeChat Name</th>
+                        <th style="min-width:100px;">WeChat ID</th> -->
+                    </tr>
+                </thead>
+                <tbody id="fillArea">
+
+                </tbody>
+
+            </table>
+            <div id = "ownerdiv" >
+            </div>
+            <div id = "housediv" class="container" style="display:none">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#HouseBasicinfo">Basic Info</a></li>
+                    <li><a data-toggle="tab" href="#HouseCondition">Condition</a></li> 
+                    <li><a data-toggle="tab" href="#HouseAvailability">Availability</a></li>
+                    <li><a data-toggle="tab" href="#HousePrice">Price</a></li>
+                    <!-- <li><a data-toggle -->
+                </ul>
+                <div class="tab-content">
+                    <div id="HouseBasicinfo" class="tab-pane fade in active" style="pading:20px;">
+                        <div class="row" >
+                            <div class="col-sm-2 input-w">
+                                <label>House ID:</label><p id="houseid_info"></p>
+                             </div>  
+                            <div class='col-sm-2'>
+                                <label>House Owner ID:</label>
+                                <p id='houseOwnerID_info'></p>
+                            </div> 
+                            <div class='col-sm-2'>
+                                <label>House ID in Owner:</label>
+                                <p id='houseIDByOwner_info'></p>
+                            </div> 
+                        </div>
+
+                        <div class='row'>
+                            <div class="col-sm-2 input-w">
+                                <label for="country_info">Country:</label><p id="country_info"></p>
+                            </div>
+                            <div class="col-sm-2 input-w">
+                                <label>State:</label><p id="state_info"></p>
+                            </div>
+                            <div class="col-sm-2 input-w">
+                                <label>City:</label><p id="city_info"></p>
+                            </div>
+                            <div class='col-sm-2'>
+                                <label>Region:</label>
+                                <p id='region_info'></p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class='col-sm-6'>
+                                <label>House Address:</label>
+                                <p id='houseAddress_info'></p>
+                            </div>
+                            <div class='col-sm-2'>
+                                <label>Zip:</label>
+                                <p id='houseZip_info'></p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class='col-sm-4'>
+                                <label>House Type:</label>
+                                <p id="houseType_info"></p>
+                            </div>
+                            <div class='col-sm-4'>
+                                <label>Size:</label>
+                                <p id="size_info"></p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class='col-sm-2'>
+                                <label>Number Of Rooms:</label>
+                                <p id='numOfRooms_info'></p>
+                            </div>
+                            <div class='col-sm-2'>
+                                <label>Number Of Baths:</label>
+                                <p id='numOfBaths_info'></p>
+                            </div>
+                            <div class='col-sm-2'>
+                                <label>Number Of Beds:</label>
+                                <p id='numOfBeds_info'></p>
+                            </div>
+                            <div class='col-sm-2'>
+                                <label>Max Number of Guests</label>
+                                <p id='maxNumOfGuest_info'></p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class='col-sm-4'>
+                                <label>On Other Website</label>
+                                <p id='onOtherWebsite_info'></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="HouseCondition" class="tab-pane fade" style="padding:20px;font-size:12px">
+
+                    </div>
+
+                    <div id="HouseAvailability" class="tab-pane fade" style="padding:20px;font-size:12px">
+                        <p><label>Whole/Share: </label><span id='rentShared'><span></p>
+                        <p><label>Availablitity: </label><span id='availability'><span></p>
+                        <p><label>Minimum Stay: </label><span id='minStayTerm'></span><span id='minStayUnit'></span></p>
+                        <p><label>Allow Cooking: </label><span id='allowCooking'><span></p>
+                        <p><label>Furnished: </label><span id='furnished'><span></p>
+                        <p><label>Availability Note: </label><span id='availabilityNote'><span></p>
+                    </div>
+
+                    <div id="HousePrice" class="tab-pane fade" style="padding:20px;font-size:12px">
+                        <p><label>Day Price:  $</label><span id='costDayPrice'><span></p>
+                        <p><label>Week Price:  $</label><span id='costWeekPrice'><span></p>
+                        <p><label>Month Price:  $</label><span id='costMonthPrice'><span></p>
+                        <p><label>Utility:  $</label><span id='costUtility'><span></p>
+                        <p><label>Cleaning Fee:  $</label><span id='costCleaning'><span></p>
+                        <p><label>Deposite:  $</label><span id='costSecurityDeposit'><span></p>
+                        <p><label>Utility Note:</label><span id='utilityNote'><span></p>
+                        <p><label>Cost Note:</label><span id='costNote'><span></p>
+
+                        <p><label>Retail Day Price:  $</label><span id='retailDayPrice'><span></p>
+                        <p><label>Retail Week Price:  $</label><span id='retailWeekPrice'><span></p>
+                        <p><label>Retail Month Price:  $</label><span id='retailMonthPrice'><span></p>
+                        <p><label>Retail Utility:  $</label><span id='retailUtility'><span></p>
+                        <p><label>Retail Cleaning Fee:  $</label><span id='retailCleaning'><span></p>
+                        <p><label>Retail Deposite:  $</label><span id='retailSecurityDeposit'><span></p>
+
+                        <p><label>Upsell Percent:</label><span id='upsellPercent'><span>%</p>
+                        <p><label>TOT Percent:</label><span id='totPercent'><span>%</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
      
         <hr>
     </div>
