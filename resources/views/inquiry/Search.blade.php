@@ -539,7 +539,7 @@
 			              <div class="modal-dialog modal-md">
 			                <div class="modal-content">
 			                  <div class="modal-header">
-			                    <button type="button" class="close" data-dismiss="modal">&times;</button> 
+			                    <button type="button" class="close" data-dismiss="modal" onclick='showAddfollowUp("{{$query->inquiryID}}","addfollowup_{{$loop->index}}","followup_{{$loop->index}}")'>&times;</button> 
 			                    <h4 class="modal-title">
 			                      <p>Inquiry Follow Up History of Customer: {{$query->quirer->inquirerFirst}} {{$query->quirer->inquirerLast}}</p>
 			                      <p>(Inquiry ID: {{$query->inquiryID}})</p>
