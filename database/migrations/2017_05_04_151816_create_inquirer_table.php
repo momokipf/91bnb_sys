@@ -17,7 +17,8 @@ class CreateInquirerTable extends Migration
      */
     public function up()
     {
-        Schema::create('inquirer', function (Blueprint $table) {
+        Schema::create('Inquirer', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->increments('inquirerID')->comment('inquirer ID');
             $table->string('inquirerFirst', 20)->nullable()->comment('inquirer first name, 20 letters max');
             $table->string('inquirerLast', 20)->nullable()->comment('inquirer last name, 20 letters max');
@@ -47,6 +48,6 @@ class CreateInquirerTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('inquirer');
+        Schema::dropIfExists('Inquirer');
     }
 }
