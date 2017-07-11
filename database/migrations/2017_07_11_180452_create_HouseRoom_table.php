@@ -41,7 +41,7 @@ class CreateHouseRoomTable extends Migration
 
         });
         Schema::table('HouseRoom', function($table) {
-            $table->foreign('numberID')->references('numberID')->on('House');
+            $table->foreign('numberID')->references('numberID')->on('House')->onDelete('cascade');
         });
     }
 

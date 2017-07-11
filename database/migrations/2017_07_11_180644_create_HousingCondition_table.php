@@ -80,7 +80,7 @@ class CreateHousingConditionTable extends Migration
 
         });
         Schema::table('HousingCondition', function($table) {
-            $table->foreign('numberID')->references('numberID')->on('House');
+            $table->foreign('numberID')->references('numberID')->on('House')->onDelete('cascade');
         });
     }
 

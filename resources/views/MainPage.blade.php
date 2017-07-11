@@ -580,19 +580,6 @@
        </table>
     </div>
 
-        <div class='well'>
-                <div class='input-group'>
-                  <form id='addFollowupForm' action='MainPage/addfollow' method='POST' hidden>
-                    {{ csrf_field() }}
-                    <p>Inquiry ID: <INPUT id='inquiryID' name='inquiryID' type='search'></p>
-                    <p>Follow Up Date: <INPUT id='followupDate' name='followupDate' type='date' value='{{date("Y-m-d")}}' ></p>
-                    <p>Follow Up Status: <INPUT id='followupStatus' name='followupStatus' type='search' size=130></p>
-                    <INPUT type='submit' class='btn btn-default' id='addFollowupSubmit' name='addFollowupFromMainpage' value='Submit'>
-                    &nbsp&nbsp<button type='button' class='btn btn-default' onclick='document.getElementById("addFollowupForm").style.display="none";
-                    document.getElementById("followup").style.display="none";'>Hide</button>
-                  </form>
-                </div>
-            </div>
 
             <div class='page' id='pagination' style='text-align:right'>
             {{$Hotquerys->links()}}

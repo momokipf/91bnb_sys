@@ -40,7 +40,7 @@ class CreateHousePriceTable extends Migration
 
         });
         Schema::table('HousePrice', function($table) {
-            $table->foreign('numberID')->references('numberID')->on('House');
+            $table->foreign('numberID')->references('numberID')->on('House')->onDelete('cascade');
         });
 
         //
