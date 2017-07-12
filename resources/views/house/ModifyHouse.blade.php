@@ -146,12 +146,8 @@
 
 		$(document).ready(function() {
 			loadOpt();
-			$("#hotcountry").load("{{asset('list/hotCountryList')}}");
-			$("#rentShared").val("{{$house->houseavailability->rentShared}}");
-			$("#available").val("{{$house->houseavailability->availability}}");
-			$("#minStayUnit").val("{{$house->houseavailability->minStayUnit}}");
-			$("#allowCooking").val("{{$house->houseavailability->allowCooking}}");
-			$("#furnished").val("{{$house->houseavailability->furnished}}");
+			//$("#hotcountry").load("{{asset('list/hotCountryList')}}");
+
 
 			$("#allowKid").change(function() {
 				if (this.checked) {
@@ -323,7 +319,7 @@
 					<div class='row'>
 						<div class='col-sm-2'>
 							<label>Country</label>
-							<input class='form-control input-sm' type='text' name='country' id='country' list="hotcountry" value="{{$house->country}}">
+							<input class='form-control input-sm' type='text' name='country' id='country' list="hotcountry" value="{{$house->country}}" readonly>
 							<datalist id="hotcountry">
 							</datalist>
 						</div>
@@ -335,21 +331,21 @@
 					</div>
 
 					<div class="row" hidden>
-						<input id="state" name="state" value="{{$house->country}}">
-						<input id="city" name="city" value="{{$house->city}}">
-						<input id="longitude" name="longitude" value="{{$house->longitude}}">
-						<input id="latitude" name="latitude" value="{{$house->latitude}}">
+						<input id="state" name="state" value="{{$house->country}}" readonly>
+						<input id="city" name="city" value="{{$house->city}}" readonly>
+						<input id="longitude" name="longitude" value="{{$house->longitude}}" readonly>
+						<input id="latitude" name="latitude" value="{{$house->latitude}}" readonly>
 					</div>
 
 					<div class='row'>
 						<div class='col-sm-4'>
 								<label>House Address</label>
-								<input type='text' name='houseAddress' id='houseAddress' value="{{$house->houseAddress}}" class='form-control input-sm'>
+								<input type='text' name='houseAddress' id='houseAddress' value="{{$house->houseAddress}}" class='form-control input-sm' readonly>
 						</div>
 
 						<div class='col-sm-2'>
 							<label>Zip</label>
-							<input class='form-control input-sm' type='text' name='houseZip' id='houseZip' value="{{$house->houseZip}}">
+							<input class='form-control input-sm' type='text' name='houseZip' id='houseZip' value="{{$house->houseZip}}" readonly>
 						</div>
 					</div>
 
@@ -706,7 +702,11 @@
 
 						<div class="col-sm-2">
 							<label>Minimum Stay Term</label>
-							<input type="number" name="minStayTerm" value="{{$house->houseavailability->minStayTerm}}" class="form-control input-sm">
+							@if($house->houseavailability)
+								<input type="number" name="minStayTerm" value="{{$house->houseavailability->minStayTerm}}" class="form-control input-sm">
+							@else
+								<input type="number" name="minStayTerm" value="1" class="form-control input-sm" min="1">
+							@endif
 						</div>
 					</div>
 
@@ -735,7 +735,11 @@
 					<div class="row">
 						<div class="col-sm-4">
 							<label>Availability Note</label>
+							@if($house->houseavailability)
 							<textarea class="form-control" rows="4" cols="50" name="availabilityNote">{{$house->houseavailability->availabilityNote}}</textarea>
+							@else
+							<textarea class="form-control" rows="4" cols="50" name="availabilityNote"></textarea>
+							@endif
 						</div>               
 					</div>
 				</div>
