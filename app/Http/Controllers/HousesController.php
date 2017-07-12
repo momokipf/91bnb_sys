@@ -167,7 +167,6 @@ class HousesController extends Controller
     public function modifyHouse($numberID) {
     	Log::info($numberID);
     	$house = House::where('numberID', $numberID)->first();
-    	Log::info($house->houserooms);
     	return view('house.ModifyHouse')
     			->with('house', $house)
     			->with('Rep',Auth::user());
@@ -176,7 +175,7 @@ class HousesController extends Controller
     public function searchindex(Request $request)
     {
     	//$fakequery = App\Inquiry::find(114);
-    	return view('house.HouseSearchindex')
+    	return view('house.HouseSearch')
     			//->with('Query',$fakequery)
     			->with('Rep',Auth::user());
     }
@@ -302,7 +301,7 @@ class HousesController extends Controller
 
     	if($houseowner){
 
-            $houseinput = $request->only(\App\House::$fields);  
+            $houseinput = $request->only((new House())->getFillable());  
             $houseinput['longitude'] = $search_longitude;
             $houseinput['latitude'] = $search_latitude;
             Log::info($houseinput);
@@ -334,7 +333,7 @@ class HousesController extends Controller
 			$conditioninput = $request->only(\App\Housingcondition::$fields);
     		$newhouseprice = new \App\Houseprice($priceinput);  
     		$newhousecond = new \App\Housingcondition($conditioninput);
-
+            $newhouseAvailability = new \App\Houseavailability();
     		/*TODO: add house availability table funciton
     		* 
     		*
@@ -344,6 +343,7 @@ class HousesController extends Controller
         		$newhouse->houseprice()->save($newhouseprice);
         		$newhouse->housingcondition()->save($newhousecond);
         		$newhouse->houserooms()->saveMany($newrooms);
+                $newhouse->houseavailability()->save($newhouseAvailability);
     		}
     		catch(\Illuminate\Database\QueryException $ex){
                  Log::error("QueryException has been found, need to be handled");
@@ -365,23 +365,26 @@ class HousesController extends Controller
     }
 
     public function update(Request $request) {
-        Log::info($request->all());
+        // Log::info($request->all());
         $fullhouseid = $request->input('fullHouseID');
-        $house = House::where('fullHouseID','=',$fullhouseid);
+        $house = House::where('fullHouseID','=',$fullhouseid)->first();
         if($house){
-            $houseinput = $request->only(House::$fields); 
-            $priceinput = $request->only(\App\Houseprice::$fields);
-            $conditioninput = $request->only(\App\Housingcondition::$fields);
+            $houseinput = $request->only($house->getFillable()); 
+
+            $priceinput = $request->only($house->houseprice->getFillable());
+            $conditioninput = $request->only($house->housingcondition->getFillable());
+
             foreach($houseinput as $key=>$value){
+                Log::info($key."=>".$value);
                 if($value){
                     $house[$key] = $value;
                 }
             }
-            $point = $input['longitude'].',' .$input['latitude'];
+            $point = $houseinput['longitude'].',' .$houseinput['latitude'];
             $house->setLocationAttribute($point);
-            $houseprice = $house->houseprice();
+            $houseprice = $house->houseprice;
             if($houseprice){
-                foreach($priceinput as $field=>$value){
+                foreach($priceinput as $key=>$value){
                     if($value){
                         $houseprice[$key] = $value;
                     }
@@ -389,18 +392,22 @@ class HousesController extends Controller
             }
             //else handler
 
-            $housecond = $house->housingcondition();
+            $housecond = $house->housingcondition;
             if($housecond){
-                foreach($conditioninput as $field=>$value){
+                foreach($conditioninput as $key=>$value){
                     if($value){
-                        $conditioninput[$key] = $value;
+                        $housecond[$key] = $value;
                     }
+
                 }
             }
-
             $house->save();
             $houseprice->save();
-            $conditioninput->save();
+            /*
+
+            */
+            Log::info($housecond);
+            $housecond->save();
 
         }
         else{
@@ -528,6 +535,7 @@ class HousesController extends Controller
     	{
     		$housesql = House::WithinCircle($radius,$target_pt)->toSql();
     		$circlesql = "ST_Distance_Sphere(r.location,POINT(".$target_pt['longitude'].','.$target_pt['latitude']."))";//<".$radius;
+            Log::info($housesql);
     		$housebuilder = DB::table(DB::raw("(".$housesql.") as r"))
     					->select(DB::raw(implode(',',$fields)))
     					->join('HouseOwner','r.houseOwnerID','=','HouseOwner.houseOwnerID')

@@ -26,6 +26,7 @@ Route::get('logout','LoginController@logout');
 
 Route::get('resource/{typename}','ResourceController@getlist');
 Route::get('resource/{country}/{state}','ResourceController@getCity');
+Route::get('image/{imageID}','HouseImagesController@getImg');
 //Route::get()
 
 

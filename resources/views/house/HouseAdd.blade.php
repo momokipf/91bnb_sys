@@ -361,22 +361,22 @@
 									<div class="row">
 						                <div class="col-sm-2">
 						                    <label>Num of Rooms</label>
-						                    <input type="number" name="numOfRooms" class="form-control input-sm" value = 0 min="0">
+						                    <input type="number" name="numOfRooms" class="form-control input-sm" value = "1" min="1">
 						                </div>
 
 						                <div class="col-sm-2">
 						                    <label>Num of Baths</label>
-						                    <input type="number" name="numOfBaths" class="form-control input-sm" value = 0 min="0">
+						                    <input type="number" name="numOfBaths" class="form-control input-sm" value = "1" min="1">
 						                </div>
 
 						                <div class="col-sm-2">
 						                    <label>Num of Beds</label>
-						                    <input type="number" name="numOfBeds" class="form-control input-sm" value = 0 min="0">
+						                    <input type="number" name="numOfBeds" class="form-control input-sm" value = "1" min="1">
 						                </div>
 
 						                <div class="col-sm-2">
 						                    <label>Max Num of Guests</label>
-						                    <input type="number" name="maxNumOfGuests" class="form-control input-sm" value=0 min="0">
+						                    <input type="number" name="maxNumOfGuests" class="form-control input-sm" value="1" min="1">
 						                </div>
 
 									</div>

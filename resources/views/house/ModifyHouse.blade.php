@@ -116,10 +116,10 @@
 			}
 
 			autocomplete = new google.maps.places.Autocomplete(document.getElementById('houseAddress'), options);
-			autocomplete.addListener('place_changed',fillInAddress);
+			autocomplete.addListener('place_changed',geolocate);
 		}
 
-		function fillInAddress(){
+		function geolocate(){
 			var place = autocomplete.getPlace();
 			if(place){
 				// console.log(place);
@@ -128,13 +128,19 @@
 					var addressType = place.address_components[i].types[0];
 					if(componentForm[addressType]){
 						var val = place.address_components[i][componentForm[addressType]];
-						document.getElementById(componentMap[addressType]).value = val;
+						if(document.getElementById(componentMap[addressType]).value!=val){
+							document.getElementById(componentMap[addressType]).value = val;
+							alert("there is conflict on "+componentMap[addressType]+'\n Autocorrected');
+						}
 					}
 				}
-				loc = place.geometry.location;
+				 loc = place.geometry.location;
+				document.getElementById('latitude').value=loc['lat']();
+				document.getElementById('longitude').value=loc['lng']();
 			}
 			else {
-				alert("something wrong");
+				document.getElementById('latitude').value="";
+				document.getElementById('longitude').value="";
 			}
 		}
 
@@ -253,11 +259,6 @@
 
 			$('#modifyForm').submit(function() {
 				var toSend = $('#modifyForm').serializeArray();
-				if(loc){
-					toSend.push({'name':'latitude','value':loc['lat']});
-					toSend.push({'name':'longitude','value':loc['lng']});
-				}
-				console.log(toSend);
 				$.ajax({
 					type: "POST",
 					url: "/house/modify/store",
@@ -334,8 +335,10 @@
 					</div>
 
 					<div class="row" hidden>
-						<input id="state" name="state">
-						<input id="city" name="city">
+						<input id="state" name="state" value="{{$house->country}}">
+						<input id="city" name="city" value="{{$house->city}}">
+						<input id="longitude" name="longitude" value="{{$house->longitude}}">
+						<input id="latitude" name="latitude" value="{{$house->latitude}}">
 					</div>
 
 					<div class='row'>
@@ -389,7 +392,11 @@
 
 						<div class='col-sm-2'>
 							<label>Max Number of Guests</label>
-							<input name='maxNumOfGuests' value="{{$house->maxNumOfGuests}}" class='form-control input-sm'>
+							@if($house->maxNumOfGuests)
+							<input name='maxNumOfGuests' value="{{$house->maxNumOfGuests}}" type='number'class='form-control input-sm'>
+							@else
+							<input name='maxNumOfGuests' value="0" type='number' class='form-control input-sm' >
+							@endif
 						</div>
 					</div>
 
@@ -901,7 +908,11 @@
 									</div>
 									<div class='col-sm-2'>
 										<label>Max Guests number</label>
-										<input name="maxGuestsnum_{{$i}}" id="maxGuestsnum_{{$i}}" type='number' class='form-control input-sm' min='0' value="{{$house->houserooms[$i-1]->roomGuestMax}}">
+										@if($house->houserooms[$i-1]->roomGuestMax!="N/A")
+											<input name="maxGuestsnum_{{$i}}" id="maxGuestsnum_{{$i}}" type='number' class='form-control input-sm' min='0' value="{{$house->houserooms[$i-1]->roomGuestMax}}">
+										@else
+											<input name="maxGuestsnum_{{$i}}" id="maxGuestsnum_{{$i}}" type='number' class='form-control input-sm' min='0' >
+										@endif
 									</div>
 								</div>
 								<div class='row'>

@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
         //     //$query->time
         // });
         DB::enableQueryLog();
-        House::observe(HouseObserver::class);
+        //House::observe(HouseObserver::class);
     }
 
     /**

@@ -574,7 +574,8 @@
                             //rowhtml += "<td><a onclick=' retrieveHouseInfo("+numberID+");' > View House Info</td>";
                             rowhtml += "<td><button type='button' class='btm btn-info' onclick='retrieveHouseInfo("+houses[i].numberID+");resultSM.toHousePage("+i+")'>"+"View House Info"+"</button></td>";
                             rowhtml += "<td><button type='button' class='btm btn-info' onclick='resultSM.toOwnerPage("+i+")'>View Owner Info</button></td>";
-                            rowhtml += "<td><button type='button' class='btm btn-info' href='MainPage'>Modify</button></td>"
+                            rowhtml += "<td><a href='/house/modify/"+houses[i].numberID+"' class='btn btn-info' role='button'>Modify</a></td>";
+
                             attachHouseOwnerDiv(houses[i],i);
 
                             rowhtml += "</tr>";

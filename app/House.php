@@ -47,11 +47,6 @@ class House extends Model
     //     'deleted' => HouseDelete::class;
     // ];
 
-
-    public static $fields = ['houseID','fullHouseID','houseOwnerID','dateHouseAdded','houseIDByOwner',
-                              'region','houseAddress','country','state','city','houseZip','longitude','latitude',
-                              'houseType','houseTypeOther','size','numOfRooms','numOfBaths','numOfBeds',
-                              'maxNumOfGuests','onOtherWebsite'];
     // protected $events = [
     //     'deleted' =>  HouseDelete::class,
     // ];
@@ -80,6 +75,10 @@ class House extends Model
     }
     public function housingcondition(){
         return $this->hasOne('App\Housingcondition','numberID');
+    }
+
+    public function houseimage(){
+        return $this->hasMany('App\Houseimage','house_id','numberID');
     }
 
     public function setHouseID(){
