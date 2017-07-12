@@ -13,19 +13,18 @@ class CreateRoomRequirementTable extends Migration
      */
     public function up()
     {
-        Schema::create('RoomRequirement', function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-            $table->integer('inquiryID')->default(0);
-            $table->integer('roomID')->default(0);
-            $table->primary(array('inquiryID', 'roomID'));
-            
-            $table->string('roomType', 20)->nullable();
-            $table->string('roomTypeOther', 40)->nullable();
-            $table->integer('numOfBeds')->nullable();
-        });
-
-          
-        //
+        if (!Schema::hasTable('RoomRequirement')){
+            Schema::create('RoomRequirement', function (Blueprint $table) {
+                $table->engine = 'InnoDB';
+                $table->integer('inquiryID')->default(0);
+                $table->integer('roomID')->default(0);
+                $table->primary(array('inquiryID', 'roomID'));
+                $table->string('roomType', 20)->nullable();
+                $table->string('roomTypeOther', 40)->nullable();
+                $table->integer('numOfBeds')->nullable();
+            });
+        }
+        
     }
 
     /**

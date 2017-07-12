@@ -13,18 +13,15 @@ class CreateInquiryFollowupTable extends Migration
      */
     public function up()
     {
-        Schema::create('InquiryFollowup', function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-            $table->integer('inquiryID')->nullable();
-            $table->integer('followupID')->nullable();
-            $table->date('followupDate')->nullable();
-            $table->string('followupStatus', 50)->nullable();
-
-            
-
-            
-
-        });
+        if (!Schema::hasTable('InquiryFollowup')){
+            Schema::create('InquiryFollowup', function (Blueprint $table) {
+                $table->engine = 'InnoDB';
+                $table->integer('inquiryID')->nullable();
+                $table->integer('followupID')->nullable();
+                $table->date('followupDate')->nullable();
+                $table->string('followupStatus', 50)->nullable();
+            });
+        }
     }
 
     /**
