@@ -23,30 +23,30 @@ class CreateHouseTable extends Migration
 
                 //$table->unique('numberID');
                 $table->integer('houseID')->default(0);
-                $table->string('fullHouseID')->nullable();
+                $table->string('fullHouseID',45)->nullable();
                 $table->integer('houseOwnerID')->unsigned();
                 
                 $table->date('dateHouseAdded')->nullable();
-                $table->string('houseIDByOwner')->nullable();
-                $table->string('region')->nullable();
-                $table->string('houseAddress')->nullable();
-                $table->string('country')->nullable();
-                $table->string('state')->nullable();
-                $table->string('city')->nullable();
+                $table->string('houseIDByOwner',20)->nullable();
+                $table->string('region',5)->nullable();
+                $table->string('houseAddress',100)->nullable();
+                $table->string('country',30)->nullable();
+                $table->string('state',20)->nullable();
+                $table->string('city',40)->nullable();
                 $table->string('houseZip')->nullable();
                 $table->float('longitude', 10, 6)->nullable();
                 $table->float('latitude', 10, 6)->nullable();
                 
                 
-                $table->string('houseType')->nullable();
-                $table->string('houseTypeOther')->nullable();
+                $table->string('houseType',20)->nullable();
+                $table->string('houseTypeOther',20)->nullable();
                 $table->integer('repWithOwner')->nullable();
                 $table->integer('size')->nullable();
                 $table->integer('numOfRooms')->nullable();
                 $table->integer('numOfBaths')->nullable();
                 $table->integer('numOfBeds')->nullable();
                 $table->integer('maxNumOfGuests')->nullable();
-                $table->string('onOtherWebsite')->nullable();
+                $table->string('onOtherWebsite',200)->nullable();
                 $table->integer('repWithGuest')->nullable();
 
                             // DB::statement('ALTER TABLE house_loc ADD SPATIAL INDEX (location)');
