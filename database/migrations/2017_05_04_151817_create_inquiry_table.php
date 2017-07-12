@@ -17,7 +17,8 @@ class CreateInquiryTable extends Migration
      */
     public function up()
     {
-        Schema::create('inquiry', function (Blueprint $table) {
+        Schema::create('Inquiry', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->increments('inquiryID')->comment('iquery ID');
             $table->integer('repID')->nullable()->comment('representative ID');
             $table->date('inquiryDate')->nullable();
@@ -74,6 +75,6 @@ class CreateInquiryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('inquiry');
+        Schema::dropIfExists('Inquiry');
     }
 }
