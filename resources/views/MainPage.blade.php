@@ -125,6 +125,7 @@
          <!-- <td style="min-width:100px;">City Other</td> -->
          
          <th>Email</th>
+         <th>House Pair</th>
 
          <th>Modify</th>
          <th style="min-width:150px;">Show All Follow Up</th>
@@ -222,6 +223,10 @@
                 
               <!-- email -->
               <td>{{$query->quirer->inquirerEmail}}</td>
+
+              <!-- house pair -->
+              <td><button type="button" class="btn btn-primary btn-sm" onclick="location.reload(true);HousePair('{{$query->country}}','{{$query->state}}','{{$query->city}}');" > House Pair</button>
+              </td>
 
 
               @if($Rep->repPriority >=2)  
@@ -716,6 +721,16 @@ $(document).ready(function(){
         document.getElementById(btnID).innerHTML = 'Add Follow Up';
       }
 
+    }
+
+    function HousePair(country, state, city){
+      var data={};
+      data['country'] = country;
+      data['state'] = state;
+      data['city'] = city;
+      var para = $.param(data);
+      console.log(para);
+      window.location.replace("/houses/results?"+para);
     }
 
     // for test

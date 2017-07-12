@@ -149,6 +149,7 @@
 							<th>WeChat Name</th>
 							<th>TaoBao User name</th>
 							<th>Email</th>
+							<th>house pair</th>
 							<th>Modify</th>
 							<th>Show All Follow Up</th>
 							<th>Show Detail</th>
@@ -241,6 +242,9 @@
 							<td>{{$query->quirer->inquirerTaobaoUserName}}</td>
 							<!-- email -->
 							<td>{{$query->quirer->inquirerEmail}}</td>
+							<!-- house pair -->
+							<td><button type="button" class="btn btn-primary btn-sm" onclick="location.reload(true);HousePair('{{$query->country}}','{{$query->state}}','{{$query->city}}');" > House Pair</button>
+							</td>
 							
 							<!-- if priority is not enough -->
 							@if($Rep->repPriority >=2)  
@@ -645,6 +649,16 @@
 	      }
 
 	    }
+
+		function HousePair(country, state, city){
+			var data={};
+			data['country'] = country;
+			data['state'] = state;
+			data['city'] = city;
+			var para = $.param(data);
+			console.log(para);
+			window.location.replace("/houses/results?"+para);
+		}
 
 
 		function filterInquiry(){

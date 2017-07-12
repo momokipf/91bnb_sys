@@ -13,11 +13,11 @@ class CreateHousingConditionTable extends Migration
      */
     public function up()
     {
-        Schema::create('HousingCondition', function (Blueprint $table) {
+        if (!Schema::hasTable('HousingCondition')){
+            Schema::create('HousingCondition', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->integer('numberID')->unsigned();
             $table->primary('numberID');
-
 
             $table->string('additionalNote', 50)->nullable();
             $table->tinyInteger('offerToothbrush')->nullable();
@@ -73,15 +73,13 @@ class CreateHousingConditionTable extends Migration
             $table->tinyInteger('allowLandryDryer')->nullable();
             $table->tinyInteger('allowGym')->nullable();
             $table->tinyInteger('allowElevator')->nullable();
-            $table->tinyInteger('allowHotTub')->nullable();
-
-
-            
-
+            $table->tinyInteger('allowHotTub')->nullable();   
         });
         Schema::table('HousingCondition', function($table) {
             $table->foreign('numberID')->references('numberID')->on('House')->onDelete('cascade');
         });
+        }
+        
     }
 
     /**

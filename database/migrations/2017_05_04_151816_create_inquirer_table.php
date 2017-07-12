@@ -17,28 +17,31 @@ class CreateInquirerTable extends Migration
      */
     public function up()
     {
-        Schema::create('Inquirer', function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-            $table->increments('inquirerID')->comment('inquirer ID');
-            $table->string('inquirerFirst', 20)->nullable()->comment('inquirer first name, 20 letters max');
-            $table->string('inquirerLast', 20)->nullable()->comment('inquirer last name, 20 letters max');
-            $table->string('inquirerUsPhoneNumber', 20)->nullable();
-            $table->string('inquirerPhoneCountry', 30)->nullable()->comment('inquirer phone number area code');
-            $table->string('inquirerPhoneNumber', 15)->nullable()->comment('inquirer phone number');
-            $table->string('inquirerEmail', 40)->nullable()->comment('inquirer email');
-            $table->string('inquirerTaobaoUserName', 25)->nullable();
-            $table->string('inquirerWechatUserName', 25)->nullable();
-            $table->string('inquirerWechatID', 35)->nullable();
-            $table->string('inquirerCountry', 30)->nullable();
-            $table->string('inquirerState', 30)->nullable();
-            $table->string('inquirerCity', 30)->nullable();
-            $table->string('inquirerCityOther', 30)->nullable();
+        if (!Schema::hasTable('Inquirer')) {
+            Schema::create('Inquirer', function (Blueprint $table) {
+                $table->engine = 'InnoDB';
+                $table->increments('inquirerID')->comment('inquirer ID');
+                $table->string('inquirerFirst', 20)->nullable()->comment('inquirer first name, 20 letters max');
+                $table->string('inquirerLast', 20)->nullable()->comment('inquirer last name, 20 letters max');
+                $table->string('inquirerUsPhoneNumber', 20)->nullable();
+                $table->string('inquirerPhoneCountry', 30)->nullable()->comment('inquirer phone number area code');
+                $table->string('inquirerPhoneNumber', 15)->nullable()->comment('inquirer phone number');
+                $table->string('inquirerEmail', 40)->nullable()->comment('inquirer email');
+                $table->string('inquirerTaobaoUserName', 25)->nullable();
+                $table->string('inquirerWechatUserName', 25)->nullable();
+                $table->string('inquirerWechatID', 35)->nullable();
+                $table->string('inquirerCountry', 30)->nullable();
+                $table->string('inquirerState', 30)->nullable();
+                $table->string('inquirerCity', 30)->nullable();
+                $table->string('inquirerCityOther', 30)->nullable();
 
-            
+                
 
-            
+                
 
-        });
+            });
+    }
+
     }
 
     /**
