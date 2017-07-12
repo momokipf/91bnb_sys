@@ -243,7 +243,7 @@
 							<!-- email -->
 							<td>{{$query->quirer->inquirerEmail}}</td>
 							<!-- house pair -->
-							<td><button type="button" class="btn btn-primary btn-sm" onclick="location.reload(true);HousePair("{{$query->country}}","{{$query->state}}","{{$query->city}}");" > House Pair</button>
+							<td><button type="button" class="btn btn-primary btn-sm" onclick="location.reload(true);HousePair('{{$query->country}}','{{$query->state}}','{{$query->city}}');" > House Pair</button>
 							</td>
 							
 							<!-- if priority is not enough -->
