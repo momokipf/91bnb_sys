@@ -19,7 +19,6 @@ class CreateHouseTable extends Migration
 
 
                 $table->increments('numberID');
-                $table->unique('numberID', 'numberID');
 
                 //$table->unique('numberID');
                 $table->integer('houseID')->default(0);
