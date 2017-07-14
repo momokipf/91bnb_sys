@@ -2,7 +2,9 @@
 @section('title', 'Representatives')
 
 @section('head')
-	<link rel="stylesheet" href="{{asset('css/bootstrap.css')}}">
+
+	<script src="{{asset('js/bootbox.min.js')}}"></script>
+
 	<style>
 		body{
 /*       	font-family: "Serif";*/
