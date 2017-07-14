@@ -21,7 +21,7 @@ class CreateInquiryTable extends Migration
             Schema::create('Inquiry', function (Blueprint $table) {
                 $table->engine = 'InnoDB';
                 $table->increments('inquiryID')->comment('iquery ID');
-                $table->integer('repID')->nullable()->comment('representative ID');
+                $table->integer('repID')->nullable()->unsigned()->comment('representative ID');
                 $table->date('inquiryDate')->nullable();
                 $table->string('inquirySource', 20)->nullable();
                 $table->string('inquirySourceOther', 20)->nullable();

@@ -16,8 +16,8 @@ class CreateHouseOwnerTable extends Migration
         if (!Schema::hasTable('HouseOwner')){
            Schema::create('HouseOwner', function (Blueprint $table) {
                 $table->engine = 'InnoDB';
-                $table->increments('houseOwnerID');
-                $table->unique('houseOwnerID', 'houseOwnerID');
+                $table->integer('houseOwnerID')->unsigned();
+                $table->primary('houseOwnerID');
                 $table->string('first', 40)->nullable();
                 $table->string('last', 20);
                 $table->string('ownerCompanyName', 40)->nullable();

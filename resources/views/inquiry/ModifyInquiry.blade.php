@@ -2,7 +2,10 @@
 @section('title', 'Modify Inquiry')
 
 @section('head')
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
 
+	<script src="{{asset('js/jquery-ui.js')}}"></script>
+	
 @endsection
 @section('content')
 	<div class="container" style="margin-top:70px;">

@@ -11,6 +11,9 @@
     <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" /> 
 
+    <script src="{{asset('js/bootbox.min.js')}}"></script>
+    <script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
+
     <style>
         html {width:100%; height:100%;}
         body { line-height: 100%; line-height: 100%; width:100%; height:100%;}

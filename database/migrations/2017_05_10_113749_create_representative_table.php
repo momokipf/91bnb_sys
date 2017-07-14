@@ -32,7 +32,7 @@ class CreateRepresentativeTable extends Migration
 
 
                 //$table->primary('repID');
-                $table->unique(['repFirstName', 'repLastName']);
+                //$table->unique(['repFirstName', 'repLastName']);
             });
         }
         

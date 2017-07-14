@@ -81,6 +81,10 @@ class House extends Model
         return $this->hasMany('App\Houseimage','house_id','numberID');
     }
 
+    public function transaction(){
+        return $this->hasMany('App\Transaction','numberID');
+    }
+
     public function setHouseID(){
         $previousHighestID = House::where('country','=',$this->country)
                               ->where('state','=',$this->state)

@@ -4,6 +4,10 @@
 @section('head')
     <link rel="stylesheet" href="{{asset('css/priceswitch.css')}}">
     <link rel="stylesheet" href="{{asset('css/animate.css')}}">
+
+    <script src="{{asset('js/bootbox.min.js')}}"></script>
+    <script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
+    
     @php
         function checkKey(&$arr){
             if(!array_key_exists('houseAddress', $arr)){

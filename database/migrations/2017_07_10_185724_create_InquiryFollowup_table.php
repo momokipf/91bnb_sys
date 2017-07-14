@@ -16,8 +16,10 @@ class CreateInquiryFollowupTable extends Migration
         if (!Schema::hasTable('InquiryFollowup')){
             Schema::create('InquiryFollowup', function (Blueprint $table) {
                 $table->engine = 'InnoDB';
-                $table->integer('inquiryID')->nullable();
-                $table->integer('followupID')->nullable();
+                $table->integer('inquiryID')->unsigned();
+                $table->integer('followupID')->nusigned();
+                $table->primary(['inquiryID','followupID']);
+                
                 $table->date('followupDate')->nullable();
                 $table->string('followupStatus', 50)->nullable();
             });

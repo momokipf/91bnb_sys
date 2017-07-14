@@ -3,6 +3,12 @@
 
 @section('head')
 	<link rel="stylesheet" href="{{asset('css/animate.css')}}">
+
+
+	<script src="{{asset('js/bootbox.min.js')}}"></script>
+	<script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
+
+
 	<style type="text/css">
 		body {
 			background-color: white;
