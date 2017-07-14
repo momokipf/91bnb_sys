@@ -13,7 +13,16 @@
 	<link rel="stylesheet" href="{{asset('css/self.css')}}">
 	<link rel="stylesheet" href="{{asset('css/loader.css')}}">
 	<link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
+	<link rel="stylesheet" href="{{asset('css/bootstrap-datepicker3.css')}}">
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+
+	<script src="{{asset('js/jquery.min.js')}}"></script>
+	<!-- <script src="{{asset('js/jquery-ui.js')}}"></script> -->
+	<script src="{{asset('js/bootstrap.min.js')}}"></script>
+	<script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
+	<script src="{{asset('js/bootstrap-datepicker.min.js')}}"></script>
+	<script src="{{asset('js/util.js')}}"></script>
+	<script src="{{asset('js/bootbox.min.js')}}"></script>
 
 
 	<style type="text/css">
@@ -150,14 +159,6 @@
 </html>
 
 
-	
-	
-<script src="{{asset('js/jquery.min.js')}}"></script>
-<script src="{{asset('js/jquery-ui.js')}}"></script>
-<script src="{{asset('js/bootstrap.min.js')}}"></script>
-<script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
-<script src="{{asset('js/util.js')}}"></script>
-<script src="{{asset('js/bootbox.min.js')}}"></script>
 
 <!-- 
 <script src="{{asset('js/jquery-1.11.3.js')}}"></script>

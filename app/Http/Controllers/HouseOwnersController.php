@@ -120,11 +120,12 @@ class HouseOwnersController extends Controller
                 'bankRountingNumber'=> $input['bankRountingNumber'],
                 'bankAccountNumber' => $input['bankAccountNumber'],
                 ]);
-            Log::info($newowner);
+            $newowner->getownerID();
+            Log::info($newowner->houseOwnerID);
             $newowner->save();
             if($request->ajax() || $request->wantsJson()){
                 return response()
-                    ->json(['duplicate'=>$isduplicate,'owner'=>$newowner])
+                    ->json(['duplicate'=>$isduplicate,'owner'=>$newowner->houseOwnerID])
                     ->header('Content','json');
             }
         }

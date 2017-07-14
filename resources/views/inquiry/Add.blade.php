@@ -394,7 +394,7 @@
 										</div>
 									</div>
 
-									<div class="col-lg-3">
+									<!-- <div class="col-lg-3">
 										<div>
 											<label>Check-In Date</label>
 											<input name = "checkIn" class="form-control" type = "search" id="checkIn" placeholder="mm/dd/yyyy">
@@ -405,6 +405,14 @@
 										<div>
 											<label>Check-Out Date</label>
 											<input name = "checkOut" class="form-control" type = "search" id="checkOut" placeholder="mm/dd/yyyy">
+										</div>
+									</div> -->
+									<div class="col-lg-3">
+										<label>Check-In & Out Date</label>
+										<div class="input-daterange input-group">
+											<input type="text" id="checkIn" name="checkIn" class="form-control" placeholder="mm/dd/yyyy" >
+											<span class="input-group-addon">to</span>
+											<input type="text" id="checkOut" name="checkOut" class="form-control" placeholder="mm/dd/yyyy">
 										</div>
 									</div>
 
@@ -632,7 +640,6 @@
 
 	@section('script')
 	<script>
-
 		function loadList(type,element){
 			$.get("resource/"+type),function(data,status){
 				element.empty();
@@ -751,29 +758,37 @@
 		$(document).ready(function(){
 			loadOpt();// Load list
 			bindhandler();
-			$("#inquiryDate").datepicker({
-			  dateFormat: "mm/dd/yy",
-			  maxDate: 0
-			});
-			$("#inquiryDate").datepicker("setDate", new Date());
+			// $("#inquiryDate").datepicker({
+			//   dateFormat: "mm/dd/yy",
+			//   maxDate: 0
+			// });
+			// $("#inquiryDate").datepicker("setDate", new Date());
 
-			$('#checkIn').datepicker({
-			  dateFormat: "mm/dd/yy",
-			  beforeShow: function () {
-			  $('#checkIn').datepicker('option', 'minDate', 0);
-			  }
+			// $('.input-daterange').datepicker({
+			//   dateFormat: "mm/dd/yy",
+			//   disabledInputs: ['07/14/2017'],
+			//   minDate: 0,
+			//   // beforeShow: function () {
+			//   // $('#checkIn').datepicker('option', 'minDate', 0);
+			//   // }
+			// });
+			$('.input-daterange').each(function(){
+				$(this).datepicker({
+					startDate: 0,
+					dateFormat: "mm/dd/yy",
+				});
 			});
 
-			$('#checkOut').datepicker({
-			  dateFormat: "mm/dd/yy",
-			  beforeShow: function () {
-				var checkIn = $('#checkIn').datepicker("getDate");
-				if(checkIn){
-					checkIn.setDate(checkIn.getDate() + 1);
-					$('#checkOut').datepicker('option', 'minDate', checkIn);
-				}
-			  }
-			});
+			// $('#checkOut').datepicker({
+			//   dateFormat: "mm/dd/yy",
+			//   beforeShow: function () {
+			// 	var checkIn = $('#checkIn').datepicker("getDate");
+			// 	if(checkIn){
+			// 		checkIn.setDate(checkIn.getDate() + 1);
+			// 		$('#checkOut').datepicker('option', 'minDate', checkIn);
+			// 	}
+			//   }
+			// });
 
 
 			$("#search_form").submit(function(){

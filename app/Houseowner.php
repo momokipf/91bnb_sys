@@ -47,6 +47,16 @@ class Houseowner extends Model
         return $newhouse;
     }
 
+    public function getownerID(){
+        $id = Houseowner::select('houseOwnerID')->orderBy('houseOwnerID','desc')->first()->houseOwnerID;
+        if($id){
+            $this->houseOwnerID = $id+1;
+        }
+        else{
+            $this->houseOwnerID = 20000;
+        }
+    }
+
 
     /*
     * Find similar houseowner in database
