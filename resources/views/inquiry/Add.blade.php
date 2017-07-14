@@ -2,6 +2,10 @@
 @section('title', ' Add New Inquiry')
 
 @section('head')
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+
+	<script src="{{asset('js/jquery-ui.js')}}"></script>
+	<script src="{{asset('js/bootbox.min.js')}}"></script>
 
 	<style type="text/css">
 		body {

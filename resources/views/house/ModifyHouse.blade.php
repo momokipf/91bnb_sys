@@ -3,26 +3,10 @@
 
 @section('head')
 
-	<!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
-
-	<!-- jquery -->
-	<script src="{{asset('js/jquery.min.js')}}"></script>
-
-	<!-- bootstrap -->
-	<script src="{{asset('js/bootstrap.min.js')}}"></script>
-
-	<!-- bootstrap phone (local file) -->
-	<script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
-
-	<!-- alert box -->
-	<script src="{{asset('js/bootbox.min.js')}}"></script>
-
 	<link rel="stylesheet" href="{{asset('css/priceswitch.css')}}">
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
-	<script src="{{asset('js/util.js')}}"></script>
-	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-	<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+
+	
+    <script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
 		  
 	<style>
 		html {width:100%; height:100%;}

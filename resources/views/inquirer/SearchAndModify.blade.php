@@ -2,7 +2,6 @@
 @section('title', 'Modify Inquirer')
 
 @section('head')
-	<link rel="stylesheet" href="{{asset('css/bootstrap.css')}}">
 	<style type="text/css">
 		body {
 			line-height: 200%;

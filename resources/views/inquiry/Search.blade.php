@@ -4,9 +4,12 @@
 @section('head')
 
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
-	<!-- bootstrap -->
-	<!-- <link rel="stylesheet" href="../css/bootstrap.min.css"> -->
-	<!-- <link rel="stylesheet" href="../css/self.css"> -->
+	
+	<script src="{{asset('js/jquery-ui.js')}}"></script>
+	<script src="{{asset('js/bootbox.min.js')}}"></script>
+	<script src="{{asset('js/jquery.maskedinput.min.js')}}"></script>
+
+
 	<style>
 		body{
 	  background-color:black;
@@ -625,15 +628,6 @@
 @endsection
 
 @section('script')
-	<script src="{{asset('js/jquery-1.11.3.js')}}"></script>
-	<!-- Bootstrap Latest compiled and minified JavaScript -->
-	<script src="{{asset('js/bootstrap.min.js')}}"></script>
-	<script src="{{asset('js/util.js')}}"></script>
-	<script src="{{asset('js/jquery.maskedinput.min.js')}}"></script>
-	<script src="{{asset('js/bootbox.min.js')}}"></script>
-
-	<!-- jquery ui -->
-	<script src="{{asset('js/jquery-ui.js')}}"></script>
 
 	<script>
 

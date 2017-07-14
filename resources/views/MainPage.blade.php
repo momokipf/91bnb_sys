@@ -2,7 +2,7 @@
 @section('title', 'Main Page')
 
 @section('head')
-<?php
+    <?php
      $pagenum = 1;
        $itemsEachPage = 10;
        date_default_timezone_set('America/Los_Angeles');

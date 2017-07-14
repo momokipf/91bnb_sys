@@ -2,7 +2,6 @@
 @section('title', 'Show All Inquirers')
 
 @section('head')
-	<link rel="stylesheet" href="{{asset('css/bootstrap.css')}}">
 	<style>
 		/*body {
 			padding-left: 5%; padding-right: 5%;
