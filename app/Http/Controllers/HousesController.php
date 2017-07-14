@@ -13,7 +13,7 @@ use GuzzleHttp\Client;
 
 use Validator;
 use View;
-
+use \DateTime;
 use App\House;
 use App\Houseavailability;
 use App\Houseowner;
@@ -447,6 +447,9 @@ class HousesController extends Controller
     		$numOfRoomsTo = 10;
     	}
 
+        $checkIndate = $request->input('checkIn');
+        $checkOutdate = $request->input('checkOut');
+
     	$rentShared = $request->input('rentShareWhole');
 
     	$target_pt = null;
@@ -474,22 +477,23 @@ class HousesController extends Controller
     				]);
     		}
     	}
-
+        /*
+        Spatial information
+        */
     	if($request->input('search_latitude')&&$request->input('search_longitude'))
     	{
     		$target_pt = collect(['latitude'=>$request->input('search_latitude'),'longitude'=>$request->input('search_longitude')]);
     	}
     	else{
-	    	if(isset($road_1)&&isset($road_2))
-	    	{
-	    		$query_addr= $road_1.' and '.$road_2.','.$zipcode;
-	    		$response =$httpclient->request('GET','maps/api/geocode/json?',['query'=>['address'=>$query_addr,'key'=>GOOGLE_KEY]]);
-
-	    	}
-	    	else if($houseAddress)
+            if($houseAddress)
 	    	{
 	    		$query_addr=$houseAddress.($country?','.$country:' ').($state?','.$state:' ').($city?','.$city:' ').','.$zipcode;
+                try{
 	    		$response =$httpclient->request('GET','maps/api/geocode/json?',['query'=>['address'=>$query_addr,'key'=>GOOGLE_KEY]]);
+               }
+               catch(GuzzleHttp\Exception\ConnectException $e){
+                    Log::error($e);
+               }
 	    	}
     	}
 
@@ -526,41 +530,100 @@ class HousesController extends Controller
 			}
 		}
 
+
+
 		$fields = array('r.numberID', 'fullHouseID', 'state', 'city', 'houseAddress','numOfRooms', 'numOfBaths','houseType','r.houseOwnerID','latitude','longitude',//basic information
                      'costMonthPrice', 'costDayPrice',//price information
-                     'nextAvailableDate', 'minStayTerm','minStayUnit', 'rentShared',//available information
+                     // 'nextAvailableDate', 'minStayTerm','minStayUnit', 'rentShared',//available information
                      'first', 'last', 'ownerUsPhoneNumber', 'ownerWechatUserName','ownerWechatID','ownerCompanyName');
 		Log::info($target_pt);
 		if(isset($target_pt))
     	{
-    		$housesql = House::WithinCircle($radius,$target_pt)->toSql();
-    		$circlesql = "ST_Distance_Sphere(r.location,POINT(".$target_pt['longitude'].','.$target_pt['latitude']."))";//<".$radius;
-            Log::info($housesql);
-    		$housebuilder = DB::table(DB::raw("(".$housesql.") as r"))
-    					->select(DB::raw(implode(',',$fields)))
-    					->join('HouseOwner','r.houseOwnerID','=','HouseOwner.houseOwnerID')
-    					->join('HousePrice','r.numberID','=','HousePrice.numberID')
-    					->join('HouseAvailability','r.numberID','=','HouseAvailability.numberID')
-    					->join('HousingCondition','r.numberID','=','HousingCondition.numberID')
-    					->whereRaw($circlesql.'<'.$radius*1000);
+    		// $housesql = House::WithinCircle($radius,$target_pt)->toSql();
+    		// $circlesql = "ST_Distance_Sphere(r.location,POINT(".$target_pt['longitude'].','.$target_pt['latitude']."))";//<".$radius;
+      //       Log::info($housesql);
+    		// $housebuilder = 
+      //                   DB::table(DB::raw("(".$housesql.") as r"))
+      //                   ->join('HouseOwner','r.houseOwnerID','=','HouseOwner.houseOwnerID')
+      //                   ->join('HousePrice','r.numberID','=','HousePrice.numberID')
+      //                   ->leftjoin('HouseAvailability','r.numberID','=','HouseAvailability.numberID')
+      //                   ->join('HousingCondition','r.numberID','=','HousingCondition.numberID')
+    		// 			->select(DB::raw(implode(',',$fields)))
+    		// 			->whereRaw($circlesql.'<'.$radius*1000);
 
-    		if($rentShared!=0){
-    			$housebuilder = $housebuilder->where('rentShared','=',$rentShared);
-    		}
+            $housebuilder = House::WithinCircle($radius,$target_pt)
+                        ->ShpereDistance($radius,$target_pt)
+                        ->orderBy(DB::raw("ST_Distance_Sphere(location,POINT(".$target_pt['longitude'].','.$target_pt['latitude']."))"));
 
-    		$housebuilder = $housebuilder->whereBetween('numOfRooms',[$numOfRoomsFrom,$numOfRoomsTo]);
+    		// if($rentShared!=0){
+    		// 	$housebuilder = $housebuilder->where('rentShared','=',$rentShared);
+    		// }
 
-    		$housebuilder = $housebuilder
-    							->orderBy(DB::raw($circlesql));
+    		// $housebuilder = $housebuilder->whereBetween('numOfRooms',[$numOfRoomsFrom,$numOfRoomsTo]);
+
+
+    		// $housebuilder = $housebuilder
+    		// 					->orderBy(DB::raw($circlesql));
+            $houses = $housebuilder->get();
+            Log::info(DB::getQueryLog());
+            if(isset($checkOutdate)&&isset($checkIndate)){
+                $houses = $houses->filter(function($house) use($checkIndate,$checkOutdate){
+                    $tmp = $this->checkAvailability($house->houseavailability()->orderBy('rentBegin')->get(),$checkIndate,$checkOutdate);
+                    Log::info($house->numberID."result: ".$tmp);
+                    return $tmp;
+                });
+            }
 
 
     		return response()
-    			->json(['houses'=>$housebuilder->get(),
+    			->json(['houses'=>$houses->values(),
     					 'geo_center'=>$search_geo
     				]);
     	}
 
 
+    }
+
+
+
+
+    /** 
+    * @desc This function check one house availability
+    * given one checkin-checkout interval 
+    * @author Moki mokipang@91bnb.com
+    * @required all
+    */    
+
+    private function checkAvailability(\Illuminate\Support\Collection $availabilityInterval,$checkIndate,$checkOutdate){
+        if(!isset($checkIndate)||!isset($checkOutdate))
+        {
+            Log::debug("HouseController:: variable $checkIndate and $checkOutdate is not set, function will not work");
+            return true;
+        }
+        if(count($availabilityInterval)==0)
+            return true;
+        $numberID = $availabilityInterval[0]->numberID;
+        $notAvaInterval = array();
+        $web_format="Y/m/d";
+        $sql_format="Y-m-d";
+        $checkInterval = array(DateTime::createFromFormat($web_format,$checkIndate),DateTime::createFromFormat($web_format,$checkOutdate));
+        foreach($availabilityInterval as $availability){
+            $notAvaInterval[] = array(DateTime::createFromFormat($sql_format,$availability->rentBegin),DateTime::createFromFormat($sql_format,$availability->rentEnd));
+        }
+
+        for($i = 0; $i<count($notAvaInterval);++$i){
+            if($checkInterval[0]>$notAvaInterval[$i][1]){
+                continue;
+            }
+            if($checkInterval[0]>$notAvaInterval[$i][0]&&$checkInterval[0]<$notAvaInterval[$i][1]){
+                Log::info($numberID+" is not available for given interval");
+                return false;
+            }
+            else{
+                return $checkInterval[1]<$notAvaInterval[$i][0];
+            }
+        }
+        return true;
     }
 
 

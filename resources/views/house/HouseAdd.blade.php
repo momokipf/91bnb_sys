@@ -1116,7 +1116,7 @@
 							$("#houseOwnerID").val(houseOwner.houseOwnerID);
 							$('#new_house_owner_modal').modal('toggle');
 							bootbox.dialog({
-								message:"Succussfully added new house owner. ID: " + houseOwner.houseOwnerID,
+								message:"Succussfully added new house owner. ID: " + houseOwner,
 								title: "Confirmation",
 								buttons: {
 									main: {

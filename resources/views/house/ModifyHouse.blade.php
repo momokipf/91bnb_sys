@@ -3,11 +3,35 @@
 
 @section('head')
 
+	<!-- Bootstrap CSS -->
+	<!--<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">-->
+
+	<!-- jquery -->
+	<!-- <script src="{{asset('js/jquery.min.js')}}"></script> -->
+
+	<!-- bootstrap -->
+	<!--<script src="{{asset('js/bootstrap.min.js')}}"></script>-->
+
+	<!-- bootstrap phone (local file) -->
+	<!--<script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>-->
+
+	<!-- alert box -->
+	<!--<script src="{{asset('js/bootbox.min.js')}}"></script>-->
+
+	<link rel="stylesheet" href="{{asset('css/priceswitch.css')}}">
+
+	<!-- Include Required Prerequisites -->
+	<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+	<!-- Include Date Range Picker -->
+	<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+	<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />	  
+
 	<link rel="stylesheet" href="{{asset('css/priceswitch.css')}}">
 
 	
     <script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
 		  
+
 	<style>
 		html {width:100%; height:100%;}
 		body { line-height: 100%; line-height: 100%; width:100%; height:100%;}
@@ -50,7 +74,7 @@
 			display: inline-block;
 			padding: 3px;
 		}
-		.left{
+		.arrowleft{
 			transform: rotate(135deg);
 			-webkit-transform: rotate(135deg);
 		}
@@ -72,7 +96,6 @@
 	</style>
 
 	<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAAIAQT72snLXj_BITkOc5TMZjpTrzbYRw&language=en&callback=initAutoComplete"></script>
-
 	<script>
 		var componentForm = {
 			//street_number: 'short_name',
@@ -127,133 +150,6 @@
 				document.getElementById('longitude').value="";
 			}
 		}
-
-		$(document).ready(function() {
-			loadOpt();
-			$("#hotcountry").load("{{asset('list/hotCountryList')}}");
-			$("#rentShared").val("{{$house->houseavailability->rentShared}}");
-			$("#available").val("{{$house->houseavailability->availability}}");
-			$("#minStayUnit").val("{{$house->houseavailability->minStayUnit}}");
-			$("#allowCooking").val("{{$house->houseavailability->allowCooking}}");
-			$("#furnished").val("{{$house->houseavailability->furnished}}");
-
-			$("#allowKid").change(function() {
-				if (this.checked) {
-					$("#allowKidAge").prop("disabled", false);
-					$("#allowKidAge").val("");
-				}
-				else {
-					$("#allowKidAge").prop("disabled", true);
-					$("#allowKidAge").val("");
-				}
-			});
-
-			$("#allowPets").change(function() {
-				if (this.checked) {
-					$("#allowPetType").prop("disabled", false);
-					$("#allowPetType").val("");
-				}
-				else {
-					$("#allowPetType").prop("disabled", true);
-					$("#allowPetType").val("");
-				}
-			});
-
-			$("#havePet").change(function() {
-				if (this.checked) {
-					$("#havePetType").prop("disabled", false);
-					$("#havePetType").val("");
-				}
-				else {
-					$("#havePetType").prop("disabled", true);
-					$("#havePetType").val("");
-				}
-			});
-
-			$.get("/resource/roomTypes",function(data,status){
-				roomtype = "";
-				for(i=0;i<data.length;++i){
-					// var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-					// $('#room1Type').append(option);
-					// $('#room2Type').append("<option>" + data[i] + "</option>");
-					var option = "<option value='" + data[i] + "'> "+data[i]+"</option>";
-					roomtype += option;
-				}
-				var room = "{{$house->houserooms}}";
-				room = room.replace(/&quot;/g, '"');
-				room = JSON.parse(room);
-				// console.log(room);
-
-				for (var i = 1; i <= $("#roomsdiv").children().length; i++) {
-					$("#roomType_"+i).html(roomtype);
-					$("#roomType_"+i).val(room[0].roomType);
-				}
-			});
-
-			$.get("/resource/bedTypes",function(data,status){
-				bedtype = "";
-				for(i=0;i<data.length;++i){
-					// var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-					// $('#room1Type').append(option);
-					// $('#room2Type').append("<option>" + data[i] + "</option>");
-					var option = "<option value='" + data[i] + "'> "+data[i]+"</option>";
-					bedtype += option;
-				}
-				var room = "{{$house->houserooms}}";
-				bedT = room.replace(/&quot;/g, '"');
-				bedT = JSON.parse(bedT);
-				for (var i = 1; i <= $("#roomsdiv").children().length; i++) {
-					$("#roomBedType_"+i).html(bedtype);
-					$("#roomBedType_"+i).val(bedT[0].roomBedType);
-				}
-			});
-
-			$('#addRoom').click(function(){
-				var count = $("#roomsdiv").children().length + 1;
-				var htmlstr = "<div class='well' style='background-color:white;margin-bottom:30px' id=room"+count+">";
-				htmlstr += "<h4>Room "+count+"</h4><div class='row'><div class='col-sm-2'><label>Room ID</label>" + 
-						   "<input readonly type='number' class='form-control input-sm' name='roomID_"+count+"' value="+count+"></div>"+
-						   "<div class='col-sm-2'><label>Room Type</label>" +
-						   "<select class='form-control input-sm' name='roomType_"+count+"' id='roomType_"+count+" '>"+roomtype+"</select></div></div>"+
-						   "<div class='row'><div class='col-sm-2'><label>Bed Type</label><select class='form-control input-sm' name='roomBedType_"+count+"' id='roomBedType_"+count+"'>"+bedtype+"</select></div>"+
-						   "<div class='col-sm-2' id='roomBedTypeotherdiv_"+count+"'><label>Bed Type Other</label>"+
-						   "<input name='roomBedTypeOther_"+count+"' id='roomBedTypeOther_"+count+"' 'text' class='form-control input-sm'></div>"+
-						   "<div class='col-sm-2'><label>Max Guests number</label><input name='maxGuestsnum_"+count+"' id='maxGuestsnum_"+count+"' type='number' class='form-control input-sm' min='0'></div></div>"+
-						   "<div class=row><div class='col-sm-2'><label>Cost Day Price</label><div class='input-group'><span class='input-group-addon'>$</span>"+
-						   "<input type='number' name='roomCostDayPrice_"+count+"' min='0' class='form-control input-sm'><span class='input-group-addon'>USD</span></div></div>"+
-						   "<div class='col-sm-2'><label>Cost Week Price</label><div class='input-group'><span class='input-group-addon'>$</span>"+
-						   "<input type='number' name='roomCostWeekPrice_"+count+"' class='form-control input-sm' min='0'><span class='input-group-addon'>USD</span></div></div>"+
-						   "<div class='col-sm-2'><label>Cost Month Price</label><div class='input-group'><span class='input-group-addon'>$</span>"+
-						   "<input type='number' name='roomCostMonthPrice_"+count+"' class='form-control input-sm' min='0'><span class='input-group-addon'>USD</span></div></div></div>"+
-
-						   "<div class='row'><div class='col-sm-2'><label>Cost Utility</label><div class='input-group'><span class='input-group-addon'>$</span>"+
-						   "<input type='number' name='roomCostUtility_"+count+"' class='form-control input-sm' min='0'><span class='input-group-addon'>USD</span></div></div>"+
-						   "<div class='col-sm-4'><label>Utility Note</laebl><textarea class='form-control' rows='4' cols='50' name='utilityNote_"+count+"' placeholder='What&#39s included? Ex: Wi-Fi, Electricity, Water, Gas...'></textarea></div></div>"+
-							   "<div class='row'><div class='col-sm-2'><label>Cleaning Fee</label><div class='input-group'><span class='input-group-addon'>$</span>"+
-							   "<input type='number' name='roomCostCleaning_"+count+"' class='form-control input-sm' min='0'><span class='input-group-addon'>USD</span></div></div>"+
-							   "<div class='col-sm-2'><label>Cost Security Deposit</label><div class='input-group'><span class='input-group-addon'>$</span>"+
-							   "<input type='number' name='roomCostSecurityDeposit_"+count+"' class='form-control input-sm'><span class='input-group-addon'>USD</span></div></div></div>"+
-						   "</div>";
-				$('#roomsdiv').append(htmlstr);
-			});
-
-			$('#removeRoom').click(function(){
-				$("#roomsdiv").children().last().remove();
-			});
-
-			$('#modifyForm').submit(function() {
-				var toSend = $('#modifyForm').serializeArray();
-				$.ajax({
-					type: "POST",
-					url: "/house/modify/store",
-					data: $.param(toSend),
-					success: function(data) {
-						console.log("Success");
-					}
-				});
-			});
-		});
-
 	</script>
 @endsection
 
@@ -307,7 +203,7 @@
 					<div class='row'>
 						<div class='col-sm-2'>
 							<label>Country</label>
-							<input class='form-control input-sm' type='text' name='country' id='country' list="hotcountry" value="{{$house->country}}">
+							<input class='form-control input-sm' type='text' name='country' id='country' list="hotcountry" value="{{$house->country}}" readonly>
 							<datalist id="hotcountry">
 							</datalist>
 						</div>
@@ -319,21 +215,21 @@
 					</div>
 
 					<div class="row" hidden>
-						<input id="state" name="state" value="{{$house->country}}">
-						<input id="city" name="city" value="{{$house->city}}">
-						<input id="longitude" name="longitude" value="{{$house->longitude}}">
-						<input id="latitude" name="latitude" value="{{$house->latitude}}">
+						<input id="state" name="state" value="{{$house->country}}" readonly>
+						<input id="city" name="city" value="{{$house->city}}" readonly>
+						<input id="longitude" name="longitude" value="{{$house->longitude}}" readonly>
+						<input id="latitude" name="latitude" value="{{$house->latitude}}" readonly>
 					</div>
 
 					<div class='row'>
 						<div class='col-sm-4'>
 								<label>House Address</label>
-								<input type='text' name='houseAddress' id='houseAddress' value="{{$house->houseAddress}}" class='form-control input-sm'>
+								<input type='text' name='houseAddress' id='houseAddress' value="{{$house->houseAddress}}" class='form-control input-sm' readonly>
 						</div>
 
 						<div class='col-sm-2'>
 							<label>Zip</label>
-							<input class='form-control input-sm' type='text' name='houseZip' id='houseZip' value="{{$house->houseZip}}">
+							<input class='form-control input-sm' type='text' name='houseZip' id='houseZip' value="{{$house->houseZip}}" readonly>
 						</div>
 					</div>
 
@@ -646,7 +542,7 @@
 				</div>
 
 				<div class="tab-pane fade" id="availability">
-					<div class="row">
+					<!-- <div class="row">
 						<div class="col-sm-2">
 							<label>Whole/Share</label>
 							<select name="rentShared" id="rentShared" class="form-control input-sm">
@@ -661,9 +557,6 @@
 						<div class="col-sm-2">
 							<label>Availability</label>
 							<select name="available" id="available" class="form-control input-sm">
-								<!--  <option value = 0 >N/A</option>
-								<option value = 1 >Yes</option>
-								<option value = -1 >No</option> -->
 								<option value = 1 >Yes</option>
 								<option value = 0 >Yes, but not now</option>
 								<option value = -1>No</option>
@@ -672,7 +565,6 @@
 
 						<div class="col-sm-2" id="nextAvailableDateDiv" style="display:none;">
 							<label>Next Available Date</label>
-							<!--<input type="date" name="nextAvailableDate" id="nextAvailableDate" class="form-control input-sm">-->
 							<input type="search" name="nextAvailableDate" id="nextAvailableDate" class="form-control input-sm" placeholder="mm/dd/yyyy">
 						</div>
 					</div>
@@ -690,7 +582,11 @@
 
 						<div class="col-sm-2">
 							<label>Minimum Stay Term</label>
-							<input type="number" name="minStayTerm" value="{{$house->houseavailability->minStayTerm}}" class="form-control input-sm">
+							@if($house->houseavailability)
+								<input type="number" name="minStayTerm" value="{{$house->houseavailability->minStayTerm}}" class="form-control input-sm">
+							@else
+								<input type="number" name="minStayTerm" value="1" class="form-control input-sm" min="1">
+							@endif
 						</div>
 					</div>
 
@@ -719,9 +615,24 @@
 					<div class="row">
 						<div class="col-sm-4">
 							<label>Availability Note</label>
+							@if($house->houseavailability)
 							<textarea class="form-control" rows="4" cols="50" name="availabilityNote">{{$house->houseavailability->availabilityNote}}</textarea>
+							@else
+							<textarea class="form-control" rows="4" cols="50" name="availabilityNote"></textarea>
+							@endif
 						</div>               
+					</div> -->
+
+					<div class="row">
+						<!-- <div id="calender"></div>
+						<input type="text" id="calender" name="daterange" value=""  /> -->
+						<div class="col-lg-12">
+						<label> Calendar </label>
+						<input type="text" name="daterange" id="calendar" class ="form-control" value="01/01/2015 1:30 PM - 01/01/2015 2:00 PM" />
+						</div>
 					</div>
+
+
 				</div>
 
 				<div class="tab-pane fade" id="price">
@@ -977,6 +888,140 @@
 		</form>
 	</div>
 
+@endsection
+
+@section('script')
+<script>
+
+
+	$(document).ready(function() {
+			loadOpt();
+			//$("#hotcountry").load("{{asset('list/hotCountryList')}}");
+			$('input[name="daterange"]').daterangepicker({
+
+				isInvalidDate: function(date) {
+				  return (date.day() == 0 || date.day() == 6);
+				}
+		    });
+
+
+			$("#allowKid").change(function() {
+				if (this.checked) {
+					$("#allowKidAge").prop("disabled", false);
+					$("#allowKidAge").val("");
+				}
+				else {
+					$("#allowKidAge").prop("disabled", true);
+					$("#allowKidAge").val("");
+				}
+			});
+
+			$("#allowPets").change(function() {
+				if (this.checked) {
+					$("#allowPetType").prop("disabled", false);
+					$("#allowPetType").val("");
+				}
+				else {
+					$("#allowPetType").prop("disabled", true);
+					$("#allowPetType").val("");
+				}
+			});
+
+			$("#havePet").change(function() {
+				if (this.checked) {
+					$("#havePetType").prop("disabled", false);
+					$("#havePetType").val("");
+				}
+				else {
+					$("#havePetType").prop("disabled", true);
+					$("#havePetType").val("");
+				}
+			});
+
+			$.get("/resource/roomTypes",function(data,status){
+				roomtype = "";
+				for(i=0;i<data.length;++i){
+					// var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+					// $('#room1Type').append(option);
+					// $('#room2Type').append("<option>" + data[i] + "</option>");
+					var option = "<option value='" + data[i] + "'> "+data[i]+"</option>";
+					roomtype += option;
+				}
+				var room = "{{$house->houserooms}}";
+				room = room.replace(/&quot;/g, '"');
+				room = JSON.parse(room);
+				// console.log(room);
+
+				for (var i = 1; i <= $("#roomsdiv").children().length; i++) {
+					$("#roomType_"+i).html(roomtype);
+					$("#roomType_"+i).val(room[0].roomType);
+				}
+			});
+
+			$.get("/resource/bedTypes",function(data,status){
+				bedtype = "";
+				for(i=0;i<data.length;++i){
+					// var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+					// $('#room1Type').append(option);
+					// $('#room2Type').append("<option>" + data[i] + "</option>");
+					var option = "<option value='" + data[i] + "'> "+data[i]+"</option>";
+					bedtype += option;
+				}
+				var room = "{{$house->houserooms}}";
+				bedT = room.replace(/&quot;/g, '"');
+				bedT = JSON.parse(bedT);
+				for (var i = 1; i <= $("#roomsdiv").children().length; i++) {
+					$("#roomBedType_"+i).html(bedtype);
+					$("#roomBedType_"+i).val(bedT[0].roomBedType);
+				}
+			});
+
+			$('#addRoom').click(function(){
+				var count = $("#roomsdiv").children().length + 1;
+				var htmlstr = "<div class='well' style='background-color:white;margin-bottom:30px' id=room"+count+">";
+				htmlstr += "<h4>Room "+count+"</h4><div class='row'><div class='col-sm-2'><label>Room ID</label>" + 
+						   "<input readonly type='number' class='form-control input-sm' name='roomID_"+count+"' value="+count+"></div>"+
+						   "<div class='col-sm-2'><label>Room Type</label>" +
+						   "<select class='form-control input-sm' name='roomType_"+count+"' id='roomType_"+count+" '>"+roomtype+"</select></div></div>"+
+						   "<div class='row'><div class='col-sm-2'><label>Bed Type</label><select class='form-control input-sm' name='roomBedType_"+count+"' id='roomBedType_"+count+"'>"+bedtype+"</select></div>"+
+						   "<div class='col-sm-2' id='roomBedTypeotherdiv_"+count+"'><label>Bed Type Other</label>"+
+						   "<input name='roomBedTypeOther_"+count+"' id='roomBedTypeOther_"+count+"' 'text' class='form-control input-sm'></div>"+
+						   "<div class='col-sm-2'><label>Max Guests number</label><input name='maxGuestsnum_"+count+"' id='maxGuestsnum_"+count+"' type='number' class='form-control input-sm' min='0'></div></div>"+
+						   "<div class=row><div class='col-sm-2'><label>Cost Day Price</label><div class='input-group'><span class='input-group-addon'>$</span>"+
+						   "<input type='number' name='roomCostDayPrice_"+count+"' min='0' class='form-control input-sm'><span class='input-group-addon'>USD</span></div></div>"+
+						   "<div class='col-sm-2'><label>Cost Week Price</label><div class='input-group'><span class='input-group-addon'>$</span>"+
+						   "<input type='number' name='roomCostWeekPrice_"+count+"' class='form-control input-sm' min='0'><span class='input-group-addon'>USD</span></div></div>"+
+						   "<div class='col-sm-2'><label>Cost Month Price</label><div class='input-group'><span class='input-group-addon'>$</span>"+
+						   "<input type='number' name='roomCostMonthPrice_"+count+"' class='form-control input-sm' min='0'><span class='input-group-addon'>USD</span></div></div></div>"+
+
+						   "<div class='row'><div class='col-sm-2'><label>Cost Utility</label><div class='input-group'><span class='input-group-addon'>$</span>"+
+						   "<input type='number' name='roomCostUtility_"+count+"' class='form-control input-sm' min='0'><span class='input-group-addon'>USD</span></div></div>"+
+						   "<div class='col-sm-4'><label>Utility Note</laebl><textarea class='form-control' rows='4' cols='50' name='utilityNote_"+count+"' placeholder='What&#39s included? Ex: Wi-Fi, Electricity, Water, Gas...'></textarea></div></div>"+
+							   "<div class='row'><div class='col-sm-2'><label>Cleaning Fee</label><div class='input-group'><span class='input-group-addon'>$</span>"+
+							   "<input type='number' name='roomCostCleaning_"+count+"' class='form-control input-sm' min='0'><span class='input-group-addon'>USD</span></div></div>"+
+							   "<div class='col-sm-2'><label>Cost Security Deposit</label><div class='input-group'><span class='input-group-addon'>$</span>"+
+							   "<input type='number' name='roomCostSecurityDeposit_"+count+"' class='form-control input-sm'><span class='input-group-addon'>USD</span></div></div></div>"+
+						   "</div>";
+				$('#roomsdiv').append(htmlstr);
+			});
+
+			$('#removeRoom').click(function(){
+				$("#roomsdiv").children().last().remove();
+			});
+
+			$('#modifyForm').submit(function() {
+				var toSend = $('#modifyForm').serializeArray();
+				$.ajax({
+					type: "POST",
+					url: "/house/modify/store",
+					data: $.param(toSend),
+					success: function(data) {
+						console.log("Success");
+					}
+				});
+			});
+		});
+</script>
 @endsection
 
 

@@ -472,6 +472,22 @@
             loadDatafromServer();
         });
 
+        $('.input-daterange').datepicker({
+            orientation: "bottom",
+            format: "mm/dd/yyyy",
+        });
+
+        $('#checkIn').change(function(){
+            var date = $(this).datepicker('getDate');
+            $('#houseSearchForm').find('input[name="checkIn"]').val(converttimetosql(date));
+        })
+        $('#checkOut').change(function(){
+            var date = $(this).datepicker('getDate');
+            $('#houseSearchForm').find('input[name="checkOut"]').val(converttimetosql(date));
+        })
+
+
+
         /*
         TODO:(1)add link to initialize a GET request to server to get house info
              (2)add link to initialize a GET request to server to get houseowner info

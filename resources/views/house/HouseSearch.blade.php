@@ -5,9 +5,15 @@
     <link rel="stylesheet" href="{{asset('css/priceswitch.css')}}">
     <link rel="stylesheet" href="{{asset('css/animate.css')}}">
 
+    <!-- Include Required Prerequisites -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <!-- Include Date Range Picker -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" /> 
+
     <script src="{{asset('js/bootbox.min.js')}}"></script>
     <script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
-    
+
     <style>
         html {width:100%; height:100%;}
         body { line-height: 100%; line-height: 100%; width:100%; height:100%;}
@@ -17,7 +23,7 @@
         .table-bordered th{ text-align: center;}
         .disToLeft { margin-left: 20px;}
         .tab-content {
-            padding: 20px;
+            padding: 10px;
             border-left: 1px solid #ddd;
             border-right: 1px solid #ddd;
             border-bottom: 1px solid #ddd;
@@ -50,7 +56,7 @@
           display: inline-block;
           padding: 3px;
         }
-        .left{
+        .arrowleft{
             transform: rotate(135deg);
             -webkit-transform: rotate(135deg);
         }
@@ -76,8 +82,34 @@
             content:"I know";
         }
 
+        .datefrom::after {
+            content: "----";
+        }
         .tab{
             margin-left: 5px;
+        }
+
+        #loadele{
+            display:    none;
+            position:   fixed;
+            z-index:    1000;
+            top:        0;
+            left:       0;
+            height:     100%;
+            width:      100%;
+            background: rgba( 255, 255, 255, .8 ) 
+            url('http://sampsonresume.com/labs/pIkfp.gif') 
+            50% 50% 
+            no-repeat;
+        }
+
+        #loadele.loading{
+            overflow:hidden;
+            display:block;
+        }
+
+        #loadele.loading .modal{
+            display:block;
         }
 
         .searchtypediv{
@@ -108,196 +140,217 @@
                         <form id="houseSearchForm">
                         <!-- {{csrf_field()}} -->
                             <div class="row">
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <label>Inquerier ID</label>
-                                        @if(isset($inquirerID))
-                                        <input class="form-control input-sm" type="text" id="inquirerID" name="inquirerID" value="{{$inquirerID}}" readonly>
-                                        @else
-                                        <input class="form-control input-sm" type="text" id="inquirerID" name="inquirerID" readonly>
+                                <div class="col-lg-4">
+                                    <label>Inquerier ID</label>
+                                    @if(isset($inquirerID))
+                                    <input class="form-control input-sm" type="text" id="inquirerID" name="inquirerID" value="{{$inquirerID}}" readonly>
+                                    @else
+                                    <input class="form-control input-sm" type="text" id="inquirerID" name="inquirerID" readonly>
+                                    @endif
+                                        
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <label>Representatives</label>
+                                    @if(isset($searchrepID))
+                                    <input class="form-control input-sm" type="text" id="repWithOwner" name="repWithOwner" value="{{$repID}}" readonly>
+                                    @else
+                                    <input class="form-control input-sm" type="text" id="repWithOwner" name="repWithOwner" readonly>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="row" hidden>
+                                    <input name = "country"  id="country">
+                                    <input id="administrative_area_level_1" name="state">
+                                    <input id="locality" name="city">
+                                    <input id="route" name="route">
+                                    <input id="address" diabled>
+                                    <input id='postal_code' name="zipcode" maxlength="5">
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <label>House Address <span style="color:red;">*</span></label>
+                                    <input class="form-control input-sm"  type="text" id="houseAddress" name="houseAddress" placeholder="Enter and address,neighborhood,city,zipcode" >
+                                </div>
+
+                                <div class="col-lg-3">
+                                    <label>Apply Range</label>
+                                    <select class="form-control input-sm" id="milesrange" name="milesrange">
+                                        <OPTION value=1>&nbsp;&nbsp;1 Mile</OPTION>
+                                        <OPTION value=2 selected>&nbsp;&nbsp;2 Miles</OPTION>
+                                        <OPTION value=5 >&nbsp;&nbsp;5 Miles</OPTION>
+                                        <OPTION value=10>10 Miles</OPTION>
+                                        <OPTION value=20>20 Miles</OPTION>
+                                        <OPTION value=30>30 Miles</OPTION>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                    <!-- <div class="col-lg-4">
+                                        <p> Check in Date </p>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <p> Check Out Date </p>
+                                    </div>
+
+                                    <div class="input-group input-daterange" >
+                                        <div class="col-lg-4">
+                                            <input type="text" id="checkIn" class="form-control" >
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <input type="text" id='checkOut' class="form-control" >
+                                        </div>
+                                    </div> -->
+                                    <div class="col-lg-8">
+                                    <label> Calendar </label>
+                                    <input type="text"  id="daterange" class ="form-control" value="" />
+                                    </div>
+                                    <input name = "checkIn" hidden>
+                                    <input name = "checkOut" hidden>
+
+                            </div>
+
+                            <!-- <div class="row tab"> -->
+                            <label>Rent Type</label>
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    @if(isset($Query)|| (isset($Query->share)&&$Query->share==1))
+                                        <input type="radio" id="rentWhole" class="form-control input-sm" name="rentShareWhole" value="1" checked> Whole
+                                    @else
+                                        <input type="radio" id="rentWhole" name="rentShareWhole" value="1"> Whole
+                                    @endif
+                                    </input>
+                                </div>
+                                <div class="col-lg-3">
+                                    @if(isset($Query) && (isset($Query->share)&&$Query->share==-1))
+                                        <input type="radio" id="rentShare" name="rentShareWhole" value="-1" checked> Shared
+                                    @else
+                                        <input type="radio" id="rentShare" name="rentShareWhole" value="-1"> Shared
+                                    @endif
+                                    </input>
+                                </div>
+                                <div class="col-lg-3">
+                                    @if((isset($Query)&&che($Query->share)&&$Query->share==0) || !isset($Query) )
+                                        <input type="radio" id="rentEither" name="rentShareWhole" value="0" checked> Either
+                                    @else 
+                                        <input type="radio" id="rentEither" name="rentShareWhole" value="0" > Either
+                                    @endif
+                                    </input>
+                                </div>
+                            </div>
+                            <!-- </div> -->
+                            <!-- <div class="row"> -->
+                            <label>Guests constraints</label>
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <input type="checkbox" value="1" name="allowPregnant" 
+                                        @if(!isset($Query)&&isset($Query->pregnancy)&&$Query->pregnancy==1){
+                                            checked
                                         @endif
-                                            
-                                    </div>
-
-                                    <div class="col-sm-4">
-                                        <label>Representatives</label>
-                                        @if(isset($searchrepID))
-                                        <input class="form-control input-sm" type="text" id="repWithOwner" name="repWithOwner" value="{{$repID}}" readonly>
-                                        @else
-                                        <input class="form-control input-sm" type="text" id="repWithOwner" name="repWithOwner" readonly>
+                                        >&nbspPregnant</input>
+                                </div>
+                                <div class="col-lg-2">
+                                    <input type="checkbox" value="1" name="allowBaby"
+                                        @if(!isset($Query)&&isset($Query->hasBaby)&&$Query->hasBaby==1)
+                                            checked
                                         @endif
-                                    </div>
+                                        >&nbspBaby</input>
                                 </div>
-                                <!-- <div clas="searchtype"> -->
-                                <div class="row" hidden>
-                                        <input name = "country"  id="country">
-                                        <input id="administrative_area_level_1" name="state">
-                                        <input id="locality" name="city">
-                                        <input id="route" name="route">
-                                        <input id="address" diabled>
-                                        <input id='postal_code' name="zipcode" maxlength="5">
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-sm-8">
-                                        <label>House Address <span style="color:red;">*<span></label>
-                                        <input class="form-control input-sm"  type="text" id="houseAddress" name="houseAddress" placeholder="Enter and address,neighborhood,city,zipcode" >
-                                    </div>
-
-                                    <div class="col-sm-3">
-                                        <label>Apply Range</label>
-                                        <select class="form-control input-sm" id="milesrange" name="milesrange">
-                                                                        <OPTION value=1>&nbsp;&nbsp;1 Mile</OPTION>
-                                            <OPTION value=2 selected>&nbsp;&nbsp;2 Miles</OPTION>
-                                            <OPTION value=5 >&nbsp;&nbsp;5 Miles</OPTION>
-                                            <OPTION value=10>10 Miles</OPTION>
-                                            <OPTION value=20>20 Miles</OPTION>
-                                            <OPTION value=30>30 Miles</OPTION>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label>Rent Type:</label>
-                                    <div class="tab">
-                                        <div class="row">
-                                            <div class="col-sm-4">
-                                                @if(isset($Query)|| (isset($Query->share)&&$Query->share==1))
-                                                    <input type="radio" id="rentWhole" name="rentShareWhole" value="1" checked> Whole
-                                                @else
-                                                    <input type="radio" id="rentWhole" name="rentShareWhole" value="1"> Whole
-                                                @endif
-                                            </div>
-                                            <div class="col-sm-4">
-                                                @if(isset($Query) && (isset($Query->share)&&$Query->share==-1))
-                                                    <input type="radio" id="rentShare" name="rentShareWhole" value="-1" checked> Shared
-                                                @else
-                                                    <input type="radio" id="rentShare" name="rentShareWhole" value="-1"> Shared
-                                                @endif
-                                            </div>
-                                            <div class="col-sm-4">
-                                                @if((isset($Query)&&isset($Query->share)&&$Query->share==0) || !isset($Query) )
-                                                    <input type="radio" id="rentEither" name="rentShareWhole" value="0" checked> Either
-                                                @else 
-                                                    <input type="radio" id="rentEither" name="rentShareWhole" value="0" > Either
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label>Guests constraints</label>
-                                    <div class="tab">
-                                         <div class="row">
-                                            <div class="col-sm-2">
-                                                <input type="checkbox" value="1" name="allowPregnant" 
-                                                    @if(!isset($Query)&&isset($Query->pregnancy)&&$Query->pregnancy==1){
-                                                        checked
-                                                    @endif
-                                                    >&nbspPregnant
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <input type="checkbox" value="1" name="allowBaby"
-                                                    @if(!isset($Query)&&isset($Query->hasBaby)&&$Query->hasBaby==1)
-                                                        checked
-                                                    @endif
-                                                    >&nbspBaby
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <input type="checkbox" value="1" name="allowKid" id="allowKid"
-                                                    @if(!isset($Query)&&isset($Query->numOfChildren)&&$Query->numOfChildren>0)
-                                                        checked
-                                                    @endif
-                                                    >&nbspKid
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <input type="checkbox" value="1" name="allowPets" id="allowPets"
-                                                    @if(!isset($Query)&&isset($Query->pet)&& $Query->pet==1)
-                                                        checked
-                                                    @endif
-                                                    >&nbspPet
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <input type="checkbox" value="1" name="havePet" id="havePet">Have Pet
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <label>Number of Rooms</label>
-                                        <div class="input-group beddiv">
-    <!--                                     <span class="input-group-addon">Range from</span> -->
-                                            @if(!isset($Query)&&isset($Query->rooms))
-                                            <input class="form-control input-sm" type="text" id="numOfRoomsFrom" name="numOfRoomsFrom" value="{{$Query->number}}">
-                                            @else
-                                            <input class="form-control input-sm" type="text" id="numOfRoomsFrom" name="numOfRoomsFrom" value=1 >
-                                            @endif
-                                            <span class="input-group-addon">to</span>
-                                            <input class="form-control input-sm" type="text" id="numOfRoomsTo" name="numOfRoomsTo">
-    <!--                                     <span class="input-group-addon">Rooms Per House</span> -->
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label>Number of Adults</label>
-                                        @if(!isset($Query)&&isset($Query->numOfAdult))
-                                        <input class="form-control input-sm" type="number" id="numOfAdults" name="numOfAdults" value="{{$Query->numOfAdult}}">
-                                        @else
-                                        <input class="form-control input-sm" type="number" id="numOfAdults" name="numOfAdults">
+                                <div class="col-lg-2">
+                                    <input type="checkbox" value="1" name="allowKid" id="allowKid"
+                                        @if(!isset($Query)&&isset($Query->numOfChildren)&&$Query->numOfChildren>0)
+                                            checked
                                         @endif
+                                        >&nbspKid</input>
+                                </div>
+                                <div class="col-lg-2">
+                                    <input type="checkbox" value="1" name="allowPets" id="allowPets"
+                                        @if(!isset($Query)&&isset($Query->pet)&& $Query->pet==1)
+                                            checked
+                                        @endif
+                                        >&nbspPet
+                                </div>
+                                <div class="col-lg-2">
+                                    <input type="checkbox" value="1" name="havePet" id="havePet">Have Pet</input>
+                                </div>
+                            </div>
+                            <!-- </div> -->
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label>Number of Rooms</label>
+                                    <div class="input-group beddiv">
+<!--                                     <span class="input-group-addon">Range from</span> -->
+                                        @if(!isset($Query)&&isset($Query->rooms))
+                                        <input class="form-control input-sm" type="text" id="numOfRoomsFrom" name="numOfRoomsFrom" value="{{$Query->number}}">
+                                        @else
+                                        <input class="form-control input-sm" type="text" id="numOfRoomsFrom" name="numOfRoomsFrom" value=1 >
+                                        @endif
+                                        <span class="input-group-addon">to</span>
+                                        <input class="form-control input-sm" type="text" id="numOfRoomsTo" name="numOfRoomsTo">
+<!--                                     <span class="input-group-addon">Rooms Per House</span> -->
                                     </div>
-
+                                </div>
+                                <div class="col-lg-6">
+                                    <label>Number of Adults</label>
+                                    @if(!isset($Query)&&isset($Query->numOfAdult))
+                                    <input class="form-control input-sm" type="number" id="numOfAdults" name="numOfAdults" value="{{$Query->numOfAdult}}">
+                                    @else
+                                    <input class="form-control input-sm" type="number" id="numOfAdults" name="numOfAdults">
+                                    @endif
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label>Monthly Price Approximate</label>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">$</span>
-                                                <input class="form-control input-sm" type="number" id="Price" name="Price" min='0' value='0' step='100'>
-                                            <span class="input-group-addon">with Up/Down Rate of</span>
-                                            <SELECT id='houseMonthlyRate' class='form-control input-sm' name="Rate">
-                                                    <OPTION value=5 selected>&nbsp;&nbsp;5%</OPTION>
-                                                    <OPTION value=10>10%</OPTION>
-                                                    <OPTION value=20>20%</OPTION>
-                                                    <OPTION value=50>50%</OPTION>
-                                            </SELECT>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label>Monthly Price Approximate</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">$</span>
+                                            <input class="form-control input-sm" type="number" id="Price" name="Price" min='0' value='0' step='100'>
+                                        <span class="input-group-addon">with Up/Down Rate of</span>
+                                        <SELECT id='houseMonthlyRate' class='form-control input-sm' name="Rate">
+                                                <OPTION value=5 selected>&nbsp;&nbsp;5%</OPTION>
+                                                <OPTION value=10>10%</OPTION>
+                                                <OPTION value=20>20%</OPTION>
+                                                <OPTION value=50>50%</OPTION>
+                                        </SELECT>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div class="col-lg-6">
+                                        <div class="onoffswitch" style="margin: auto;">
+                                            <input type="checkbox" name="houseroomswitch" class="onoffswitch-checkbox" id="houseroomswitch" checked>
+                                            <label class="onoffswitch-label" for="houseroomswitch">
+                                                <span class="onoffswitch-inner" id="houseroomswitch-inner"></span>
+                                                <span class="onoffswitch-switch"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="onoffswitch" style="margin: auto;">
+                                            <input type="checkbox" name="monthdailyswitch" class="onoffswitch-checkbox" id="monthdailyswitch" checked>
+                                            <label class="onoffswitch-label" for="monthdailyswitch">
+                                                <span class="onoffswitch-inner" id="monthdailyswitch-inner"></span>
+                                                <span class="onoffswitch-switch"></span>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-sm-8">
-                                        <div class="col-sm-6">
-                                            <div class="onoffswitch" style="margin: auto;">
-                                                <input type="checkbox" name="houseroomswitch" class="onoffswitch-checkbox" id="houseroomswitch" checked>
-                                                <label class="onoffswitch-label" for="houseroomswitch">
-                                                    <span class="onoffswitch-inner" id="houseroomswitch-inner"></span>
-                                                    <span class="onoffswitch-switch"></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="onoffswitch" style="margin: auto;">
-                                                <input type="checkbox" name="monthdailyswitch" class="onoffswitch-checkbox" id="monthdailyswitch" checked>
-                                                <label class="onoffswitch-label" for="monthdailyswitch">
-                                                    <span class="onoffswitch-inner" id="monthdailyswitch-inner"></span>
-                                                    <span class="onoffswitch-switch"></span>
-                                                </label>
-                                            </div>
-                                        </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="alert alert-warning">
+                                        <h5><i class="fa fa-info-circle" aria-hidden="true"></i><em><strong> Note:</strong> * indicates required field. </em>
+                                      </h5>
                                     </div>
                                 </div>
-
-
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <div class="alert alert-warning">
-                                            <h5><i class="fa fa-info-circle" aria-hidden="true"></i><em><strong> Note:</strong> * indicates required field. </em>
-                                          </h5>
-                                        </div>
-                                    </div>
-                                </div>
-
                             </div>
                         </form>
                     </div> <!-- / house condition -->
@@ -305,25 +358,6 @@
                         <!-- share -1, whole 1, either 0 -->
                         <!-- / Whole or Share -->
                         <!-- <div class="tab-pane fade" id="aboutCheckin">
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <label>Check-In Date</label>
-                                    @if(!isset($Query)&&isset($Query->checkIn))
-                                    <input class="form-control input-sm" type="search" id="checkin" name="checkin" value="{{$Query->checkIn}}">
-                                    @else
-                                    <input class="form-control input-sm" type="search" id="checkin" name="checkin">
-                                    @endif
-                                </div>
-
-                                <div class="col-sm-3">
-                                    <label>Check-Out Date</label>
-                                    @if(!isset($Query)&&isset($Query->checkOut))
-                                    <input class="form-control input-sm" type="search" id="checkout" name="checkout" value="{{$Query->checkOut}}">
-                                    @else
-                                    <input class="form-control input-sm" type="search" id="checkout" name="checkout">
-                                    @endif
-                                </div>
-                            </div>
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="alert alert-warning">
@@ -636,11 +670,12 @@
                 <li class="active"><a data-toggle="tab" href"#"> -->
 
     </div>
+    <div class="modal" id="loadele"></div>
 @endsection
 
 @section('script')
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+
+
     <script>
         var autocomplete; 
         var search_geo;
@@ -758,91 +793,30 @@
     //fix 0201 suppose all is formatted
     $(document).ready(function() {
         // locations
-            $("#country").change(function(){
-                if($(this).val().length!=0){
-                    var countryfile = $(this).val().replace(' ','');
-                    $.get("/resource/"+countryfile,function(data,status){
-                    $('#state').empty();
-                    for(i=0;i<data.length;++i){
-                        var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-                        $('#state').append(option);
-                    }
-                    });
-                }
-            });
-
-            $('#state').change(function(){
-                if($(this).val().length!=0){
-                    var cityfile = $("#country").val().replace(' ','')+"_"+$(this).val().replace(' ','');
-                    $.get("/resource/"+cityfile,function(data,status){
-                    $('#city').empty();
-                    for(i=0;i<data.length;++i){
-                        var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-                        $('#city').append(option);
-                    }
-                    });
-                }
-            });
-            
-            $("#allowKid").change(function(){
-                if ($("#allowKid").is(":checked")) {
-                    $("#allowKidAge").removeAttr("disabled");
-                } else {
-                    $("#allowKidAge").attr("disabled", "true");
-                }
-            });
-
-            $("#allowPets").change(function(){
-                if ($("#allowPets").is(":checked")) {
-                    $("#allowPetType").removeAttr("disabled");
-                } else {
-                    $("#allowPetType").attr("disabled", "true");
-                }
-            });
-
-            $("#havePet").change(function(){
-                if ($("#havePet").is(":checked")) {
-                    $("#havePetType").removeAttr("disabled");
-                } else {
-                    $("#havePetType").attr("disabled", "true");
-                }
-            });
 
             $('#ownerknownswitch').change(changeswitchview);
 
-           $('#checkin').datepicker({
-              dateFormat: "mm/dd/yy",
-              beforeShow: function () {
-                $('#checkin').datepicker('option', 'minDate', 0);
-               
-              },
-              /*
-              Display and send Date in different format 
-              */
-              onSelect:function(){
-                var checkOutDate = $('#checkout').datepicker('getDate');
-                var curCheckInDate= $('#checkin').datepicker('getDate');
-                if(curCheckInDate>checkOutDate)
-                {
-                     // alert("error date");
-                     var text='<div class="alert alert-warning"><h5><i class="fa fa-info-circle" aria-hidden=true></i><em><strong> Note:</strong>The Check-In Date should be earlier than Check-Out Date.</em></h5></div>';
-                     $('#checkDateCheck').html(text);
-                }else{
-                    $('#checkDateCheck').html('');
-                }
-            
-              }
-             
-             
+            $('.input-daterange').datepicker({
+                orientation: "bottom",
+                format: "mm/dd/yyyy",
             });
 
-            $('#checkout').datepicker({
-              dateFormat: "mm/dd/yy",
-              beforeShow: function () {
-                var checkin = $('#checkin').datepicker('getDate');
-                checkin.setDate(checkin.getDate() + 1);
-                $('#checkout').datepicker('option', 'minDate', checkin);
-              }
+            $('#checkIn').change(function(){
+                var date = $(this).datepicker('getDate');
+                $('#houseSearchForm').find('input[name="checkIn"]').val(converttimetosql(date));
+            })
+            $('#checkOut').change(function(){
+                var date = $(this).datepicker('getDate');
+                $('#houseSearchForm').find('input[name="checkOut"]').val(converttimetosql(date));
+            })
+
+
+            $('#daterange').daterangepicker({
+                startDate: 0,
+            }).on('change',function(){
+                var date = $(this).val().split('-');
+                $('#houseSearchForm').find('input[name="checkIn"]').val(converttimetosql(date[0]));
+                $('#houseSearchForm').find('input[name="checkOut"]').val(converttimetosql(date[1]));
             });
 
             if(document.getElementById('address').value){
@@ -1000,6 +974,7 @@
                             showMarkers();
 
                             $('#fillArea').html(tablehtml);
+                            $('#loadele').removeClass("loading");
                         }
                         else
                         {
@@ -1021,6 +996,7 @@
                     search_geo=null;
                 }
             });
+            $('#loadele').addClass("loading");
         });
 
         function vieweffect(id) {

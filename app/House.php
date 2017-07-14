@@ -71,7 +71,7 @@ class House extends Model
         return $this->hasMany('App\Houseroom','numberID');
     }
     public function houseavailability(){
-        return $this->hasOne('App\Houseavailability','numberID');
+        return $this->hasMany('App\Houseavailability','numberID');
     }
     public function housingcondition(){
         return $this->hasOne('App\Housingcondition','numberID');
