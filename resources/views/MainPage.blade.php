@@ -645,18 +645,24 @@
                   </div>
               </div>
 
-                <!-- House -->
-                <div class="col-sm-2 bg1">
-                      <div class="caption">
-                        <div class="my-title"><h5>House</h5></div>
-                        <a href="/housesearchindex"><h6>House Search</h6></a>
-                        <a href="/house/add"><h6>Add New House</h6></a>
-                        <a href="/house/modify"><h6>Modify/Update Houses</h6></a>
-                        <a id="extAllHouse" href=""><h6>Extract All Houses</h6></a>
-                      </div>
-                </div>
+              <!-- House -->
+              <div class="col-sm-2 bg1">
+                  <div class="caption">
+                    <div class="my-title"><h5>House</h5></div>
+                    <a href="/housesearchindex"><h6>House Search</h6></a>
+                    <a href="/house/add"><h6>Add New House</h6></a>
+                    <a href="/house/modify"><h6>Modify/Update Houses</h6></a>
+                    <a id="extAllHouse" href=""><h6>Extract All Houses</h6></a>
+                  </div>
+              </div>
 
-              <div class="col-sm-1 bg1"></div>
+              <div class="col-sm-2 bg1">
+                  <div class="caption">
+                    <div class="my-title"><h5>Transaction</h5></div>
+                    <a href=""><h6>Modify/Update Transactions</h6></a>
+                    <a href="/transaction/showAll"><h6>Show All Transactions</h6></a>
+                  </div>
+              </div>
             </div>
            </div>
 

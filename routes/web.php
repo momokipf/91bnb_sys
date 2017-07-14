@@ -95,6 +95,10 @@ Route::get('report/houseLocation', 'HousesController@houseLocation');
 Route::get('report/getCityCount/{state}', 'HousesController@getCityCount');
 
 
+Route::get('transaction/showAll', 'TransactionsController@show');
+
+
+
 
 //Route::resource('/postmech','PostController');
 Route::get('/post','PostController@index');

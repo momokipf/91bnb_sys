@@ -105,7 +105,7 @@
 							@if($Rep->repPriority<=3)
 							<li><a href="/inquirer/searchAndModify"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search/Modify Inquirer</a></li>
 							@endif
-							<li><a href="/inquirer/showAll"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Show All Inquirers</a></li>
+							<li><a href="/inquirer/showAll"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show All Inquirers</a></li>
 						</ul>
 					</li>
 
@@ -118,6 +118,16 @@
 							<li><a href="/house/add"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add New House</a></li>
 							<li><a href="/house/modify"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Modify/Update House</a></li>
 							<li><a href="#"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Extract All Houses</a></li>
+						</ul>
+					</li>
+
+					<!-- Transaction -->
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">Transaction
+						<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/transaction/modify"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Modify/Update Transactions</a></li>
+							<li><a href="/transaction/showAll"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show All Transactions</a></li>							
 						</ul>
 					</li>
 
