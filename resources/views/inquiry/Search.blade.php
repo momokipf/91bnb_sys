@@ -613,7 +613,7 @@
 	
 	@endisset
 		
-
+	<div class='content container'>
         <button id="extSearch" type='button' class="btn btn-success">Extract Search Results</button>
         <button id="extAll" type='button' class="btn btn-primary">Extract All Inquiries</button>
         <button id="extPri" type='button' class="btn btn-info">Extract High Priority Inquiries</button>	
