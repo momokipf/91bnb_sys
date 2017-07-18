@@ -80,6 +80,9 @@ Route::get('houseowner/{id}/{house?}','HouseOwnersController@ownerinfo');
 Route::post('houseowner/search/{similar?}','HouseOwnersController@search');
 Route::post('houseowner/add','HouseOwnersController@store');
 
+Route::get('houseavailability/{id}','HouseAvailabilityController@get');
+
+
 
 Route::get('representatives', 'RepresentativesController@showAll');
 Route::post('representatives/update', 'RepresentativesController@update');

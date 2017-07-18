@@ -5,9 +5,17 @@
     <link rel="stylesheet" href="{{asset('css/priceswitch.css')}}">
     <link rel="stylesheet" href="{{asset('css/animate.css')}}">
 
+
+    <!-- Include Required Prerequisites -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <!-- Include Date Range Picker -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />  
+    
     <script src="{{asset('js/bootbox.min.js')}}"></script>
     <script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
     
+
     <style>
         html {width:100%; height:100%;}
         body { line-height: 100%; line-height: 100%; width:100%; height:100%;}
@@ -128,72 +136,79 @@
                                 </div>
                             </div>
 
-                            <div>
-                                <label>Rent Type:</label>
-                                <div class="tab">
-                                    <div class="row">
-                                        <div class="col-sm-4">
-                                            @if(isset($Query)|| (isset($Query->share)&&$Query->share==1))
-                                                <input type="radio" id="rentWhole" name="rentShareWhole" value="1" checked> Whole
-                                            @else
-                                                <input type="radio" id="rentWhole" name="rentShareWhole" value="1"> Whole
-                                            @endif
-                                        </div>
-                                        <div class="col-sm-4">
-                                            @if(isset($Query) && (isset($Query->share)&&$Query->share==-1))
-                                                <input type="radio" id="rentShare" name="rentShareWhole" value="-1" checked> Shared
-                                            @else
-                                                <input type="radio" id="rentShare" name="rentShareWhole" value="-1"> Shared
-                                            @endif
-                                        </div>
-                                        <div class="col-sm-4">
-                                            @if((isset($Query)&&isset($Query->share)&&$Query->share==0) || !isset($Query) )
-                                                <input type="radio" id="rentEither" name="rentShareWhole" value="0" checked> Either
-                                            @else 
-                                                <input type="radio" id="rentEither" name="rentShareWhole" value="0" > Either
-                                            @endif
-                                        </div>
-                                    </div>
+                            <div class="row">
+                                <div class="col-lg-8">
+                                <label> Calendar </label>
+                                <input type="text"  id="daterange" class ="form-control" value="" />
+                                </div>
+                                <input name = "checkIn" hidden>
+                                <input name = "checkOut" hidden>
+
+                            </div>
+
+
+                            <label>Rent Type</label>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    @if(isset($Query)|| (isset($Query->share)&&$Query->share==1))
+                                        <input type="radio" id="rentWhole" name="rentShareWhole" value="1" checked> Whole
+                                    @else
+                                        <input type="radio" id="rentWhole" name="rentShareWhole" value="1"> Whole
+                                    @endif
+                                </div>
+                                <div class="col-sm-4">
+                                    @if(isset($Query) && (isset($Query->share)&&$Query->share==-1))
+                                        <input type="radio" id="rentShare" name="rentShareWhole" value="-1" checked> Shared
+                                    @else
+                                        <input type="radio" id="rentShare" name="rentShareWhole" value="-1"> Shared
+                                    @endif
+                                </div>
+                                <div class="col-sm-4">
+                                    @if((isset($Query)&&isset($Query->share)&&$Query->share==0) || !isset($Query) )
+                                        <input type="radio" id="rentEither" name="rentShareWhole" value="0" checked> Either
+                                    @else 
+                                        <input type="radio" id="rentEither" name="rentShareWhole" value="0" > Either
+                                    @endif
                                 </div>
                             </div>
-                            <!-- <div>
-                                <label>Guests constraints</label>
-                                <div class="tab">
-                                     <div class="row">
-                                        <div class="col-sm-2">
-                                            <input type="checkbox" value="1" name="allowPregnant" 
-                                                @if(!isset($Query)&&isset($Query->pregnancy)&&$Query->pregnancy==1){
-                                                    checked
-                                                @endif
-                                                >&nbspPregnant
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <input type="checkbox" value="1" name="allowBaby"
-                                                @if(!isset($Query)&&isset($Query->hasBaby)&&$Query->hasBaby==1)
-                                                    checked
-                                                @endif
-                                                >&nbspBaby
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <input type="checkbox" value="1" name="allowKid" id="allowKid"
-                                                @if(!isset($Query)&&isset($Query->numOfChildren)&&$Query->numOfChildren>0)
-                                                    checked
-                                                @endif
-                                                >&nbspKid
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <input type="checkbox" value="1" name="allowPets" id="allowPets"
-                                                @if(!isset($Query)&&isset($Query->pet)&& $Query->pet==1)
-                                                    checked
-                                                @endif
-                                                >&nbspPet
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <input type="checkbox" value="1" name="havePet" id="havePet">Have Pet
-                                        </div>
-                                    </div>
+
+
+                            <label>Guests constraints</label>
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <input type="checkbox" value="1" name="allowPregnant" 
+                                        @if(!isset($Query)&&isset($Query->pregnancy)&&$Query->pregnancy==1){
+                                            checked
+                                        @endif
+                                        >&nbspPregnant</input>
                                 </div>
-                            </div> -->
+                                <div class="col-lg-2">
+                                    <input type="checkbox" value="1" name="allowBaby"
+                                        @if(!isset($Query)&&isset($Query->hasBaby)&&$Query->hasBaby==1)
+                                            checked
+                                        @endif
+                                        >&nbspBaby</input>
+                                </div>
+                                <div class="col-lg-2">
+                                    <input type="checkbox" value="1" name="allowKid" id="allowKid"
+                                        @if(!isset($Query)&&isset($Query->numOfChildren)&&$Query->numOfChildren>0)
+                                            checked
+                                        @endif
+                                        >&nbspKid</input>
+                                </div>
+                                <div class="col-lg-2">
+                                    <input type="checkbox" value="1" name="allowPets" id="allowPets"
+                                        @if(!isset($Query)&&isset($Query->pet)&& $Query->pet==1)
+                                            checked
+                                        @endif
+                                        >&nbspPet
+                                </div>
+                                <div class="col-lg-2">
+                                    <input type="checkbox" value="1" name="havePet" id="havePet">Have Pet</input>
+                                </div>
+                            </div>
+
+
                             <div class="row">
                                 <div class="col-sm-6">
                                     <label>Number of Rooms</label>
@@ -426,8 +441,6 @@
 @endsection
 
 @section('script')
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
     <script>
         var autocomlete;
         var componentForm = {
@@ -547,6 +560,7 @@
                 });
             
             });
+
             /*
             TODO:(1)add link to initialize a GET request to server to get house info
                  (2)add link to initialize a GET request to server to get houseowner info
@@ -673,6 +687,14 @@
         });
         
         $('#ownerknownswitch').change(changeswitchview);
+
+        $('#daterange').daterangepicker({
+            startDate: 0,
+        }).on('change',function(){
+            var date = $(this).val().split('-');
+            $('#houseSearchForm').find('input[name="checkIn"]').val(converttimetosql(date[0]));
+            $('#houseSearchForm').find('input[name="checkOut"]').val(converttimetosql(date[1]));
+        });
 
         function vieweffect(id) {
             $('#houseOwnerID').val(id);

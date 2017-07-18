@@ -5,12 +5,13 @@
     <link rel="stylesheet" href="{{asset('css/priceswitch.css')}}">
     <link rel="stylesheet" href="{{asset('css/animate.css')}}">
 
+
     <!-- Include Required Prerequisites -->
     <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <!-- Include Date Range Picker -->
     <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
-    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" /> 
-
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />  
+    
     <script src="{{asset('js/bootbox.min.js')}}"></script>
     <script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
 
@@ -804,11 +805,11 @@
             $('#checkIn').change(function(){
                 var date = $(this).datepicker('getDate');
                 $('#houseSearchForm').find('input[name="checkIn"]').val(converttimetosql(date));
-            })
+            });
             $('#checkOut').change(function(){
                 var date = $(this).datepicker('getDate');
                 $('#houseSearchForm').find('input[name="checkOut"]').val(converttimetosql(date));
-            })
+            });
 
 
             $('#daterange').daterangepicker({

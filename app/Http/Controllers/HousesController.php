@@ -174,7 +174,6 @@ class HousesController extends Controller
 
     public function searchindex(Request $request)
     {
-    	//$fakequery = App\Inquiry::find(114);
     	return view('house.HouseSearch')
     			//->with('Query',$fakequery)
     			->with('Rep',Auth::user());

@@ -18,15 +18,17 @@
 	<!-- alert box -->
 	<!--<script src="{{asset('js/bootbox.min.js')}}"></script>-->
 
-	<link rel="stylesheet" href="{{asset('css/priceswitch.css')}}">
 
-	<!-- Include Required Prerequisites -->
-	<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-	<!-- Include Date Range Picker -->
+	<script type="text/javascript" src="{{asset('js/moment.js')}}"></script>
+	<link rel="stylesheet" type="text/css" href="{{asset('css/fullcalendar.css')}}">
+	<script rel="stylesheet" type="text/javascript" src="{{asset('js/fullcalendar.min.js')}}"></script>
+	<!--
 	<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
 	<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />	  
 
-	<link rel="stylesheet" href="{{asset('css/priceswitch.css')}}">
+	<link rel="stylesheet" href="{{asset('css/priceswitch.css')}}"> -->
+
+	<script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
 
 	
     <script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
@@ -91,6 +93,10 @@
 		}
 		#monthdailyswitch-inner:after{
 			content: "Daily";
+		}
+
+		.date-disabled-day{
+			 background-image: linear-gradient(to bottom right,  transparent calc(50% - 1px), red, transparent calc(50% + 1px));
 		}
 
 	</style>
@@ -542,95 +548,16 @@
 				</div>
 
 				<div class="tab-pane fade" id="availability">
-					<!-- <div class="row">
-						<div class="col-sm-2">
-							<label>Whole/Share</label>
-							<select name="rentShared" id="rentShared" class="form-control input-sm">
-								<option value = 0 >Either</option>
-								<option value = 1 >Whole</option>
-								<option value = -1 >Share</option>
-							</select>
-						</div>
-					</div>
 
-					<div class="row">
-						<div class="col-sm-2">
-							<label>Availability</label>
-							<select name="available" id="available" class="form-control input-sm">
-								<option value = 1 >Yes</option>
-								<option value = 0 >Yes, but not now</option>
-								<option value = -1>No</option>
-							</select>
-						</div>
 
-						<div class="col-sm-2" id="nextAvailableDateDiv" style="display:none;">
-							<label>Next Available Date</label>
-							<input type="search" name="nextAvailableDate" id="nextAvailableDate" class="form-control input-sm" placeholder="mm/dd/yyyy">
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-sm-2">
-							<label>Minimum Stay Unit</label>
-							<select name="minStayUnit" id="minStayUnit" class="form-control input-sm">
-								<option value = "Day" >Day</option>
-								<option value = "Week" >Week</option>
-								<option value = "Month" >Month</option>
-								<option value = "Year" >Year</option>
-							</select>
-						</div>
-
-						<div class="col-sm-2">
-							<label>Minimum Stay Term</label>
-							@if($house->houseavailability)
-								<input type="number" name="minStayTerm" value="{{$house->houseavailability->minStayTerm}}" class="form-control input-sm">
-							@else
-								<input type="number" name="minStayTerm" value="1" class="form-control input-sm" min="1">
-							@endif
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-sm-2">
-							<label>Allow Cooking</label>
-							<select name="allowCooking" id="allowCooking" class="form-control input-sm">
-							<option value = 0 >N/A</option>
-							<option value = 2 >Occasional</option>
-							<option value = 1 >Yes</option>
-							<option value = -1 >No</option>
-							</select>
-						</div>
-
-						<div class="col-sm-2">
-							<label>Furnished</label>
-							<select name="furnished" id="furnished" class="form-control input-sm">
-								<option value = 0 >N/A</option>
-								<option value = 2 >Simple</option>
-								<option value = 1 >Yes</option>
-								<option value = -1 >No</option>
-							</select>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-sm-4">
-							<label>Availability Note</label>
-							@if($house->houseavailability)
-							<textarea class="form-control" rows="4" cols="50" name="availabilityNote">{{$house->houseavailability->availabilityNote}}</textarea>
-							@else
-							<textarea class="form-control" rows="4" cols="50" name="availabilityNote"></textarea>
-							@endif
-						</div>               
-					</div> -->
-
-					<div class="row">
-						<!-- <div id="calender"></div>
-						<input type="text" id="calender" name="daterange" value=""  /> -->
+<!-- 					<div class="row">
 						<div class="col-lg-12">
 						<label> Calendar </label>
 						<input type="text" name="daterange" id="calendar" class ="form-control" value="01/01/2015 1:30 PM - 01/01/2015 2:00 PM" />
 						</div>
-					</div>
+					</div> -->
+
+					<div id="calendar"></div>
 
 
 				</div>
@@ -892,18 +819,50 @@
 
 @section('script')
 <script>
+	
 
+	var patharray = (window.location.pathname).split('/');
+	var numberID = patharray[3];
 
 	$(document).ready(function() {
 			loadOpt();
 			//$("#hotcountry").load("{{asset('list/hotCountryList')}}");
-			$('input[name="daterange"]').daterangepicker({
+			// $('input[name="daterange"]').daterangepicker({
 
-				isInvalidDate: function(date) {
-				  return (date.day() == 0 || date.day() == 6);
+			// 	isInvalidDate: function(date) {
+			// 	  return (date.day() == 0 || date.day() == 6);
+			// 	}
+		 //    });
+			
+			$('#calendar').fullCalendar({
+		        // put your options and callbacks here
+		        eventSources: [
+				    {
+				        url:'/houseavailability/'+ numberID,
+				        allDay:true,
+						// rendering: 'background',
+						// color: '#FF0000'
+				    },],
+				selectable:true,
+				selectMinDistance:2, 
+				selectOverlap: false,
+				select: function( start, end, jsEvent, view){
+					alert("from: "+moment(start).format("YYYY-MM-DD") + " to " + moment(end).format("YYYY-MM-DD") + " has been selected");
+					$('#calendar').fullCalendar('unselect');
+				},
+				dayRender:function(date,cell){
+					if(moment().diff(date,'days') > 0){
+						cell.addClass('date-disabled-day');
+					}
+				},
+				eventClick:function(event){
+					if(event.url){
+						window.open(event.url);
+						return false;
+					}
 				}
+				
 		    });
-
 
 			$("#allowKid").change(function() {
 				if (this.checked) {

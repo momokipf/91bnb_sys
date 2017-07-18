@@ -2,10 +2,8 @@
 @section('title', 'Modify Inquiry')
 
 @section('head')
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
 
-	<script src="{{asset('js/jquery-ui.js')}}"></script>
-	
+
 @endsection
 @section('content')
 	<div class="container" style="margin-top:70px;">
@@ -27,7 +25,7 @@
 						<!-- house owner ID -->
 						<div class='col-lg-2'>
 							<label>House Owner ID</label>
-							<input name='houseOwnerID' value="DD" class='form-control input-sm' readonly>
+							<input name='houseOwnerID' value="{{$inquiry->fullHouseID}}" class='form-control input-sm' readonly>
 						</div>
 						<!-- representative -->
 						<div class='col-lg-3'>

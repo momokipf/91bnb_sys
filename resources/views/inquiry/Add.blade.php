@@ -2,10 +2,6 @@
 @section('title', ' Add New Inquiry')
 
 @section('head')
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
-
-	<script src="{{asset('js/jquery-ui.js')}}"></script>
-	<script src="{{asset('js/bootbox.min.js')}}"></script>
 
 	<style type="text/css">
 		body {
@@ -413,7 +409,7 @@
 									</div> -->
 									<div class="col-lg-3">
 										<label>Check-In & Out Date</label>
-										<div class="input-daterange input-group">
+										<div class="input-daterange input-group" id="calendar">
 											<input type="text" id="checkIn" name="checkIn" class="form-control" placeholder="mm/dd/yyyy" >
 											<span class="input-group-addon">to</span>
 											<input type="text" id="checkOut" name="checkOut" class="form-control" placeholder="mm/dd/yyyy">
@@ -762,26 +758,28 @@
 		$(document).ready(function(){
 			loadOpt();// Load list
 			bindhandler();
-			// $("#inquiryDate").datepicker({
-			//   dateFormat: "mm/dd/yy",
-			//   maxDate: 0
-			// });
-			// $("#inquiryDate").datepicker("setDate", new Date());
-
-			// $('.input-daterange').datepicker({
-			//   dateFormat: "mm/dd/yy",
-			//   disabledInputs: ['07/14/2017'],
-			//   minDate: 0,
-			//   // beforeShow: function () {
-			//   // $('#checkIn').datepicker('option', 'minDate', 0);
-			//   // }
-			// });
-			$('.input-daterange').each(function(){
-				$(this).datepicker({
-					startDate: 0,
-					dateFormat: "mm/dd/yy",
-				});
+			$("#inquiryDate").datepicker({
+			  dateFormat: "mm/dd/yy",
+			  maxDate: 0
 			});
+			$("#inquiryDate").datepicker("setDate", new Date());
+
+			$('#calendar').datepicker({
+			  dateFormat: "mm/dd/yy",
+			  disabledInputs: ['07/14/2017'],
+			  minDate: 0,
+			  // beforeShow: function () {
+			  // $('#checkIn').datepicker('option', 'minDate', 0);
+			  // }
+			});
+
+
+			// $('.input-daterange').each(function(){
+			// 	$(this).datepicker({
+			// 		startDate: 0,
+			// 		dateFormat: "mm/dd/yy",
+			// 	});
+			// });
 
 			// $('#checkOut').datepicker({
 			//   dateFormat: "mm/dd/yy",

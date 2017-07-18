@@ -15,7 +15,6 @@
 	<link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
 
 	<link rel="stylesheet" href="{{asset('css/bootstrap-datepicker3.css')}}">
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
 
 	<script src="{{asset('js/jquery.min.js')}}"></script>
 	<!-- <script src="{{asset('js/jquery-ui.js')}}"></script> -->

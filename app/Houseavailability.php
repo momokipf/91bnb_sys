@@ -29,4 +29,12 @@ class Houseavailability extends Model
     public function house(){
         return $this->belongsTo('App\House','numberID');
     }
+
+
+    public function scopeavailabilitiesInRange($query,$start,$end){
+
+
+        return $query->where('rentEnd','>',$start)
+                        ->orwhere('rentBegin','<',$end);
+    }
 }

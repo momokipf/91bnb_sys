@@ -239,7 +239,7 @@ class InquirysController extends Controller
                             ->header('Content','json');
             }
 
-            return $inquiry;
+            return redirect()->route('MainPage');
         }
 
 

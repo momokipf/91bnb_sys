@@ -4,6 +4,7 @@
 @section('head')
     <link rel="stylesheet" href="{{asset('css/priceswitch.css')}}">
     <link rel="stylesheet" href="{{asset('css/animate.css')}}">
+    <link rel="stylesheet" href="{{asset('css/equal-height-columns.css')}}">
 
     <script src="{{asset('js/bootbox.min.js')}}"></script>
     <script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
@@ -133,19 +134,24 @@
 
 @section('content')
     <div class="container-fluid" style="width:100%;height:100%">
-        <div class="row equal" id="searchbar"> 
+        <div class="row" id="searchbar"> 
             <form id="houseSearchForm">   
-                <div class="col-sm-4">
+                <div class="col-lg-4">
                     <div class="search">
+                        <label> Search </label>
                         <span class="fa fa-search"></span>
                         <input class="form-control input-sm" type="text" id="houseAddress" name="houseAddress" value="{{$parameter['houseAddress']}}"
                         >
                     </div>
                 </div>
-                <div class="col-sm-9">
-
+                <div class="col-lg-4">
+                    <label> Calendar </label>
+                    <input type="text"  id="daterange" class ="form-control" value="" />
                 </div>
+
                 <div style="display:none">
+                    <input name = "checkIn" hidden>
+                    <input name = "checkOut" hidden>
                     <input name = "country"  id="country" value="{{$parameter['country']}}">
                     <input id="administrative_area_level_1" name="state" value="{{$parameter['state']}}">
                     <input id="locality" name="city" value="{{$parameter['city']}}">
