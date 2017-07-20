@@ -34,6 +34,10 @@ class CreateRepresentativeTable extends Migration
                 //$table->primary('repID');
                 //$table->unique(['repFirstName', 'repLastName']);
             });
+            Schema::table('Representative', function($table) {
+                $table->index(['repFirstName','repLastName']);
+                $table->index('repUserName');
+            });
         }
         
     }

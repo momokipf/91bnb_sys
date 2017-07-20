@@ -14,9 +14,9 @@ class CreateHouseImageTable extends Migration
     public function up()
     {
         Schema::create('HouseImage', function (Blueprint $table) {
-            $table->increments('ImageId');
+            $table->increments('ImageID');
             $table->integer('numberID')->unsigned();
-            $table->String('HousePath',300);
+            $table->String('ImagePath',300);
         });
         Schema::table('HouseImage', function(Blueprint $table) {
                 $table->foreign('numberID')->references('numberID')->on('House')->onDelete('cascade');
