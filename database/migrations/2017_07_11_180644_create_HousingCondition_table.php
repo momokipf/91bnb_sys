@@ -20,6 +20,8 @@ class CreateHousingConditionTable extends Migration
             $table->integer('numberID')->unsigned();
             $table->primary('numberID');
 
+            $table->tinyInteger('furnished')->nullable();
+
             $table->string('additionalNote', 50)->nullable();
             $table->tinyInteger('offerToothbrush')->nullable();
             $table->tinyInteger('offerToothpaste')->nullable();
@@ -58,6 +60,8 @@ class CreateHousingConditionTable extends Migration
             $table->tinyInteger('haveSafetyGuard')->nullable();
             $table->tinyInteger('haveBedroomLock')->nullable();
             $table->tinyInteger('haveSecurityAlarm')->nullable();
+            
+            $table->tinyInteger('allowCooking')->nullable();
             $table->tinyInteger('allowPregnant')->nullable();
             $table->tinyInteger('allowBaby')->nullable();
             $table->tinyInteger('allowKid')->nullable();

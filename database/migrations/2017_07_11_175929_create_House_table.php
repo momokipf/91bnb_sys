@@ -39,16 +39,27 @@ class CreateHouseTable extends Migration
                 
                 $table->string('houseType',20)->nullable();
                 $table->string('houseTypeOther',20)->nullable();
+                $table->tinyInteger('rentShared');
+
                 $table->integer('repWithOwner')->nullable();
+
                 $table->integer('size')->nullable();
                 $table->integer('numOfRooms')->nullable();
                 $table->integer('numOfBaths')->nullable();
                 $table->integer('numOfBeds')->nullable();
                 $table->integer('maxNumOfGuests')->nullable();
+
+                $table->integer('minStayTerm')->nullable();
+                $table->string('minStayUnit',5)->nullable();
+
                 $table->string('onOtherWebsite',200)->nullable();
                 $table->integer('repWithGuest')->nullable();
 
-                            // DB::statement('ALTER TABLE house_loc ADD SPATIAL INDEX (location)');
+                $table->string('note',300)->nullable();
+
+
+
+                // DB::statement('ALTER TABLE house_loc ADD SPATIAL INDEX (location)');
 
 
             });
