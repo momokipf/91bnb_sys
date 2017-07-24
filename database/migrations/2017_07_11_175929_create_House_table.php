@@ -67,6 +67,7 @@ class CreateHouseTable extends Migration
             DB::statement('ALTER TABLE House ADD SPATIAL INDEX (location)');
 
             Schema::table('House', function($table) {
+                $table->index('fullHouseID');
                 $table->foreign('houseOwnerID')->references('houseOwnerID')->on('HouseOwner')->onDelete('cascade');
             });
 
