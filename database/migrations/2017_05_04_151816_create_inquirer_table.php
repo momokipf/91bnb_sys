@@ -34,11 +34,10 @@ class CreateInquirerTable extends Migration
                 $table->string('inquirerState', 30)->nullable();
                 $table->string('inquirerCity', 30)->nullable();
                 $table->string('inquirerCityOther', 30)->nullable();
-
-                
-
-                
-
+            });
+            Schema::table('Inquirer', function($table) {
+                $table->index(['inquirerFirst','inquirerLast']);
+                $table->index('inquirerWechatID');
             });
     }
 

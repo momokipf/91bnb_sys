@@ -33,6 +33,10 @@ class CreateHouseOwnerTable extends Migration
                 $table->string('bankRountingNumber', 25)->nullable();
                 $table->string('bankAccountNumber', 25)->nullable();
             }); 
+           Schema::table('HouseOwner', function($table) {
+                $table->index(['first','last']);
+                $table->index('ownerWechatID');
+            });
         }
     }
 
