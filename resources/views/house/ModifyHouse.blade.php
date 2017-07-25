@@ -22,11 +22,12 @@
 	<script type="text/javascript" src="{{asset('js/moment.js')}}"></script>
 	<link rel="stylesheet" type="text/css" href="{{asset('css/fullcalendar.css')}}">
 	<script rel="stylesheet" type="text/javascript" src="{{asset('js/fullcalendar.min.js')}}"></script>
-	<!--
-	<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
-	<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />	  
 
-	<link rel="stylesheet" href="{{asset('css/priceswitch.css')}}"> -->
+	
+	<script type="text/javascript" src="{{asset('js/bootstrap-datepicker.min.js')}}"></script>
+	<link rel="stylesheet" type="text/css" href="{{asset('css/bootstrap-datepicker3.css')}}" />	  
+
+	<link rel="stylesheet" href="{{asset('css/priceswitch.css')}}"> 
 
 	<script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
 
@@ -548,18 +549,22 @@
 				</div>
 
 				<div class="tab-pane fade" id="availability">
+					<div class="row">
+						<div class="col-lg-9">
 
-
-<!-- 					<div class="row">
-						<div class="col-lg-12">
-						<label> Calendar </label>
-						<input type="text" name="daterange" id="calendar" class ="form-control" value="01/01/2015 1:30 PM - 01/01/2015 2:00 PM" />
+							<div id="calendar"></div>
 						</div>
-					</div> -->
 
-					<div id="calendar"></div>
-
-
+						<div class="col-lg-3" style="margin-top: 30px;">
+							<label> Start </label>
+							<input type="text" class="form-control" name="rentStart" id="datestart">
+							<label> End </label>
+							<input type="text" class="form-control" name="rentEnd" id = "dateend">
+							<div style='text-align:center; margin: 25px 0 200px 0;'>
+								<button type='button' class='btn btn-info' style='margin:25px 0 200px 0;' onclick="insertDaterange()">Insert Daterange</button>
+							</div>
+						</div>
+					</div>
 				</div>
 
 				<div class="tab-pane fade" id="price">
@@ -827,13 +832,32 @@
 	$(document).ready(function() {
 			loadOpt();
 			//$("#hotcountry").load("{{asset('list/hotCountryList')}}");
-			// $('input[name="daterange"]').daterangepicker({
+			$('#datestart').datepicker({
+				todayHighlight:true,
+				autoclose:true,
 
-			// 	isInvalidDate: function(date) {
-			// 	  return (date.day() == 0 || date.day() == 6);
-			// 	}
-		 //    });
+			});
 			
+			$('#datestart').change(function(){
+				// $('#calendar').fullcalendar('select',$(this).val());
+			});
+
+			$('#dateend').datepicker({
+				autoclose:true,
+			});
+
+			$('#dateend').change(function(){
+				// var start = $('#datestart').val();
+				var end = $(this).val();
+				// if(start){
+				// 	$('#calendar').fullCalendar('select',moment(start),moment(end));
+				// }
+				// else{
+
+				// }
+
+				alert(end);
+			});
 			$('#calendar').fullCalendar({
 		        // put your options and callbacks here
 		        eventSources: [
@@ -846,9 +870,16 @@
 				selectable:true,
 				selectMinDistance:2, 
 				selectOverlap: false,
+				editable: true,
+				droppable: true, // this allows things to be dropped onto the calendar
+				dragScroll:true,
 				select: function( start, end, jsEvent, view){
-					alert("from: "+moment(start).format("YYYY-MM-DD") + " to " + moment(end).format("YYYY-MM-DD") + " has been selected");
-					$('#calendar').fullCalendar('unselect');
+					//alert("from: "+moment(start).format("YYYY-MM-DD") + " to " + moment(end).format("YYYY-MM-DD") + " has been selected");
+
+					$('#datestart').val(moment(start).format("MM/DD/YYYY"));
+					$('#dateend').val(moment(end).format("MM/DD/YYYY"));
+
+					// $('#calendar').fullCalendar('unselect');
 				},
 				dayRender:function(date,cell){
 					if(moment().diff(date,'days') > 0){
@@ -980,6 +1011,34 @@
 				});
 			});
 		});
+
+	function insertDaterange(){
+		var toSend = {};
+		var id = numberID;
+		toSend['_token'] = "{{csrf_token()}}";
+		toSend['rentStart'] = converttimetosql($('#datestart').val());
+		toSend['rentEnd'] = converttimetosql($('#dateend').val());
+		$.ajax({
+			type: "POST",
+			url: "/houseavailability/"+numberID+"/insert",
+			data: toSend,
+			success: function(data){
+				$('#calendar').fullCalendar('addEventSource','/houseavailability/'+ numberID);
+				bootbox.dialog({
+					message: "Range successfully added",
+					title: "Confirmation",
+
+					buttons: {
+						main: {
+							label: "OK",
+							className: "btn-primary"
+						}
+					}
+				});
+
+			}
+		});
+	}
 </script>
 @endsection
 

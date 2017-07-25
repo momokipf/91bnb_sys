@@ -151,6 +151,7 @@
 							<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
+							<li><a href="/calendar"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> CheckIn-Out Schedule</a></li>
 							<li><a href="#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Profile</a></li>
 							<li><a href="#"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Change Password</a></li>
 							<li role="separator" class="divider"></li>

@@ -10,7 +10,10 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View;
+
 
 Route::get('/welcome', function () {
     return view('welcome');
@@ -81,8 +84,17 @@ Route::post('houseowner/search/{similar?}','HouseOwnersController@search');
 Route::post('houseowner/add','HouseOwnersController@store');
 
 Route::get('houseavailability/{id}','HouseAvailabilityController@get');
+Route::post('houseavailability/{id}/insert','HouseAvailabilityController@insert');
 
 
+Route::get('calendar',function(){
+	return view('admin.checkinoutCal')->with('Rep',Auth::user());
+});
+
+
+
+//tmp put this function in houseavailabilitycontroller
+Route::get('calendar/data','HouseAvailabilityController@fromSource');
 
 Route::get('representatives', 'RepresentativesController@showAll');
 Route::post('representatives/update', 'RepresentativesController@update');

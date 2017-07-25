@@ -422,164 +422,176 @@ class HousesController extends Controller
 
     public function search(Request $request)
     {
-    	Log::info($request->all());
-    	$httpclient = new Client(['base_uri'=>'https://maps.googleapis.com/','timeout'=>5.0]);
+        Log::info($request->has('houseOwnerID'));
+        if($request->has('houseID')==1){
+            Log::info("search By ID");
+            $houseid = $request->input('houseID');
 
-    	$houseid = $request->input('houseID');
-    	$ownerid = $request->input('houseOwnerID');
-
-    	$zipcode = $request->input('zipcode');
-    	$houseAddress = $request->input('houseAddress');
-
-    	$country = $request->input('country');
-    	$state = $this->getState($request->input('state'));
-    	$city = $request->input('city');
-
-    	$radius = $request->input('milesrange',2);
-
-    	$numOfRoomsFrom = $request->input('numOfRoomsFrom');
-    	if(!$numOfRoomsFrom){
-    		$numOfRoomsFrom = 1;
-    	}
-    	$numOfRoomsTo = $request->input('numOfRoomsTo');
-    	if(!$numOfRoomsTo){
-    		$numOfRoomsTo = 10;
-    	}
-
-        $checkIndate = $request->input('checkIn');
-        $checkOutdate = $request->input('checkOut');
-
-    	$rentShared = $request->input('rentShareWhole');
-
-    	$target_pt = null;
-    	$search_geo = null;
-
-		if($houseid){
-    		$house = House::where('fullHouseID','=',$houseid)->first();
-    		Log::info($house);
-    		if($house){
-    			$search_geo = collect(['location'=>collect(['lat'=>$house->latitude,'lng'=>$house->longitude])]);
-    			return response()
-    				->json(['houses'=>array($house),
-    					 'geo_center'=>$search_geo
-    				]);
-    		}
-    	}
-    	if($ownerid){
-    		$houses = Houseowner::find($ownerid)->houses()->get();
-    		if($houses){
-    			$search_geo = collect(['location'=>collect(['lat'=>$houses[0]->latitude,'lng'=>$houses[0]->longitude])]);
-
-    			return response()
-    				->json(['houses'=>$houses,
-    					 'geo_center'=>$search_geo
-    				]);
-    		}
-    	}
-        /*
-        Spatial information
-        */
-    	if($request->input('search_latitude')&&$request->input('search_longitude'))
-    	{
-    		$target_pt = collect(['latitude'=>$request->input('search_latitude'),'longitude'=>$request->input('search_longitude')]);
-    	}
-    	else{
-            if($houseAddress)
-	    	{
-	    		$query_addr=$houseAddress.($country?','.$country:' ').($state?','.$state:' ').($city?','.$city:' ').','.$zipcode;
-                try{
-	    		$response =$httpclient->request('GET','maps/api/geocode/json?',['query'=>['address'=>$query_addr,'key'=>GOOGLE_KEY]]);
-               }
-               catch(GuzzleHttp\Exception\ConnectException $e){
-                    Log::error($e);
-               }
-	    	}
-    	}
-
-    	if(isset($response))
-		{
-	    	if($response->getStatusCode()=='200')
-			{
-				$obj = json_decode($response->getBody());
-				$status = $obj->status;
-				if($status=='OK')
-				{
-					//$target_pt = $obj->{'results'}[0]->{'geometry'}->{'location'}->{'lat'}.','.$obj->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
-
-					$search_geo = collect($obj->{'results'}[0]->{'geometry'});
-					$target_pt = collect(['latitude'=>$obj->{'results'}[0]->{'geometry'}->{'location'}->{'lat'},'longitude'=>$obj->{'results'}[0]->{'geometry'}->{'location'}->{'lng'}]);
-					//$isExact = $obj->{'results'}[0]->{'geometry'}->{'location_type'};
-					//Log::info($search_geo);
-				}
-				else if($status=='ZERO_RESULTS')
-				{
-
-				}
-				else if($status=='OVER_QUERY_LIMIT')
-				{
-
-				}
-				else{
-					
-				}
-			}
-			else
-			{
-				Log::info($response->getReasonPhrase());
-			}
-		}
-
-
-
-		$fields = array('r.numberID', 'fullHouseID', 'state', 'city', 'houseAddress','numOfRooms', 'numOfBaths','houseType','r.houseOwnerID','latitude','longitude',//basic information
-                     'costMonthPrice', 'costDayPrice',//price information
-                     // 'nextAvailableDate', 'minStayTerm','minStayUnit', 'rentShared',//available information
-                     'first', 'last', 'ownerUsPhoneNumber', 'ownerWechatUserName','ownerWechatID','ownerCompanyName');
-		Log::info($target_pt);
-		if(isset($target_pt))
-    	{
-    		// $housesql = House::WithinCircle($radius,$target_pt)->toSql();
-    		// $circlesql = "ST_Distance_Sphere(r.location,POINT(".$target_pt['longitude'].','.$target_pt['latitude']."))";//<".$radius;
-      //       Log::info($housesql);
-    		// $housebuilder = 
-      //                   DB::table(DB::raw("(".$housesql.") as r"))
-      //                   ->join('HouseOwner','r.houseOwnerID','=','HouseOwner.houseOwnerID')
-      //                   ->join('HousePrice','r.numberID','=','HousePrice.numberID')
-      //                   ->leftjoin('HouseAvailability','r.numberID','=','HouseAvailability.numberID')
-      //                   ->join('HousingCondition','r.numberID','=','HousingCondition.numberID')
-    		// 			->select(DB::raw(implode(',',$fields)))
-    		// 			->whereRaw($circlesql.'<'.$radius*1000);
-
-            $housebuilder = House::WithinCircle($radius,$target_pt)
-                        ->ShpereDistance($radius,$target_pt)
-                        ->orderBy(DB::raw("ST_Distance_Sphere(location,POINT(".$target_pt['longitude'].','.$target_pt['latitude']."))"));
-
-    		// if($rentShared!=0){
-    		// 	$housebuilder = $housebuilder->where('rentShared','=',$rentShared);
-    		// }
-
-    		// $housebuilder = $housebuilder->whereBetween('numOfRooms',[$numOfRoomsFrom,$numOfRoomsTo]);
-
-
-    		// $housebuilder = $housebuilder
-    		// 					->orderBy(DB::raw($circlesql));
-            $houses = $housebuilder->get();
-            Log::info(DB::getQueryLog());
-            if(isset($checkOutdate)&&isset($checkIndate)){
-                $houses = $houses->filter(function($house) use($checkIndate,$checkOutdate){
-                    $tmp = $this->checkAvailability($house->houseavailability()->orderBy('rentBegin')->get(),$checkIndate,$checkOutdate);
-                    Log::info($house->numberID."result: ".$tmp);
-                    return $tmp;
-                });
+            $house = House::where('fullHouseID','=',$houseid)->first();
+            Log::info($house);
+            if($house){
+                $search_geo = collect(['location'=>collect(['lat'=>$house->latitude,'lng'=>$house->longitude])]);
+                return response()
+                    ->json(['houses'=>$houses->values()->load('houseowner'),
+                         'geo_center'=>$search_geo
+                    ]);
             }
+            else{
+
+            }
+        }
+        else if($request->has('houseOwnerID')==1){
+
+            $ownerid = $request->input('houseOwnerID');
+            if(isset($ownerid)){
+                $houses = Houseowner::find($ownerid)->houses;
+                Log::info($houses);
+                if($houses){
+                    $search_geo = collect(['location'=>collect(['lat'=>$houses[0]->latitude,'lng'=>$houses[0]->longitude])]);
+
+                    return response()
+                        ->json(['houses'=>$houses->load('houseowner'),
+                             'geo_center'=>$search_geo
+                        ]);
+                }
+            }
+            else{
+
+            }
+        }
+        else{
+        	Log::info($request->all());
+        	$httpclient = new Client(['base_uri'=>'https://maps.googleapis.com/','timeout'=>5.0]);
+
+        	$zipcode = $request->input('zipcode');
+        	$houseAddress = $request->input('houseAddress');
+
+        	$country = $request->input('country');
+        	$state = $this->getState($request->input('state'));
+        	$city = $request->input('city');
+
+        	$radius = $request->input('milesrange',2);
+
+        	$numOfRoomsFrom = $request->input('numOfRoomsFrom');
+        	if(!$numOfRoomsFrom){
+        		$numOfRoomsFrom = 1;
+        	}
+        	$numOfRoomsTo = $request->input('numOfRoomsTo');
+        	if(!$numOfRoomsTo){
+        		$numOfRoomsTo = 10;
+        	}
+
+            $checkIndate = $request->input('checkIn');
+            $checkOutdate = $request->input('checkOut');
+
+        	$rentShared = $request->input('rentShareWhole');
+
+        	$target_pt = null;
+        	$search_geo = null;
+
+            /*
+            Spatial information
+            */
+        	if($request->input('search_latitude')&&$request->input('search_longitude'))
+        	{
+        		$target_pt = collect(['latitude'=>$request->input('search_latitude'),'longitude'=>$request->input('search_longitude')]);
+        	}
+        	else{
+                if($houseAddress)
+    	    	{
+    	    		$query_addr=$houseAddress.($country?','.$country:' ').($state?','.$state:' ').($city?','.$city:' ').','.$zipcode;
+                    try{
+    	    		$response =$httpclient->request('GET','maps/api/geocode/json?',['query'=>['address'=>$query_addr,'key'=>GOOGLE_KEY]]);
+                   }
+                   catch(GuzzleHttp\Exception\ConnectException $e){
+                        Log::error($e);
+                   }
+    	    	}
+        	}
+
+        	if(isset($response))
+    		{
+    	    	if($response->getStatusCode()=='200')
+    			{
+    				$obj = json_decode($response->getBody());
+    				$status = $obj->status;
+    				if($status=='OK')
+    				{
+    					//$target_pt = $obj->{'results'}[0]->{'geometry'}->{'location'}->{'lat'}.','.$obj->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
+
+    					$search_geo = collect($obj->{'results'}[0]->{'geometry'});
+    					$target_pt = collect(['latitude'=>$obj->{'results'}[0]->{'geometry'}->{'location'}->{'lat'},'longitude'=>$obj->{'results'}[0]->{'geometry'}->{'location'}->{'lng'}]);
+    					//$isExact = $obj->{'results'}[0]->{'geometry'}->{'location_type'};
+    					//Log::info($search_geo);
+    				}
+    				else if($status=='ZERO_RESULTS')
+    				{
+
+    				}
+    				else if($status=='OVER_QUERY_LIMIT')
+    				{
+
+    				}
+    				else{
+    					
+    				}
+    			}
+    			else
+    			{
+    				Log::info($response->getReasonPhrase());
+    			}
+    		}
 
 
-    		return response()
-    			->json(['houses'=>$houses->values(),
-    					 'geo_center'=>$search_geo
-    				]);
-    	}
 
+    		$fields = array('r.numberID', 'fullHouseID', 'state', 'city', 'houseAddress','numOfRooms', 'numOfBaths','houseType','r.houseOwnerID','latitude','longitude',//basic information
+                         'costMonthPrice', 'costDayPrice',//price information
+                         // 'nextAvailableDate', 'minStayTerm','minStayUnit', 'rentShared',//available information
+                         'first', 'last', 'ownerUsPhoneNumber', 'ownerWechatUserName','ownerWechatID','ownerCompanyName');
+    		Log::info($target_pt);
+    		if(isset($target_pt))
+        	{
+        		// $housesql = House::WithinCircle($radius,$target_pt)->toSql();
+        		// $circlesql = "ST_Distance_Sphere(r.location,POINT(".$target_pt['longitude'].','.$target_pt['latitude']."))";//<".$radius;
+          //       Log::info($housesql);
+        		// $housebuilder = 
+          //                   DB::table(DB::raw("(".$housesql.") as r"))
+          //                   ->join('HouseOwner','r.houseOwnerID','=','HouseOwner.houseOwnerID')
+          //                   ->join('HousePrice','r.numberID','=','HousePrice.numberID')
+          //                   ->leftjoin('HouseAvailability','r.numberID','=','HouseAvailability.numberID')
+          //                   ->join('HousingCondition','r.numberID','=','HousingCondition.numberID')
+        		// 			->select(DB::raw(implode(',',$fields)))
+        		// 			->whereRaw($circlesql.'<'.$radius*1000);
+
+                $housebuilder = House::WithinCircle($radius,$target_pt)
+                            ->ShpereDistance($radius,$target_pt);
+                            
+
+        		if($rentShared!=0){
+        			$housebuilder = $housebuilder->where('rentShared','=',$rentShared);
+        		}
+
+        		$housebuilder = $housebuilder->whereBetween('numOfRooms',[$numOfRoomsFrom,$numOfRoomsTo]);
+
+        		$housebuilder = $housebuilder
+        							->orderBy(DB::raw("ST_Distance_Sphere(location,POINT(".$target_pt['longitude'].','.$target_pt['latitude']."))"));
+                $houses = $housebuilder->get();
+                Log::info(DB::getQueryLog());
+                if(isset($checkOutdate)&&isset($checkIndate)){
+                    $houses = $houses->filter(function($house) use($checkIndate,$checkOutdate){
+                        $tmp = $this->checkAvailability($house->houseavailability()->orderBy('rentBegin')->get(),$checkIndate,$checkOutdate);
+                        Log::info($house->numberID."result: ".$tmp);
+                        return $tmp;
+                    });
+                }
+
+
+        		return response()
+        			->json(['houses'=>$houses->values()->load('houseowner'),
+        					 'geo_center'=>$search_geo
+        				]);
+        	}
+        }
 
     }
 

@@ -124,15 +124,29 @@
 @section('content')
     <div class="container-fluid" style="width:100%;height:100%">
         <div class="row equal">
-            <div class = "col-sm-6">
+            <div class = "col-lg-6">
                 <ul class="nav nav-tabs">
                     <li class="active"><a data-toggle="tab" href="#aboutLocation">Basic Search</a></li>
                     <!-- <li><a data-toggle="tab" href="#aboutdetail">aboutdetail</a></li> -->
                 <!-- <li><a data-toggle="tab" href="#aboutCheckin">Check-In/Out Date</a></li> -->
                     <!-- <li><a data-toggle="tab" href="#aboutCondition">House Condition</a></li> -->
                     <!-- <li><a data-toggle="tab" href="#aboutPrice">House/Room Price</a></li> -->
-                    <li><a data-toggle="tab" href="#advancedsearch">Advanced search</a></li>
+<!--                     <li><a data-toggle="tab" href="#advancedsearch">Advanced search</a></li> -->
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Advanced search<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#searchByHouseID" data-toggle="tab">Search by House ID</a></li>
+                            <li><a href="#searchByOwner" data-toggle="tab">Search by Owner</a></li>
+                        </ul>
+                    </li>
                 </ul>
+                    <!-- <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Advanced search
+                        <ul class="dropdown-menu">
+                            <li>Search by House ID</li>
+                            <li>Search by owner ID</li>
+                        </ul>
+                    </li> -->
 
                 <div class="tab-content">
 
@@ -297,9 +311,9 @@
                                 <div class="col-lg-6">
                                     <label>Number of Adults</label>
                                     @if(!isset($Query)&&isset($Query->numOfAdult))
-                                    <input class="form-control input-sm" type="number" id="numOfAdults" name="numOfAdults" value="{{$Query->numOfAdult}}">
+                                    <input class="form-control input-sm" type="number" id="numOfAdults" name="numOfAdults" value="{{$Query->numOfAdult}}" min="1">
                                     @else
-                                    <input class="form-control input-sm" type="number" id="numOfAdults" name="numOfAdults">
+                                    <input class="form-control input-sm" type="number" id="numOfAdults" name="numOfAdults" value="1" min="1">
                                     @endif
                                 </div>
 
@@ -360,7 +374,7 @@
                         <!-- / Whole or Share -->
                         <!-- <div class="tab-pane fade" id="aboutCheckin">
                             <div class="row">
-                                <div class="col-sm-12">
+                                <div class="col-lg-12">
                                     <div class="alert alert-warning">
                                         <h5><i class="fa fa-info-circle" aria-hidden="true"></i><em><strong> Note:</strong> If guest didn't indicate the exact date, please apply the 1st of the month
                                         for Check-In date, and the end of the month for Check-Out date.</em>
@@ -369,7 +383,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-12">
+                                <div class="col-lg-12">
                                     <div class="alert alert-warning">
                                         <h5><i class="fa fa-info-circle" aria-hidden="true"></i><em><strong> Note:</strong> * indicates required field. </em>
                                         </h5>
@@ -377,22 +391,17 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-12">
+                                <div class="col-lg-12">
                                     <div id='checkDateCheck'></div>
                                 </div>
                             </div>
                         </div> --><!-- / Check in and check out -->
-
-
-                    <div class="tab-pane fade" id="advancedsearch">
-                        <form id="adhouseSearchForm">
+                    <div class="tab-pane fade" id="searchByHouseID">
+                        <form id ="houseIDsearchForm" class="searchtypediv">
                             {{csrf_field()}}
                             <div class="row">
-                                <h5>Search By House ID:</h5>
-                            </div>
-                            <div class="row searchtypediv">
-                                <div class="col-sm-8">
-                                    <!-- <label>House ID</label> -->
+                                <div class="col-lg-8">
+                                    <label> House ID </label>
                                     @if(isset($fullHouseID))
                                     <input class="form-control input-sm" type="text" id="houseID" name="houseID" placeholder="Format: 91bnb_State_City_0000" value="{{$fullHouseID}}">
                                     @else
@@ -400,21 +409,14 @@
                                     @endif
                                 </div>
                             </div>
+                        </form>
+                    </div>
 
-                                <!-- <div class="row searchtypediv">
-                                    <div class="col-sm-10">
-                                        <label>Cross Road Between</label>
-                                        <div class="input-group">
-                                            <input class="form-control input-sm" type="text" id="crossroadA" name="crossroadA" placeholder="Road A">
-                                            <span class="input-group-addon">and</span>
-                                            <input class="form-control input-sm" type="text" id="crossroadB" name="crossroadB" placeholder="Road B">
-                                        </div>
-                                    </div>
-                                </div> -->
+                    <div class="tab-pane fade" id="searchByOwner">
+                        <form id ="ownersearchForm" class="searchtypediv">
+                            {{csrf_field()}}
                             <div class="row">
-                                <h5>Search By Owner:</h5>
-                            </div>
-                            <div class="row">
+                                <div class="col-lg-10">
                                 <label>DO YOU KNOW OWNER ID?</label>
                                 <div class="onoffswitch" style="margin: auto;">
                                     <input type="checkbox" class="onoffswitch-checkbox" id="ownerknownswitch" unchecked >
@@ -423,15 +425,68 @@
                                         <span class="onoffswitch-switch"></span>
                                     </label>
                                 </div>
+                                </div>
                             </div>
-                            <div class="row searchtypediv" id="knowowneridDiv" style="display:none;">
+
+                            <div class="row">
+                                <div id="knowowneridDiv" style="display:none;">
+                                    <div class="col-lg-12">
+                                        <label>Owner ID</label>
+                                        <input type="text" name="houseOwnerID" id="houseOwnerID" class="form-control input-sm" placeholder="Owner ID">
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div id="dontknowowneridDiv" style="display:none;">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <label>First Name</label>
+                                    <input type="text" name="first" class="form-control input-sm" placeholder="First Name">
+                                </div>
+
+                                <div class="col-lg-2">
+                                    <label>Last Name</label>
+                                    <input type="text" name="last" class="form-control input-sm" placeholder="Last Name">
+                                </div>
+
+                                <div class="col-lg-3">
+                                    <label>WeChat Username</label>
+                                    <input type="text" name="ownerWechatUserName" class="form-control input-sm" placeholder="Owner WeChat Username">
+                                </div>
+
+                                <div class="col-lg-3">
+                                    <label>WeChat ID</label>
+                                    <input type="text" name="ownerWechatID" class="form-control input-sm" placeholder="Owner Wechat ID">
+                                </div>
+                            </div>
+                            <div class="row" style="margin: auto;">
+                                <!-- <div > -->
+                                <label style="visibility:hidden">Owner Search</label>
+                                <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#search_result_modal" id="ownerIDsearch" type="button" >
+                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search ownerID</button>
+                                <!-- <button class="btn btn-success" type="button" id="myBtn"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Apply Filter</button> -->
+                            </div>
+                            </div>
+                        </form>
+
+
+                    </div>
+
+                    <div class="tab-pane fade" id="advancedsearch">
+
+
+
+                        <form id="adhouseSearchForm">
+
+                            <!-- <div class="row searchtypediv" id="knowowneridDiv" style="display:none;">
                                 <div class="col-lg-2">
                                     <label>Owner ID</label>
                                     <input type="text" name="houseOwnerID" id="houseOwnerID" class="form-control input-sm" placeholder="Owner ID">
                                 </div>
-                            </div>
+                            </div> -->
 
-                            <div class="row searchtypediv" id="dontknowowneridDiv" style="display:none;">
+                            <!-- <div class="row searchtypediv" id="dontknowowneridDiv" style="display:none;">
                                 <div class="col-lg-2">
                                     <label>First Name</label>
                                     <input type="text" name="first" class="form-control input-sm" placeholder="First Name">
@@ -456,15 +511,15 @@
                                     <label style="visibility:hidden">Owner Search</label>
                                     <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#search_result_modal" id="ownersearch" type="button" >Search</button>
                                 </div>
-                            </div>
+                            </div> -->
                         </form>
                     </div>
                     <div style="margin-top:30px; margin-bottom:50px;">
-                                <button class="btn btn-success" type="button" id="myBtn"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Apply Filter</button>
-                                <button class="btn btn-warning disToLeft" type="reset" id = "refreshPage" onclick="location.reload(true);"><span class="glyphicon glyphicon-refresh"></span> Reset Filter</button>
-                                <!-- <button id="extall" type="button" class="btn btn-primary disToLeft"><span class="glyphicon glyphicon-download-alt"></span>
-                                    Export Filtered Result to Excel
-                                </button> -->
+                        <button class="btn btn-success" type="button" id="myBtn"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Apply Filter</button>
+                        <button class="btn btn-warning disToLeft" type="reset" id = "refreshPage" onclick="location.reload(true);"><span class="glyphicon glyphicon-refresh"></span> Reset Filter</button>
+                        <!-- <button id="extall" type="button" class="btn btn-primary disToLeft"><span class="glyphicon glyphicon-download-alt"></span>
+                            Export Filtered Result to Excel
+                        </button> -->
                     </div>
                 </div>
             </div>
@@ -485,7 +540,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-6">
+            <div class="col-lg-6">
                 <div id="map_div">
                     <div id="map">
                     </div>
@@ -526,6 +581,7 @@
                         <th style="min-width:150px;">View House info</th>
                         <th style="min-width:150px;">View Owner info</th>
                         <th style="min-width:100px;">Modify</th>
+                        <th sytle="min-width:100px;">Add to Transaction</th> 
                         <!--<th style="min-width:170px;">Owner Phone Number</th>
                         <th style="min-width:170px;">Owner Name</th>
                         <th style="min-width:150px;">WeChat Name</th>
@@ -550,78 +606,78 @@
                 <div class="tab-content">
                     <div id="HouseBasicinfo" class="tab-pane fade in active" style="pading:20px;">
                         <div class="row" >
-                            <div class="col-sm-2 input-w">
+                            <div class="col-lg-2 input-w">
                                 <label>House ID:</label><p id="houseid_info"></p>
                              </div>  
-                            <div class='col-sm-2'>
+                            <div class='col-lg-2'>
                                 <label>House Owner ID:</label>
                                 <p id='houseOwnerID_info'></p>
                             </div> 
-                            <div class='col-sm-2'>
+                            <div class='col-lg-2'>
                                 <label>House ID in Owner:</label>
                                 <p id='houseIDByOwner_info'></p>
                             </div> 
                         </div>
 
                         <div class='row'>
-                            <div class="col-sm-2 input-w">
+                            <div class="col-lg-2 input-w">
                                 <label for="country_info">Country:</label><p id="country_info"></p>
                             </div>
-                            <div class="col-sm-2 input-w">
+                            <div class="col-lg-2 input-w">
                                 <label>State:</label><p id="state_info"></p>
                             </div>
-                            <div class="col-sm-2 input-w">
+                            <div class="col-lg-2 input-w">
                                 <label>City:</label><p id="city_info"></p>
                             </div>
-                            <div class='col-sm-2'>
+                            <div class='col-lg-2'>
                                 <label>Region:</label>
                                 <p id='region_info'></p>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class='col-sm-6'>
+                            <div class='col-lg-6'>
                                 <label>House Address:</label>
                                 <p id='houseAddress_info'></p>
                             </div>
-                            <div class='col-sm-2'>
+                            <div class='col-lg-2'>
                                 <label>Zip:</label>
                                 <p id='houseZip_info'></p>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class='col-sm-4'>
+                            <div class='col-lg-4'>
                                 <label>House Type:</label>
                                 <p id="houseType_info"></p>
                             </div>
-                            <div class='col-sm-4'>
+                            <div class='col-lg-4'>
                                 <label>Size:</label>
                                 <p id="size_info"></p>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class='col-sm-2'>
+                            <div class='col-lg-2'>
                                 <label>Number Of Rooms:</label>
                                 <p id='numOfRooms_info'></p>
                             </div>
-                            <div class='col-sm-2'>
+                            <div class='col-lg-2'>
                                 <label>Number Of Baths:</label>
                                 <p id='numOfBaths_info'></p>
                             </div>
-                            <div class='col-sm-2'>
+                            <div class='col-lg-2'>
                                 <label>Number Of Beds:</label>
                                 <p id='numOfBeds_info'></p>
                             </div>
-                            <div class='col-sm-2'>
+                            <div class='col-lg-2'>
                                 <label>Max Number of Guests</label>
                                 <p id='maxNumOfGuest_info'></p>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class='col-sm-4'>
+                            <div class='col-lg-4'>
                                 <label>On Other Website</label>
                                 <p id='onOtherWebsite_info'></p>
                             </div>
@@ -833,8 +889,8 @@
 
         });
 
-        $("#ownersearch").click(function(){
-            var toSend = $('#adhouseSearchForm').serialize();
+        $("#ownerIDsearch").click(function(){
+            var toSend = $('#ownersearchForm').serialize();
             $.ajax({
                 type:"POST",
                 url:"/houseowner/search/similar",
@@ -875,6 +931,8 @@
 
         });
 
+        
+
         /*
         TODO:(1)add link to initialize a GET request to server to get house info
              (2)add link to initialize a GET request to server to get houseowner info
@@ -889,17 +947,53 @@
             if($('#houseOwnerID').val()){
                 var houseownernode = document.getElementById('houseOwnerID');
                 toSend.push({'name':houseownernode.name,'value':houseownernode.value});
+                realsearch(toSend);
+                return ;
             }
             if($('#houseID').val()){
                 var houseidnode= document.getElementById('houseID');
                 toSend.push({'name':houseidnode.name,'value':houseidnode.value});
+                realsearch(toSend); 
+                return ;
             }
             if(search_geo){
                 var location = search_geo['location'];
                 toSend.push({'name':'search_latitude','value':location['lat']});
                 toSend.push({'name':'search_longitude','value':location['lng']});
+                realsearch(toSend);
             }
+            else{
+                var houseAddress = $('#houseAddress').val();
+                $.ajax({
+                    url:'https://maps.googleapis.com/maps/api/geocode/json?',
+                    type:'GET',
+                    data: {'address':houseAddress, 'key':'AIzaSyCpF-_i-utIH6cZl94zpu4C5vx_FBDDI9s'},
+                    datatype:'json',
+                    success: function(data){
+                        if(data.results.length==0){
 
+                        }
+                        else{
+                            var longitude=data.results[0].geometry.location.lng;
+                            var latitude =data.results[0].geometry.location.lat;
+                            $('#houseSearchForm').find('input[name="search_latitude"]').val(latitude);
+                            $('#houseSearchForm').find('input[name="search_longitude"]').val(longitude);
+                            search_geo = data.results[0].geometry;
+                        }
+                        realsearch(toSend)
+                    },
+                    error: function(){
+
+                    }
+                });
+            }
+        });
+        
+        function realsearch(toSend){
+            if(toSend=== undefined){
+                var toSend = $('#houseSearchForm').serializeArray();
+            }
+            $('#loadele').addClass("loading");
             $.ajax({
                 type:"GET",
                 url:"/houses/realsearch",
@@ -949,10 +1043,10 @@
                                                     numberID + "</a></td>";
                                     }
                                     else if(itemsToShow[j] == 'OwnerName'){
-                                        rowhtml +=  "<td>"+houses[i].first + ' ' + houses[i].last + "</td>";
+                                        rowhtml +=  "<td>"+houses[i].houseowner.first + ' ' + houses[i].houseowner.last + "</td>";
                                     }
                                     else if(itemsToShow[j] == 'ownerWechatUserName' ){
-                                        rowhtml += "<td title='Wechat ID: " + houses[i]['ownerWechatID']+"'>"+houses[i][itemsToShow[j]] +"</td>";
+                                        rowhtml += "<td title='Wechat ID: " + houses[i].houseowner['ownerWechatID']+"'>"+houses[i].houseowner[itemsToShow[j]] +"</td>";
                                     }
                                     else if(!houses[i][itemsToShow[j]]){
                                         rowhtml += "<td>N/A</td>";
@@ -964,10 +1058,11 @@
                                 }
 
                                 //rowhtml += "<td><a onclick=' retrieveHouseInfo("+numberID+");' > View House Info</td>";
-                                rowhtml += "<td><button type='button' class='btm btn-info' onclick='retrieveHouseInfo("+houses[i].numberID+");resultSM.toHousePage("+i+")'>"+"View House Info"+"</button></td>";
-                                rowhtml += "<td><button type='button' class='btm btn-info' onclick='resultSM.toOwnerPage("+i+")'>View Owner Info</button></td>";
-                                rowhtml += "<td><a href='/house/modify/"+houses[i].numberID+"' class='btn btn-info' role='button'>Modify</a></td>"
-                                attachHouseOwnerDiv(houses[i],i);
+                                rowhtml += "<td><button type='button' class='btn btn-info' onclick='retrieveHouseInfo("+houses[i].numberID+");resultSM.toHousePage("+i+")'>"+"View House"+"</button></td>";
+                                rowhtml += "<td><button type='button' class='btn btn-info' onclick='resultSM.toOwnerPage("+i+")'>View Owner</button></td>";
+                                rowhtml += "<td><a href='/house/modify/"+houses[i].numberID+"' class='btn btn-info' role='button'>House Modify</a></td>";
+                                rowhtml += "<td><a class='btn btn-info' role='button'>+</a></td>"
+                                attachHouseOwnerDiv(houses[i].houseowner,i);
 
                                 rowhtml += "</tr>";
                                 tablehtml += rowhtml;
@@ -982,23 +1077,22 @@
                             $("#showResult").hide();
                             // Notice that there is no result
                         }
-                    }
+                        if(search_geo){
+                            mapMovecenter(search_geo);
+                        }
+                        else{
+                            //alert(JSON.stringify(data.geo_center));
+                            var loc = new google.maps.LatLng(data.geo_center.location.lat,data.geo_center.location.lng);
+                            search_geo = {'location': loc};
+                            mapMovecenter(search_geo);
+                        }
 
-                    if(search_geo){
-                        mapMovecenter(search_geo);
+                        search_geo=null;
                     }
-                    else{
-                        //alert(JSON.stringify(data.geo_center));
-                        var loc = new google.maps.LatLng(data.geo_center.location.lat,data.geo_center.location.lng);
-                        search_geo = {'location': loc};
-                        mapMovecenter(search_geo);
-                    }
-
-                    search_geo=null;
                 }
             });
-            $('#loadele').addClass("loading");
-        });
+        }
+
 
         function vieweffect(id) {
             $('#houseOwnerID').val(id);
@@ -1184,7 +1278,7 @@
         }
 
         function attachHouseOwnerDiv(data,index){
-            var houseownerhtml= "<div class='col-sm-6' id=ownerinfo_"+index+" style='width=\"50%\";display:none'>";
+            var houseownerhtml= "<div class='col-lg-6' id=ownerinfo_"+index+" style='width=\"50%\";display:none'>";
             houseownerhtml+= "<table class='table table-bordered table-striped text-center' style='font-size:12px;' >";
             houseownerhtml += "<thead></thead><tbody><col width = '20%'><col width='80%'>"
 

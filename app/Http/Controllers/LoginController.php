@@ -108,7 +108,7 @@ class LoginController extends Controller
         else{
             // $this->incrementLoginAttempts($request);
 
-            return redirect('login')
+            return  \Redirect::intended('/login')
                 ->withInput()
                 ->with('status','login failed');
         }
@@ -125,7 +125,7 @@ class LoginController extends Controller
         $request->session()->flush();
         $request->session()->regenerate();
 
-        return redirect('/login');
+        return  \Redirect::intended('/login');
     }
 
 
