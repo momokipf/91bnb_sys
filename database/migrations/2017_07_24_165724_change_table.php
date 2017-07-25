@@ -15,7 +15,7 @@ class ChangeTable extends Migration
     {
 
         Schema::dropIfExists('HouseAvailability');
-        
+
         Schema::create('HouseAvailability',function(Blueprint $table)
         {
             $table->integer('numberID');
@@ -23,11 +23,15 @@ class ChangeTable extends Migration
             $table->date('rentBegin');
             $table->date('rentEnd');
             $table->string('description',200);
-            $table->integer('rentprice');
-            $table->integer('inquirerID');
-            $table->foreign('numberID')->references('numberID')->on('House')->onDelete('cascade');
-            $table->foreign('inquirerID')->references('inquirerID')->on('Inquirer')->onDelete('cascade');
+            // $table->integer('rentprice');
+            $table->integer('inquiryID');
         });
+
+        Schema::table('HouseAvailability',function(Blueprint $table)
+        {
+            $table->foreign('numberID')->references('numberID')->on('House')->onDelete('cascade');
+        });
+
     }
 
     /**
