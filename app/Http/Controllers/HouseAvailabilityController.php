@@ -58,7 +58,8 @@ class HouseAvailabilityController extends Controller
     	$newHouseAva->rentBegin = $request->input('rentStart');
     	$newHouseAva->rentEnd = $request->input('rentEnd');
     	$newHouseAva->inquiryID = $request->input('inquiryID',0);
-
+    	$newHouseAva->source = $request->input('source','inner');
+    	$newHouseAva->source = $request->input('idInSource');
     	$house->houseavailability()->save($newHouseAva);
 
     	if($request->ajax()||$request->wantsJson()){
@@ -78,15 +79,15 @@ class HouseAvailabilityController extends Controller
 
 
     private $housecals = array(
-    						'Alhambra_23'=>array('17046071.ics?s=e9923535454dc862ba756d211d9123a3','#007FFF'),
-    						'Monrovia_13'=>array('17867446.ics?s=3db0cd9df87b853420f9eb03958f95f9','#FF4040'),
-    						'RH_89'=>array('18044055.ics?s=b810601c619ff7db7cceadaa04341dff','#7FFFD4'),
-    						'Irvine_85'=>array('18584713.ics?s=976d6fc96ae42067327bf6565bbe7933','#FFD700'),
-    						'TC_01'=>array('18584713.ics?s=976d6fc96ae42067327bf6565bbe7933','#FF7F24'),
+    						'Alhambra_0023'=>array('17046071.ics?s=e9923535454dc862ba756d211d9123a3','#007FFF'),
+    						'Monrovia_0013'=>array('17867446.ics?s=3db0cd9df87b853420f9eb03958f95f9','#FF4040'),
+    						'RH_0089'=>array('18044055.ics?s=b810601c619ff7db7cceadaa04341dff','#7FFFD4'),
+    						'Irvine_0085'=>array('18584713.ics?s=976d6fc96ae42067327bf6565bbe7933','#FFD700'),
+    						'TempleCity_0001'=>array('18584713.ics?s=976d6fc96ae42067327bf6565bbe7933','#FF7F24'),
     						'Arcadia_128'=>array('18946103.ics?s=fb1388b36d6e0450e3c2ff3d537d4389','#FF1493'),
     						'Arcadia_130'=>array('19309098.ics?s=3312405167315729456c561e8971bbf7','#F0FFFF'),
-    						'Tustin_03'=>array('19713586.ics?s=5f323ea05754bc2ce1af2f2259e6e6d5','#00FFFF'),
-    						'TC_21'=>array('19786881.ics?s=d1c123ba4f87f4140b3be5abb84a3b8a','#7CFC00'),
+    						'Tustin_0003'=>array('19713586.ics?s=5f323ea05754bc2ce1af2f2259e6e6d5','#00FFFF'),
+    						'TempleCity_0021'=>array('19786881.ics?s=d1c123ba4f87f4140b3be5abb84a3b8a','#7CFC00'),
     					);
 
 
@@ -105,7 +106,9 @@ class HouseAvailabilityController extends Controller
   //   			),
   //   		'cache'
   //   		);
-
+    	if(!file_exists(storage_path('icals'))){
+    		mkdir(storage_path("icals"), 0700);
+    	}
 
     	$httpclient = new \GuzzleHttp\Client(['base_uri'=>'https://www.airbnb.com/calendar/ical/','timeout'=>5.0]);
     	$start = $request->input('start');
@@ -119,7 +122,7 @@ class HouseAvailabilityController extends Controller
 				$now = new \DateTime();
 				$lasttime = filemtime($filename);
 				Log::info(date_timestamp_get($now) - $lasttime);
-				if(date_timestamp_get($now) - $lasttime <= 60*60){ // 30*60 = 30 min ;{
+				if(date_timestamp_get($now) - $lasttime <= 60*60){ // 60*60 = 30 min ;{
 					$icalstr = file_get_contents($filename);
 				}
     		}
@@ -142,6 +145,13 @@ class HouseAvailabilityController extends Controller
 	    		Log::info($e);
 	    		die($e);
 			}
+
+			$house = \App\House::where('fullHouseID','LIKE','%'.$key)->first();
+			if($house)
+				Log::info("House ID : ".$house->numberID);
+			else
+				Log::info($key." can not found");
+
 			foreach($ical->eventsFromRange($start,$end) as &$event){
 				if($event->summary == "Not available")
 					continue;
@@ -149,12 +159,22 @@ class HouseAvailabilityController extends Controller
 				$renter = substr($event->summary,0,strpos($event->summary,'('));
 
 				$info = "Renter: ".$renter."; House: ".$key;
+				if(preg_match("/PHONE:([\s\+]+[\d\s()-]+)\\n/", $event->description,$match)){
+		    		$phone = str_replace(" ","",$match[1]);
+		    		$info = $info." PHONE: ".$phone;
+		    	}
+		    	if(preg_match("/EMAIL:\s([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})\\n/", $event->description,$match)){
+		    		$email = $match[1];
+		    		$info = $info." EMAIL: ".$email;
+		    	}
+
 				$ts = $event->dtstart_array[2];
 				$estart = new \DateTime("@$ts") ;
 				$ts = $event->dtend_array[2];
 				$eend = new \DateTime("@$ts");
 
-				$tmp = array('id'=>$event->uid,'start'=>$estart->format('Y-m-d'),'end'=>$eend->format('Y-m-d'),'color'=>$value[1],'title'=>$info);
+
+				$tmp = array('id'=>$event->uid,'start'=>$estart->format('Y-m-d'),'end'=>$eend->format('Y-m-d'),'color'=>$value[1],'url'=>$info);
 				array_push($ret,$tmp);
 			}
 		}
@@ -164,5 +184,6 @@ class HouseAvailabilityController extends Controller
 
 		return response($ret);
     }	
+
 
 }

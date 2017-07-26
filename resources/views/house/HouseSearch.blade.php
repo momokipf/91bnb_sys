@@ -1078,13 +1078,13 @@
                             // Notice that there is no result
                         }
                         if(search_geo){
-                            mapMovecenter(search_geo);
+                            //drawCircle(search_geo,,$('#milesrange').val());
                         }
                         else{
                             //alert(JSON.stringify(data.geo_center));
                             var loc = new google.maps.LatLng(data.geo_center.location.lat,data.geo_center.location.lng);
                             search_geo = {'location': loc};
-                            mapMovecenter(search_geo);
+                            //drawCircle(search_geo,$('#milesrange').val());
                         }
 
                         search_geo=null;
@@ -1121,10 +1121,10 @@
             marker.setAnimation(google.maps.Animation.BOUNCE); 
             setTimeout(function(){ marker.setAnimation(null); }, 2000);  
         }
-        function mapMovecenter(search_geo)
+        function drawCircle(search_geo,radius)
         {
             var loc = search_geo['location'];
-            var radius = (document.getElementById('milesrange')).value*1000;
+            //var radius = (document.getElementById('milesrange')).value*1000;
             map.setCenter(loc);
             if(!rangemarker){
                 rangemarker = new google.maps.Circle({

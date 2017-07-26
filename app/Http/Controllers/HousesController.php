@@ -422,17 +422,17 @@ class HousesController extends Controller
 
     public function search(Request $request)
     {
-        Log::info($request->has('houseOwnerID'));
+        Log::info(Log::info($request->all()));
         if($request->has('houseID')==1){
             Log::info("search By ID");
             $houseid = $request->input('houseID');
 
             $house = House::where('fullHouseID','=',$houseid)->first();
             Log::info($house);
-            if($house){
+            if(isset($house)){
                 $search_geo = collect(['location'=>collect(['lat'=>$house->latitude,'lng'=>$house->longitude])]);
                 return response()
-                    ->json(['houses'=>$houses->values()->load('houseowner'),
+                    ->json(['houses'=>array($house->load('houseowner')),
                          'geo_center'=>$search_geo
                     ]);
             }
@@ -445,7 +445,6 @@ class HousesController extends Controller
             $ownerid = $request->input('houseOwnerID');
             if(isset($ownerid)){
                 $houses = Houseowner::find($ownerid)->houses;
-                Log::info($houses);
                 if($houses){
                     $search_geo = collect(['location'=>collect(['lat'=>$houses[0]->latitude,'lng'=>$houses[0]->longitude])]);
 

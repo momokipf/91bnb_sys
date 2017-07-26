@@ -10,6 +10,11 @@
 	.fc-unthemed td.fc-today {
 	background: #fcf8e3;
 	}
+
+	.fc-event {
+		font-size: .35em;
+	}
+
 	.date-disabled-day{
 		 background-image: linear-gradient(to bottom right,  transparent calc(50% - 1px), red, transparent calc(50% + 1px));
 	}
@@ -26,7 +31,6 @@
         50% 50% 
         no-repeat;
     }
-
     #loadele.loading{
         overflow:hidden;
         display:block;
@@ -35,13 +39,25 @@
     #loadele.loading .modal{
         display:block;
     }
+    .foo {
+	  /*float: left;*/
+	  width: 40px;
+	  height: 20px;
+	  margin: 5px;
+	  border: 1px solid rgba(0, 0, 0, .2);
+	}
+
 </style>
 
 @endsection
 
 @section('content')
 <div class="container">
-	<div id="calendar"></div>
+	<div class="row">
+		<div class="col-lg-12">
+			<div id="calendar"></div>
+		</div>
+	</div>
 </div>
 <div class="modal" id="loadele"></div>
 
@@ -86,8 +102,10 @@
 			},
 			eventClick:function(event){
 				if(event.url){
-					window.open(event.url);
-					return false;
+					bootbox.dialog({
+						message: event.url,
+						title: "Infomation",
+					});
 				}
 			}
 			
