@@ -18,7 +18,7 @@ class ChangeTable extends Migration
 
         Schema::create('HouseAvailability',function(Blueprint $table)
         {
-            $table->integer('numberID');
+            $table->integer('numberID')->unsigned();
             $table->tinyInteger('rentShared');
             $table->date('rentBegin');
             $table->date('rentEnd');
