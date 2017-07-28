@@ -246,7 +246,7 @@
 							<!-- email -->
 							<td>{{$query->quirer->inquirerEmail}}</td>
 							<!-- house pair -->
-							<td><button type="button" class="btn btn-primary btn-sm" onclick="location.reload(true);HousePair('{{$query->country}}','{{$query->state}}','{{$query->city}}');" > House Pair</button>
+							<td><button type="button" class="btn btn-primary btn-sm" onclick="location.reload(true);HousePair('{{$query->inquiryID}}');" > House Pair</button>
 							</td>
 							
 							<!-- if priority is not enough -->
@@ -644,14 +644,14 @@
 
 	    }
 
-		function HousePair(country, state, city){
+		function HousePair(inquiryID){
 			var data={};
-			data['country'] = country;
-			data['state'] = state;
-			data['city'] = city;
+			data['inquiryID'] = inquiryID;
 			var para = $.param(data);
 			console.log(para);
-			window.location.replace("/houses/results?"+para);
+			var url = window.location.origin+"/inquiry/housepair"+'?'+para;
+			window.open(url);
+			//window.location.replace("/houses/results?"+para);
 		}
 
 

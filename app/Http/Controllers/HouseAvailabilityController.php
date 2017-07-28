@@ -35,7 +35,13 @@ class HouseAvailabilityController extends Controller
 
 			$ret = array();
     		foreach($availabilities as &$ava){
-    			$tmp = array('start'=>$ava->rentBegin,'end'=>$ava->rentEnd,'title'=>'Event');
+
+    			$tmp = array('start'=>$ava->rentBegin,'end'=>$ava->rentEnd,'id'=>$id.'_'.$ava->avaid);
+    			if($ava->inquiryID==0){
+    				$tmp['color'] = '#ff1a1a';
+    				$tmp['title'] = 'Block';
+    			}
+
     			array_push($ret,$tmp);
     		}
     		return response($ret);
@@ -52,18 +58,46 @@ class HouseAvailabilityController extends Controller
 
 
     public function insert(Request $request,$id){
-    	Log::info($request->all());
+    	//Log::info($request->input('source','inner'));
     	$house = \App\House::find($id);
+    	$highava = $house->houseavailability()->orderBy('avaid')->first();
+    	if($highava)
+    		$avaid = $highava->avaid+1;
+    	else
+    		$avaid = 0;	
+
     	$newHouseAva =  new \App\Houseavailability();
+
     	$newHouseAva->rentBegin = $request->input('rentStart');
     	$newHouseAva->rentEnd = $request->input('rentEnd');
     	$newHouseAva->inquiryID = $request->input('inquiryID',0);
     	$newHouseAva->source = $request->input('source','inner');
-    	$newHouseAva->source = $request->input('idInSource');
+    	$newHouseAva->idInSource = $request->input('idInSource');
+    	$newHouseAva->avaid = $avaid;
     	$house->houseavailability()->save($newHouseAva);
 
     	if($request->ajax()||$request->wantsJson()){
     		return ;
+    	}
+    }
+
+
+    public function update(Request $request,$id){
+    	$avaid = $request->input('avaid');
+    	Log::info($request->all());
+    	if(isset($avaid)){
+    		$houseava = \App\Houseavailability::where('numberID','=',$id)->where('avaid','=',$avaid)->first();
+			if($houseava){
+				if($request->input('delete')=='true'){
+					$houseava->delete();
+				}
+				else{
+					$houseava->rentBegin = $request->input('rentStart');
+					$houseava->rentEnd = $request->input('rentEnd');
+					$houseava->save();
+				}
+			}    		
+
     	}
     }
 

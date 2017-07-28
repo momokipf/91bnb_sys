@@ -156,19 +156,19 @@
                         <!-- {{csrf_field()}} -->
                             <div class="row">
                                 <div class="col-lg-4">
-                                    <label>Inquerier ID</label>
-                                    @if(isset($inquirerID))
-                                    <input class="form-control input-sm" type="text" id="inquirerID" name="inquirerID" value="{{$inquirerID}}" readonly>
+                                    <label>Inquery ID</label>
+                                    @if(isset($Query))
+                                    <input class="form-control input-sm" type="text" id="inquiryID" name="inquiryID" value="{{$Query->inquiryID}}" readonly>
                                     @else
-                                    <input class="form-control input-sm" type="text" id="inquirerID" name="inquirerID" readonly>
+                                    <input class="form-control input-sm" type="text" id="inquiryID" name="inquiryID" readonly>
                                     @endif
                                         
                                 </div>
 
                                 <div class="col-lg-4">
                                     <label>Representatives</label>
-                                    @if(isset($searchrepID))
-                                    <input class="form-control input-sm" type="text" id="repWithOwner" name="repWithOwner" value="{{$repID}}" readonly>
+                                    @if(isset($Query))
+                                    <input class="form-control input-sm" type="text" id="repWithOwner" name="repWithOwner" value="{{$Query->repID}}" readonly>
                                     @else
                                     <input class="form-control input-sm" type="text" id="repWithOwner" name="repWithOwner" readonly>
                                     @endif
@@ -179,7 +179,11 @@
                                     <input id="administrative_area_level_1" name="state">
                                     <input id="locality" name="city">
                                     <input id="route" name="route">
-                                    <input id="address" diabled>
+                                    @if(!isset($Query))
+                                        <input id="address" >
+                                    @else
+                                        <input id="address" value="{{$Query->country}} {{$Query->state}} {{$Query->city}}" >
+                                    @endif
                                     <input id='postal_code' name="zipcode" maxlength="5">
                             </div>
 
@@ -221,7 +225,11 @@
                                     </div> -->
                                     <div class="col-lg-8">
                                     <label> Calendar </label>
-                                    <input type="text"  id="daterange" class ="form-control" value="" />
+                                    @if(!isset($Query))
+                                        <input type="text" id="daterange" class="form-control" value="" />
+                                    @else
+                                        <input type="text" id="daterange" class="form-control" value="07/28/2017 - 08/01/2017" >
+                                    @endif
                                     </div>
                                     <input name = "checkIn" hidden>
                                     <input name = "checkOut" hidden>
@@ -248,7 +256,7 @@
                                     </input>
                                 </div>
                                 <div class="col-lg-3">
-                                    @if((isset($Query)&&che($Query->share)&&$Query->share==0) || !isset($Query) )
+                                    @if((isset($Query)&&($Query->share)&&$Query->share==0) || !isset($Query) )
                                         <input type="radio" id="rentEither" name="rentShareWhole" value="0" checked> Either
                                     @else 
                                         <input type="radio" id="rentEither" name="rentShareWhole" value="0" > Either
@@ -783,7 +791,8 @@
         function initAutoComplete(){
             var options = {
             // bounds: new google.maps.LatLngBounds(southwest, northeast),
-            componentRestrictions: {country: "us"}//Make the range fixed
+            componentRestrictions: {country: "us"},//Make the range fixed
+            autoFocus: true,
             }
 
             autocomplete = new google.maps.places.Autocomplete(
@@ -853,10 +862,10 @@
 
             $('#ownerknownswitch').change(changeswitchview);
 
-            $('.input-daterange').datepicker({
-                orientation: "bottom",
-                format: "mm/dd/yyyy",
-            });
+            // $('.input-daterange').datepicker({
+            //     orientation: "bottom",
+            //     format: "MM/DD/YYYY",
+            // });
 
             $('#checkIn').change(function(){
                 var date = $(this).datepicker('getDate');
@@ -869,7 +878,9 @@
 
 
             $('#daterange').daterangepicker({
-                startDate: 0,
+                locale: {
+                    format: 'MM/DD/YYYY'
+                }
             }).on('change',function(){
                 var date = $(this).val().split('-');
                 $('#houseSearchForm').find('input[name="checkIn"]').val(converttimetosql(date[0]));
@@ -1006,7 +1017,7 @@
                     //alert(JSON.stringify(data));
 
                     var houses = data.houses;
-                    if(houses){
+                    if(houses.length!=0){
                         var tablehtml = "";
                         if(houses.length>0){
 
@@ -1061,7 +1072,7 @@
                                 rowhtml += "<td><button type='button' class='btn btn-info' onclick='retrieveHouseInfo("+houses[i].numberID+");resultSM.toHousePage("+i+")'>"+"View House"+"</button></td>";
                                 rowhtml += "<td><button type='button' class='btn btn-info' onclick='resultSM.toOwnerPage("+i+")'>View Owner</button></td>";
                                 rowhtml += "<td><a href='/house/modify/"+houses[i].numberID+"' class='btn btn-info' role='button'>House Modify</a></td>";
-                                rowhtml += "<td><a class='btn btn-info' role='button'>+</a></td>"
+                                rowhtml += "<td><a class='btn btn-info' role='button' onclick='addToTrand();'>+</a></td>"
                                 attachHouseOwnerDiv(houses[i].houseowner,i);
 
                                 rowhtml += "</tr>";
@@ -1070,7 +1081,6 @@
                             showMarkers();
 
                             $('#fillArea').html(tablehtml);
-                            $('#loadele').removeClass("loading");
                         }
                         else
                         {
@@ -1086,9 +1096,12 @@
                             search_geo = {'location': loc};
                             //drawCircle(search_geo,$('#milesrange').val());
                         }
-
                         search_geo=null;
                     }
+                    else{    /*no result*/
+
+                    }
+                    $('#loadele').removeClass("loading");
                 }
             });
         }
@@ -1275,6 +1288,11 @@
                     }
                 }
             });
+        }
+
+        function addToTrand(){
+            var data = {};
+            alert($('#inquiryID').val()+" add to transaction");
         }
 
         function attachHouseOwnerDiv(data,index){

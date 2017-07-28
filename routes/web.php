@@ -39,8 +39,9 @@ Route::get('inquiry/search','InquirysController@searchIndex');
 Route::get('inquiry/search/modify/{inquiryID}','InquirysController@modifyinquiry');
 Route::get('inquiry/search/result','InquirysController@search');
 Route::post('inquiry/update/{inquiryID}','InquirysController@update');
-Route::post('inquiry/search/addfollow','FollowUpController@store');
+Route::get('inquiry/housepair','InquirysController@housepair');
 
+Route::post('inquiry/search/addfollow','FollowUpController@store');
 
 Route::get('inquiry/{post}','InquirysController@show');
 
@@ -85,6 +86,7 @@ Route::post('houseowner/add','HouseOwnersController@store');
 
 Route::get('houseavailability/{id}','HouseAvailabilityController@get');
 Route::post('houseavailability/{id}/insert','HouseAvailabilityController@insert');
+Route::post('houseavailability/{id}/update','HouseAvailabilityController@update');
 
 
 Route::get('calendar',function(){

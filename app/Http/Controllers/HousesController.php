@@ -566,9 +566,13 @@ class HousesController extends Controller
                             ->ShpereDistance($radius,$target_pt);
                             
 
-        		if($rentShared!=0){
-        			$housebuilder = $housebuilder->where('rentShared','=',$rentShared);
-        		}
+
+                /*
+                    Note: this constrained may be affected by the change of the table in server in July;
+                */
+        		// if($rentShared!=0){
+        		// 	$housebuilder = $housebuilder->where('rentShared','=',$rentShared);
+        		// }
 
         		$housebuilder = $housebuilder->whereBetween('numOfRooms',[$numOfRoomsFrom,$numOfRoomsTo]);
 

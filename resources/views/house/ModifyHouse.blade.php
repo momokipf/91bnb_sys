@@ -100,6 +100,11 @@
 			 background-image: linear-gradient(to bottom right,  transparent calc(50% - 1px), red, transparent calc(50% + 1px));
 		}
 
+		.tool {
+			
+		    
+		}
+
 	</style>
 
 	<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAAIAQT72snLXj_BITkOc5TMZjpTrzbYRw&language=en&callback=initAutoComplete"></script>
@@ -561,7 +566,7 @@
 							<label> End </label>
 							<input type="text" class="form-control" name="rentEnd" id = "dateend">
 							<div style='text-align:center; margin: 25px 0 200px 0;'>
-								<button type='button' class='btn btn-info' style='margin:25px 0 200px 0;' onclick="insertDaterange()">Insert Daterange</button>
+								<button type='button' class='btn btn-danger' onclick='insertDaterange();'>Block</button> 
 							</div>
 						</div>
 					</div>
@@ -819,7 +824,7 @@
 			</div>
 		</form>
 	</div>
-
+	<div>
 @endsection
 
 @section('script')
@@ -863,16 +868,20 @@
 		        eventSources: [
 				    {
 				        url:'/houseavailability/'+ numberID,
+				        error: function() {
+			                alert('there was an error while fetching events!');
+			            },
 				        allDay:true,
+				        cache: true,
+				        className :'tool',
 						// rendering: 'background',
 						// color: '#FF0000'
 				    },],
 				selectable:true,
 				selectMinDistance:2, 
 				selectOverlap: false,
-				editable: true,
+				eventDurationEditable: true,
 				droppable: true, // this allows things to be dropped onto the calendar
-				dragScroll:true,
 				select: function( start, end, jsEvent, view){
 					//alert("from: "+moment(start).format("YYYY-MM-DD") + " to " + moment(end).format("YYYY-MM-DD") + " has been selected");
 
@@ -886,8 +895,21 @@
 						cell.addClass('date-disabled-day');
 					}
 				},
+				eventResize:function( event, delta, revertFunc, jsEvent, ui, view){
+					if (confirm("Change the block interval?") == true) {
+				        updateDaterange(event,false);
+				    } else {
+				    	revertFunc();
+				    }
+				},
 				eventClick:function(event){
-					if(event.url){
+					if(event.title=="Block"){
+						if(confirm("Do you want to disable this block?")==true){
+							$('#calendar').fullCalendar( 'removeEvents',event.id);
+							updateDaterange(event,true);
+						}
+					}
+					else if(event.url){
 						window.open(event.url);
 						return false;
 					}
@@ -1023,7 +1045,7 @@
 			url: "/houseavailability/"+numberID+"/insert",
 			data: toSend,
 			success: function(data){
-				$('#calendar').fullCalendar('addEventSource','/houseavailability/'+ numberID);
+				$('#calendar').fullCalendar( 'refetchEvents' );
 				bootbox.dialog({
 					message: "Range successfully added",
 					title: "Confirmation",
@@ -1038,6 +1060,58 @@
 
 			}
 		});
+	}
+
+	function updateDaterange(ele,isdelete){
+		var toSend={};
+		var id = numberID;
+		var avaid = 
+
+		toSend['_token'] = "{{csrf_token()}}";
+		toSend['avaid'] = ele.id.split('_')[1];
+		toSend['rentStart'] = converttimetosql(ele.start.format("MM/DD/YYYY"));
+		toSend['rentEnd'] = converttimetosql(ele.end.format("MM/DD/YYYY"));
+
+		if(isdelete){
+			toSend['delete'] = 'true';
+			$.ajax({
+				type: "POST",
+				url: "/houseavailability/"+numberID+"/update",
+				data: toSend,
+				success: function(data){
+					bootbox.dialog({
+						message: "Range successfully delete",
+						title: "Confirmation",
+						buttons: {
+							main: {
+								label: "OK",
+								className: "btn-primary"
+							}
+						}
+					});
+				}
+			});
+		}
+		else{
+			toSend['delete'] = 'false';
+			$.ajax({
+				type: "POST",
+				url: "/houseavailability/"+numberID+"/update",
+				data: toSend,
+				success: function(data){
+					bootbox.dialog({
+						message: "Range successfully update",
+						title: "Confirmation",
+						buttons: {
+							main: {
+								label: "OK",
+								className: "btn-primary"
+							}
+						}
+					});
+				}
+			});
+		}
 	}
 </script>
 @endsection
