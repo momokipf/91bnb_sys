@@ -707,21 +707,13 @@
                             rowhtml += "</tr>";
                             tablehtml += rowhtml;
 
-
-                            //picture part
-
-                            // for ftp url
-
-                            // if(houses[i]['houseimage']){
-                            //     picturehtml += "<div class=\"col-sm-4\"><div class =\"w3-display-container w3-text-white\"><img class=\"crop\" src =\"http://192.168.200.65/storage/houses/"+houses[i]['houseimage']['ImagePath']+"\" width=\"100%\"><div class = \"w3-display-bottomleft w3-container\"><p>"+houses[i]['numberID']+"</p></div></div></div>";
-                            // }
-
-
-                            // for local 
-                            // if(houses[i]['houseimage']){
-                            //     picturehtml += "<div class=\"col-sm-4\"><div class =\"w3-display-container w3-text-white\"><img class=\"crop\" src =\""+houses[i]['houseimage']['ImagePath']+"\" width=\"100%\"><div class = \"w3-display-bottomleft w3-container\"><p>"+houses[i]['numberID']+"</p></div></div></div>";
-                            // }
                             
+                            // for local use url
+                            // if(houses[i]['houseimage']){
+                            //     picturehtml +="<li><p>"+houses[i]['numberID']+"</p><img src=\"http://192.168.200.65/"+houses[i]['houseimage']['ImagePath']+"\"></li>";
+                            // }
+
+                            // for server use storage
                             if(houses[i]['houseimage']){
                                 picturehtml +="<li><p>"+houses[i]['numberID']+"</p><img src=\""+houses[i]['houseimage']['ImagePath']+"\"></li>";
                             }
