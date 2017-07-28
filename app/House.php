@@ -78,7 +78,7 @@ class House extends Model
     }
 
     public function houseimage(){
-        return $this->hasMany('App\Houseimage','house_id','numberID');
+        return $this->hasOne('App\Houseimage','numberID');
     }
 
     public function transaction(){

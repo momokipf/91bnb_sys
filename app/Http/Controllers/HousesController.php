@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Filesystem\Filesystem;
+use Storage;
 
 use GuzzleHttp\Pool;
 use GuzzleHttp\Client;
@@ -174,7 +176,7 @@ class HousesController extends Controller
 
     public function searchindex(Request $request)
     {
-    	return view('house.HouseSearch')
+    	return view('house.HouseSearchindex')
     			//->with('Query',$fakequery)
     			->with('Rep',Auth::user());
     }
@@ -427,10 +429,31 @@ class HousesController extends Controller
             Log::info("search By ID");
             $houseid = $request->input('houseID');
 
-            $house = House::where('fullHouseID','=',$houseid)->first();
+            //$house = House::where('fullHouseID','=',$houseid)->first();
+            $house = House::with('Houseimage')
+                ->where('fullHouseID','=',$houseid)->first();
             Log::info($house);
             if(isset($house)){
                 $search_geo = collect(['location'=>collect(['lat'=>$house->latitude,'lng'=>$house->longitude])]);
+
+                if($house->Houseimage){
+                    //for local use ftp
+                    //$files = Storage::disk('ftphouseimage')->files($house->houseimage->ImagePath);
+                    
+                    // for server use storage
+                    $files = Storage::files('public/houses/'.$house->Houseimage->ImagePath);
+                    if($files){
+                        
+                        foreach ($files as $tmp) {
+                            //echo $tmp;
+                            if(pathinfo($tmp)['extension'] =='jpg'|| pathinfo($tmp)['extension'] =='png'|| pathinfo($tmp)['extension'] =='jpeg' ){
+                                $house->Houseimage->ImagePath = Storage::url($tmp);
+                                break;
+                            }
+                        } 
+
+                    }    
+                }
                 return response()
                     ->json(['houses'=>array($house->load('houseowner')),
                          'geo_center'=>$search_geo
@@ -444,9 +467,26 @@ class HousesController extends Controller
 
             $ownerid = $request->input('houseOwnerID');
             if(isset($ownerid)){
-                $houses = Houseowner::find($ownerid)->houses;
+                //$houses = Houseowner::find($ownerid)->houses;
+                $houses = House::with('Houseimage')
+                    ->where('houseOwnerID','=',$ownerid);
                 if($houses){
                     $search_geo = collect(['location'=>collect(['lat'=>$houses[0]->latitude,'lng'=>$houses[0]->longitude])]);
+
+                    for($i =0; $i< count($houses); $i++){
+                        if($houses[$i]->Houseimage){
+                            // for local use ftp
+                            //$files = Storage::disk('ftphouseimage')->files($houses[$i]->Houseimage->ImagePath);
+                            // for server use storage
+                            $files = Storage::files('public/houses/'.$houses[$i]->Houseimage->ImagePath);
+                            foreach($files as $tmp){
+                                if(pathinfo($tmp)['extension'] =='jpg'|| pathinfo($tmp)['extension'] =='png'|| pathinfo($tmp)['extension'] =='jpeg' ){
+                                    $houses[$i]->Houseimage->ImagePath = Storage::url($tmp);
+                                    break;
+                                }
+                            }
+                        } 
+                    }
 
                     return response()
                         ->json(['houses'=>$houses->load('houseowner'),
@@ -484,9 +524,8 @@ class HousesController extends Controller
             $checkOutdate = $request->input('checkOut');
 
         	$rentShared = $request->input('rentShareWhole');
-
-        	$target_pt = null;
-        	$search_geo = null;
+            $target_pt = null;
+            $search_geo = null;
 
             /*
             Spatial information
@@ -562,7 +601,8 @@ class HousesController extends Controller
         		// 			->select(DB::raw(implode(',',$fields)))
         		// 			->whereRaw($circlesql.'<'.$radius*1000);
 
-                $housebuilder = House::WithinCircle($radius,$target_pt)
+                $housebuilder = House::with('Houseimage')
+                            ->WithinCircle($radius,$target_pt)
                             ->ShpereDistance($radius,$target_pt);
                             
 
@@ -588,6 +628,25 @@ class HousesController extends Controller
                     });
                 }
 
+                
+                for($i =0; $i< count($houses); $i++){
+                    
+                    if($houses[$i]->Houseimage){
+                        // for local use ftp 
+                        //$files = Storage::disk('ftphouseimage')->files($houses[$i]->Houseimage->ImagePath);
+                        // for server use storage
+                        $files = Storage::files('public/houses/'.$houses[$i]->Houseimage->ImagePath);
+                        foreach($files as $tmp){
+                            //Log::info('$tmp:'.$tmp);
+                            if(pathinfo($tmp)['extension'] =='jpg'|| pathinfo($tmp)['extension'] =='png'|| pathinfo($tmp)['extension'] =='jpeg' ){
+                                $houses[$i]->Houseimage->ImagePath = Storage::url($tmp);
+                                break;
+                            }
+                        }    
+                    }
+                    
+                }
+                Log::info('houses query:'.$houses);
 
         		return response()
         			->json(['houses'=>$houses->values()->load('houseowner'),

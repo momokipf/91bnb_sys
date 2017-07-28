@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Houseimage extends Model
 {
     //
-    protected $table = 'Houseimage';
+    protected $table = 'HouseImage';
 
-    protected $fillable = ['house_id','image','description'];
+    protected $fillable = ['ImageID','numberID','ImagePath'];
 
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'ImageID';
 
-    public function housebelong(){
-    	return $this->belongsTo('App\House','house_id','numberID');
+    public function house(){
+    	return $this->belongsTo('App\House','numberID');
     }
 
 
