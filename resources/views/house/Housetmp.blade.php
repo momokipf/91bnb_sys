@@ -4,7 +4,7 @@
 @section('head')
     <link rel="stylesheet" href="{{asset('css/priceswitch.css')}}">
     <link rel="stylesheet" href="{{asset('css/animate.css')}}">
-    <link rel="stylesheet" href="{{asset('css/equal-height-columns.css')}}">
+    <!-- <link rel="stylesheet" href="{{asset('css/equal-height-columns.css')}}"> -->
     <link rel="stylesheet" href="{{asset('css/w3.css')}}">
 
     <script src="{{asset('js/bootbox.min.js')}}"></script>
@@ -144,7 +144,7 @@
         /*for image wall*/
         /*------IMG_CONTAINER------*/
         .img_container {
-          width: 1120px;
+          width: 100%;
           margin: 0 auto 50px auto;
         }
 
