@@ -16,7 +16,7 @@
 			$('#transactionTable').DataTable({
 				"columnDefs": [
 					{
-						"targets": [ 5 ],
+						"targets": [ 6 ],
 						"sortable": false
 					}
 				]
@@ -27,32 +27,38 @@
 
 @section('content')
 	<div class="container">
-		<table id="transactionTable" class="table table-hover">
-			<thead>
-				<th>Transaction ID</th><th>Inquirer Name</th><th>Full House ID</th><th>Checkin Date</th><th>Checkout Date</th><th>Amount</th><th></th>
-			</thead>
-			<tbody>
-				@foreach ($tran as $tr)
-					<tr>
-						<td>{{$tr->transactionID}}</td>
-						<td>{{$tr->inquiry->quirer->inquirerFirst}}</td>
-						<td>{{$tr->house->fullHouseID}}</td>
-						<td>{{$tr->inquiry->checkIn}}</td>
-						<td>{{$tr->inquiry->checkOut}}</td>
-						<td>{{$tr->amount}}</td>
-						<td align='right' style='padding-right:20px'>
-							<button type="button" class="btn btn-primary">View Details</button>
-						</td>
-					</tr>
-				@endforeach
-			</tbody>
-		</table>
+		<div class="well" style='background-color:white;'>
+			<table id="transactionTable" class="table table-hover">
+				<thead>
+					<th>Transaction ID</th><th>Inquirer Name</th><th>Full House ID</th><th>Checkin Date</th><th>Checkout Date</th><th>Amount</th><th></th>
+				</thead>
+				<tbody>
+					@foreach ($tran as $tr)
+						<tr>
+							<td>{{$tr->transactionID}}</td>
+							<td>{{$tr->inquiry->quirer->inquirerFirst}} {{$tr->inquiry->quirer->inquirerLast}}</td>
+							<td>{{$tr->house->fullHouseID}}</td>
+							<td>{{$tr->inquiry->checkIn}}</td>
+							<td>{{$tr->inquiry->checkOut}}</td>
+							<td>{{$tr->amount}}</td>
+							<td align='right' style='padding-right:20px'>
+								<button type="button" class="btn btn-primary" onclick="detail('{{$tr}}')">View Details</button>
+							</td>
+						</tr>
+					@endforeach
+				</tbody>
+			</table>
+		</div>
 	</div>
 @endsection
 
 @section('script')
 	<script type="text/javascript">
-		
+		function detail(data) {
+			console.log(data);
+			tran = JSON.parse(data);
+			console.log(tran);
+		}
 	</script>
 @endsection
 

@@ -112,7 +112,7 @@ Route::get('report/houseLocation', 'HousesController@houseLocation');
 Route::get('report/getCityCount/{state}', 'HousesController@getCityCount');
 
 
-Route::get('transaction/showAll', 'TransactionsController@show');
+Route::get('transaction/ShowAll', 'TransactionsController@show');
 
 
 
