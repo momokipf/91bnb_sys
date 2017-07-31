@@ -137,7 +137,7 @@
 				<table class="table table-hover">
 					<thead>
 						<tr>
-							<th>Pass</th>
+							<th>Due</th>
 							<th>Priority</th>
 							<th>Inquiry ID</th>
 							<th>Name</th>
@@ -162,8 +162,15 @@
 					<tbody>
 						@foreach($hotquerys as $query )
 						<tr>
-							<!-- pass -->
+							<!-- due -->
 							<td>
+								@if(\Carbon\Carbon::parse($query->checkIn)->isPast())
+									
+									<a href="#" data-toggle="tooltip" data-placement="top" title="{{$query->checkIn}}"><i class="glyphicon glyphicon-time" style="color:red"></i></a>
+								@else
+									<!-- <i class="glyphicon glyphicon-time" style="color:green"></i> -->
+									<a href="#" data-toggle="tooltip" data-placement="top" title="{{$query->checkIn}}"><i class="glyphicon glyphicon-time" style="color:green"></i></a>
+								@endif
 							</td>
 							<!-- priority -->
 							<td>
