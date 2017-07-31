@@ -709,13 +709,13 @@
 
                             
                             // for local use url
-                            // if(houses[i]['houseimage']){
-                            //     picturehtml +="<li><p>"+houses[i]['numberID']+"</p><img src=\"http://192.168.200.65/"+houses[i]['houseimage']['ImagePath']+"\"></li>";
+                            // if(houses[i]['ImagePath']){
+                            //     picturehtml +="<li><p>"+houses[i]['numberID']+"</p><img src=\"http://192.168.200.65/"+houses[i]['ImagePath']+"\"></li>";
                             // }
 
                             // for server use storage
-                            if(houses[i]['houseimage']){
-                                picturehtml +="<li><p>"+houses[i]['numberID']+"</p><img src=\""+houses[i]['houseimage']['ImagePath']+"\"></li>";
+                            if(houses[i]['ImagePath']){
+                                picturehtml +="<li><p>"+houses[i]['numberID']+"</p><img src=\""+houses[i]['ImagePath']+"\"></li>";
                             }
 
 
