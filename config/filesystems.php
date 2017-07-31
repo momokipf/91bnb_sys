@@ -74,7 +74,7 @@ return [
             'port'   => '21',
             'username'=>'root',
             'password'=>'91+bnb',
-            'root'   => '/var/www/html/houses',
+            'root'   => '/var/www/html/web_laravel/storage/app/public',
         ],
 
     ],

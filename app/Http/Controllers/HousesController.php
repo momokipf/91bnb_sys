@@ -429,25 +429,24 @@ class HousesController extends Controller
             Log::info("search By ID");
             $houseid = $request->input('houseID');
 
-            //$house = House::where('fullHouseID','=',$houseid)->first();
-            $house = House::with('Houseimage')
-                ->where('fullHouseID','=',$houseid)->first();
+            $house = House::where('fullHouseID','=',$houseid)->first();
+            
             Log::info($house);
             if(isset($house)){
                 $search_geo = collect(['location'=>collect(['lat'=>$house->latitude,'lng'=>$house->longitude])]);
 
-                if($house->Houseimage){
+                if($house->ImagePath){
                     //for local use ftp
-                    //$files = Storage::disk('ftphouseimage')->files($house->houseimage->ImagePath);
+                    //$files = Storage::disk('ftphouseimage')->files("houses/".$house->ImagePath);
                     
                     // for server use storage
-                    $files = Storage::files('public/houses/'.$house->Houseimage->ImagePath);
+                    $files = Storage::files('public/houses/'.$house->ImagePath);
                     if($files){
                         
                         foreach ($files as $tmp) {
                             //echo $tmp;
                             if(pathinfo($tmp)['extension'] =='jpg'|| pathinfo($tmp)['extension'] =='png'|| pathinfo($tmp)['extension'] =='jpeg' ){
-                                $house->Houseimage->ImagePath = Storage::url($tmp);
+                                $house->ImagePath = Storage::url($tmp);
                                 break;
                             }
                         } 
@@ -467,24 +466,26 @@ class HousesController extends Controller
 
             $ownerid = $request->input('houseOwnerID');
             if(isset($ownerid)){
-                //$houses = Houseowner::find($ownerid)->houses;
-                $houses = House::with('Houseimage')
-                    ->where('houseOwnerID','=',$ownerid);
+                $houses = Houseowner::find($ownerid)->houses;
+                
                 if($houses){
                     $search_geo = collect(['location'=>collect(['lat'=>$houses[0]->latitude,'lng'=>$houses[0]->longitude])]);
 
                     for($i =0; $i< count($houses); $i++){
-                        if($houses[$i]->Houseimage){
+                        if($houses[$i]->ImagePath){
                             // for local use ftp
-                            //$files = Storage::disk('ftphouseimage')->files($houses[$i]->Houseimage->ImagePath);
+                            //$files = Storage::disk('ftphouseimage')->files("houses/".$houses[$i]->ImagePath);
                             // for server use storage
-                            $files = Storage::files('public/houses/'.$houses[$i]->Houseimage->ImagePath);
-                            foreach($files as $tmp){
-                                if(pathinfo($tmp)['extension'] =='jpg'|| pathinfo($tmp)['extension'] =='png'|| pathinfo($tmp)['extension'] =='jpeg' ){
-                                    $houses[$i]->Houseimage->ImagePath = Storage::url($tmp);
-                                    break;
-                                }
+                            $files = Storage::files('public/houses/'.$houses[$i]->ImagePath);
+                            if($files){
+                                foreach($files as $tmp){
+                                    if(pathinfo($tmp)['extension'] =='jpg'|| pathinfo($tmp)['extension'] =='png'|| pathinfo($tmp)['extension'] =='jpeg' ){
+                                        $houses[$i]->ImagePath = Storage::url($tmp);
+                                        break;
+                                    }
+                                }    
                             }
+                            
                         } 
                     }
 
@@ -601,8 +602,7 @@ class HousesController extends Controller
         		// 			->select(DB::raw(implode(',',$fields)))
         		// 			->whereRaw($circlesql.'<'.$radius*1000);
 
-                $housebuilder = House::with('Houseimage')
-                            ->WithinCircle($radius,$target_pt)
+                $housebuilder = House::WithinCircle($radius,$target_pt)
                             ->ShpereDistance($radius,$target_pt);
                             
 
@@ -631,18 +631,22 @@ class HousesController extends Controller
                 
                 for($i =0; $i< count($houses); $i++){
                     
-                    if($houses[$i]->Houseimage){
+                    if($houses[$i]->ImagePath){
                         // for local use ftp 
-                        //$files = Storage::disk('ftphouseimage')->files($houses[$i]->Houseimage->ImagePath);
+                        //$files = Storage::disk('ftphouseimage')->files("houses/".$houses[$i]->ImagePath);
+                        //Log::info('files:'.$files);
                         // for server use storage
-                        $files = Storage::files('public/houses/'.$houses[$i]->Houseimage->ImagePath);
-                        foreach($files as $tmp){
-                            //Log::info('$tmp:'.$tmp);
-                            if(pathinfo($tmp)['extension'] =='jpg'|| pathinfo($tmp)['extension'] =='png'|| pathinfo($tmp)['extension'] =='jpeg' ){
-                                $houses[$i]->Houseimage->ImagePath = Storage::url($tmp);
-                                break;
+                        $files = Storage::files('public/houses/'.$houses[$i]->ImagePath);
+                        if($files){
+                            foreach($files as $tmp){
+                                //Log::info('$tmp:'.$tmp);
+                                if(pathinfo($tmp)['extension'] =='jpg'|| pathinfo($tmp)['extension'] =='png'|| pathinfo($tmp)['extension'] =='jpeg' ){
+                                    $houses[$i]->ImagePath = Storage::url($tmp);
+                                    break;
+                                }
                             }
-                        }    
+                        }
+                            
                     }
                     
                 }
