@@ -14,7 +14,7 @@ class TransactionsController extends Controller
     public function show(Request $request)
     {
     	$tran = Transaction::all();
-        return view('transaction.showAll')
+        return view('transaction.ShowAll')
                 ->with('Rep', Auth::user())
                 ->with('tran', $tran);
     }
