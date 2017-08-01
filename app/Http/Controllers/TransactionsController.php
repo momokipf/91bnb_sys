@@ -11,6 +11,11 @@ use App\Transaction;
 
 class TransactionsController extends Controller
 {
+	public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function show(Request $request)
     {
     	$tran = Transaction::all();
@@ -18,4 +23,11 @@ class TransactionsController extends Controller
                 ->with('Rep', Auth::user())
                 ->with('tran', $tran);
     }
+
+    public function store(Request $request) {
+		Log::info($request->all());
+		$storeInfo = array_slice($request->all(), 1);
+
+		Inquirer::insert($storeInfo);
+	}
 }
