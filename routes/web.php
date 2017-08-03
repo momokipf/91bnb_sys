@@ -116,6 +116,7 @@ Route::get('transaction/showAll', 'TransactionsController@show');
 Route::get('transaction/modify/{id}', 'TransactionsController@modify');
 Route::post('transaction/delete', 'TransactionsController@delete');
 
+Route::get('transaction/confirm','TransactionsController@confirmInquiry');
 
 
 
