@@ -589,7 +589,9 @@
                         <th style="min-width:150px;">View House info</th>
                         <th style="min-width:150px;">View Owner info</th>
                         <th style="min-width:100px;">Modify</th>
+                        @if(isset($Query))
                         <th sytle="min-width:100px;">Add to Transaction</th> 
+                        @endif
                         <!--<th style="min-width:170px;">Owner Phone Number</th>
                         <th style="min-width:170px;">Owner Name</th>
                         <th style="min-width:150px;">WeChat Name</th>
@@ -1072,7 +1074,8 @@
                                 rowhtml += "<td><button type='button' class='btn btn-info' onclick='retrieveHouseInfo("+houses[i].numberID+");resultSM.toHousePage("+i+")'>"+"View House"+"</button></td>";
                                 rowhtml += "<td><button type='button' class='btn btn-info' onclick='resultSM.toOwnerPage("+i+")'>View Owner</button></td>";
                                 rowhtml += "<td><a href='/house/modify/"+houses[i].numberID+"' class='btn btn-info' role='button'>House Modify</a></td>";
-                                rowhtml += "<td><a class='btn btn-info' role='button' onclick='addToTrand();'>+</a></td>"
+                                if($('#inquiryID').val())
+                                    rowhtml += "<td><a class='btn btn-info' role='button' onclick='addToTrand("+ houses[i].numberID +");'>+</a></td>"
                                 attachHouseOwnerDiv(houses[i].houseowner,i);
 
                                 rowhtml += "</tr>";
@@ -1290,9 +1293,13 @@
             });
         }
 
-        function addToTrand(){
+        function addToTrand(numberID){
             var data = {};
-            alert($('#inquiryID').val()+" add to transaction");
+            data['inquiryID'] = $('#inquiryID').val()
+            data['houseID'] = numberID
+
+            var para = $.param(data);
+            window.location.assign("/transaction/confirm"+'?'+para);
         }
 
         function attachHouseOwnerDiv(data,index){
