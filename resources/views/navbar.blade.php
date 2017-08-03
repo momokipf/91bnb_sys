@@ -135,8 +135,7 @@
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#">Transaction
 						<span class="caret"></span></a>
 						<ul class="dropdown-menu">
-							<li><a href="/transaction/modify"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Modify/Update Transactions</a></li>
-							<li><a href="/transaction/showAll"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Show All Transactions</a></li>							
+							<li><a href="/transaction/showAll"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search/Modify Transactions</a></li>							
 						</ul>
 					</li>
 
