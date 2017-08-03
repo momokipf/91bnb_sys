@@ -4,7 +4,8 @@
 @section('head')
     <link rel="stylesheet" href="{{asset('css/priceswitch.css')}}">
     <link rel="stylesheet" href="{{asset('css/animate.css')}}">
-    <link rel="stylesheet" href="{{asset('css/equal-height-columns.css')}}">
+    <!-- <link rel="stylesheet" href="{{asset('css/equal-height-columns.css')}}"> -->
+    <link rel="stylesheet" href="{{asset('css/w3.css')}}">
 
     <script src="{{asset('js/bootbox.min.js')}}"></script>
     <script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
@@ -123,11 +124,107 @@
             margin-left: 5px;
         }
 
+        .crop {
+            /*position: absolute;*/
+            clip: rect(0px,300px,200px,0px);
+
+        }
+
         .searchtypediv{
             /*margin-left: 5px;*/
             border-left: 4px solid red;
             background-color: WhiteSmoke;
         }
+
+
+
+
+
+
+        /*for image wall*/
+        /*------IMG_CONTAINER------*/
+        .img_container {
+          width: 100%;
+          margin: 0 auto 50px auto;
+        }
+
+        /*------MEDIA QUERIES------*/
+        @media screen and (max-width: 1120px) {
+          .img_container {width: 840px;}
+        }
+         
+        @media screen and (max-width: 840px) {
+          .img_container {width: 560px;}
+        }
+         
+        @media screen and (max-width: 560px) {
+          .img_container {width: 280px;}
+        }
+
+        /*------LIST------*/
+        .img_container ul {
+          list-style-type: none;
+        }
+         
+        .img_container li {
+          float: left;
+          position: relative;
+          width: 280px;
+          height: 187px;
+          overflow: hidden;
+        }
+         
+        .img_container li:hover {
+          cursor: pointer;
+        }
+
+        /*------PARAGRAPH------*/
+        .img_container li p {
+          color: transparent;
+          background: transparent;
+          font: 200 30px/187px 'Arvo', Helvetica, Arial, sans-serif;
+          text-align: center;
+          text-transform: uppercase;
+          
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 280px;
+          height: 187px; 
+         
+         
+          -webkit-transition: all 1s ease;
+          -moz-transition: all 1s ease;
+          -o-transition: all 1s ease;
+          -ms-transition: all 1s ease;
+          transition: all 1s ease;
+        }
+         
+        .img_container li:hover p {
+          color: white;
+          background: #000; /*fallback for old browsers*/
+          background: rgba(0,0,0,0.7);
+        }
+
+        /*------IMAGES------*/
+        .img_container img {
+          width: 280px;
+          height: 187px;
+          
+          -webkit-transition: all 1s ease;
+          -moz-transition: all 1s ease;
+          -o-transition: all 1s ease;
+          -ms-transition: all 1s ease;
+          transition: all 1s ease;
+        }
+         
+        .img_container li:hover img {
+          width: 320px;
+          height: 213px;
+        }
+
+
+
     </style>
 @endsection
 @section('inbody', ' class=marginMe onload=doload()')
@@ -172,9 +269,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6">
-                <table id="housedisplay" style="width:100%;hight:800px;">
-                </table>
+            <div class="col-sm-6" id= "housedisplay">
+                <!-- <table id="housedisplay" style="width:100%;hight:800px;">
+                </table> -->
             </div>
         </div>
 
@@ -547,7 +644,9 @@
                 //alert(JSON.stringify(data));
                 var houses = data.houses;
                 if(houses){
+                    console.log(houses);
                     var tablehtml = "";
+                    var picturehtml = "<div class = \"img_container\"><ul>";
                     if(houses.length>0){
 
                         $("#showResult").show();
@@ -555,6 +654,7 @@
 
                         for(var i=0;i<houses.length;++i)
                         {
+                            // table part
                             var loc = new google.maps.LatLng(houses[i].latitude,houses[i].longitude);
                             var address = houses[i].houseAddress+','+houses[i].city+','+houses[i].state;
                             var marker = new google.maps.Marker({
@@ -606,7 +706,22 @@
 
                             rowhtml += "</tr>";
                             tablehtml += rowhtml;
+
+                            
+                            // for local use url
+                            // if(houses[i]['ImagePath']){
+                            //     picturehtml +="<li><p>"+houses[i]['numberID']+"</p><img src=\"http://192.168.200.65/"+houses[i]['ImagePath']+"\"></li>";
+                            // }
+
+                            // for server use storage
+                            if(houses[i]['ImagePath']){
+                                picturehtml +="<li><p>"+houses[i]['numberID']+"</p><img src=\""+houses[i]['ImagePath']+"\"></li>";
+                            }
+
+
                         }
+                        picturehtml +="</ul></div>";
+                        $('#housedisplay').html(picturehtml);
                         showMarkers();
 
                         $('#fillArea').html(tablehtml);
@@ -706,6 +821,7 @@
         function clearMarker(){
             setMapOnAll(null);
         }
+
 
         function showMarkers(){
             setMapOnAll(map);

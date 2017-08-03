@@ -1,0 +1,45 @@
+Environment: vsftpd,laravel(5.4),mySQL,centOS(6.9, kernel 2.6)
+
+Server:centOS(192.168.200.65)
+	account:root
+	passwd:91+bnb
+
+autotest: Jenkins(192.168.200.65:8088)
+	account:root
+	passwd:91+bnb
+
+version control: gitlab(192.168.200.65:8008)
+
+database: mySQL(192.168.200.65)
+	ssh
+		host:192.168.200.65
+		account:root
+		passwd:91+bnb
+
+	mySQL
+		account:root
+		passwd:Us91bnb
+
+
+
+Environment setting:
+
+1.Laravel
+install: https://laravel.com/docs/5.4/installation
+
+	(1)Install Composer(if you have already install it. Skip)
+		(1.1)Go to https://getcomposer.org/download/ and follow it’s instruction.
+	(2)Then, you can use ‘composer global require "laravel/installer"’ in terminal to install Laravel.
+	(3)Enter ‘sudo vim etc/paths’ to modify doc. Add ‘$HOME/.composer/vendor/bin’ line at bottom and then exit(Can see at https://laravel.com/docs/5.4#server-requirements).
+	(4)Remember to run ’source /etc/paths’ to soure the $PATH
+	(5)Remember to reopen the terminal 
+	(6)Finish
+
+
+
+basic guide: http://blog.zhoujiping.com/category/scratch/
+
+
+
+
+

@@ -7,18 +7,22 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
+use App\Transaction;
+
 class TransactionsController extends Controller
 {
 
 	public function __construct()
     {
         $this->middleware('auth');
-    }	
+    }
 
     public function show(Request $request)
     {
-        return view('transaction.showAll')
-                ->with('Rep',Auth::user());
+    	$tran = Transaction::all();
+        return view('transaction.ShowAll')
+                ->with('Rep', Auth::user())
+                ->with('tran', $tran);
     }
 
     public function confirmInquiry(Request $request){
@@ -38,4 +42,10 @@ class TransactionsController extends Controller
 
     	}
     }
+    public function store(Request $request) {
+		Log::info($request->all());
+		$storeInfo = array_slice($request->all(), 1);
+
+		Inquirer::insert($storeInfo);
+	}
 }

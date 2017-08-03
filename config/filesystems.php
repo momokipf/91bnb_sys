@@ -63,6 +63,20 @@ return [
             'bucket' => env('AWS_BUCKET'),
         ],
 
+        'houseimage' => [
+            'driver' => 'local',
+            'root'   => '/var/www/html/web_laravel/app/storage/public/houses',
+        ],
+
+        'ftphouseimage' => [
+            'driver' => 'ftp',
+            'host'   => '192.168.200.65',
+            'port'   => '21',
+            'username'=>'root',
+            'password'=>'91+bnb',
+            'root'   => '/var/www/html/web_laravel/storage/app/public',
+        ],
+
     ],
 
 ];

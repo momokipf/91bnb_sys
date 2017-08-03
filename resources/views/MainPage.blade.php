@@ -659,8 +659,7 @@
               <div class="col-sm-2 bg1">
                   <div class="caption">
                     <div class="my-title"><h5>Transaction</h5></div>
-                    <a href=""><h6>Modify/Update Transactions</h6></a>
-                    <a href="/transaction/showAll"><h6>Show All Transactions</h6></a>
+                      <a href="/transaction/showAll"><h6>Search/Modify Transactions</h6></a>
                   </div>
               </div>
             </div>
