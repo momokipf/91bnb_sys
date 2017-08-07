@@ -25,6 +25,22 @@ class TransactionsController extends Controller
                 ->with('tran', $tran);
     }
 
+    public function modify($id)
+    {
+    	Log::info($id);
+    	$tran = Transaction::find($id);
+        return view('transaction.Modify')
+                ->with('Rep', Auth::user())
+                ->with('tran', $tran);
+    }
+
+    public function delete(Request $request)
+    {
+        Log::info($request->all());
+        $info = $request->all();
+        Transaction::where('transactionID', $info['transactionID'])->delete();
+    }
+
     public function confirmInquiry(Request $request){
 
     	$inquiryID = $request->input('inquiryID');
@@ -42,6 +58,7 @@ class TransactionsController extends Controller
 
     	}
     }
+
     public function store(Request $request) {
 		Log::info($request->all());
 		$storeInfo = array_slice($request->all(), 1);
