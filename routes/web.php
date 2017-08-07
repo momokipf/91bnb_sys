@@ -40,8 +40,9 @@ Route::get('inquiry/search/modify/{inquiryID}','InquirysController@modifyinquiry
 Route::get('inquiry/search/result','InquirysController@search');
 Route::post('inquiry/update/{inquiryID}','InquirysController@update');
 Route::get('inquiry/housepair','InquirysController@housepair');
-
+Route::get('inquiry/decline/{inquiryID}','InquirysController@decline');
 Route::post('inquiry/search/addfollow','FollowUpController@store');
+
 
 Route::get('inquiry/{post}','InquirysController@show');
 
@@ -92,6 +93,7 @@ Route::post('houseavailability/{id}/update','HouseAvailabilityController@update'
 Route::get('calendar',function(){
 	return view('admin.checkinoutCal')->with('Rep',Auth::user());
 });
+Route::get('calendar/import','HouseAvailabilityController@importSource');
 
 
 
@@ -114,6 +116,7 @@ Route::get('report/getCityCount/{state}', 'HousesController@getCityCount');
 
 Route::get('transaction/showAll', 'TransactionsController@show');
 Route::get('transaction/confirm','TransactionsController@confirmInquiry');
+Route::post('transaction/add','TransactionsController@add');
 
 
 

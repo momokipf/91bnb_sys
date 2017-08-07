@@ -58,7 +58,14 @@
 			<div id="calendar"></div>
 		</div>
 	</div>
+	<div style="margin-top:50px;">
+		<div style="margin:auto; text-align:center;">
+			<button type="buton" class="btn btn-primary btn-sm" onclick="importTodatabase();">Import to system</button>
+		</div>
+	</div>
 </div>
+
+
 <div class="modal" id="loadele"></div>
 
 @endsection
@@ -111,5 +118,24 @@
 			
 	    });
 	});
+
+
+	function importTodatabase(){
+		$.ajax({
+			url:"/calendar/import",
+			type:"GET",
+			datatype:'json',
+			succuss: function(data){
+				alert('success');
+				$('#loadele').removeClass("loading");	
+			},
+			error:function(){
+				alert('failed');
+				$('#loadele').removeClass("loading");	
+			}
+		});
+		$('#loadele').addClass("loading");
+	}
+	
 </script>
 @endsection

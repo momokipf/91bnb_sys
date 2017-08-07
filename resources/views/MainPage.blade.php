@@ -130,6 +130,7 @@
          <th>Modify</th>
          <th style="min-width:150px;">Show All Follow Up</th>
          <th style="min-width:130px;">Show Detail</th>
+         <th style="min-width:100px;">Status</th>
        </thead>
 
         <tbody id="mytable">
@@ -225,7 +226,7 @@
               <td>{{$query->quirer->inquirerEmail}}</td>
 
               <!-- house pair -->
-              <td><button type="button" class="btn btn-primary btn-sm" onclick="location.reload(true);HousePair('{{$query->country}}','{{$query->state}}','{{$query->city}}');" > House Pair</button>
+              <td><button type="button" class="btn btn-primary btn-sm" onclick="location.reload(true);HousePair('{{$query->inquiryID}}');" > House Pair</button>
               </td>
 
 
@@ -493,11 +494,11 @@
                             </tr>
                             <tr>
                               <td>Status</td>
-                              <td>{{$query->quirer->inquirerStatus}}</td>
+                              <td>{{$query->status}}</td>
                             </tr>
                             <tr>
                               <td>Reason Of Decline</td>
-                              <td><{{$query->reasonOfDecline}}/td>
+                              <td>{{$query->reasonOfDecline}}</td>
                             </tr>
                             <tr>
                               <td>Note</td>
@@ -520,6 +521,38 @@
                     
                   </div>
                 </div>
+              </td>
+
+              <td>
+                @if($query->status!="Declined")
+                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target='#status_{{$loop->index}}' style="min-width:70px;">Decline</button>
+                @else
+                <button type="button" class="btn btn-primary btn-sm" style="min-width:70px;">Active</button>
+                @endif
+
+                <div class="modal fade" id='status_{{$loop->index}}' style="text-align:center;" role="dialog">
+                  <div class='modal-dialog modal-md'>
+                    <div class='modal-content'>
+                      <div class='modal-header'>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button> 
+                        <h4 class='modal-title'>
+                          <p>    </p>
+                        </h4>
+                      </div>
+                      <div class='modal-body'>
+                        <label> Reson of Decline</label>
+                        <select class='form-control input-sm reasonofDecline' id='{{$loop->index}}'>
+                        </select>
+                      </div>
+                      <div class='modal-footer'>
+                        <button type="button" class="btn btn-primary btn-sm"  data-dismiss='modal' onclick="decline({{$query->inquiryID}},{{$loop->index}});" >Decline</button>
+                        <button type="button" class="btn btn-default btn-sm"  data-dismiss='modal'>Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
               </td>
             </tr>
 
@@ -728,14 +761,31 @@ $(document).ready(function(){
 
     }
 
-    function HousePair(country, state, city){
+    function decline(inquiryID,index){
+      var reason = $('#'+index+'.reasonofDecline').val();
+      $.ajax({
+          url:"inquiry/decline/"+inquiryID,
+          type:'GET',
+          data:{'reason':reason},
+          success:function(data){
+              if(data.status=="success"){
+                  location.reload();
+              }
+          },
+          error:function(){
+
+          }
+      });
+    }
+
+    function HousePair(inquiryID){
       var data={};
-      data['country'] = country;
-      data['state'] = state;
-      data['city'] = city;
+      data['inquiryID'] = inquiryID;
       var para = $.param(data);
       console.log(para);
-      window.location.replace("/houses/results?"+para);
+      var url = window.location.origin+"/inquiry/housepair"+'?'+para;
+      window.open(url);
+      //window.location.replace("/houses/results?"+para);
     }
 
     // for test

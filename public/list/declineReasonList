@@ -1,9 +1,10 @@
-
-No long-term leasing
-Detour to another house
-No house available
-Guest - No response
-Guest - Change of plan
-Guest - Conflict
-Owner - Not available
-Owner - Purpose
+<OPTION>No long-term leasing</OPTION>
+<OPTION>Detour to another house</OPTION>
+<OPTION>No house available</OPTION>
+<OPTION>Guest - No response</OPTION>
+<OPTION>Guest - Change of plan -Booked hotel</OPTION>
+<OPTION>Guest - Distance Conflict</OPTION>
+<OPTION>Guest - Price Conflict</OPTION>
+<OPTION>Guest - Purpose Conflict</OPTION>
+<OPTION>Owner - Not available</OPTION>
+<OPTION>Owner - Purpose</OPTION>

@@ -67,57 +67,68 @@
 		</div>
 
 		<div style="margin-top: 50px;">
-			<form action="" method="POST" id="transform">
-				<div class="row">
-					<div class="col-sm-6">
-					</div>
-					<div class = "col-sm-6">
-						<table id = "pricecalculator">
-							<tr>
-								<td class="left">Day Cost</td>
-								<td></td>
-								<td id="costDayPrice" class="right" >{{$house->houseprice->costDayPrice}}</th>
-							</tr>
-							<tr class="verticalline">
-								<td class="left">Days</td>
-								<td class="middle" >x</td>
-								<td class="right" id="numberOfdays"></td>
-							</tr>
-							<tr >
-								<td class="left"></td>
-								<td class="middle" ></td>
-								<td class="right" id="rawsumbeforediscount"></td>
-							</tr>
-							<tr class="verticalline">
-								<td class="left">Discount</td>
-								<td class="middle" >x</td>
-								<td class="right" id="disrate">90<span sytle="font-size:8px;">%</span></td>
-							</tr>
-
-							<tr>
-								<td class="left">Sum</td>
-								<td class="middle"></td>
-								<td class="right" id="rawsumafterdiscount"> </td>
-							</tr>
-
-							<tr class="verticalline">
-								<td class="left">Cleaning</td>
-								<td class="middle">+</td>
-								<td class="right">{{$house->houseprice->costCleaning}}</td>
-							</tr>
-
-
-
-
-							<tr>
-								<td class="left">Total</td>
-								<td class="middle">=</td>
-								<td class="right" id="total"> </td> 
-							</tr>
-						</table>
-					</div>
+			<div class="row">
+				<div class="col-sm-6">
 				</div>
-			</form>
+				<div class = "col-sm-6">
+					<table id = "pricecalculator">
+						<tr>
+							<td class="left">Day Cost</td>
+							<td></td>
+							<td id="costDayPrice" class="right" >{{$house->houseprice->retailDayPrice}}</th>
+						</tr>
+						<tr class="verticalline">
+							<td class="left">Days</td>
+							<td class="middle" >x</td>
+							<td class="right" id="numberOfdays"></td>
+						</tr>
+						<tr >
+							<td class="left"></td>
+							<td class="middle" ></td>
+							<td class="right" id="rawsumbeforediscount"></td>
+						</tr>
+						<tr class="verticalline">
+							<td class="left">Discount</td>
+							<td class="middle" >x</td>
+							<td class="right" ><span id="disrate"> @if($house->houseprice->discount){{$house->houseprice->discount}}@else 100 @endif  </span><span sytle="font-size:8px;">%</span></td>
+						</tr>
+
+						<tr>
+							<td class="left">Sum</td>
+							<td class="middle"></td>
+							<td class="right" id="rawsumafterdiscount"></td>
+						</tr>
+
+						<tr class="verticalline">
+							<td class="left">Cleaning</td>
+							<td class="middle">+</td>
+							<td class="right" id="cleaningfee">{{$house->houseprice->retailCleaning}}</td>
+						</tr>
+
+						<tr>
+							<td class="left">Total</td>
+							<td class="middle">=</td>
+							<td class="right" id="total"></td> 
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div style="margin-top: 10px;"> 
+				<div style="text-align:center;margin:auto;" >
+					<button type="button" class='btn btn-primary' onclick="confirm();"> Confirm</button> 
+				</div>
+			</div>
+			<div hidden>
+				<form method="POST" id="transactionform">
+					{{ csrf_field() }}
+					<input name="inquiryID" value="{{$_GET['inquiryID']}}">
+					<input name="numberID" value="{{$_GET['houseID']}}">
+					<input name="dayprice" value="{{$house->houseprice->retailDayPrice}}">
+					<input name="discount">
+					<input name="amount">			
+				</form>	
+			</div>
+
 		</div>
 	</div>
 @endsection
@@ -135,11 +146,50 @@
 		$(document).ready(function(){
 			$('#numberOfdays').html(calnumberOfDays($('#checkIn').html(),$('#checkOut').html()));
 			$('#rawsumbeforediscount').html(  parseInt($('#costDayPrice').html()) * parseInt($('#numberOfdays').html())); 
-			// $('#rawsumafterdiscount').html( parseInt($('#rawsumbeforediscount').html()) * ())
-			$('#total').html(    );
+			$('#rawsumafterdiscount').html( parseInt($('#rawsumbeforediscount').html()) * parseInt($('#disrate').html())/100);
+			$('#total').html(  parseInt($('#rawsumafterdiscount').html()) + parseInt($('#cleaningfee').html()));
 		})
 
+		function confirm(){
+			var toSend = $('#transactionform').serialize();
+			$.ajax({
+				type:"POST",
+				dataType: "json",
+				url: "/transaction/add",
+				data:toSend,
+				success: function(data){
+					if(data.length==0||data.status=="error"){
+						bootbox.dialog({
+							message: "Server inner error",
+							title: 'Notice',
+							buttons: {
+							  success: {
+								  label: 'OK',
+								  className: 'btn-primary'
+							  }
+							}
+						});
+					}
+					else{
+						bootbox.dialog({
+							message: "Adding transaction successfully",
+							title: 'Notice',
+							buttons: {
+							  success: {
+								  label: 'OK',
+								  className: 'btn-primary',
+								  callback: function(){
+									window.location.replace("/MainPage");
+								  }
+							  }
+							},
+						});
 
+
+					}
+				}
+			})
+		}
 	</script>
 	
 @endsection

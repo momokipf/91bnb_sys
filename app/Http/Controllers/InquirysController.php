@@ -254,6 +254,20 @@ class InquirysController extends Controller
     }
 
 
+    public function decline(Request $request,$id){
+        $inquiry = Inquiry::find($id);
+        Log::info($request->all());
+        if($inquiry){
+            $reason = $request->input('reason');
+            $inquiry->status = "Declined";
+            $inquiry->reasonOfDecline = $reason;
+            $inquiry->save();
+            Log::info($inquiry);
+            return response()->json(['status'=>'success'])
+                                ->header('Content','json');
+        }
+    }
+
     // public function result(Request $request){
 
 

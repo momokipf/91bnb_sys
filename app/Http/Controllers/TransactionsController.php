@@ -48,4 +48,31 @@ class TransactionsController extends Controller
 
 		Inquirer::insert($storeInfo);
 	}
+
+    public function add(Request $request){
+        Log::info($request->all());
+        $trans =  new Transaction();
+        $trans->inquiryID = $request->input('inquiryID');
+        $trans->numberID = $request->input('numberID');
+        $trans->status = 0;
+        $trans->dayprice = $request->input('dayprice');
+        if($request->input('discount')!=NULL)
+            $trans->discount = $request->input('discount');
+        else 
+            $trans->discount = 1;
+
+        $trans->save();
+
+        if($request->ajax() || $request->wantsJson())
+        {
+            $json = [
+                'status' => 'success'
+            ];
+            return response()->json(['status'=>"success"])
+                            ->header('Content-Type', 'json');
+        } 
+        else{
+            return ;
+        }
+    }
 }

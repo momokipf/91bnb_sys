@@ -241,7 +241,7 @@
                             <div class="row">
                                 <div class="col-lg-3">
                                     @if(isset($Query)|| (isset($Query->share)&&$Query->share==1))
-                                        <input type="radio" id="rentWhole" class="form-control input-sm" name="rentShareWhole" value="1" checked> Whole
+                                        <input type="radio" id="rentWhole" name="rentShareWhole" value="1" checked> Whole
                                     @else
                                         <input type="radio" id="rentWhole" name="rentShareWhole" value="1"> Whole
                                     @endif
@@ -769,6 +769,27 @@
         var resultSM;
 
 
+        function autoCallback(predictions,status){
+            // *Callback from async google places call
+            if(status != "OK"){
+                //show that this address is an error
+                document.getElementById('houseAddress').className='error';
+                return;
+            }
+            $('#houseAddress').addClass('success');
+            $('#houseAddress').val(predictions[0].description);
+        }
+
+        function queryAutocomplete(input){
+            var service = new google.maps.places.AutocompleteService();
+            service.getPlacePredictions({
+                input: input,
+                componentRestrictions: {
+                    country: 'us'
+                }
+            }, autoCallback);
+        }
+
         function initMap(){
             uluru = {lat: 36.778259, lng: -119.417931};
             map = new google.maps.Map(document.getElementById('map'), {
@@ -777,7 +798,7 @@
             });
             infowindow = new google.maps.InfoWindow({
             maxWidth:350
-        });
+        })
             // var cityCircle = new google.maps.Circle({
             //   strokeColor: '#FF0000',
             //   strokeOpacity: 0.8,
@@ -810,7 +831,11 @@
         function geolocate(){
             var place = autocomplete.getPlace();
             //console.log(JSON.stringify(place));
-            if(place){
+            if(typeof place.address_components == 'undefined'){
+                console.log(result.name);
+                //queryAutocomplete(result.name);
+            }
+            else{
                 for(var i = 0 ;i < place.address_components.length;i++){
                     var addressType = place.address_components[i].types[0];
                     if(componentForm[addressType]){
@@ -820,9 +845,6 @@
                 }
                 search_geo = place.geometry;
                 document.getElementById('address').value = document.getElementById('houseAddress').value;
-            }
-            else {
-                alert("something wrong");
             }
         }
         function changeswitchview(){
@@ -847,6 +869,9 @@
     src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAAIAQT72snLXj_BITkOc5TMZjpTrzbYRw&language=en&callback=initialize">
     </script>
     <script>
+
+
+        // var location_input = document.getElementById('');
 
         $.fn.extend({
         animateCss: function (animationName) {
@@ -989,8 +1014,11 @@
                         else{
                             var longitude=data.results[0].geometry.location.lng;
                             var latitude =data.results[0].geometry.location.lat;
-                            $('#houseSearchForm').find('input[name="search_latitude"]').val(latitude);
-                            $('#houseSearchForm').find('input[name="search_longitude"]').val(longitude);
+                            // $('#houseSearchForm').find('input[name="search_latitude"]').val(latitude);
+                            // $('#houseSearchForm').find('input[name="search_longitude"]').val(longitude);
+                            toSend.push({'name':'search_latitude','value':latitude});
+                            toSend.push({'name':'search_longitude','value':longitude});
+
                             search_geo = data.results[0].geometry;
                         }
                         realsearch(toSend)

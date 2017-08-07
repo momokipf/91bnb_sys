@@ -124,7 +124,67 @@ class HouseAvailabilityController extends Controller
     						'TempleCity_0021'=>array('19786881.ics?s=d1c123ba4f87f4140b3be5abb84a3b8a','#7CFC00'),
     					);
 
+    public function importSource(Request $request){
+        if(!file_exists(storage_path('icals')))
+            mkdir(storage_path('icals'),0700);
 
+        foreach($this->housecals as $key=>$value){
+            $icalstr = NULL;
+            $filename = storage_path("icals/".(explode('?', $value[0])[0]));
+            $icalstr = file_get_contents($filename);
+            try{
+                $ical = new ICal();
+                $ical->initString($icalstr);
+            }catch (\Exception $e) {
+                Log::info($e);
+                die($e);
+            }
+            $house = \App\House::where('fullHouseID','LIKE','%'.$key)->first();
+            if(isset($house)){
+                Log::info("House ID : ".$house->numberID);
+            }
+            else{
+                Log::info($key." can not found");    
+                continue;
+            }
+            $highava = $house->houseavailability()->orderBy('avaid')->first();
+            if($highava)
+                $avaid = $highava->avaid+1;
+            else
+                $avaid = 0; 
+            foreach($ical->events() as &$event){
+                $houseava = $house->houseavailability()->where('idInSource','=',$event->uid)->first();
+                if(isset($houseava))continue;
+                $ts = $event->dtstart_array[2];
+                $estart = new \DateTime("@$ts") ;
+                $ts = $event->dtend_array[2];
+                $eend = new \DateTime("@$ts");
+
+                $newHouseAva = new \App\Houseavailability();
+                $newHouseAva->rentBegin=$estart->format('Y-m-d');
+                $newHouseAva->rentEnd = $eend->format('Y-m-d');
+                $newHouseAva->inquiryID = 0; 
+                $newHouseAva->source = "Airbnb";
+                $newHouseAva->idInSource = $event->uid;
+                $newHouseAva->avaid = $avaid;
+                $avaid++;
+                if($event->summary == "Not available")
+                {
+                    $newHouseAva->description = $event->summary;
+                }
+                else{
+                    $newHouseAva->description = $event->description.'\nRENTER: '.$event->summary;
+                }   
+                Log::info($newHouseAva);
+                $house->houseavailability()->save($newHouseAva);
+            }
+        }
+        if($request->ajax()||$request->wantsJson){
+            Log::info("fin");
+            return response()->json(['status'=>'success'])
+                                ->header('Content','json');
+        }
+    }
     public function fromSource(Request $request){
 
     	// Create default HandlerStack
