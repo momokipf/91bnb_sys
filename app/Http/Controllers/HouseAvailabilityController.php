@@ -140,11 +140,8 @@ class HouseAvailabilityController extends Controller
                 die($e);
             }
             $house = \App\House::where('fullHouseID','LIKE','%'.$key)->first();
-            if(isset($house)){
-                Log::info("House ID : ".$house->numberID);
-            }
-            else{
-                Log::info($key." can not found");    
+            if(!isset($house)){
+                Log::debug($key." can not found");    
                 continue;
             }
             $highava = $house->houseavailability()->orderBy('avaid')->first();
@@ -175,7 +172,7 @@ class HouseAvailabilityController extends Controller
                 else{
                     $newHouseAva->description = $event->description.'\nRENTER: '.$event->summary;
                 }   
-                Log::info($newHouseAva);
+                Log::debug($newHouseAva);
                 $house->houseavailability()->save($newHouseAva);
             }
         }
