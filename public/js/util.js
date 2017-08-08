@@ -25,10 +25,11 @@ function loadOpt()
 	});
 
 
-	$('.country').load("/list/countryListOption");
+	$('.country').load("/list/countryListOption");  
 	$('.roomType').load("/list/roomTypeListOption",function(){
 
 	});
+	$('.reasonofDecline').load("/list/declineReasonList");
 
 	$.get("/resource/houseTypes",function(data,status){
 			$('#houseType').empty();
