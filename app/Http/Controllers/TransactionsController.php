@@ -34,6 +34,14 @@ class TransactionsController extends Controller
                 ->with('tran', $tran);
     }
 
+    public function update(Request $request)
+    {
+    	$data = $request->all();
+    	// Log::info($request);
+    	unset($data['fullHouseID']);
+    	Transaction::where('transactionID', $data['transactionID'])->update($data);
+    }
+
     public function delete(Request $request)
     {
         Log::info($request->all());
