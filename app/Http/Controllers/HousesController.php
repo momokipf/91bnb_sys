@@ -176,7 +176,7 @@ class HousesController extends Controller
 
     public function searchindex(Request $request)
     {
-    	return view('house.HouseSearchindex')
+    	return view('house.HouseSearch')
     			//->with('Query',$fakequery)
     			->with('Rep',Auth::user());
     }
@@ -459,7 +459,10 @@ class HousesController extends Controller
                     ]);
             }
             else{
-
+                return response()
+                    ->json(['houses'=>NULL,
+                         'geo_center'=>$search_geo
+                    ]);
             }
         }
         else if($request->has('houseOwnerID')==1){
@@ -511,6 +514,12 @@ class HousesController extends Controller
         	$city = $request->input('city');
 
         	$radius = $request->input('milesrange',2);
+
+            $price = $request->input('Price');
+            $rangerate = $request->input('Rate');
+
+            $monthdaily = $request->input('monthdailyswitch');
+            $houseOrrooms = $request->input('houseroomswitch');
 
         	$numOfRoomsFrom = $request->input('numOfRoomsFrom');
         	if(!$numOfRoomsFrom){
@@ -616,10 +625,24 @@ class HousesController extends Controller
 
         		$housebuilder = $housebuilder->whereBetween('numOfRooms',[$numOfRoomsFrom,$numOfRoomsTo]);
 
+                log::info($price*(100+$rangerate)/100);
+                if($price != 0 ){ 
+                    if($monthdaily="on")
+                        $housebuilder = $housebuilder
+                                        ->wherehas('houseprice',function($query) use($price,$rangerate){
+                                             $query->where('retailDayPrice','<' ,$price*(100+$rangerate)/100); 
+                                        });
+                    else
+                        $housebuilder = $housebuilder
+                                        ->wherehas('houseprice',function($query) use($price,$rangerate){
+                                            $query->where('retailMonthPrice','<',$price*(100+$rangerate)/100); 
+                                        });
+                }
+
         		$housebuilder = $housebuilder
         							->orderBy(DB::raw("ST_Distance_Sphere(location,POINT(".$target_pt['longitude'].','.$target_pt['latitude']."))"));
                 $houses = $housebuilder->get();
-                Log::info(DB::getQueryLog());
+
                 if(isset($checkOutdate)&&isset($checkIndate)){
                     $houses = $houses->filter(function($house) use($checkIndate,$checkOutdate){
                         $tmp = $this->checkAvailability($house->houseavailability()->orderBy('rentBegin')->get(),$checkIndate,$checkOutdate);

@@ -254,7 +254,7 @@ class InquirysController extends Controller
     }
 
 
-    public function decline(Request $request,$id){
+    public function declineInquiry(Request $request,$id){
         $inquiry = Inquiry::find($id);
         Log::info($request->all());
         if($inquiry){
@@ -264,6 +264,21 @@ class InquirysController extends Controller
             $inquiry->save();
             Log::info($inquiry);
             return response()->json(['status'=>'success'])
+                                ->header('Content','json');
+        }
+    }
+
+    public function activateInquiry(Request $request,$id){
+        $inquiry = inquiry::find($id);
+        if($inquiry){
+            $inquiry->status = "Active";
+            $inquiry->reasonOfDecline = "";
+            $inquiry->save();
+            return response()->json(['status'=>'success'])
+                                ->header('Content','json');
+        }
+        else{
+            return response()->json(['status'=>'error'])
                                 ->header('Content','json');
         }
     }

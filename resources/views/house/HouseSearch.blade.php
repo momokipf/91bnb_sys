@@ -125,8 +125,8 @@
     <div class="container-fluid" style="width:100%;height:100%">
         <div class="row equal">
             <div class = "col-lg-6">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a data-toggle="tab" href="#aboutLocation">Basic Search</a></li>
+                <ul class="nav nav-tabs" id="searchbar">
+                    <li class="active"><a data-toggle="tab" href="#aboutLocation" onclick="$('#houseID').val('');">Basic Search</a></li>
                     <!-- <li><a data-toggle="tab" href="#aboutdetail">aboutdetail</a></li> -->
                 <!-- <li><a data-toggle="tab" href="#aboutCheckin">Check-In/Out Date</a></li> -->
                     <!-- <li><a data-toggle="tab" href="#aboutCondition">House Condition</a></li> -->
@@ -190,7 +190,11 @@
                             <div class="row">
                                 <div class="col-lg-8">
                                     <label>House Address <span style="color:red;">*</span></label>
+                                    @if(!isset($Query))
                                     <input class="form-control input-sm"  type="text" id="houseAddress" name="houseAddress" placeholder="Enter and address,neighborhood,city,zipcode" >
+                                    @else
+                                    <input class="form-control input-sm"  type="text" id="houseAddress" name="houseAddress" placeholder="Enter and address,neighborhood,city,zipcode" readonly>
+                                    @endif
                                 </div>
 
                                 <div class="col-lg-3">
@@ -568,7 +572,7 @@
                 <thead>
                     <tr>
                         <th style="min-width:50px;">Number ID</th>
-                        <!-- <th style="min-width:100px;">House ID</th> -->
+                        <th style="min-width:100px;">House Name</th>
                         <th style="min-width:100px;">State</th>
                         <th style="min-width:100px;">City</th>
                         <th style="min-width:150px;">House Address</th>
@@ -758,7 +762,7 @@
         };
         var rangemarker;
         var itemsToShow = [
-            'numberID', 'state', 'city', 'houseAddress',
+            'numberID','fullHouseID', 'state', 'city', 'houseAddress',
             'numOfRooms', 'numOfBaths',
             'OwnerName', 'ownerUsPhoneNumber','ownerWechatUserName',
             //'costMonthPrice', 'costDayPrice', 'nextAvailableDate',

@@ -37,10 +37,23 @@ class HouseAvailabilityController extends Controller
     		foreach($availabilities as &$ava){
 
     			$tmp = array('start'=>$ava->rentBegin,'end'=>$ava->rentEnd,'id'=>$id.'_'.$ava->avaid);
-    			if($ava->inquiryID==0){
+    			if($ava->inquiryID==0&&$ava->source=="inner"){
     				$tmp['color'] = '#ff1a1a';
     				$tmp['title'] = 'Block';
     			}
+                else if($ava->source=="Airbnb"){
+                    $tmp['color'] = '#A52A2A'; 
+                    $tmp['durationEditable'] = false;
+                    $tmp['startEditable'] = false;
+                    $tmp['editable'] = false;
+                    if($ava->description!="Not available"){
+                        $tmp['title'] = $ava->source;
+                    }
+                    else{
+                        $tmp['title'] = "Block";
+                    }
+                }
+
 
     			array_push($ret,$tmp);
     		}
@@ -60,7 +73,7 @@ class HouseAvailabilityController extends Controller
     public function insert(Request $request,$id){
     	//Log::info($request->input('source','inner'));
     	$house = \App\House::find($id);
-    	$highava = $house->houseavailability()->orderBy('avaid')->first();
+    	$highava = $house->houseavailability()->orderBy('avaid','desc')->first();
     	if($highava)
     		$avaid = $highava->avaid+1;
     	else
@@ -144,7 +157,7 @@ class HouseAvailabilityController extends Controller
                 Log::debug($key." can not found");    
                 continue;
             }
-            $highava = $house->houseavailability()->orderBy('avaid')->first();
+            $highava = $house->houseavailability()->orderBy('avaid','desc')->first();
             if($highava)
                 $avaid = $highava->avaid+1;
             else

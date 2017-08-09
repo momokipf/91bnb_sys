@@ -170,10 +170,13 @@
 							@endif
 						</div>
 						<div class="col-lg-3">
-							<div>
-								<label>Add room type (max 2)</label>
-								<button id='addRoomType' type="button" class="btn btn-primary form-control">+</button>
-							</div>
+							<label>Add room type (max 2)</label>
+							<button id='addRoomType' type="button" class="btn btn-primary form-control">+</button>
+						</div>
+
+						<div class="col-lg-3" style="display:none;">
+							<label>Remove room</label>
+							<button id='removeRoomType' type='button' class='btn btn-primary form-control'>-</button>
 						</div>
 
 					</div>
@@ -400,11 +403,28 @@
 
 		$('#addRoomType').click(function() {
 			console.log($('#room1TypeDiv').css('display'));
+			$("#removeRoomType").parent().show();
 			if ($('#room1TypeDiv').css('display') != 'none') {
+				if($('#rooms').val()<2){
+					$('#rooms').val(2);
+				}
 				$('#room2TypeDiv').show();
 			}
 			else {
+				if($('#rooms').val()<1){
+					$('#rooms').val(1);
+				}
 				$('#room1TypeDiv').show();
+			}
+		});
+
+		$('#removeRoomType').click(function(){
+			if($('#room2TypeDiv').css('display')!='none' ){
+				$('#room2TypeDiv').hide();
+			}
+			else if($('#room1TypeDiv').css('display') != 'none'){
+				$('#room1TypeDiv').hide();
+				$(this).parent().hide();
 			}
 		});
 

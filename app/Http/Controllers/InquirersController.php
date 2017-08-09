@@ -104,6 +104,7 @@ class InquirersController extends Controller
 		{
 			return response($search)->header('Content-Type', 'json');
 		}
+		Log::info($search);
 		if($similar==null) 
 			$ret = Inquirer::FindSimilar($search,'AND')->get();
 		else 
@@ -125,6 +126,7 @@ class InquirersController extends Controller
 
 		unset($storeInfo['inquirerStateOther']);
 		unset($storeInfo['inquirerCityOther']);
+
 		foreach ($storeInfo as $key => $value) {
 			if ($value == null) {
 				$storeInfo[$key] = '';

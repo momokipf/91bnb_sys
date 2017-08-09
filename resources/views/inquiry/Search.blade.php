@@ -253,7 +253,10 @@
 							<!-- email -->
 							<td>{{$query->quirer->inquirerEmail}}</td>
 							<!-- house pair -->
-							<td><button type="button" class="btn btn-primary btn-sm" onclick="location.reload(true);HousePair('{{$query->inquiryID}}');" > House Pair</button>
+							<td>
+								@if($query->status!='Declined')
+									<button type="button" class="btn btn-primary btn-sm" onclick="location.reload(true);HousePair('{{$query->inquiryID}}');" > House Pair</button>
+								@endif
 							</td>
 							
 							<!-- if priority is not enough -->
@@ -518,11 +521,11 @@
 				                            </tr>
 				                            <tr>
 				                              <td>Status</td>
-				                              <td>{{$query->quirer->inquirerStatus}}</td>
+				                              <td>{{$query->status}}</td>
 				                            </tr>
 				                            <tr>
 				                              <td>Reason Of Decline</td>
-				                              <td><{{$query->reasonOfDecline}}/td>
+                              					<td>{{$query->reasonOfDecline}}</td>
 				                            </tr>
 				                            <tr>
 				                              <td>Note</td>
