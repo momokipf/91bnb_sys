@@ -486,14 +486,14 @@
 										<div class="col-lg-2">
 											<div>
 												<label>Number of Adult</label>
-												<input name="numOfAdult" type = "number" size = "1" min="0" id="numOfAdult" class="form-control">
+												<input name="numOfAdult" type = "number" size = "1" min="1" id="numOfAdult" class="form-control" value='1'>
 											</div>
 										</div>
 
 										<div class="col-lg-2">
 											<div>
 												<label>Number of Kids</label>
-												<input name="numOfChildren" type = "number" size = "1" min="0" id="numOfChildren" class="form-control">
+												<input name="numOfChildren" type = "number" size = "1" min="0" id="numOfChildren" class="form-control" value='0'>
 											</div>
 										</div>
 

@@ -131,6 +131,7 @@
          <th style="min-width:150px;">Show All Follow Up</th>
          <th style="min-width:130px;">Show Detail</th>
          <th style="min-width:100px;">Status</th>
+         <th style="min-width:100px;">Action</th>
        </thead>
 
         <tbody id="mytable">
@@ -226,7 +227,10 @@
               <td>{{$query->quirer->inquirerEmail}}</td>
 
               <!-- house pair -->
-              <td><button type="button" class="btn btn-primary btn-sm" onclick="location.reload(true);HousePair('{{$query->inquiryID}}');" > House Pair</button>
+              <td>
+                @if($query->status!="Declined")
+                  <button type="button" class="btn btn-primary btn-sm" onclick="location.reload(true);HousePair('{{$query->inquiryID}}');" > House Pair</button>
+                @endif
               </td>
 
 
@@ -524,23 +528,33 @@
               </td>
 
               <td>
-                @if($query->status!="Declined")
-                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target='#status_{{$loop->index}}' style="min-width:70px;">Decline</button>
+                @if(isset($query->satus))
+                  {{$query->status}}
                 @else
-                <button type="button" class="btn btn-primary btn-sm" style="min-width:70px;">Active</button>
+                  Pending
                 @endif
+              </td>
 
+              <td>
+
+                @if($query->status=="Completed")
+                  <button type="button" class='btn btn-primary btn-sm' style="min-width:70px;"> Completed </button>
+                @elseif($query->status=="Declined")
+                  <button type="button" class="btn btn-primary btn-sm" style="min-width:70px;"onclick="reactivateInquiry({{$query->inquiryID}},this)" >Active</button>
+                @else
+                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target='#status_{{$loop->index}}' style="min-width:70px;">Decline</button>
+                @endif
                 <div class="modal fade" id='status_{{$loop->index}}' style="text-align:center;" role="dialog">
                   <div class='modal-dialog modal-md'>
                     <div class='modal-content'>
                       <div class='modal-header'>
                         <button type="button" class="close" data-dismiss="modal">&times;</button> 
                         <h4 class='modal-title'>
-                          <p>    </p>
+                          <p></p>
                         </h4>
                       </div>
                       <div class='modal-body'>
-                        <label> Reson of Decline</label>
+                        <label> Reason of Decline</label>
                         <select class='form-control input-sm reasonofDecline' id='{{$loop->index}}'>
                         </select>
                       </div>
@@ -551,8 +565,6 @@
                     </div>
                   </div>
                 </div>
-
-
               </td>
             </tr>
 
@@ -795,6 +807,34 @@ $(document).ready(function(){
       document.getElementById('inquiryID').value = rowNum;//document.getElementById('inquiryID').innerHTML;
     }
 
+    function reactivateInquiry(inquiryID,elem){
+      bootbox.confirm({
+        message: "Reactive this inquiry? ",
+        buttons:{
+          confirm:{
+            label:'Yes',
+            className: 'btn-success'
+          },
+          cancel:{
+            label: 'No',
+            className: 'btn-danger'
+          }
+        },
+        callback: function(result){
+          if(result){
+            $.ajax({
+              url:"inquiry/activate/"+inquiryID,
+              type:'GET',
+              success: function(data){
+                  if(data.status=="success"){
+                  location.reload();
+                  }
+              }
+            });
+          }
+        }
+      });
+    }
 
     // for datepicker
     $( function() {
