@@ -106,7 +106,7 @@
 @section('script')
 	<script type="text/javascript">
 		function detail(data) {
-			console.log(data);
+			// console.log(data);
 			tran = JSON.parse(data);
 			$("#myCarousel").carousel("next");
 			html = "<table class='table table-hover' style='text-align:left;'><tbody>"

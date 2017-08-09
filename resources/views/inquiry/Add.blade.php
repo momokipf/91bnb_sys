@@ -227,7 +227,7 @@
 								</div> <!-- body -->
 							<div class="modal-footer" id="testAddNewInquirer">
 								<button class="btn btn-primary" onclick="findSimilarInquirers();" type="button" id="inquirerSubmitBtn">Submit</button>
-								<button class="btn btn-primary" type="submit" id="inquirerStillSubmitBtn">Still Submit</button>
+								<button class="btn btn-primary" type="button" id="inquirerStillSubmitBtn">Still Submit</button>
 								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 								</div>
 							</div>
@@ -781,11 +781,7 @@
 
 			$("#search_form").submit(function(){
 				var toSend = $(this).serialize();
-				// $.ajaxSetup({
-				//     headers: {
-				//         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-				//     }
-				// });
+				
 				$.ajax({
 					type: "POST",
 					dataType: "json",//data type expected from server
@@ -974,6 +970,10 @@
 				}
 			});
 
+			$('#inquirerStillSubmitBtn').click(function() {
+				$('#new_inquirer_form').submit();
+			});
+
 			$('#new_inquirer_form').submit(function(){
 				var toSend = $(this).serialize();
 				$.ajax({
@@ -1035,19 +1035,41 @@
 	<script>
 		
 		function findSimilarInquirers(){
+			var check = $("#new_inquirer_form").serializeArray();
+			var flag = 0;
+			for (var each in check) {
+				console.log(each);
+			    if (check[each]['name'] != "_token" && check[each]['value'] != "" && check[each]['value'] != null) {
+			    	flag = 1;
+			    	break;
+			    }
+			}
+			if (flag == 0) {
+				bootbox.dialog({
+					message: "At least one field should be filled!",
+					title: "Failed",
+					buttons: {
+						main: {
+							label: "OK",
+							className: "btn-primary"
+						}
+					}
+				});
+				return;
+			}
+
 			$("#similarResult").empty();
 			var toSend = $("#new_inquirer_form").serialize();
-			$.ajaxSetup({
-				headers: {
-					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-				}
-			});
+
+			console.log(1212121);
+
 			$.ajax({
 				type: "POST",
 				dataType: "json",//data type expected from server
 				url: "/inquirer/search/similar=0",
 				data: toSend,
 				success: function(data) {
+					console.log(data);
 					if (data.length == 0) {
 						$("#new_inquirer_form").submit();
 					} 
