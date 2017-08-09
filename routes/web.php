@@ -116,8 +116,10 @@ Route::get('report/getCityCount/{state}', 'HousesController@getCityCount');
 
 
 Route::get('transaction/showAll', 'TransactionsController@show');
-Route::get('transaction/modify/{id}', 'TransactionsController@modify');
 Route::post('transaction/delete', 'TransactionsController@delete');
+Route::get('transaction/modify/{id}', 'TransactionsController@modify');
+Route::post('transaction/modify/store', 'TransactionsController@update');
+
 
 Route::get('transaction/confirm','TransactionsController@confirmInquiry');
 Route::post('transaction/add','TransactionsController@add');

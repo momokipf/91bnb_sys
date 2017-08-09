@@ -111,6 +111,7 @@
 			$("#myCarousel").carousel("next");
 			html = "<table class='table table-hover' style='text-align:left;'><tbody>"
 			html += "<tr><td>Transaction ID: </td><td>" + tran.transactionID + "</td></tr>";
+			html += "<tr><td>Inquiry ID: </td><td>" + tran.inquiryID + "</td></tr>";
 			html += "<tr><td>Full Hosue ID: </td><td>" + tran.house.fullHouseID + "</td></tr>";
 			html += "<tr><td>Hosue Address: </td><td>" + tran.house.houseAddress + "</td></tr>";
 			html += "<tr><td>Check In Date </td><td>" + tran.inquiry.checkIn + "</td></tr>";
@@ -129,9 +130,11 @@
 			html += "<tr><td>House Owner Wechat ID </td><td>" + tran.house.houseowner.ownerWechatID + "</td></tr>";
 			html += "<tr><td>House Owner Wechat Name </td><td>" + tran.house.houseowner.ownerWechatUserName + "</td></tr>";
 			html += "</table></td></tr>";
+			html += "<tr><td>Daily price </td><td>$ " + tran.dayprice + "</td></tr>";
+			html += "<tr><td>Discount </td><td>" + tran.discount + "</td></tr>";
 			html += "<tr><td>Amount </td><td>$ " + tran.amount + "</td></tr>";
 			if (tran.status == 0) {
-				html += "<tr><td>Status </td><td> Complete </td></tr>";
+				html += "<tr><td>Status </td><td> Completed </td></tr>";
 			}
 			else if (tran.status == -1) {
 				html += "<tr><td>Status </td><td> Cancelled </td></tr>";
@@ -145,7 +148,7 @@
 			$("#modifyBtn").click(function() {
 				window.location.href="modify/" + tran.transactionID;
 			});
-			
+
 			$("#deleteBtn").click(function() {
 				bootbox.dialog({
 					message: 'Continue deleting?',
