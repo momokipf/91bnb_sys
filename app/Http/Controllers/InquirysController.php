@@ -120,7 +120,14 @@ class InquirysController extends Controller
     public function search(Request $request)
     {
         $itemsEachPage = 10;
-        // find by inquiry ID
+
+        $fullurl = $request->fullUrl();
+        $position = stripos($fullurl,"&page");
+        $pos = stripos($fullurl,'&page');
+        if($pos!==false){
+            $fullurl = substr($fullurl,0,$pos);
+        }
+        Log::info($fullurl);
         $inquiryid = $request->input('inquiryID');
         if($inquiryid)
         {
@@ -170,8 +177,8 @@ class InquirysController extends Controller
         }
         
         //$hotquerys = $querybuilder->with('roomType')->with('quirer')->get();
-        $hotquerys = $querybuilder->with('roomType')->with('quirer')->paginate($itemsEachPage);
-        
+        $hotquerys = $querybuilder->orderBy(DB::raw('checkIn - CURDATE()'))->with('roomType')->with('quirer')->paginate($itemsEachPage);
+        $hotquerys->withPath($fullurl);
 
         return view('inquiry.Search') 
                     ->with('hotquerys',$hotquerys)

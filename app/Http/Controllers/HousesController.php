@@ -429,7 +429,7 @@ class HousesController extends Controller
             Log::info("search By ID");
             $houseid = $request->input('houseID');
 
-            $house = House::where('fullHouseID','=',$houseid)->first();
+            $house = House::where('fullHouseID','LIKE','%'.$houseid.'%')->first();
             
             Log::info($house);
             if(isset($house)){

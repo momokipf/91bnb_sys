@@ -188,11 +188,11 @@
               <!-- whole/share -->
               <td>
                 @if($query->share==1)
-                Share
-                @elseif($query->share==0)
                 Whole
-                @elseif($query->share==-1)
+                @elseif($query->share==0)
                 Either
+                @elseif($query->share==-1)
+                Share
                 @endif
               </td>
               
