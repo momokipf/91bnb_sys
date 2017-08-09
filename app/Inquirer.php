@@ -71,7 +71,7 @@ class Inquirer extends Model
                 $query->where($attributes,'LIKE','%'.$value.'%');
             }
             else if($andOr=='OR'){
-                $query->orwhere($attributes,'LIKE','%'.$value).'%';
+                $query->orwhere($attributes,'LIKE','%'.$value.'%');
             }
         }
         return $query;

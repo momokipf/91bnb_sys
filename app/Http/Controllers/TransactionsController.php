@@ -68,17 +68,32 @@ class TransactionsController extends Controller
 
     public function add(Request $request){
         Log::info($request->all());
-        $trans =  new Transaction();
-        $trans->inquiryID = $request->input('inquiryID');
-        $trans->numberID = $request->input('numberID');
-        $trans->status = 0;
-        $trans->dayprice = $request->input('dayprice');
-        if($request->input('discount')!=NULL)
-            $trans->discount = $request->input('discount');
-        else 
-            $trans->discount = 1;
+        $inquiryID = $request->input('inquiryID');
+        if($inquiryID){
 
-        $trans->save();
+            $inquiry = \App\Inquiry::find($inquiryID);
+
+            if($inquiry){
+
+                $inquiry->status = "Completed";
+
+                $trans =  new Transaction();
+                $trans->inquiryID = $request->input('inquiryID');
+                $trans->numberID = $request->input('numberID');
+                $trans->status = 0;
+                $trans->dayprice = $request->input('dayprice');
+                if($request->input('discount')!=NULL)
+                    $trans->discount = $request->input('discount');
+                else 
+                    $trans->discount = 1;
+                $inquiry->save();
+                $trans->save();
+            }
+            else{
+                return response()->json(['status'=>'error','info'=>'No such inquiry in database'])
+                                    ->header('Content-Type','json');
+            }
+        }
 
         if($request->ajax() || $request->wantsJson())
         {

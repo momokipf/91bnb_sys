@@ -40,7 +40,8 @@ Route::get('inquiry/search/modify/{inquiryID}','InquirysController@modifyinquiry
 Route::get('inquiry/search/result','InquirysController@search');
 Route::post('inquiry/update/{inquiryID}','InquirysController@update');
 Route::get('inquiry/housepair','InquirysController@housepair');
-Route::get('inquiry/decline/{inquiryID}','InquirysController@decline');
+Route::get('inquiry/decline/{inquiryID}','InquirysController@declineInquiry');
+Route::get('inquiry/activate/{inquiryID}','InquirysController@activateInquiry');
 Route::post('inquiry/search/addfollow','FollowUpController@store');
 
 
