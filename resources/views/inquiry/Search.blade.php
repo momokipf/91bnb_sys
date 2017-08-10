@@ -295,11 +295,15 @@
 				                          <tbody>
 				                            <tr>
 				                              <td>Rep. Name</td>
+				                              @if(isset($query->represent))
 				                              <td>{{$query->represent->repFirstName.' '.$query->represent->repLastName}}</td>
+				                              @endif
 				                            </tr>
 				                            <tr>
 				                              <td>RepID</td>
+				                              @if(isset($query->represent))
 				                              <td>{{$query->represent->repID}}</td>
+				                              @endif
 				                            </tr>
 				                            <tr>
 				                              <td>Inquiry ID</td>

@@ -32,10 +32,10 @@
 							<label>Representative</label>
 							<select id="repID" class="form-control" name="repWithOwner">
 							@foreach ($Allreps as $repre)
-								@if ($repre->repUserName == $inquiry->represent->repUserName)
-									<option selected value={{$repre->repID}}>{{$repre->repUserName}}</option>
-								@else
+								@if (!isset($inquiry->represent) ||  $repre->repUserName != $inquiry->represent->repUserName)
 									<option value={{$repre->repID}}>{{$repre->repUserName}}</option>
+								@else
+									<option selected value={{$repre->repID}}>{{$repre->repUserName}}</option>
 								@endif
 							@endforeach
 							</select>

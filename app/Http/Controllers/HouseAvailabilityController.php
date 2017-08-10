@@ -131,8 +131,8 @@ class HouseAvailabilityController extends Controller
     						'RH_0089'=>array('18044055.ics?s=b810601c619ff7db7cceadaa04341dff','#7FFFD4'),
     						'Irvine_0085'=>array('18584713.ics?s=976d6fc96ae42067327bf6565bbe7933','#FFD700'),
     						'TempleCity_0001'=>array('18584713.ics?s=976d6fc96ae42067327bf6565bbe7933','#FF7F24'),
-    						'Arcadia_128'=>array('18946103.ics?s=fb1388b36d6e0450e3c2ff3d537d4389','#FF1493'),
-    						'Arcadia_130'=>array('19309098.ics?s=3312405167315729456c561e8971bbf7','#F0FFFF'),
+    						'Arcadia_0128'=>array('18946103.ics?s=fb1388b36d6e0450e3c2ff3d537d4389','#FF1493'),
+    						'Arcadia_0130'=>array('19309098.ics?s=3312405167315729456c561e8971bbf7','#F0FFFF'),
     						'Tustin_0003'=>array('19713586.ics?s=5f323ea05754bc2ce1af2f2259e6e6d5','#00FFFF'),
     						'TempleCity_0021'=>array('19786881.ics?s=d1c123ba4f87f4140b3be5abb84a3b8a','#7CFC00'),
     					);
@@ -165,6 +165,7 @@ class HouseAvailabilityController extends Controller
             foreach($ical->events() as &$event){
                 $houseava = $house->houseavailability()->where('idInSource','=',$event->uid)->first();
                 if(isset($houseava))continue;
+
                 $ts = $event->dtstart_array[2];
                 $estart = new \DateTime("@$ts") ;
                 $ts = $event->dtend_array[2];
@@ -178,14 +179,55 @@ class HouseAvailabilityController extends Controller
                 $newHouseAva->idInSource = $event->uid;
                 $newHouseAva->avaid = $avaid;
                 $avaid++;
+
                 if($event->summary == "Not available")
                 {
                     $newHouseAva->description = $event->summary;
                 }
                 else{
-                    $newHouseAva->description = $event->description.'\nRENTER: '.$event->summary;
+                    $inquirerfield = array();
+                    if(preg_match("/(.*)\(.*\)/", $event->summary,$match)){
+                        $inquiryrawfield = explode(" ",trim($match[1],' '));
+                        if(count($inquiryrawfield)==2){
+                            $inquirerfield['inquirerFirst'] = $inquiryrawfield[0]; 
+                            $inquirerfield['inquirerLast'] = $inquiryrawfield[1];
+                        }
+                        else{
+                            $inquiryfield['inquirerFirst'] = $inquiryrawfield[0];
+                        }
+                    }
+                    if(preg_match("/PHONE:([\s\+]+[\d\s()-]+)\\n/", $event->description,$match)){
+                        $phone = str_replace(" ","",$match[1]);
+                        $inquirerfield['inquirerUsPhoneNumber'] = $phone;
+                    }
+                    if(preg_match("/EMAIL:\s([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})\\n/", $event->description,$match)){
+                        $email = $match[1];
+                        $inquirerfield['inquirerEmail'] = $email;
+                    }
+                    /*
+                        Here may cause duplicate inquirer user
+                    */
+                    if(\App\Inquirer::where('inquirerUsPhoneNumber','=',$inquirerfield['inquirerUsPhoneNumber'])->first())
+                    {
+                        Log::info('inquirer exist');
+                        $inquirer =\App\Inquirer::where('inquirerUsPhoneNumber','=',$inquirerfield['inquirerUsPhoneNumber'])->first();
+                    }
+                    else {
+                        Log::info('add inquirer');
+                        $inquirer = new \App\Inquirer($inquirerfield);
+                        //$inquirer->save();
+                    }
+
+                    $inquiry = new \App\Inquiry([ 'checkIn'=>$estart->format('Y-m-d'),'checkOut'=> $eend->format('Y-m-d'), 
+                                                  'inquirySource'=>'Airbnb','fullHouseID'=> $key,
+                                                ]);
+
+                    Log::info($inquirer);
+                    Log::info($inquiry);
+                    $inquirer->queries()->save($inquiry);
+                    $newHouseAva->description = $event->description.'\n RENTER: '.$event->summary;
                 }   
-                Log::debug($newHouseAva);
+                //Log::debug($newHouseAva);
                 $house->houseavailability()->save($newHouseAva);
             }
         }
