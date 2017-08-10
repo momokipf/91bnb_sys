@@ -200,9 +200,15 @@ class HouseAvailabilityController extends Controller
                         $phone = str_replace(" ","",$match[1]);
                         $inquirerfield['inquirerUsPhoneNumber'] = $phone;
                     }
+                    else{
+                        $inquirerfield['inquirerUsPhoneNumber'] = "";
+                    }
                     if(preg_match("/EMAIL:\s([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})\\n/", $event->description,$match)){
                         $email = $match[1];
                         $inquirerfield['inquirerEmail'] = $email;
+                    }
+                    else{
+                         $inquirerfield['inquirerEmail'] = "::";
                     }
                     /*
                         Here may cause duplicate inquirer user
@@ -224,7 +230,7 @@ class HouseAvailabilityController extends Controller
 
                     Log::info($inquirer);
                     Log::info($inquiry);
-                    $inquirer->queries()->save($inquiry);
+                    //$inquirer->queries()->save($inquiry);
                     $newHouseAva->description = $event->description.'\n RENTER: '.$event->summary;
                 }   
                 //Log::debug($newHouseAva);

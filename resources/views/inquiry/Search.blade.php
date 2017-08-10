@@ -67,24 +67,24 @@
 					<div class="col-sm-12">
 						<div class="col-lg-3 col-md-3 col-sm-3">
 							<label>Inquiry Date</label>
-							<input name="inquiryDate" class="form-control input-sm" id="inquiryDate" type="search" placeholder="mm/dd/yyyy" value="{{ app('request')->input('inquiryDate') }}">
-							<input type="hidden" name = 'inquiryDate' id = 'altinquiryDate'> 
+							<input class="form-control input-sm" id="inquiryDate" type="search" placeholder="mm/dd/yyyy" >
+							<input type="hidden" name = 'inquiryDate' id = 'altinquiryDate' value="{{ app('request')->input('inquiryDate') }}"> 
 						</div>
 						<div class="col-lg-3 col-md-3 col-sm-3">
 							<label>Inquiry Date Range From </label>
-							<input type="search" class="form-control input-sm" id="inquiryDateFrom" name="inquiryDateFrom" placeholder="mm/dd/yyyy" value="{{ app('request')->input('inquiryDateFrom') }}">
-							<input type="hidden" name='inquiryDateFrom' id='altinquiryDateFrom'>
+							<input type="search" class="form-control input-sm" id="inquiryDateFrom" placeholder="mm/dd/yyyy">
+							<input type="hidden" name='inquiryDateFrom' id='altinquiryDateFrom' value="{{ app('request')->input('inquiryDateFrom') }}">
 						</div>
 
 						<div class="col-lg-3 col-md-3 col-sm-3">
 							<label>Inquiry Date Range To </label>
-							<input type="search" class="form-control input-sm" id="inquiryDateTo" name="inquiryDateTo" placeholder="mm/dd/yyyy" value="{{ app('request')->input('inquiryDateTo') }}">
-							<input type="hidden" name = 'inquiryDateTo' id = 'altinquiryDateTo'> 
+							<input type="search" class="form-control input-sm" id="inquiryDateTo" placeholder="mm/dd/yyyy">
+							<input type="hidden" name = 'inquiryDateTo' id = 'altinquiryDateTo' value="{{ app('request')->input('inquiryDateTo') }}"> 
 						</div>
 						<div class="col-lg-3 col-md-3 col-sm-3">
 							<label>Checkin Date Range</label>
-							<input type="search" class="form-control input-sm" id="CheckinDateFrom" name="CheckinDateFrom" placeholder="mm/dd/yyyy" value="{{ app('request')->input('CheckinDateFrom') }}">
-							<input type="hidden" name = 'CheckinDateFrom' id = 'altCheckinDateFrom'> 
+							<input type="search" class="form-control input-sm" id="CheckinDateFrom" placeholder="mm/dd/yyyy" >
+							<input type="hidden" name = 'CheckinDateFrom' id = 'altCheckinDateFrom' value="{{ app('request')->input('CheckinDateFrom') }}"> 
 						</div>
 					</div>
 				</div>
@@ -741,6 +741,26 @@
     		  	if(!$(this).val()) $("#altCheckinDateFrom").val('');
     		  }
 	        });
+
+	        if($('#altinquiryDate').val()&&!$('#inquiryDate').val()){
+	        	var d = new Date($('#altinquiryDate').val());
+	        	d.setDate(d.getDate()+1);
+	        	$('#inquiryDate').datepicker( "setDate", d);
+	        }
+
+	        if($('#altinquiryDateFrom').val()&&!$('#inquiryDateFrom').val()){
+	        	var d = new Date($('#altinquiryDateFrom').val());
+	        	d.setDate(d.getDate()+1);
+	        	$('#inquiryDateFrom').datepicker("setDate",d);
+	        }
+
+	        if($('#altinquiryDateTo').val()&&!$('#inquiryDateTo').val()){
+	        	var d = new Date($('#altinquiryDateTo').val());
+	        	d.setDate(d.getDate()+1);
+	        	$('#inquiryDateTo').datepicker("setDate",d);
+	        }
+
+
 		});
 
 	</script>
