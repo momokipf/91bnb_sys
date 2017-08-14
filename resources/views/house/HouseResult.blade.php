@@ -173,6 +173,8 @@
                                         <input id="address" value="{{$Query->country}} {{$Query->state}} {{$Query->city}}" >
                                     @endif
                                     <input id='postal_code' name="zipcode" maxlength="5">
+                                    <input name ="search_latitude" value= <?php if(array_key_exists("search_latitude",$_GET)) echo $_GET["search_latitude"];?>  >
+                                    <input name ="search_longitude" value=<?php if(array_key_exists("search_longitude", $_GET)) echo $_GET["search_longitude"];?> >
                             </div>
 
                             <div class="row">
@@ -817,6 +819,7 @@
         function initialize(){
             initMap();
             initAutoComplete();
+            loadDatafromServer();
         }
         function geolocate(){
             var place = autocomplete.getPlace();
@@ -904,13 +907,51 @@
                 $("#houseAddress").focus();
             }
 
-            // $("#housestable").colResizable({liveDrag:true});
-            //loadOpt();
-            // alert((document.getElementById('houseAddress')).value);
-            // alert((document.getElementById('milesrange')).value);
+    });
+
+    function loadDatafromServer(){
+
+            if(!$('#houseSearchForm').find('input[name="search_latitude"]').val()||!$('#houseSearchForm').find('input[name="search_longitude"]').val()){
+                var houseaddress = $('#houseAddress').val();
+                if(!houseaddress){
+                    houseaddress = $('#country').val()+' '+$('#administrative_area_level_1').val()+' '+$('#locality').val();
+
+                }
+                console.log(houseaddress);
+                $.ajax({
+                    url:'https://maps.googleapis.com/maps/api/geocode/json?',
+                    type:'GET',
+                    data: {'address':houseaddress, 'key':'AIzaSyCpF-_i-utIH6cZl94zpu4C5vx_FBDDI9s'},
+                    datatype:'json',
+                    success: function(data){
+                        if(data.results.length==0){
+
+                        }
+                        else{
+                            var longitude=data.results[0].geometry.location.lng;
+                            var latitude =data.results[0].geometry.location.lat;
+                            $('#houseSearchForm').find('input[name="search_latitude"]').val(latitude);
+                            $('#houseSearchForm').find('input[name="search_longitude"]').val(longitude);
+                        }
+
+                        search_geo = data.results[0].geometry;
+
+                        realsearch()
+                    },
+                    error: function(){
+
+                    }
+                });
+            }
+            else{
+                var loc = new google.maps.LatLng($('#houseSearchForm').find('input[name="search_latitude"]').val(),$('#houseSearchForm').find('input[name="search_longitude"]').val());
+                search_geo = {'location': loc};
+                realsearch();
+            }
 
 
-        });
+
+    }
 
         $("#ownerIDsearch").click(function(){
             var toSend = $('#ownersearchForm').serialize();

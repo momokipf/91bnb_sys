@@ -231,14 +231,15 @@ class HouseAvailabilityController extends Controller
                     Log::info($inquirer);
                     Log::info($inquiry);
                     //$inquirer->queries()->save($inquiry);
-                    $newHouseAva->description = $event->description.'\n RENTER: '.$event->summary;
+                    $newHouseAva->description = $event->description.' \n RENTER: '.$event->summary;
                 }   
                 //Log::debug($newHouseAva);
                 $house->houseavailability()->save($newHouseAva);
             }
         }
-        if($request->ajax()||$request->wantsJson){
-            Log::info("fin");
+        if($request->ajax() || $request->wantsJson()){
+            Log::info(response()->json(['status'=>'success'])
+                                ->header('Content','json'));
             return response()->json(['status'=>'success'])
                                 ->header('Content','json');
         }

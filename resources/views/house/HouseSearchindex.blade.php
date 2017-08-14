@@ -69,13 +69,15 @@
     <!-- Fixed navbar -->
     <div class="searchdiv">
         <div class = "col-sm-12">
-            <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#aboutLocation">Basic Search</a></li>
-                <!-- <li><a data-toggle="tab" href="#aboutdetail">aboutdetail</a></li> -->
-            <!-- <li><a data-toggle="tab" href="#aboutCheckin">Check-In/Out Date</a></li> -->
-                <!-- <li><a data-toggle="tab" href="#aboutCondition">House Condition</a></li> -->
-                <!-- <li><a data-toggle="tab" href="#aboutPrice">House/Room Price</a></li> -->
-                <li><a data-toggle="tab" href="#advancedsearch">Advanced search</a></li>
+            <ul class="nav nav-tabs" id="searchbar">
+                <li class="active"><a data-toggle="tab" href="#aboutLocation" onclick="$('#houseID').val('');">Basic Search</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Advanced search<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#searchByHouseID" data-toggle="tab">Search by House ID</a></li>
+                        <li><a href="#searchByOwner" data-toggle="tab">Search by Owner</a></li>
+                    </ul>
+                </li>
             </ul>
 
             <div class="tab-content">
@@ -86,7 +88,7 @@
                     <!-- {{csrf_field()}} -->
                         <div class="row">
                             <div class="row">
-                                <div class="col-sm-4">
+                                <div class="col-lg-4">
                                     <label>Inquerier ID</label>
                                     @if(isset($inquirerID))
                                     <input class="form-control input-sm" type="text" id="inquirerID" name="inquirerID" value="{{$inquirerID}}" readonly>
@@ -96,7 +98,7 @@
                                         
                                 </div>
 
-                                <div class="col-sm-4">
+                                <div class="col-lg-4">
                                     <label>Representatives</label>
                                     @if(isset($searchrepID))
                                     <input class="form-control input-sm" type="text" id="repWithOwner" name="repWithOwner" value="{{$repID}}" readonly>
@@ -111,19 +113,27 @@
                                     <input id="administrative_area_level_1" name="state">
                                     <input id="locality" name="city">
                                     <input id="route" name="route">
-                                    <input id="address" diabled>
+                                    @if(!isset($Query))
+                                        <input id="address" >
+                                    @else
+                                        <input id="address" value="{{$Query->country}} {{$Query->state}} {{$Query->city}}" >
+                                    @endif
                                     <input id='postal_code' name="zipcode" maxlength="5">
                                     <input id='search_latitude' name='search_latitude'>
                                     <input id='search_longitude' name='search_longitude'>
                             </div>
 
                             <div class="row">
-                                <div class="col-sm-8">
-                                    <label>House Address <span style="color:red;">*<span></label>
+                                <div class="col-lg-8">
+                                    <label>House Address <span style="color:red;">*</span></label>
+                                    @if(!isset($Query))
                                     <input class="form-control input-sm"  type="text" id="houseAddress" name="houseAddress" placeholder="Enter and address,neighborhood,city,zipcode" >
+                                    @else
+                                    <input class="form-control input-sm"  type="text" id="houseAddress" name="houseAddress" placeholder="Enter and address,neighborhood,city,zipcode" readonly>
+                                    @endif
                                 </div>
 
-                                <div class="col-sm-3">
+                                <div class="col-lg-3">
                                     <label>Apply Range</label>
                                     <select class="form-control input-sm" id="milesrange" name="milesrange">
                                                                     <OPTION value=1>&nbsp;&nbsp;1 Mile</OPTION>
@@ -139,7 +149,11 @@
                             <div class="row">
                                 <div class="col-lg-8">
                                 <label> Calendar </label>
-                                <input type="text"  id="daterange" class ="form-control" value="" />
+                                @if(!isset($Query))
+                                    <input type="text" id="daterange" class="form-control" value="" />
+                                @else
+                                    <input type="text" id="daterange" class="form-control" value="07/28/2017 - 08/01/2017" >
+                                @endif
                                 </div>
                                 <input name = "checkIn" hidden>
                                 <input name = "checkOut" hidden>
@@ -149,21 +163,21 @@
 
                             <label>Rent Type</label>
                             <div class="row">
-                                <div class="col-sm-4">
+                                <div class="col-lg-4">
                                     @if(isset($Query)|| (isset($Query->share)&&$Query->share==1))
                                         <input type="radio" id="rentWhole" name="rentShareWhole" value="1" checked> Whole
                                     @else
                                         <input type="radio" id="rentWhole" name="rentShareWhole" value="1"> Whole
                                     @endif
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-lg-4">
                                     @if(isset($Query) && (isset($Query->share)&&$Query->share==-1))
                                         <input type="radio" id="rentShare" name="rentShareWhole" value="-1" checked> Shared
                                     @else
                                         <input type="radio" id="rentShare" name="rentShareWhole" value="-1"> Shared
                                     @endif
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-lg-4">
                                     @if((isset($Query)&&isset($Query->share)&&$Query->share==0) || !isset($Query) )
                                         <input type="radio" id="rentEither" name="rentShareWhole" value="0" checked> Either
                                     @else 
@@ -210,7 +224,7 @@
 
 
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-lg-6">
                                     <label>Number of Rooms</label>
                                     <div class="input-group beddiv">
 <!--                                     <span class="input-group-addon">Range from</span> -->
@@ -224,7 +238,7 @@
 <!--                                     <span class="input-group-addon">Rooms Per House</span> -->
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-lg-6">
                                     <label>Number of Adults</label>
                                     @if(!isset($Query)&&isset($Query->numOfAdult))
                                     <input class="form-control input-sm" type="number" id="numOfAdults" name="numOfAdults" value="{{$Query->numOfAdult}}">
@@ -236,7 +250,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-sm-12">
+                                <div class="col-lg-12">
                                     <label>Monthly Price Approximate</label>
                                     <div class="input-group">
                                         <span class="input-group-addon">$</span>
@@ -252,7 +266,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-8">
+                                <div class="col-lg-8">
                                     <div class="col-sm-6">
                                         <div class="onoffswitch" style="margin: auto;">
                                             <input type="checkbox" name="houseroomswitch" class="onoffswitch-checkbox" id="houseroomswitch" checked>
@@ -276,7 +290,7 @@
 
 
                             <div class="row">
-                                <div class="col-sm-12">
+                                <div class="col-lg-12">
                                     <div class="alert alert-warning">
                                         <h5><i class="fa fa-info-circle" aria-hidden="true"></i><em><strong> Note:</strong> * indicates required field. </em>
                                       </h5>
@@ -288,62 +302,12 @@
                     </form>
                 </div> <!-- / house condition -->
 
-                    <!-- share -1, whole 1, either 0 -->
-                    <!-- / Whole or Share -->
-                    <!-- <div class="tab-pane fade" id="aboutCheckin">
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <label>Check-In Date</label>
-                                @if(!isset($Query)&&isset($Query->checkIn))
-                                <input class="form-control input-sm" type="search" id="checkin" name="checkin" value="{{$Query->checkIn}}">
-                                @else
-                                <input class="form-control input-sm" type="search" id="checkin" name="checkin">
-                                @endif
-                            </div>
-
-                            <div class="col-sm-3">
-                                <label>Check-Out Date</label>
-                                @if(!isset($Query)&&isset($Query->checkOut))
-                                <input class="form-control input-sm" type="search" id="checkout" name="checkout" value="{{$Query->checkOut}}">
-                                @else
-                                <input class="form-control input-sm" type="search" id="checkout" name="checkout">
-                                @endif
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="alert alert-warning">
-                                    <h5><i class="fa fa-info-circle" aria-hidden="true"></i><em><strong> Note:</strong> If guest didn't indicate the exact date, please apply the 1st of the month
-                                    for Check-In date, and the end of the month for Check-Out date.</em>
-                                    </h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="alert alert-warning">
-                                    <h5><i class="fa fa-info-circle" aria-hidden="true"></i><em><strong> Note:</strong> * indicates required field. </em>
-                                    </h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div id='checkDateCheck'></div>
-                            </div>
-                        </div>
-                    </div> --><!-- / Check in and check out -->
-
-
-                <div class="tab-pane fade" id="advancedsearch">
-                    <form id="adhouseSearchForm">
+                <div class="tab-pane fade" id="searchByHouseID">
+                    <form id ="houseIDsearchForm" class="searchtypediv">
                         {{csrf_field()}}
                         <div class="row">
-                            <h5>Search By House ID:</h5>
-                        </div>
-                        <div class="row searchtypediv">
-                            <div class="col-sm-8">
-                                <!-- <label>House ID</label> -->
+                            <div class="col-lg-8">
+                                <label> House ID </label>
                                 @if(isset($fullHouseID))
                                 <input class="form-control input-sm" type="text" id="houseID" name="houseID" placeholder="Format: 91bnb_State_City_0000" value="{{$fullHouseID}}">
                                 @else
@@ -351,21 +315,15 @@
                                 @endif
                             </div>
                         </div>
+                    </form>
+                </div>
 
-                            <!-- <div class="row searchtypediv">
-                                <div class="col-sm-10">
-                                    <label>Cross Road Between</label>
-                                    <div class="input-group">
-                                        <input class="form-control input-sm" type="text" id="crossroadA" name="crossroadA" placeholder="Road A">
-                                        <span class="input-group-addon">and</span>
-                                        <input class="form-control input-sm" type="text" id="crossroadB" name="crossroadB" placeholder="Road B">
-                                    </div>
-                                </div>
-                            </div> -->
+
+                <div class="tab-pane fade" id="searchByOwner">
+                    <form id ="ownersearchForm" class="searchtypediv">
+                        {{csrf_field()}}
                         <div class="row">
-                            <h5>Search By Owner:</h5>
-                        </div>
-                        <div class="row">
+                            <div class="col-lg-10">
                             <label>DO YOU KNOW OWNER ID?</label>
                             <div class="onoffswitch" style="margin: auto;">
                                 <input type="checkbox" class="onoffswitch-checkbox" id="ownerknownswitch" unchecked >
@@ -374,42 +332,56 @@
                                     <span class="onoffswitch-switch"></span>
                                 </label>
                             </div>
-                        </div>
-                        <div class="row searchtypediv" id="knowowneridDiv" style="display:none;">
-                            <div class="col-lg-2">
-                                <label>Owner ID</label>
-                                <input type="text" name="houseOwnerID" id="houseOwnerID" class="form-control input-sm" placeholder="Owner ID">
                             </div>
                         </div>
 
-                        <div class="row searchtypediv" id="dontknowowneridDiv" style="display:none;">
-                            <div class="col-lg-2">
-                                <label>First Name</label>
-                                <input type="text" name="first" class="form-control input-sm" placeholder="First Name">
-                            </div>
+                        <div class="row">
+                            <div id="knowowneridDiv" style="display:none;">
+                                <div class="col-lg-12">
+                                    <label>Owner ID</label>
+                                    <input type="text" name="houseOwnerID" id="houseOwnerID" class="form-control input-sm" placeholder="Owner ID">
 
-                            <div class="col-lg-2">
-                                <label>Last Name</label>
-                                <input type="text" name="last" class="form-control input-sm" placeholder="Last Name">
-                            </div>
+                                </div>
 
-                            <div class="col-lg-3">
-                                <label>WeChat Username</label>
-                                <input type="text" name="ownerWechatUserName" class="form-control input-sm" placeholder="Owner WeChat Username">
                             </div>
+                        </div>
+                        <div id="dontknowowneridDiv" style="display:none;">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <label>First Name</label>
+                                    <input type="text" name="first" class="form-control input-sm" placeholder="First Name">
+                                </div>
 
-                            <div class="col-lg-2">
-                                <label>WeChat ID</label>
-                                <input type="text" name="ownerWechatID" class="form-control input-sm" placeholder="Owner Wechat ID">
+                                <div class="col-lg-2">
+                                    <label>Last Name</label>
+                                    <input type="text" name="last" class="form-control input-sm" placeholder="Last Name">
+                                </div>
+
+                                <div class="col-lg-3">
+                                    <label>WeChat Username</label>
+                                    <input type="text" name="ownerWechatUserName" class="form-control input-sm" placeholder="Owner WeChat Username">
+                                </div>
+
+                                <div class="col-lg-3">
+                                    <label>WeChat ID</label>
+                                    <input type="text" name="ownerWechatID" class="form-control input-sm" placeholder="Owner Wechat ID">
+                                </div>
                             </div>
-
-                            <div class="col-lg-2">
+                            <div class="row" style="margin: auto;">
+                                <!-- <div > -->
                                 <label style="visibility:hidden">Owner Search</label>
-                                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#search_result_modal" id="ownersearch" type="button" >Search</button>
+                                <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#search_result_modal" id="ownerIDsearch" type="button" >
+                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search ownerID</button>
+                                <!-- <button class="btn btn-success" type="button" id="myBtn"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Apply Filter</button> -->
                             </div>
                         </div>
                     </form>
                 </div>
+
+
+                
+
+
                 <div style="margin-top:30px; margin-bottom:50px;  margin:auto; width:50%">
 
                             <button class="btn btn-success" type="button" id="myBtn"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search </button>
@@ -572,117 +544,6 @@
                     return;
                 }
                 $('#houseSearchForm').submit();
-                // var toSend = $('#houseSearchForm').serializeArray();
-                // if($('#houseOwnerID').val()){
-                //     var houseownernode = document.getElementById('houseOwnerID');
-                //     toSend.push({'name':houseownernode.name,'value':houseownernode.value});
-                // }
-                // if($('#houseID').val()){
-                //     var houseidnode= document.getElementById('houseID');
-                //     toSend.push({'name':houseidnode.name,'value':houseidnode.value});
-                // }
-                // if(search_geo){
-                //     var location = search_geo['location'];
-                //     toSend.push({'name':'search_latitude','value':location['lat']});
-                //     toSend.push({'name':'search_longitude','value':location['lng']});
-                // }
-
-                // $.ajax({
-                //     type:"GET",
-                //     url:"/house/search",
-                //     data:$.param(toSend),
-                //     datatype:'json',
-                //     success: function(data){
-                //         if(map){
-                //             deleteMarkers();
-                //         }
-                //         //alert(JSON.stringify(data));
-
-                //         var houses = data.houses;
-                //         if(houses){
-                //             var tablehtml = "";
-                //             if(houses.length>0){
-
-                //                 $("#showResult").show();
-                //                 resultSM = makeResuiltSM();
-
-                //                 for(var i=0;i<houses.length;++i)
-                //                 {
-                //                     var loc = new google.maps.LatLng(houses[i].latitude,houses[i].longitude);
-                //                     var address = houses[i].houseAddress+','+houses[i].city+','+houses[i].state;
-                //                     var marker = new google.maps.Marker({
-                //                         position:loc,
-                //                         title: houses[i].fullHouseID,
-                //                         map:map
-                //                     });
-
-                //                     google.maps.event.addListener(marker,'click',infocallbackClosure(marker,houses[i].fullHouseID,houses[i].numberID,address,setinfohtml));
-                //                     housemarkers.push(marker);
-                //                     if (houses[i]['rentShared'] == '1') {
-                //                         houses[i]['rentShared'] = 'Whole';
-                //                     } else if (houses[i]['rentShared'] == '-1') {
-                //                         houses[i]['rentShared'] = 'Share';
-                //                     } else {
-                //                         houses[i]['rentShared'] = 'Either';
-                //                     }
-                //                     houses[i]['minStayTerm'] = houses[i]['minStayTerm'] + ' ' + houses[i]['minStayUnit'];
-
-                //                     var rowhtml = "<tr id='house_" + houses[i]['numberID'] + "'>";
-                //                     var numberID = houses[i].numberID;
-                //                     for(var j =0 ; j< itemsToShow.length;++j){
-
-                //                         if(itemsToShow[j]=='numberID'){
-                //                             rowhtml += "<td><a href='#map_div' onclick = 'makeMarkerBounce("+i+");' >" + 
-                //                                         numberID + "</a></td>";
-                //                         }
-                //                         else if(itemsToShow[j] == 'OwnerName'){
-                //                             rowhtml +=  "<td>"+houses[i].first + ' ' + houses[i].last + "</td>";
-                //                         }
-                //                         else if(itemsToShow[j] == 'ownerWechatUserName' ){
-                //                             rowhtml += "<td title='Wechat ID: " + houses[i]['ownerWechatID']+"'>"+houses[i][itemsToShow[j]] +"</td>";
-                //                         }
-                //                         else if(!houses[i][itemsToShow[j]]){
-                //                             rowhtml += "<td>N/A</td>";
-                //                         }
-                //                         else{
-                //                             rowhtml += "<td>"+houses[i][itemsToShow[j]] + "</td>"; 
-                //                         }
-                //                         //console.log(rowhtml);
-                //                     }
-
-                //                     //rowhtml += "<td><a onclick=' retrieveHouseInfo("+numberID+");' > View House Info</td>";
-                //                     rowhtml += "<td><button type='button' class='btm btn-info' onclick='retrieveHouseInfo("+houses[i].numberID+");resultSM.toHousePage("+i+")'>"+"View House Info"+"</button></td>";
-                //                     rowhtml += "<td><button type='button' class='btm btn-info' onclick='resultSM.toOwnerPage("+i+")'>View Owner Info</button></td>";
-                //                     rowhtml += "<td><button type='button' class='btm btn-info' href='MainPage'>Modify</button></td>"
-                //                     attachHouseOwnerDiv(houses[i],i);
-
-                //                     rowhtml += "</tr>";
-                //                     tablehtml += rowhtml;
-                //                 }
-                //                 showMarkers();
-
-                //                 $('#fillArea').html(tablehtml);
-                //             }
-                //             else
-                //             {
-                //                 $("#showResult").hide();
-                //                 // Notice that there is no result
-                //             }
-                //         }
-
-                //         if(search_geo){
-                //             mapMovecenter(search_geo);
-                //         }
-                //         else{
-                //             //alert(JSON.stringify(data.geo_center));
-                //             var loc = new google.maps.LatLng(data.geo_center.location.lat,data.geo_center.location.lng);
-                //             search_geo = {'location': loc};
-                //             mapMovecenter(search_geo);
-                //         }
-
-                //         search_geo=null;
-                //     }
-                // });
             });
         });
         

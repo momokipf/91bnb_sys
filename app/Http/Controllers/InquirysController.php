@@ -255,7 +255,7 @@ class InquirysController extends Controller
 
     public function housepair(Request $request){
         $inquiry = Inquiry::find($request->input('inquiryID'));
-        return view('house.HouseSearch')
+        return view('house.HouseResult')
                 ->with('Query',$inquiry)
                 ->with('Rep',Auth::user());
     }

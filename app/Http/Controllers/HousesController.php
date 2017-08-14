@@ -176,7 +176,7 @@ class HousesController extends Controller
 
     public function searchindex(Request $request)
     {
-    	return view('house.HouseSearch')
+    	return view('house.HouseSearchindex')
     			//->with('Query',$fakequery)
     			->with('Rep',Auth::user());
     }
@@ -185,7 +185,7 @@ class HousesController extends Controller
     {
     	$input = $request->all();
     	Log::info($input);
-    	return view('house.Housetmp')
+    	return view('house.HouseResult')
     			->with('Rep',Auth::user());
 
     }
@@ -252,7 +252,6 @@ class HousesController extends Controller
         $country = $request->input('country');
         $state = $this->getState($request->input('state'));
         $city = $request->input('city');
-
 
 
 
@@ -357,32 +356,35 @@ class HousesController extends Controller
 
     		if($request->ajax() || $request->wantsJson()){
     			//Log::info("Send json back to client ".$newhouse);
-    			// return response()
-    			// 		->json(['status'=>'success','houseinfo'=>$newhouse])
-    			// 		->header('Content','json');
-                return ;
+    			return response()
+    					->json(['status'=>'success'])
+    					->header('Content','json');
     		}
     	}
     }
 
-    public function update(Request $request) {
-        // Log::info($request->all());
+    public function update(Request $request,$id) {
+        Log::info($request->all());
         $fullhouseid = $request->input('fullHouseID');
-        $house = House::where('fullHouseID','=',$fullhouseid)->first();
+        $house = House::find($id);
         if($house){
             $houseinput = $request->only($house->getFillable()); 
 
             $priceinput = $request->only($house->houseprice->getFillable());
             $conditioninput = $request->only($house->housingcondition->getFillable());
 
+            $room_num = $request->input('room_num'); 
+
             foreach($houseinput as $key=>$value){
-                Log::info($key."=>".$value);
                 if($value){
                     $house[$key] = $value;
                 }
             }
-            $point = $houseinput['longitude'].',' .$houseinput['latitude'];
-            $house->setLocationAttribute($point);
+            if($houseinput['longitude']&& $houseinput['latitude'])
+            {
+                $point = $houseinput['longitude'].',' .$houseinput['latitude'];
+                $house->setLocationAttribute($point);
+            }
             $houseprice = $house->houseprice;
             if($houseprice){
                 foreach($priceinput as $key=>$value){
@@ -401,18 +403,74 @@ class HousesController extends Controller
                     }
 
                 }
+            }  
+            // $houserooms = $house->houserooms;
+            $rooms = array();
+            for($i=1;$i<=$room_num;$i++){
+                $room = \App\Houseroom::where("numberID",'=',$id)->where("roomID",'=',$i)->first();
+                // Log::info($room);
+                if($room){
+                    $room->roomType = $request->input('roomType_'.$i);
+                    $room->roomBedType = $request->input('roomBedType_'.$i);
+                    $room->roomBedTypeOther = $request->input('roomBedTypeOther_'.$i);
+                    if($request->input('maxGuestsnum_'.$i))
+                        $room->roomGuestMax = $request->input('maxGuestsnum_'.$i);
+                    else
+
+                    $room->roomCostDayPrice = $request->input('roomCostDayPrice_'.$i);
+                    $room->roomCostWeekPrice = $request->input('roomCostWeekPrice_'.$i);
+                    $room->roomCostMonthPrice = $request->input('roomCostMonthPrice_'.$i);
+                    $room->roomCostUtility = $request->input('roomCostUtility_'.$i);
+                    $room->utilityNote = $request->input('utilityNote_'.$i);
+                    $room->roomCostCleaning = $request->input('roomCostCleaning_'.$i);
+                    $room->roomCostSecurityDeposit = $request->input('roomCostSecurityDeposit_'.$i);
+                    array_push($rooms,$room);
+                    Log::info($room);
+                }
+                else{
+                    $newroom = new \App\Houseroom();
+                    $newroom->roomID = $i;
+                    $newroom->roomType = $request->input('roomType_'.$i);
+                    $newroom->roomBedType = $request->input('roomBedType_'.$i);
+                    $newroom->roomBedTypeOther = $request->input('roomBedTypeOther_'.$i);
+                    $newroom->roomGuestMax = $request->input('maxGuestsnum_'.$i);
+                    $newroom->roomCostDayPrice = $request->input('roomCostDayPrice_'.$i);
+                    $newroom->roomCostWeekPrice = $request->input('roomCostWeekPrice_'.$i);
+                    $newroom->roomCostMonthPrice = $request->input('roomCostMonthPrice_'.$i);
+                    $newroom->roomCostUtility = $request->input['roomCostUtility_'.$i];
+                    $newroom->utilityNote = $request->input('utilityNote_'.$i);
+                    $newroom->roomCostCleaning = $request->input('roomCostCleaning_'.$i);
+                    $newroom->roomCostSecurityDeposit = $request->input('roomCostSecurityDeposit_'.$i);
+                    array_push($rooms,$newroom);
+                    Log::info($newroom);
+                }
             }
-            $house->save();
-            $houseprice->save();
-            /*
 
-            */
-            Log::info($housecond);
-            $housecond->save();
+            try{            
 
+                $house->save();
+                $houseprice->save();
+                /*
+
+                */
+                //Log::info($house);
+                $housecond->save();
+                $house->houserooms()->saveMany($rooms);
+            }
+            catch(\Illuminate\Database\QueryException $ex){
+                 Log::error("QueryException has been found, need to be handled");
+                 /*
+                 * Need to found a elegant way to do cascade delete;
+                 * one on boot
+                 */             
+                 $newhouse->delete();
+            }
+
+
+            return response()->json(['status'=>'success']);
         }
         else{
-
+            return response()->json(['status'=>'error','info'=>'no house founded']);
         }
     }
 
@@ -453,10 +511,8 @@ class HousesController extends Controller
 
                     }    
                 }
-                return response()
-                    ->json(['houses'=>array($house->load('houseowner')),
-                         'geo_center'=>$search_geo
-                    ]);
+                return response()->json(['houses'=>array($house->load('houseowner')),
+                         'geo_center'=>$search_geo]);
             }
             else{
                 return response()

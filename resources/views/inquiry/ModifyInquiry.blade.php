@@ -114,16 +114,11 @@
 						</div>
 
 						<div class="col-lg-3">
-							<div>
-								<label>Check-In Date</label>
-								<input name = "checkIn" class="form-control" type = "search" id="checkIn" value="{{$inquiry->checkIn}}" placeholder="mm/dd/yyyy">
-							</div>
-						</div>
-
-						<div class="col-lg-3">
-							<div>
-								<label>Check-Out Date</label>
-								<input name = "checkOut" class="form-control" type = "search" id="checkOut" value="{{$inquiry->checkOut}}" placeholder="mm/dd/yyyy">
+							<label>Check-In & Out Date</label>
+							<div class="input-daterange input-group" id="calendar">
+								<input type="text" id="checkIn" name="checkIn" class="form-control" placeholder="mm/dd/yyyy" >
+								<span class="input-group-addon">to</span>
+								<input type="text" id="checkOut" name="checkOut" class="form-control" placeholder="mm/dd/yyyy">
 							</div>
 						</div>
 
@@ -379,28 +374,25 @@
 
 		$("#inquiryDate").datepicker({
 			  dateFormat: "mm-dd-yy",
-			  maxDate: 0
+			  maxDate: 0,
+			  autoclose:true
 			});
 		$("#inquiryDate").datepicker("setDate", new Date());
 
-		$('#checkIn').datepicker({
-		  dateFormat: "mm-dd-yy",
-		  beforeShow: function () {
-		  $('#checkIn').datepicker('option', 'minDate', 0);
-		  }
+		$('#calendar').datepicker({
+		  dateFormat: "mm/dd/yy",
+		  disabledInputs: ['07/14/2017'],
+		  minDate: 0,
+		  // beforeShow: function () {
+		  // $('#checkIn').datepicker('option', 'minDate', 0);
+		  // }
+		});
+		$('#checkIn').change(function(){
+			$('#checkIn').datepicker('hide');
+			$('#checkOut').focus();
 		});
 
-		$('#checkOut').datepicker({
-		  dateFormat: "mm-dd-yy",
-		  beforeShow: function () {
-			var checkIn = $('#checkIn').datepicker("getDate");
-			if(checkIn){
-				checkIn.setDate(checkIn.getDate() + 1);
-				$('#checkOut').datepicker('option', 'minDate', checkIn);
-			}
-		  }
-		});
-
+			
 		$('#addRoomType').click(function() {
 			console.log($('#room1TypeDiv').css('display'));
 			$("#removeRoomType").parent().show();

@@ -440,16 +440,16 @@
 
 								<div class="row">
 									<div class="col-lg-3">
-										<div>
-											<label>Number of Rooms</label>
-											<input type = "number" name = "rooms" id = "rooms" min="0" class="form-control"/>
-										</div>
+										<label>Number of Rooms</label>
+										<input type = "number" name = "rooms" id = "rooms" min="0" class="form-control"/>
 									</div>
 									<div class="col-lg-3">
-										<div>
-											<label>Add room type (max 2)</label>
-											<button id='addRoomType' type="button" class="btn btn-primary form-control">+</button>
-										</div>
+										<label>Add room type (max 2)</label>
+										<button id='addRoomType' type="button" class="btn btn-primary form-control">+</button>
+									</div>
+									<div class="col-lg-3" style="display:none;">
+										<label>Remove room</label>
+										<button id='removeRoomType' type='button' class='btn btn-primary form-control'>-</button>
 									</div>
 								</div>
 
@@ -507,10 +507,11 @@
 										<div class="col-lg-2">
 											<div>
 												<label>Baby</label>
-												<SELECT name="hasBaby" id="hasBaby" class="form-control">
+												<!-- <SELECT name="hasBaby" id="hasBaby" class="form-control">
 												<OPTION value =  1>Yes</OPTION>
 												<OPTION value =  0 selected>No</OPTION>
-												</SELECT>
+												</SELECT> -->
+												<input name="hasBaby" type="number" min='0' id="hasBaby" class="form-control">
 											</div>
 										</div>
 									</div>
@@ -626,16 +627,6 @@
 
 	@section('script')
 	<script>
-		function loadList(type,element){
-			$.get("resource/"+type),function(data,status){
-				element.empty();
-				for(i=0;i<data.length;++i)
-				{
-					var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-					element.append(option);
-				}
-			};
-		}
 
 		function vieweffect_1(){
 			// $('#collapseTwo').collapse({toggle: true, parent: '#accordion'});
@@ -746,7 +737,8 @@
 			bindhandler();
 			$("#inquiryDate").datepicker({
 			  dateFormat: "mm/dd/yy",
-			  maxDate: 0
+			  maxDate: 0,
+			  autoclose:true
 			});
 			$("#inquiryDate").datepicker("setDate", new Date());
 
@@ -757,6 +749,10 @@
 			  // beforeShow: function () {
 			  // $('#checkIn').datepicker('option', 'minDate', 0);
 			  // }
+			});
+			$('#checkIn').change(function(){
+				$('#checkIn').datepicker('hide');
+				$('#checkOut').focus();
 			});
 
 
@@ -842,11 +838,28 @@
 
 			$('#addRoomType').click(function() {
 				console.log($('#room1TypeDiv').css('display'));
+				$("#removeRoomType").parent().show();
 				if ($('#room1TypeDiv').css('display') != 'none') {
+					if($('#rooms').val()<2){
+						$('#rooms').val(2);
+					}
 					$('#room2TypeDiv').show();
 				}
 				else {
+					if($('#rooms').val()<1){
+						$('#rooms').val(1);
+					}
 					$('#room1TypeDiv').show();
+				}
+			});
+
+			$('#removeRoomType').click(function(){
+				if($('#room2TypeDiv').css('display')!='none' ){
+					$('#room2TypeDiv').hide();
+				}
+				else if($('#room1TypeDiv').css('display') != 'none'){
+					$('#room1TypeDiv').hide();
+					$(this).parent().hide();
 				}
 			});
 

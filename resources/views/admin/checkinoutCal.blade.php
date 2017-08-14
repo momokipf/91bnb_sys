@@ -121,12 +121,12 @@
 
 
 	function importTodatabase(){
+		$('#loadele').addClass("loading");
 		$.ajax({
 			url:"/calendar/import",
 			type:"GET",
 			datatype:'json',
-			succuss: function(data){
-				alert('success');
+			success: function(data){
 				$('#loadele').removeClass("loading");	
 			},
 			error:function(){
@@ -134,7 +134,6 @@
 				$('#loadele').removeClass("loading");	
 			}
 		});
-		$('#loadele').addClass("loading");
 	}
 	
 </script>

@@ -812,6 +812,7 @@
 					<br>
 					<div class="row">
 						<div class="col-sm-3">
+							<input id="room_num" name="room_num" hidden>
 							<button class="btn btn-success btn-sm" type="button" id="addRoom">Add a Room</button>
 							<button class="btn btn-danger btn-sm" type="button" id="removeRoom">Remove a Room</button>
 						</div>
@@ -1023,12 +1024,41 @@
 
 			$('#modifyForm').submit(function() {
 				var toSend = $('#modifyForm').serializeArray();
+				toSend.push({'name':'room_num','value':document.getElementById('roomsdiv').childElementCount});
 				$.ajax({
 					type: "POST",
-					url: "/house/modify/store",
+					url: "/house/modify/update/"+numberID,
 					data: $.param(toSend),
 					success: function(data) {
-						console.log("Success");
+						if(data.length==0||data.status=="error"){
+							bootbox.dialog({
+								message: "Erro happened on modifying House info, please contact IT stuff",
+								title:"Failed",
+								buttons: {
+									main: {
+										label:"OK",
+										className: "btn-primary"
+									}
+								}
+							});
+						}
+						else if(data.status="success"){
+							bootbox.dialog({
+								message: "Modifying House info successfully",
+								title: 'Notice',
+								buttons: {
+								  success: {
+									  label: 'OK',
+									  className: 'btn-primary',
+									  callback: function(){
+										window.history.back();
+									  }
+								  }
+								},
+							});
+
+
+						}
 					}
 				});
 			});
