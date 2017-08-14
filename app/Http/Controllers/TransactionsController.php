@@ -67,13 +67,6 @@ class TransactionsController extends Controller
     	}
     }
 
-    public function store(Request $request) {
-		Log::info($request->all());
-		$storeInfo = array_slice($request->all(), 1);
-
-		Inquirer::insert($storeInfo);
-	}
-
     public function add(Request $request){
         Log::info($request->all());
         $inquiryID = $request->input('inquiryID');

@@ -1074,8 +1074,6 @@
 			$("#similarResult").empty();
 			var toSend = $("#new_inquirer_form").serialize();
 
-			console.log(1212121);
-
 			$.ajax({
 				type: "POST",
 				dataType: "json",//data type expected from server
