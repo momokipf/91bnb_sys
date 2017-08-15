@@ -6,10 +6,12 @@
     <link rel="stylesheet" href="{{asset('css/animate.css')}}">
     <!-- <link rel="stylesheet" href="{{asset('css/equal-height-columns.css')}}"> -->
     <link rel="stylesheet" href="{{asset('css/w3.css')}}">
+    <link type="text/css" rel="stylesheet" href="{{asset('simplePagination.css')}}"/>
 
     <script src="{{asset('js/bootbox.min.js')}}"></script>
     <script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
     
+    <script type="text/javascript" src="{{asset('jquery.simplePagination.js')}}"></script>
     @php
         function checkKey(&$arr){
             if(!array_key_exists('houseAddress', $arr)){
@@ -479,7 +481,7 @@
         ];
         var infowindow ;
         var resultSM;
-
+        var housesbuf;
 
         function initMap(){
             uluru = {lat: 36.778259, lng: -119.417931};
@@ -648,7 +650,7 @@
                     var tablehtml = "";
                     var picturehtml = "<div class = \"img_container\"><ul>";
                     if(houses.length>0){
-
+                        housesbuf = house;
                         $("#showResult").show();
                         resultSM = makeResuiltSM();
 

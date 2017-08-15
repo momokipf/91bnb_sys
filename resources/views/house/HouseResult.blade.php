@@ -1,5 +1,5 @@
 @extends('navbar')
-@section('title', 'House Search')
+@section('title', 'House Result')
 
 @section('head')
     <link rel="stylesheet" href="{{asset('css/priceswitch.css')}}">
@@ -11,9 +11,11 @@
     <!-- Include Date Range Picker -->
     <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />  
-    
+    <link type="text/css" rel="stylesheet" href="{{asset('css/simplePagination.css')}}"/>
+
     <script src="{{asset('js/bootbox.min.js')}}"></script>
     <script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
+    <script type="text/javascript" src="{{asset('js/jquery.simplePagination.js')}}"></script>
 
     <style>
         html {width:100%; height:100%;}
@@ -88,6 +90,13 @@
         }
         .tab{
             margin-left: 5px;
+        }
+
+        #housestable tr.highlight {
+            background-color: #e92929 !important;
+            color:#fff;
+            vertical-align: middle;
+            padding: 1.5em;
         }
 
         #loadele{
@@ -180,7 +189,9 @@
                             <div class="row">
                                 <div class="col-lg-8">
                                     <label>House Address <span style="color:red;">*</span></label>
-                                    @if(!isset($Query))
+                                    @if(array_key_exists("houseAddress",$_GET))
+                                    <input class="form-control input-sm"  type="text" id="houseAddress" name="houseAddress" placeholder="Enter and address,neighborhood,city,zipcode" value="{{$_GET['houseAddress']}}">
+                                    @elseif(!isset($Query))
                                     <input class="form-control input-sm"  type="text" id="houseAddress" name="houseAddress" placeholder="Enter and address,neighborhood,city,zipcode" >
                                     @else
                                     <input class="form-control input-sm"  type="text" id="houseAddress" name="houseAddress" placeholder="Enter and address,neighborhood,city,zipcode" readonly>
@@ -595,6 +606,9 @@
                 </tbody>
 
             </table>
+
+            <ul id="pagination" class="pagination"></ul>
+
             <div id = "ownerdiv" >
             </div>
             <div id = "housediv" class="container" style="display:none">
@@ -760,6 +774,8 @@
         var infowindow ;
         var resultSM;
 
+        var housesbuf;
+        var itemsOnPage = 10;
 
         function autoCallback(predictions,status){
             // *Callback from async google places call
@@ -1073,6 +1089,7 @@
                     //alert(JSON.stringify(data));
 
                     var houses = data.houses;
+                    housesbuf  =  data.houses;
                     if(houses.length!=0){
                         var tablehtml = "";
                         if(houses.length>0){
@@ -1090,7 +1107,7 @@
                                     map:map
                                 });
 
-                                google.maps.event.addListener(marker,'click',infocallbackClosure(marker,houses[i].fullHouseID,houses[i].numberID,address,setinfohtml));
+                                google.maps.event.addListener(marker,'click',infocallbackClosure(marker,houses[i].fullHouseID,houses[i].numberID,address,i,setinfohtml));
                                 housemarkers.push(marker);
                                 if (houses[i]['rentShared'] == '1') {
                                     houses[i]['rentShared'] = 'Whole';
@@ -1100,44 +1117,57 @@
                                     houses[i]['rentShared'] = 'Either';
                                 }
                                 houses[i]['minStayTerm'] = houses[i]['minStayTerm'] + ' ' + houses[i]['minStayUnit'];
-
-                                var rowhtml = "<tr id='house_" + houses[i]['numberID'] + "'>";
-                                var numberID = houses[i].numberID;
-                                for(var j =0 ; j< itemsToShow.length;++j){
-
-                                    if(itemsToShow[j]=='numberID'){
-                                        rowhtml += "<td><a href='#map_div' onclick = 'makeMarkerBounce("+i+");' >" + 
-                                                    numberID + "</a></td>";
-                                    }
-                                    else if(itemsToShow[j] == 'OwnerName'){
-                                        rowhtml +=  "<td>"+houses[i].houseowner.first + ' ' + houses[i].houseowner.last + "</td>";
-                                    }
-                                    else if(itemsToShow[j] == 'ownerWechatUserName' ){
-                                        rowhtml += "<td title='Wechat ID: " + houses[i].houseowner['ownerWechatID']+"'>"+houses[i].houseowner[itemsToShow[j]] +"</td>";
-                                    }
-                                    else if(!houses[i][itemsToShow[j]]){
-                                        rowhtml += "<td>N/A</td>";
-                                    }
-                                    else{
-                                        rowhtml += "<td>"+houses[i][itemsToShow[j]] + "</td>"; 
-                                    }
-                                    //console.log(rowhtml);
-                                }
-
-                                //rowhtml += "<td><a onclick=' retrieveHouseInfo("+numberID+");' > View House Info</td>";
-                                rowhtml += "<td><button type='button' class='btn btn-info' onclick='retrieveHouseInfo("+houses[i].numberID+");resultSM.toHousePage("+i+")'>"+"View House"+"</button></td>";
-                                rowhtml += "<td><button type='button' class='btn btn-info' onclick='resultSM.toOwnerPage("+i+")'>View Owner</button></td>";
-                                rowhtml += "<td><a href='/house/modify/"+houses[i].numberID+"' class='btn btn-info' role='button'>House Modify</a></td>";
-                                if($('#inquiryID').val())
-                                    rowhtml += "<td><a class='btn btn-info' role='button' onclick='addToTrand("+ houses[i].numberID +");'>+</a></td>"
-                                attachHouseOwnerDiv(houses[i].houseowner,i);
-
-                                rowhtml += "</tr>";
-                                tablehtml += rowhtml;
                             }
                             showMarkers();
 
-                            $('#fillArea').html(tablehtml);
+                            //$('#fillArea').html(tablehtml);
+
+                            $('#pagination').pagination({
+                                items: houses.length,
+                                itemsOnPage:itemsOnPage,
+                                cssStyle: 'light-theme',
+                                onPageClick: function(pageNumber,event){
+
+                                    $("#fillArea tr").remove();
+                                    var tablehtml = "";
+                                    for(var i = $(this)[0].itemsOnPage* (pageNumber-1); i<$(this)[0].itemsOnPage*pageNumber&&i<$(this)[0].items;++i){
+                                        //var rowhtml = "<tr id='house_" + housesbuf[i]['numberID'] + "'>";
+                                        var rowhtml ="<tr>"
+                                        var numberID = housesbuf[i].numberID;
+                                        for(var j =0 ; j< itemsToShow.length;++j){
+
+                                            if(itemsToShow[j]=='numberID'){
+                                                rowhtml += "<td><a href='#map_div' onclick = 'makeMarkerBounce("+i+");hightlightrow("+ i +")' >" + 
+                                                            numberID + "</a></td>";
+                                            }
+                                            else if(itemsToShow[j] == 'OwnerName'){
+                                                rowhtml +=  "<td>"+housesbuf[i].houseowner.first + ' ' + housesbuf[i].houseowner.last + "</td>";
+                                            }
+                                            else if(itemsToShow[j] == 'ownerWechatUserName' ){
+                                                rowhtml += "<td title='Wechat ID: " + housesbuf[i].houseowner['ownerWechatID']+"'>"+housesbuf[i].houseowner[itemsToShow[j]] +"</td>";
+                                            }
+                                            else if(!housesbuf[i][itemsToShow[j]]){
+                                                rowhtml += "<td>N/A</td>";
+                                            }
+                                            else{
+                                                rowhtml += "<td>"+housesbuf[i][itemsToShow[j]] + "</td>"; 
+                                            }
+                                        }
+                                        rowhtml += "<td><button type='button' class='btn btn-info' onclick='retrieveHouseInfo("+houses[i].numberID+");resultSM.toHousePage("+i+")'>"+"View House"+"</button></td>";
+                                        rowhtml += "<td><button type='button' class='btn btn-info' onclick='resultSM.toOwnerPage("+i+")'>View Owner</button></td>";
+                                        rowhtml += "<td><a href='/house/modify/"+houses[i].numberID+"' class='btn btn-info' role='button'>House Modify</a></td>";
+                                        if($('#inquiryID').val())
+                                            rowhtml += "<td><a class='btn btn-info' role='button' onclick='addToTrand("+ houses[i].numberID +");'>+</a></td>"
+                                        attachHouseOwnerDiv(houses[i].houseowner,i);
+
+                                        rowhtml += "</tr>";
+                                        tablehtml += rowhtml;      
+                                    }
+                                    $('#fillArea').html(tablehtml);
+                                }
+                            });
+
+                            $('#pagination').pagination('selectPage',1);
                         }
                         else
                         {
@@ -1170,18 +1200,23 @@
             changeswitchview();
         }
 
-        function setinfohtml(title,id,addr)
+        function setinfohtml(index,title,id,addr)
         {
             html = "<div>"+
                     "<h4>" + title + "</h4><h5>No:"+ id + " </h5><p>Address:" + addr + "<br>"+
-                    "<a href='#house_"+id+"' onclick=\"$('#house_"+id+"\').animateCss('bounce 1s')\";>View Details</a></p></div>";
+                    "<a onclick=jumptableTospecific("+ index +");>View Details</a></p></div>";
             infowindow.setContent(html);
         }
 
-        function infocallbackClosure(marker,title,id,addr,callback){
+        function jumptableTospecific(index){
+            hightlightrow(index);
+            location.hash = '#' + "housestable";
+        }
+
+        function infocallbackClosure(marker,title,id,addr,index,callback){
             return function(){
                 var caller = event.target;
-                callback(title,id,addr);
+                callback(index,title,id,addr);
                 infowindow.open(map,marker);
             }   
         }
@@ -1190,6 +1225,16 @@
             var marker = housemarkers[index];
             marker.setAnimation(google.maps.Animation.BOUNCE); 
             setTimeout(function(){ marker.setAnimation(null); }, 2000);  
+        }
+
+        function hightlightrow(index){
+            if(index<housesbuf.length){
+                $('#pagination').pagination('selectPage', parseInt((index+1)/itemsOnPage + 1));
+                $('.highlight').removeClass('highlight');
+
+                $('tr:nth-child('+ (index+1)%itemsOnPage +')').addClass('highlight');
+                // $('#house_"+id+"\').animateCss('bounce 1s')
+            }
         }
         function drawCircle(search_geo,radius)
         {
@@ -1443,7 +1488,7 @@
             return {
                 toOwnerPage:function(index){
                     $('#housestable').fadeOut();
-                    //$('#ownerdiv').show();
+                    $('#pagination').hide();
                     $('#ownerinfo_'+index).show();
                     $("#back_menu").css("visibility", "visible");
                     changestate("Owner");
@@ -1451,6 +1496,7 @@
                 },
                 toHousePage: function(index){
                     $('#housestable').fadeOut();
+                    $('#pagination').hide();
                     $('#housediv').fadeIn();
                     $("#back_menu").css("visibility", "visible");
                     changestate("House");
@@ -1458,6 +1504,7 @@
                 },
                 toTablePage:function(){
                     $('#housestable').fadeIn();
+                    $('#pagination').show();
                     if(getstates()=="Owner"){
                         //$('#ownerdiv').hide();
                         $('#ownerinfo_'+getDivindex()).hide();
