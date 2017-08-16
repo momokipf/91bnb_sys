@@ -43,11 +43,13 @@ class Houseowner extends Model
         $newhouse->setHouseID();
         $point = $houseinput['longitude'].',' .$houseinput['latitude'];
         $newhouse->setLocationAttribute($point);
+        $newhouse->dateHouseAdded = date('Y-m-d',time());
         $this->houses()->save($newhouse);
         return $newhouse;
     }
 
     public function getownerID(){
+        Log::info($this);
         $id = Houseowner::select('houseOwnerID')->orderBy('houseOwnerID','desc')->first()->houseOwnerID;
         if($id){
             $this->houseOwnerID = $id+1;
@@ -55,6 +57,7 @@ class Houseowner extends Model
         else{
             $this->houseOwnerID = 20000;
         }
+        return $this->houseOwnerID;
     }
 
 

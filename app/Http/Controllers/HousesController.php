@@ -357,7 +357,7 @@ class HousesController extends Controller
     		if($request->ajax() || $request->wantsJson()){
     			//Log::info("Send json back to client ".$newhouse);
     			return response()
-    					->json(['status'=>'success'])
+    					->json(['status'=>'success', 'houseinfo'=>$newhouse])
     					->header('Content','json');
     		}
     	}
@@ -681,7 +681,6 @@ class HousesController extends Controller
 
         		$housebuilder = $housebuilder->whereBetween('numOfRooms',[$numOfRoomsFrom,$numOfRoomsTo]);
 
-                log::info($price*(100+$rangerate)/100);
                 if($price != 0 ){ 
                     if($monthdaily="on")
                         $housebuilder = $housebuilder

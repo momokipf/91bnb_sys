@@ -128,7 +128,7 @@
 							<div class="row">
 
 			                    <div class="col-sm-2">
-							        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#search_result_modal" id='forbounce' type="submit" >Search</button>
+							        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#search_result_modal" type="submit" >Search</button>
 			                        <button class="btn btn-warning btn-sm" type="reset">Clear</button>
 			                    </div>
 			                </div>
@@ -1112,11 +1112,9 @@
 							});
 						}
 						else{
-							houseOwner = data.owner;
-							$("#houseOwnerID").val(houseOwner.houseOwnerID);
 							$('#new_house_owner_modal').modal('toggle');
 							bootbox.dialog({
-								message:"Succussfully added new house owner. ID: " + houseOwner,
+								message:"Succussfully added new house owner. ID: " + data.ownerid,
 								title: "Confirmation",
 								buttons: {
 									main: {
@@ -1125,6 +1123,7 @@
 									}
 								}
 							});
+							vieweffect(data.ownerid);
 						}
 					}
 					,
@@ -1230,7 +1229,7 @@
 			});
 
 
-			$('#forbounce').animateCss('bounce 1s infinite');
+			//$('#forbounce').animateCss('bounce 1s infinite');
 		});
 
 	

@@ -32,7 +32,7 @@ class House extends Model
 
 	protected $hidden = ['location'];
 
-    protected $fillable =['houseID','fullHouseID','houseOwnerID','houseIDByOwner',
+    protected $fillable =['houseID','fullHouseID','houseOwnerID','houseIDByOwner','dateHouseAdded',
                           'region','houseAddress','country','state','city','houseZip','longitude','latitude',
                           'houseType','houseTypeOther','size','numOfRooms','numOfBaths','numOfBeds',
                           'maxNumOfGuests','onOtherWebsite'];

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
+use DB;
 use App\Houseowner;
 
 
@@ -13,7 +14,7 @@ class HouseOwnersController extends Controller
 {
     //
 
-    private $searchFields = array('first','last','ownerWechatID','ownerWechatUserName');
+    private $searchFields = array('houseOwnerID','first','last','ownerWechatID','ownerWechatUserName');
 
 	public function __construct() {
 		$this->middleware('auth');
@@ -80,6 +81,8 @@ class HouseOwnersController extends Controller
 
         $similarowner = $querybuilder->get();
 
+        Log::info(DB::getQueryLog());
+
         if($request->ajax() || $request->wantsJson()){
             return response($similarowner)
                         ->header('Content','json');
@@ -87,7 +90,7 @@ class HouseOwnersController extends Controller
 
     }
 
-    public function store(Request $request){
+    public function add(Request $request){
         Log::info($request->all());
         $houseownerSearchField = $request->only($this->searchFields);
         $isduplicate = !(Houseowner::FindSimilar($houseownerSearchField,'AND')->count()==0);
@@ -96,7 +99,7 @@ class HouseOwnersController extends Controller
             $duplicateRecords = Houseowner::FindSimilar($houseownerSearchField,'AND')->get();
             if($request->ajax() || $request->wantsJson()){
                 return response()
-                    ->json(['duplicate'=>$isduplicate,'owner'=>$duplicateRecords])
+                    ->json(['duplicate'=>$isduplicate,'ownerid'=>$duplicateRecords])
                     ->header('Content','json');
             }
         }
@@ -119,13 +122,13 @@ class HouseOwnersController extends Controller
                 'bankName'=> $input['bankName'],
                 'bankRountingNumber'=> $input['bankRountingNumber'],
                 'bankAccountNumber' => $input['bankAccountNumber'],
+                'houseownerID' => 0,
                 ]);
-            $newowner->getownerID();
-            Log::info($newowner->houseOwnerID);
+            $houseownerID = $newowner->getownerID();
             $newowner->save();
             if($request->ajax() || $request->wantsJson()){
                 return response()
-                    ->json(['duplicate'=>$isduplicate,'owner'=>$newowner->houseOwnerID])
+                    ->json(['duplicate'=>$isduplicate,'ownerid'=>$houseownerID])
                     ->header('Content','json');
             }
         }

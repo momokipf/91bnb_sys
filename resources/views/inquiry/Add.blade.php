@@ -754,6 +754,9 @@
 				$('#checkIn').datepicker('hide');
 				$('#checkOut').focus();
 			});
+			$('#checkOut').change(function(){
+				$(this).datepicker('hide');
+			});
 
 
 			// $('.input-daterange').each(function(){

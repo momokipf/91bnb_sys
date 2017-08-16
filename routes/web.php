@@ -84,7 +84,7 @@ Route::post('house/modify/update/{numberID}','HousesController@update');
 
 Route::get('houseowner/{id}/{house?}','HouseOwnersController@ownerinfo');
 Route::post('houseowner/search/{similar?}','HouseOwnersController@search');
-Route::post('houseowner/add','HouseOwnersController@store');
+Route::post('houseowner/add','HouseOwnersController@add');
 
 Route::get('houseavailability/{id}','HouseAvailabilityController@get');
 Route::post('houseavailability/{id}/insert','HouseAvailabilityController@insert');
