@@ -130,7 +130,7 @@ class HouseAvailabilityController extends Controller
     						'Monrovia_0013'=>array('17867446.ics?s=3db0cd9df87b853420f9eb03958f95f9','#FF4040'),
     						'RH_0089'=>array('18044055.ics?s=b810601c619ff7db7cceadaa04341dff','#7FFFD4'),
     						'Irvine_0085'=>array('18584713.ics?s=976d6fc96ae42067327bf6565bbe7933','#FFD700'),
-    						'TempleCity_0001'=>array('18584713.ics?s=976d6fc96ae42067327bf6565bbe7933','#FF7F24'),
+    						'TempleCity_0001'=>array('18945692.ics?s=bd969f5e66c67c944ee4fc1f04972046','#FF7F24'),
     						'Arcadia_0128'=>array('18946103.ics?s=fb1388b36d6e0450e3c2ff3d537d4389','#FF1493'),
     						'Arcadia_0130'=>array('19309098.ics?s=3312405167315729456c561e8971bbf7','#F0FFFF'),
     						'Tustin_0003'=>array('19713586.ics?s=5f323ea05754bc2ce1af2f2259e6e6d5','#00FFFF'),

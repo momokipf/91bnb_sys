@@ -225,7 +225,7 @@ class HousesController extends Controller
 	*/
 
     public function store(Request $request){
-    	//Log::info($request->all());
+    	Log::info($request->all());
     	$input = $request->all();
     	//Log::info($input);
 
@@ -317,7 +317,8 @@ class HousesController extends Controller
 				$newroom->roomID = $i;
 				$newroom->roomType = $input['roomType_'.$i];
 				$newroom->roomBedType = $input['roomBedType_'.$i];
-				$newroom->roomBedTypeOther = $input['roomBedTypeOther_'.$i];
+				//$newroom->roomBedTypeOther = $input['roomBedTypeOther_'.$i];
+                $newroom->numOfBeds = $input['numOfBeds_'.$i];
 				$newroom->roomGuestMax = $input['maxGuestsnum_'.$i];
 				$newroom->roomCostDayPrice = $input['roomCostDayPrice_'.$i];
 				$newroom->roomCostWeekPrice = $input['roomCostWeekPrice_'.$i];

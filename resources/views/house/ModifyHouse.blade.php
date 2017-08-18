@@ -50,6 +50,16 @@
 			border-bottom: 1px solid #ddd;
 			border-radius: 0px 0px 5px 5px;
 		}
+		table th, td{
+			border: 1px solid Gainsboro;
+			border-collapse: collapse;
+		}
+		.bedtable th,td{
+			margin-left: 20px;
+			margin-top: 20px;
+			padding: 5px;
+			text-align: center;
+		}
 		a {
 			text-decoration: none;
 			display: inline-block;
@@ -306,35 +316,35 @@
 					<h5>Guests Info</h5>
 					<div class="row">
 						<div class="col-sm-2">
-							@if ($house->housingcondition->allowPregnant == 1)
+							@if (isset($house->housingcondition)&&$house->housingcondition->allowPregnant == 1)
 								<input type="checkbox" checked value="1" name="allowPregnant"> Allow Pregnant
 							@else
 								<input type="checkbox" value="1" name="allowPregnant"> Allow Pregnant
 							@endif
 						</div>
 						<div class="col-sm-2">
-							@if ($house->housingcondition->allowBaby == 1)
+							@if (isset($house->housingcondition)&&$house->housingcondition->allowBaby == 1)
 								<input type="checkbox" checked value="1" name="allowBaby"> Allow Baby
 							@else
 								<input type="checkbox" value="1" name="allowBaby"> Allow Baby
 							@endif
 						</div>
 						<div class="col-sm-2">
-							@if ($house->housingcondition->allowKid == 1)
+							@if (isset($house->housingcondition)&&$house->housingcondition->allowKid == 1)
 								<input type="checkbox" checked value="1" name="allowKid" id="allowKid"> Allow Kid
 							@else
 								<input type="checkbox" value="1" name="allowKid" id="allowKid"> Allow Kid
 							@endif
 						</div>
 						<div class="col-sm-2">
-							@if ($house->housingcondition->allowPets == 1)
+							@if (isset($house->housingcondition)&&$house->housingcondition->allowPets == 1)
 								<input type="checkbox" checked value="1" name="allowPets" id="allowPets"> Allow Pet
 							@else
 								<input type="checkbox" value="1" name="allowPets" id="allowPets"> Allow Pet
 							@endif
 						</div>
 						<div class="col-sm-2">
-							@if ($house->housingcondition->havePet == 1)
+							@if (isset($house->housingcondition)&&$house->housingcondition->havePet == 1)
 								<input type="checkbox" checked value="1" name="havePet" id="havePet"> Have Pet
 							@else
 								<input type="checkbox" value="1" name="havePet" id="havePet"> Have Pet
@@ -346,21 +356,21 @@
 						<div class="col-sm-2"></div>
 						<div class="col-sm-2"></div>
 						<div class="col-sm-2">
-							@if ($house->housingcondition->allowKid == 1)
+							@if (isset($house->housingcondition)&&$house->housingcondition->allowKid == 1)
 								<input id="allowKidAge" type="text" name="allowKidAge" class="form-control input-sm" value="{{$house->housingcondition->allowKidAge}}" placeholder="Allow Kids Age">
 							@else
 								<input id="allowKidAge" type="text" name="allowKidAge" class="form-control input-sm" disabled placeholder="Allow Kids Age">
 							@endif
 						</div>
 						<div class="col-sm-2">
-							@if ($house->housingcondition->allowPet == 1)
+							@if (isset($house->housingcondition)&&$house->housingcondition->allowPet == 1)
 								<input id="allowPetType" type="text" name="allowPetType" class="form-control input-sm" value="{{$house->housingcondition->allowPetType}}" placeholder="Allow Pet Type">
 							@else
 								<input id="allowPetType" type="text" name="allowPetType" class="form-control input-sm" disabled placeholder="Allow Pet Type">
 							@endif
 						</div>
 						<div class="col-sm-2">
-							@if ($house->housingcondition->havePet == 1)
+							@if (isset($house->housingcondition)&&$house->housingcondition->havePet == 1)
 								<input id="havePetType" type="text" name="havePetType" class="form-control input-sm" value="{{$house->housingcondition->havePetType}}" placeholder="Have Pet Type">
 							@else
 								<input id="havePetType" type="text" name="havePetType" class="form-control input-sm" disabled placeholder="Have Pet Type">
@@ -548,7 +558,7 @@
 					<h5>Additional Note</h5>
 					<div class="row">
 						<div class="col-sm-6">
-							<textarea name="additionalNote" ROWS=10 COLS=100 class="form-control input-sm">{{$house->housingcondition->additionalNote}}</textarea>
+							<textarea name="additionalNote" ROWS=10 COLS=100 class="form-control input-sm">@if(isset($house->housingcondition)){{$house->housingcondition->additionalNote}}@endif</textarea>
 						</div>
 					</div>
 				</div>
@@ -728,6 +738,34 @@
 										</select>
 									</div>
 								</div>
+
+								<div class='row'>
+									<div class='col-sm-4'>
+										<label>Number of Beds</label>
+										<input name='numOfBeds_{{$i}}'type='number' min='1' class='form-control input-sm' onchange='bedsnumberchange(this)' value='{{$house->houserooms[$i-1]->numOfBeds}}'>
+
+										<table class='bedtable'>
+											<thead>
+												<tr>
+													<th style='min-width:50px;'>#</th>
+													<th style='min-width:200px;'>Bed Type</th>
+												</tr>
+											</thead>
+											<tbody>
+												@for($j=0;$j<$house->houserooms[$i-1]->numOfBeds;++$j)
+													<tr>
+														<th>{{$j+1}}</th>
+														<th>
+															<select class='form-control input-sm bedtype' >
+															</select>
+														</th>
+													</tr>
+												@endfor
+											</tbody>
+										</table>
+									</div>	
+								</div>
+
 								<div class='row'>
 									<div class='col-sm-2'>
 										<label>Bed Type</label>
@@ -980,40 +1018,55 @@
 					var option = "<option value='" + data[i] + "'> "+data[i]+"</option>";
 					bedtype += option;
 				}
+				$('.bedtype').html(bedtype);
 				var room = "{{$house->houserooms}}";
 				bedT = room.replace(/&quot;/g, '"');
 				bedT = JSON.parse(bedT);
-				for (var i = 1; i <= $("#roomsdiv").children().length; i++) {
-					$("#roomBedType_"+i).html(bedtype);
-					$("#roomBedType_"+i).val(bedT[0].roomBedType);
+				for (var i = 0; i <$("#roomsdiv").children().length; i++) {
+					bedTarray = (bedT[i].roomBedType).split(';');
+					var tableele = $('#roomsdiv').children().eq(i).find('table');
+					var rowCount = $('tr', $(tableele).find('tbody')).length;
+					for(var j = 0 ; j < rowCount ; ++j ){
+						$('tbody > tr',tableele).eq(j).find('select').val(bedTarray[j]);
+					}
 				}
 			});
 
 			$('#addRoom').click(function(){
 				var count = $("#roomsdiv").children().length + 1;
-				var htmlstr = "<div class='well' style='background-color:white;margin-bottom:30px' id=room"+count+">";
+				var htmlstr = "<div class='well' style='background-color:white;margin-bottom:30px' id=room_"+count+">";
 				htmlstr += "<h4>Room "+count+"</h4><div class='row'><div class='col-sm-2'><label>Room ID</label>" + 
 						   "<input readonly type='number' class='form-control input-sm' name='roomID_"+count+"' value="+count+"></div>"+
 						   "<div class='col-sm-2'><label>Room Type</label>" +
-						   "<select class='form-control input-sm' name='roomType_"+count+"' id='roomType_"+count+" '>"+roomtype+"</select></div></div>"+
-						   "<div class='row'><div class='col-sm-2'><label>Bed Type</label><select class='form-control input-sm' name='roomBedType_"+count+"' id='roomBedType_"+count+"'>"+bedtype+"</select></div>"+
-						   "<div class='col-sm-2' id='roomBedTypeotherdiv_"+count+"'><label>Bed Type Other</label>"+
-						   "<input name='roomBedTypeOther_"+count+"' id='roomBedTypeOther_"+count+"' 'text' class='form-control input-sm'></div>"+
-						   "<div class='col-sm-2'><label>Max Guests number</label><input name='maxGuestsnum_"+count+"' id='maxGuestsnum_"+count+"' type='number' class='form-control input-sm' min='0'></div></div>"+
+						   "<select class='form-control input-sm' name='roomType_"+count+"' id='roomType_"+count+" ' onchange='roomtypechange(this)'>"+roomtype+"</select></div>"+
+
+						   "<div class='col-sm-2' id='roomTypeOtherDiv_"+count+"' hidden><label>Room Type Other</label>"+
+						   "<input name='roomTypeOther_"+count+"'  type='text' class='form-control input-sm' ></div></div>"+
+
+						   "<div class='row'><div class='col-sm-4'><label>Number of Beds</label><input name='numOfBeds_"+count+"'type='number' min='1' value='0'  class='form-control input-sm' onchange='bedsnumberchange(this)'>"+
+						   "<table class='bedtable'><thead><tr><th style='min-width:50px;'>#</th><th style='min-width:200px;'>Bed Type</th></tr></thead><tbody></tbody></table></div></div>"+
+
+
+						   "<div class='row'>"+
+						   // "<div class='col-sm-2'><label>Bed Type</label><select class='form-control input-sm' name='roomBedType_"+count+"'id='roomBedType_"+count+"' onchange='bedtypechange(this)'>"+bedtype+"</select></div>"+
+						   // "<div class='col-sm-2' id='roomBedTypeotherdiv_"+count+"' hidden><label>Bed Type Other</label>"+
+						   // "<input name='roomBedTypeOther_"+count+"' id='roomBedTypeOther_"+count+"' type='text' class='form-control input-sm'></div>"+
+
+						   "<div class='col-sm-2'><label>Max Guests number</label><input name='maxGuestsnum_"+count+"' id='maxGuestsnum_"+count+"' type='number' class='form-control input-sm' value='0' min='1'></div></div>"+
 						   "<div class=row><div class='col-sm-2'><label>Cost Day Price</label><div class='input-group'><span class='input-group-addon'>$</span>"+
-						   "<input type='number' name='roomCostDayPrice_"+count+"' min='0' class='form-control input-sm'><span class='input-group-addon'>USD</span></div></div>"+
+						   "<input type='number' name='roomCostDayPrice_"+count+"' min='0' value='0' class='form-control input-sm'><span class='input-group-addon'>USD</span></div></div>"+
 						   "<div class='col-sm-2'><label>Cost Week Price</label><div class='input-group'><span class='input-group-addon'>$</span>"+
-						   "<input type='number' name='roomCostWeekPrice_"+count+"' class='form-control input-sm' min='0'><span class='input-group-addon'>USD</span></div></div>"+
+						   "<input type='number' name='roomCostWeekPrice_"+count+"' class='form-control input-sm' value='0' min='0'><span class='input-group-addon'>USD</span></div></div>"+
 						   "<div class='col-sm-2'><label>Cost Month Price</label><div class='input-group'><span class='input-group-addon'>$</span>"+
-						   "<input type='number' name='roomCostMonthPrice_"+count+"' class='form-control input-sm' min='0'><span class='input-group-addon'>USD</span></div></div></div>"+
+						   "<input type='number' name='roomCostMonthPrice_"+count+"' class='form-control input-sm' value='0' min='0'><span class='input-group-addon'>USD</span></div></div></div>"+
 
 						   "<div class='row'><div class='col-sm-2'><label>Cost Utility</label><div class='input-group'><span class='input-group-addon'>$</span>"+
-						   "<input type='number' name='roomCostUtility_"+count+"' class='form-control input-sm' min='0'><span class='input-group-addon'>USD</span></div></div>"+
+						   "<input type='number' name='roomCostUtility_"+count+"' class='form-control input-sm' value='0' min='0'><span class='input-group-addon'>USD</span></div></div>"+
 						   "<div class='col-sm-4'><label>Utility Note</laebl><textarea class='form-control' rows='4' cols='50' name='utilityNote_"+count+"' placeholder='What&#39s included? Ex: Wi-Fi, Electricity, Water, Gas...'></textarea></div></div>"+
-							   "<div class='row'><div class='col-sm-2'><label>Cleaning Fee</label><div class='input-group'><span class='input-group-addon'>$</span>"+
-							   "<input type='number' name='roomCostCleaning_"+count+"' class='form-control input-sm' min='0'><span class='input-group-addon'>USD</span></div></div>"+
-							   "<div class='col-sm-2'><label>Cost Security Deposit</label><div class='input-group'><span class='input-group-addon'>$</span>"+
-							   "<input type='number' name='roomCostSecurityDeposit_"+count+"' class='form-control input-sm'><span class='input-group-addon'>USD</span></div></div></div>"+
+ 						   "<div class='row'><div class='col-sm-2'><label>Cleaning Fee</label><div class='input-group'><span class='input-group-addon'>$</span>"+
+ 						   "<input type='number' name='roomCostCleaning_"+count+"' class='form-control input-sm' value='0' min='0'><span class='input-group-addon'>USD</span></div></div>"+
+ 						   "<div class='col-sm-2'><label>Cost Security Deposit</label><div class='input-group'><span class='input-group-addon'>$</span>"+
+ 						   "<input type='number' name='roomCostSecurityDeposit_"+count+"' class='form-control input-sm' value='0' min='0' ><span class='input-group-addon'>USD</span></div></div></div>"+
 						   "</div>";
 				$('#roomsdiv').append(htmlstr);
 			});
@@ -1063,6 +1116,26 @@
 				});
 			});
 		});
+
+	function bedsnumberchange(ele){
+		var tableele = $(ele).siblings('table');
+		var rowCount = $('tr', $(tableele).find('tbody')).length;
+		var numberofbeds = parseInt($(ele).val());
+
+		if(rowCount<numberofbeds){
+			for(var i=rowCount;i<numberofbeds;++i){
+				var markup = "<tr><td>"+(i+1)+"</td><td><select class='form-control input-sm'>"+bedtype+"</select></td></tr>";
+				$('tbody',tableele).append(markup);
+			}
+		}
+		else{
+			for(var i=numberofbeds+1;i<=rowCount;++i){
+				$('tbody > tr:nth-child('+i+')',tableele).remove();
+			}
+		}
+
+
+	}	
 
 	function insertDaterange(){
 		var toSend = {};

@@ -45,7 +45,7 @@ class CreateHouseTable extends Migration
 
                 $table->integer('size')->nullable();
                 $table->integer('numOfRooms')->nullable();
-                $table->integer('numOfBaths')->nullable();
+                $table->float('numOfBaths')->nullable();
                 $table->integer('numOfBeds')->nullable();
                 $table->integer('maxNumOfGuests')->nullable();
 
