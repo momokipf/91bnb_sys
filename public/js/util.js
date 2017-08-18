@@ -27,8 +27,8 @@ function loadOpt()
 
 	$('.country').load("/list/countryListOption");  
 	$('.roomType').load("/list/roomTypeListOption",function(){
-
 	});
+
 	$('.reasonofDecline').load("/list/declineReasonList");
 
 	$.get("/resource/houseTypes",function(data,status){
@@ -87,8 +87,10 @@ function bindhandler(){
 }
 
 
-function sourcechange(ele){
-
+function getSearchParams(k){
+ var p={};
+ location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(s,k,v){p[k]=v})
+ return k?p[k]:p;
 }
 
 function converttimetosql(str){

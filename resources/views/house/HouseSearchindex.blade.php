@@ -81,7 +81,6 @@
             </ul>
 
             <div class="tab-content">
-
                     <!-- house condition -->
                 <div class="tab-pane fade in active" id="aboutLocation">
                     <form id="houseSearchForm" action="/houses/results" method="GET">
@@ -121,6 +120,8 @@
                                     <input id='postal_code' name="zipcode" maxlength="5">
                                     <input id='search_latitude' name='search_latitude'>
                                     <input id='search_longitude' name='search_longitude'>
+                                    <input name='houseID' >
+                                    <input name='houseOwnerID' >
                             </div>
 
                             <div class="row">
@@ -303,21 +304,20 @@
                 </div> <!-- / house condition -->
 
                 <div class="tab-pane fade" id="searchByHouseID">
-                        <form id ="houseIDsearchForm" class="searchtypediv">
-                            {{csrf_field()}}
-                            <div class="row">
-                                <div class="col-lg-8">
-                                    <label> House ID </label>
-                                    @if(isset($fullHouseID))
-                                    <input class="form-control input-sm" type="text" id="houseID" name="houseID" placeholder="Format: 91bnb_State_City_0000" value="{{$fullHouseID}}">
-                                    @else
-                                    <input class="form-control input-sm" type="text" id="houseID" name="houseID" placeholder="Format: 91bnb_State_City_0000">
-                                    @endif
-                                </div>
+                    <form id ="houseIDsearchForm" class="searchtypediv">
+                        {{csrf_field()}}
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <label> House ID </label>
+                                @if(isset($fullHouseID))
+                                <input class="form-control input-sm" type="text" id="houseID" name="houseID" placeholder="Format: 91bnb_State_City_0000" value="{{$fullHouseID}}">
+                                @else
+                                <input class="form-control input-sm" type="text" id="houseID" name="houseID" placeholder="Format: 91bnb_State_City_0000">
+                                @endif
                             </div>
-                        </form>
-                    </div>
-
+                        </div>
+                    </form>
+                </div>
 
                 <div class="tab-pane fade" id="searchByOwner">
                     <form id ="ownersearchForm" class="searchtypediv">
@@ -479,6 +479,7 @@
             else{
                 $('#knowowneridDiv').hide();
                 $('#dontknowowneridDiv').show();
+                $('#dontknowowneridDiv').find('input').val('');
             }
         }
         function doload(){
@@ -491,8 +492,8 @@
     <script>
 
         $(document).ready(function(){
-            $("#ownersearch").click(function(){
-                var toSend = $('#adhouseSearchForm').serialize();
+            $("#ownerIDsearch").click(function(){
+                var toSend = $('#ownersearchForm').serialize();
                 $.ajax({
                     type:"POST",
                     url:"/houseowner/search/similar",
@@ -543,118 +544,15 @@
                 if(!houseSearchcheck()){
                     return;
                 }
+
+
+                if($('#houseOwnerID').val()){
+                    $('#houseSearchForm').find("input[name='houseOwnerID']").val($('#houseOwnerID').val());
+                }
+                if($('#houseID').val()){
+                    $('#houseSearchForm').find("input[name='houseID']").val($('#houseID').val());
+                }
                 $('#houseSearchForm').submit();
-                // var toSend = $('#houseSearchForm').serializeArray();
-                // if($('#houseOwnerID').val()){
-                //     var houseownernode = document.getElementById('houseOwnerID');
-                //     toSend.push({'name':houseownernode.name,'value':houseownernode.value});
-                // }
-                // if($('#houseID').val()){
-                //     var houseidnode= document.getElementById('houseID');
-                //     toSend.push({'name':houseidnode.name,'value':houseidnode.value});
-                // }
-                // if(search_geo){
-                //     var location = search_geo['location'];
-                //     toSend.push({'name':'search_latitude','value':location['lat']});
-                //     toSend.push({'name':'search_longitude','value':location['lng']});
-                // }
-
-                // $.ajax({
-                //     type:"GET",
-                //     url:"/house/search",
-                //     data:$.param(toSend),
-                //     datatype:'json',
-                //     success: function(data){
-                //         if(map){
-                //             deleteMarkers();
-                //         }
-                //         //alert(JSON.stringify(data));
-
-                //         var houses = data.houses;
-                //         if(houses){
-                //             var tablehtml = "";
-                //             if(houses.length>0){
-
-                //                 $("#showResult").show();
-                //                 resultSM = makeResuiltSM();
-
-                //                 for(var i=0;i<houses.length;++i)
-                //                 {
-                //                     var loc = new google.maps.LatLng(houses[i].latitude,houses[i].longitude);
-                //                     var address = houses[i].houseAddress+','+houses[i].city+','+houses[i].state;
-                //                     var marker = new google.maps.Marker({
-                //                         position:loc,
-                //                         title: houses[i].fullHouseID,
-                //                         map:map
-                //                     });
-
-                //                     google.maps.event.addListener(marker,'click',infocallbackClosure(marker,houses[i].fullHouseID,houses[i].numberID,address,setinfohtml));
-                //                     housemarkers.push(marker);
-                //                     if (houses[i]['rentShared'] == '1') {
-                //                         houses[i]['rentShared'] = 'Whole';
-                //                     } else if (houses[i]['rentShared'] == '-1') {
-                //                         houses[i]['rentShared'] = 'Share';
-                //                     } else {
-                //                         houses[i]['rentShared'] = 'Either';
-                //                     }
-                //                     houses[i]['minStayTerm'] = houses[i]['minStayTerm'] + ' ' + houses[i]['minStayUnit'];
-
-                //                     var rowhtml = "<tr id='house_" + houses[i]['numberID'] + "'>";
-                //                     var numberID = houses[i].numberID;
-                //                     for(var j =0 ; j< itemsToShow.length;++j){
-
-                //                         if(itemsToShow[j]=='numberID'){
-                //                             rowhtml += "<td><a href='#map_div' onclick = 'makeMarkerBounce("+i+");' >" + 
-                //                                         numberID + "</a></td>";
-                //                         }
-                //                         else if(itemsToShow[j] == 'OwnerName'){
-                //                             rowhtml +=  "<td>"+houses[i].first + ' ' + houses[i].last + "</td>";
-                //                         }
-                //                         else if(itemsToShow[j] == 'ownerWechatUserName' ){
-                //                             rowhtml += "<td title='Wechat ID: " + houses[i]['ownerWechatID']+"'>"+houses[i][itemsToShow[j]] +"</td>";
-                //                         }
-                //                         else if(!houses[i][itemsToShow[j]]){
-                //                             rowhtml += "<td>N/A</td>";
-                //                         }
-                //                         else{
-                //                             rowhtml += "<td>"+houses[i][itemsToShow[j]] + "</td>"; 
-                //                         }
-                //                         //console.log(rowhtml);
-                //                     }
-
-                //                     //rowhtml += "<td><a onclick=' retrieveHouseInfo("+numberID+");' > View House Info</td>";
-                //                     rowhtml += "<td><button type='button' class='btm btn-info' onclick='retrieveHouseInfo("+houses[i].numberID+");resultSM.toHousePage("+i+")'>"+"View House Info"+"</button></td>";
-                //                     rowhtml += "<td><button type='button' class='btm btn-info' onclick='resultSM.toOwnerPage("+i+")'>View Owner Info</button></td>";
-                //                     rowhtml += "<td><button type='button' class='btm btn-info' href='MainPage'>Modify</button></td>"
-                //                     attachHouseOwnerDiv(houses[i],i);
-
-                //                     rowhtml += "</tr>";
-                //                     tablehtml += rowhtml;
-                //                 }
-                //                 showMarkers();
-
-                //                 $('#fillArea').html(tablehtml);
-                //             }
-                //             else
-                //             {
-                //                 $("#showResult").hide();
-                //                 // Notice that there is no result
-                //             }
-                //         }
-
-                //         if(search_geo){
-                //             mapMovecenter(search_geo);
-                //         }
-                //         else{
-                //             //alert(JSON.stringify(data.geo_center));
-                //             var loc = new google.maps.LatLng(data.geo_center.location.lat,data.geo_center.location.lng);
-                //             search_geo = {'location': loc};
-                //             mapMovecenter(search_geo);
-                //         }
-
-                //         search_geo=null;
-                //     }
-                // });
             });
         });
         
@@ -670,7 +568,7 @@
 
         function vieweffect(id) {
             $('#houseOwnerID').val(id);
-            $('#ownerknownswitch').attr( "checked",true);
+            $('#ownerknownswitch').prop( "checked",true);
             changeswitchview();
         }
 

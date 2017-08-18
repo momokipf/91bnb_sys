@@ -1308,13 +1308,19 @@
 
 		//TODO: This can be integrated with the sarch reaction function
 
-		function findSimilarOwners(){
+		function findSimilarOwners(exactly){
+			if(exactly===undefined){
+				exactly = false; 
+			}
+			else{
+				exactly = true;
+			}
 			$("#similarResult").empty();
 			var toSend = $("#new_house_owner_form").serialize();//ownerWechatID=XXXX
 			$.ajax({
 				type:"post",
 				dataType: "json",
-				url:'/houseowner/search/similar',
+				url:(exactly)?'/houseowner/search/similar':'/houseowner/search',
 				data: toSend,
 				success: function(data) {
 					//alert(JSON.stringify(data));

@@ -451,7 +451,7 @@
 
                                 </div>
                             </div>
-                            <div id="dontknowowneridDiv" style="display:none;">
+                            <div id="dontknowowneridDivdon" style="display:none;">
                                 <div class="row">
                                     <div class="col-lg-2">
                                         <label>First Name</label>
@@ -867,6 +867,7 @@
             else{
                 $('#knowowneridDiv').hide();
                 $('#dontknowowneridDiv').show();
+                $('#dontknowowneridDiv').find('input').val(' ');
             }
         }
         function doload(){
@@ -931,33 +932,45 @@
                 var houseaddress = $('#houseAddress').val();
                 if(!houseaddress){
                     houseaddress = $('#country').val()+' '+$('#administrative_area_level_1').val()+' '+$('#locality').val();
-
                 }
-                console.log(houseaddress);
-                $.ajax({
-                    url:'https://maps.googleapis.com/maps/api/geocode/json?',
-                    type:'GET',
-                    data: {'address':houseaddress, 'key':'AIzaSyCpF-_i-utIH6cZl94zpu4C5vx_FBDDI9s'},
-                    datatype:'json',
-                    success: function(data){
-                        if(data.results.length==0){
-
-                        }
-                        else{
-                            var longitude=data.results[0].geometry.location.lng;
-                            var latitude =data.results[0].geometry.location.lat;
-                            $('#houseSearchForm').find('input[name="search_latitude"]').val(latitude);
-                            $('#houseSearchForm').find('input[name="search_longitude"]').val(longitude);
-                        }
-
-                        search_geo = data.results[0].geometry;
-
-                        realsearch()
-                    },
-                    error: function(){
-
+                if(!houseaddress.trim()){
+                    var toSend = $('#houseSearchForm').serializeArray();
+                    if(getSearchParams('houseID')){
+                        toSend.push({'name':'houseID','value':getSearchParams('houseID')});
                     }
-                });
+                    if(getSearchParams('houseOwnerID')){
+                        toSend.push({'name':'houseOwnerID','value':getSearchParams('houseOwnerID')});
+                    }
+                    console.log(toSend);
+                    realsearch(toSend);
+                }
+                else{
+                    console.log(houseaddress);
+                    $.ajax({
+                        url:'https://maps.googleapis.com/maps/api/geocode/json?',
+                        type:'GET',
+                        data: {'address':houseaddress, 'key':'AIzaSyCpF-_i-utIH6cZl94zpu4C5vx_FBDDI9s'},
+                        datatype:'json',
+                        success: function(data){
+                            if(data.results.length==0){
+
+                            }
+                            else{
+                                var longitude=data.results[0].geometry.location.lng;
+                                var latitude =data.results[0].geometry.location.lat;
+                                $('#houseSearchForm').find('input[name="search_latitude"]').val(latitude);
+                                $('#houseSearchForm').find('input[name="search_longitude"]').val(longitude);
+                            }
+
+                            search_geo = data.results[0].geometry;
+
+                            realsearch();
+                        },
+                        error: function(){
+
+                        }
+                    });
+                }
             }
             else{
                 var loc = new google.maps.LatLng($('#houseSearchForm').find('input[name="search_latitude"]').val(),$('#houseSearchForm').find('input[name="search_longitude"]').val());
@@ -1196,7 +1209,7 @@
 
         function vieweffect(id) {
             $('#houseOwnerID').val(id);
-            $('#ownerknownswitch').attr( "checked",true);
+            $('#ownerknownswitch').prop( "checked",true);
             changeswitchview();
         }
 

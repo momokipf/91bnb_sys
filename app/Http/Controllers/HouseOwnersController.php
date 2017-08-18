@@ -14,7 +14,7 @@ class HouseOwnersController extends Controller
 {
     //
 
-    private $searchFields = array('houseOwnerID','first','last','ownerWechatID','ownerWechatUserName');
+    private $searchFields = array('houseOwnerID','first','last','ownerWechatID','ownerWechatUserName','ownerUsPhoneNumber');
 
 	public function __construct() {
 		$this->middleware('auth');
@@ -97,6 +97,7 @@ class HouseOwnersController extends Controller
         $houseownerSearchField = $request->only($this->searchFields);
         if($isduplicate==TRUE){
             $duplicateRecords = Houseowner::FindSimilar($houseownerSearchField,'AND')->get();
+            Log::info($duplicateRecords);
             if($request->ajax() || $request->wantsJson()){
                 return response()
                     ->json(['duplicate'=>$isduplicate,'ownerid'=>$duplicateRecords])

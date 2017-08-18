@@ -101,13 +101,13 @@ class LoginController extends Controller
                 'active' => 1
             ])){
             //Log::info(Auth::user());
-            return redirect('/MainPage');
+            return \Redirect::intended('/MainPage');
 
             //return redirect('/welcome');
         }
         else{
             // $this->incrementLoginAttempts($request);
-
+            //dd($errors);
             return  \Redirect::intended('/login')
                 ->withInput()
                 ->with('status','login failed');
