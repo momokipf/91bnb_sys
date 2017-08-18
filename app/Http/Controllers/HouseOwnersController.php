@@ -93,9 +93,12 @@ class HouseOwnersController extends Controller
     public function add(Request $request){
         Log::info($request->all());
         $houseownerSearchField = $request->only($this->searchFields);
+
+        $houseownerSearchField['ownerUsPhoneNumber'] = str_replace(' ', '', $houseownerSearchField['ownerUsPhoneNumber']);
+
         $isduplicate = !(Houseowner::FindSimilar($houseownerSearchField,'AND')->count()==0);
         $houseownerSearchField = $request->only($this->searchFields);
-        if($isduplicate==TRUE){
+        if($isduplicate==false){
             $duplicateRecords = Houseowner::FindSimilar($houseownerSearchField,'AND')->get();
             Log::info($duplicateRecords);
             if($request->ajax() || $request->wantsJson()){

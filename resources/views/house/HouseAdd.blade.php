@@ -1063,9 +1063,15 @@
 						htmlcont += "</table></div>";
 						}
 						$("#display_search_result").html(htmlcont);
+						$('#loadele').removeClass("loading");
+					},
+					error: function(){
+						$('#loadele').removeClass("loading");
 					}
 
+
 				});
+				$('#loadele').addClass("loading");
 
 
 			});
