@@ -98,7 +98,7 @@ class HouseOwnersController extends Controller
 
         $isduplicate = !(Houseowner::FindSimilar($houseownerSearchField,'AND')->count()==0);
         $houseownerSearchField = $request->only($this->searchFields);
-        if($isduplicate==false){
+        if($isduplicate==TRUE){
             $duplicateRecords = Houseowner::FindSimilar($houseownerSearchField,'AND')->get();
             Log::info($duplicateRecords);
             if($request->ajax() || $request->wantsJson()){
