@@ -1049,6 +1049,7 @@
 										"<th style='min-width:100px;'>Last Name</th>"+
 										"<th style='min-width:100px;'>WeChat ID</th>"+
 										"<th style='min-width:160px;'>WeChat Username</th>"+
+										"<th style='min-width:160px;'>Phone Number</th>"
 										"<th style='min-width:50px;'>ID</td>"+
 										"</tr>"
 						for(i = 0 ;i<data.length;++i)
@@ -1058,6 +1059,7 @@
 										    "<td>"+data[i].last +"</td>"+
 										    "<td>"+data[i].ownerWechatID+"</td>"+
 										    "<td>"+data[i].ownerWechatUserName+"</td>"+
+										    "<td>"+data[i].ownerUsPhoneNumber+"</td>"+
 										    "<td>"+data[i].houseOwnerID+"</td></tr>";
 						}
 						htmlcont += "</table></div>";
@@ -1156,6 +1158,7 @@
 					}
 					,
 					error: function (xhr, ajaxOptions, thrownError) {
+						
 						alert("Failed to add new house owner.");
 					}
 				});
@@ -1334,16 +1337,17 @@
 					if (data.length==0) {//no similar results found
 						$("#new_house_owner_form").submit();
 					} else {
-						htmlcont += "<div style='overflow:auto'>"+
-									"<table class='table table-striped table-bordered'>"+
-									"<tr>"+
-									"<th></th>"+
-									"<th style='min-width:100px;'>First Name</th>"+
-									"<th style='min-width:100px;'>Last Name</th>"+
-									"<th style='min-width:100px;'>WeChat ID</th>"+
-									"<th style='min-width:160px;'>WeChat Username</th>"+
-									"<th style='min-width:50px;'>ID</td>"+
-									"</tr>"
+							htmlcont += "<div style='overflow:auto'>"+
+										"<table class='table table-striped table-bordered'>"+
+										"<tr>"+
+										"<th></th>"+
+										"<th style='min-width:100px;'>First Name</th>"+
+										"<th style='min-width:100px;'>Last Name</th>"+
+										"<th style='min-width:100px;'>WeChat ID</th>"+
+										"<th style='min-width:160px;'>WeChat Username</th>"+
+										"<th style='min-width:160px;'>Phone Number</th>"+
+										"<th style='min-width:50px;'>ID</td>"+
+										"</tr>"
 						for(i = 0 ;i<data.length;++i)
 						{
 							htmlcont += "<tr><td data-dismiss='modal' style='cursor:pointer; text-decoration:underline; color:blue;' onclick='$(\"#houseOwnerID\").val( "+ data[i].houseOwnerID+ ")'>Select</td>"+
@@ -1351,6 +1355,7 @@
 										    "<td>"+data[i].last +"</td>"+
 										    "<td>"+data[i].ownerWechatID+"</td>"+
 										    "<td>"+data[i].ownerWechatUserName+"</td>"+
+										    "<td>"+data[i].ownerUsPhoneNumber+"</td>"+
 										    "<td>"+data[i].houseOwnerID+"</td></tr>";
 						}
 						htmlcont += "</table></div>";
@@ -1365,6 +1370,7 @@
 					alert("Something's wrong, try again later.");
 				}
 			});
+			// $('#loadele').addClass("loading");
 		}
 
 		function georesponse(elem){
