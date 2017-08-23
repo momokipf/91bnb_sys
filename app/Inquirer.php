@@ -11,7 +11,7 @@ class Inquirer extends Model
 {
     //
 
-    protected $table = 'Inquirer';
+    protected $table = 'inquirer';
 
     /* primaryKey keyword*/
 

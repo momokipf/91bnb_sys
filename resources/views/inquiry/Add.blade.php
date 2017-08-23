@@ -892,34 +892,6 @@
 					$('#petTypeDiv').val('');//empty input
 				}
 			});
-
-
-			// $("#country").change(function(){
-			// 	if($(this).val().length!=0){
-			// 		var countryfile = $(this).val().replace(' ','');
-			// 		$.get("/resource/"+countryfile,function(data,status){
-			// 		$('#state').empty();
-			// 		for(i=0;i<data.length;++i){
-			// 			var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-			// 			$('#state').append(option);
-			// 		}
-			// 		});
-			// 	}
-			// });
-
-			// $('#state').change(function(){
-			// 	if($(this).val().length!=0){
-			// 		var cityfile = $("#country").val().replace(' ','')+"_"+$(this).val().replace(' ','');
-			// 		$.get("/resource/"+cityfile,function(data,status){
-			// 		$('#city').empty();
-			// 		for(i=0;i<data.length;++i){
-			// 			var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-			// 			$('#city').append(option);
-			// 		}
-			// 		});
-			// 	}
-			// });
-
 			$.ajax({
 				type: "GET",
 				dataType: "json",//data type expected from server
@@ -1149,18 +1121,31 @@
 			}
 
 			if(!optionFound){
-				$(elem)[0].setCustomValidity('Please select a valid value.');
-					return;
+				if(value){
+					$(elem)[0].setCustomValidity('Please select a valid value.');
+						return;
+				}
+				else{
+					if(elem===$('#country')[0]){
+						$('#state').val('');
+						$('#city').val('');
+					}
+					else if(elem===$('#state')[0]){
+						$('#city').val('');
+					}
+				}
 			}
 
 			//var url = "/resource/";
 			if(elem===$('#country')[0]){
 				//url += value.trim();
+				$('#state').val('');
+				$('#statelist').empty();
+				$('#city').val('');
 				$.get({
 					url:"/resource/"+value,
 					type:"GET",
 					success: function(data){
-						$('#statelist').empty;
 						for(var i=0;i<data.length;++i){
 							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
 							$('#statelist').append(option);
@@ -1172,11 +1157,12 @@
 				});
 			}
 			else if(elem===$('#state')[0]){
+				$('#city').val('');
+				$('#citylist').empty();
 				$.get({
 					url:"/resource/"+$('#country').val()+'/'+value,
 					type:"GET",
 					success:function(data){
-							$('#citylist').empty;
 							$('#citylist').html(data);
 						},
 					error: function(jqXHR,error){

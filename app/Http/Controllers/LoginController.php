@@ -93,7 +93,7 @@ class LoginController extends Controller
         // }
 
         // if ($this->attemptLogin($request)) {
-        //     return $this->sendLoginResponse($request);
+        //     return $this->sendLoginResponse($request);p
         // }
         if(Auth::attempt([
                 'repUserName'=>$input['userID'],
@@ -108,6 +108,19 @@ class LoginController extends Controller
         else{
             // $this->incrementLoginAttempts($request);
             //dd($errors);
+
+            if(!\App\Representative::where('userID',$input['userID'])->first()){
+                return redirect()->back()
+                        ->withInput()
+                        ->withErrors(['status' => 'Login in failed','info' => 'No such account']);
+            }
+
+            if(!\App\Representative::where('userID',$input['userID'])->where('password', bcrypt($input['password']))->first()){
+                return redirect()->back()
+                        ->withInput()
+                        ->withErrors(['status' => 'Login in failed','info' => 'Wrong password']);
+            }
+
             return  \Redirect::intended('/login')
                 ->withInput()
                 ->with('status','login failed');

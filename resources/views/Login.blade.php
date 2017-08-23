@@ -93,7 +93,7 @@
                         @elseif($errors->has('email'))
                             {{$errors->first('email')}}
 	                    @elseif (session('status'))
-               				login failed
+               				{{$errors->first('info')}}
                			@endif
                         <!-- @foreach($errors->all() as $key => $error )
                            Key: {{ $key }}

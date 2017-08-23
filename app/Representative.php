@@ -64,12 +64,14 @@ class Representative extends Model implements
     }
 
     public function inquirer() {
-        return DB::table('inquirer')
-                ->whereIn('inquirerID', function ($query) {
+        return Inquirer
+                ::whereIn('inquirerID', function ($query) {
                     $query->select('inquirerID')
                         ->from('inquiry')
                         ->where('repID', $this->repID);
                 });
+
+
         //return DB::select('select * from inquirer where inquirerID in (select inquirerID from inquiry where repID = ?)', [$this->repID]);
     }
 

@@ -450,39 +450,48 @@
 			}
 
 			if(!optionFound){
-				$(elem)[0].setCustomValidity('Please select a valid value.');
-					return;
+				if(value){
+					$(elem)[0].setCustomValidity('Please select a valid value.');
+						return;
+				}
+				else{
+					if(elem===$('#country')[0]){
+						$('#state').val('');
+						$('#city').val('');
+					}
+					else if(elem===$('#state')[0]){
+						$('#city').val('');
+					}
+				}
 			}
 
 			//var url = "/resource/";
 			if(elem===$('#country')[0]){
 				//url += value.trim();
-				$('#state').val("");
-				$('#city').val("");
-				if(value){
-					$.get({
-						url:"/resource/"+value,
-						type:"GET",
-						success: function(data){
-							$('#statelist').empty;
-							for(var i=0;i<data.length;++i){
-								var option = $("<option></option>").attr("value", data[i]).text(data[i]);
-								$('#statelist').append(option);
-							}
-						},
-						error: function(jqXHR,error){
-							errorhandler(jqXHR);
+				$('#state').val('');
+				$('#statelist').empty();
+				$('#city').val('');
+				$.get({
+					url:"/resource/"+value,
+					type:"GET",
+					success: function(data){
+						for(var i=0;i<data.length;++i){
+							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
+							$('#statelist').append(option);
 						}
-					});
-				}
+					},
+					error: function(jqXHR,error){
+						errorhandler(jqXHR);
+					}
+				});
 			}
 			else if(elem===$('#state')[0]){
-				$('#city').val("");
+				$('#city').val('');
+				$('#citylist').empty();
 				$.get({
 					url:"/resource/"+$('#country').val()+'/'+value,
 					type:"GET",
 					success:function(data){
-							$('#citylist').empty;
 							$('#citylist').html(data);
 						},
 					error: function(jqXHR,error){
@@ -507,7 +516,7 @@
 					url:"/resource/"+value,
 					type:"GET",
 					success: function(data){
-						$('#statelist').empty;
+						$('#statelist').empty();
 						for(var i=0;i<data.length;++i){
 							var option = $("<option></option>").attr("value", data[i]).text(data[i]);
 							$('#statelist').append(option);
@@ -523,7 +532,7 @@
 						url:"/resource/"+$('#country').val()+'/'+value,
 						type:"GET",
 						success:function(data){
-								$('#citylist').empty;
+								$('#citylist').empty();
 								$('#citylist').html(data);
 							},
 						error: function(jqXHR,error){
