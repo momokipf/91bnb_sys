@@ -67,7 +67,7 @@ class Representative extends Model implements
         return Inquirer
                 ::whereIn('inquirerID', function ($query) {
                     $query->select('inquirerID')
-                        ->from('inquiry')
+                        ->from('Inquiry')
                         ->where('repID', $this->repID);
                 });
 

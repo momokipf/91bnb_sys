@@ -496,7 +496,7 @@
                 var toSend = $('#ownersearchForm').serialize();
                 $.ajax({
                     type:"POST",
-                    url:"/houseowner/search/similar",
+                    url:"/houseowner/search",
                     data:toSend,
                     datatype:'json',
                     success: function(data){

@@ -528,7 +528,7 @@ class HousesController extends Controller
             if(isset($ownerid)){
                 $houses = Houseowner::find($ownerid)->houses;
                 
-                if($houses){
+                if($houses&&count($houses)!=0){
                     $search_geo = collect(['location'=>collect(['lat'=>$houses[0]->latitude,'lng'=>$houses[0]->longitude])]);
 
                     for($i =0; $i< count($houses); $i++){

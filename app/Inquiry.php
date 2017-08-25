@@ -103,7 +103,7 @@ class Inquiry extends Model
         if($attributes['inquiryDate']&&$attributes['inquiryDate']!="NULL"){
             $date = str_replace('/','-',$attributes['inquiryDate']);
             //Log::info($date);
-            $query =$query->where('InquiryDate','=',$date);
+            $query =$query->where('inquiryDate','=',$date);
         }
         if($attributes['inquiryDateFrom']&&$attributes['inquiryDateFrom']!="NULL"){
             $date = str_replace('/','-',$attributes['inquiryDateFrom']);
@@ -112,7 +112,7 @@ class Inquiry extends Model
         }
         if($attributes['inquiryDateTo']&&$attributes['inquiryDateTo']!="NULL"){
             $date = str_replace('/','-',$attributes['inquiryDateTo']);
-            $query = $query->whereRaw("InquiryDate<='".$date."'");
+            $query = $query->whereRaw("inquiryDate<='".$date."'");
         }
         if($attributes['inquiryPriorityLevel']){
             $query = $query->where('inquiryPriorityLevel','=',$attributes['inquiryPriorityLevel']);

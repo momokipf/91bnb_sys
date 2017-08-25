@@ -23,6 +23,20 @@ class HouseAvailabilityController extends Controller
         $this->middleware('auth');
     }
 
+    public function show(Request $request){
+        $houseid = $request->input('houseid');
+        $avaid = $request->input('sourceid');
+        $houseavas = \App\Houseavailability::where('numberID','=',$houseid)->where('avaid','=',$avaid)->get();
+
+        if(count($houseavas)==1){
+            $houseava = $houseavas[0];
+            return view('house.Houseavailability')
+                    ->with('ava',$houseava)
+                    ->with('Rep',Auth::user());
+        }
+
+    }
+
     public function get(Request $request,$id){
 
     	$house = \App\House::find($id);
@@ -35,23 +49,27 @@ class HouseAvailabilityController extends Controller
 
 			$ret = array();
     		foreach($availabilities as &$ava){
-
+                $info = array();
+                $info['houseid'] = $house->numberID;
+                $info['sourceid'] = $ava->avaid;
+                $url = 'houseavailability/show?'.http_build_query($info);
     			$tmp = array('start'=>$ava->rentBegin,'end'=>$ava->rentEnd,'id'=>$id.'_'.$ava->avaid);
     			if($ava->inquiryID==0&&$ava->source=="inner"){
     				$tmp['color'] = '#ff1a1a';
-    				$tmp['title'] = 'Block';
+    				$tmp['title'] = 'Inner Booking';
     			}
                 else if($ava->source=="Airbnb"){
-                    $tmp['color'] = '#A52A2A'; 
+                    //$tmp['color'] = '#A52A2A'; 
                     $tmp['durationEditable'] = false;
                     $tmp['startEditable'] = false;
                     $tmp['editable'] = false;
                     if($ava->description!="Not available"){
-                        $tmp['title'] = $ava->source;
+                        $tmp['title'] = $ava->description;
                     }
                     else{
                         $tmp['title'] = "Block";
                     }
+                    $tmp['url'] = $url;
                 }
 
 
@@ -194,6 +212,7 @@ class HouseAvailabilityController extends Controller
                         }
                         else{
                             $inquiryfield['inquirerFirst'] = $inquiryrawfield[0];
+                             $inquirerfield['inquirerLast'] = "";
                         }
                     }
                     if(preg_match("/PHONE:([\s\+]+[\d\s()-]+)\\n/", $event->description,$match)){
@@ -231,7 +250,7 @@ class HouseAvailabilityController extends Controller
                     Log::info($inquirer);
                     Log::info($inquiry);
                     //$inquirer->queries()->save($inquiry);
-                    $newHouseAva->description = $event->description.' \n RENTER: '.$event->summary;
+                    $newHouseAva->description = 'Renter:'.$inquirerfield['inquirerFirst'].' '.$inquirerfield['inquirerLast'].'\n'.'PHONE:'.$phone;      /*$event->description.' \n RENTER: '.$event->summary;*/
                 }   
                 //Log::debug($newHouseAva);
                 $house->houseavailability()->save($newHouseAva);
@@ -308,26 +327,28 @@ class HouseAvailabilityController extends Controller
 			foreach($ical->eventsFromRange($start,$end) as &$event){
 				if($event->summary == "Not available")
 					continue;
-
-				$renter = substr($event->summary,0,strpos($event->summary,'('));
-
-				$info = "Renter: ".$renter."; House: ".$key;
+                $info =array();
+                $renter = substr($event->summary,0,strpos($event->summary,'('));
+                if($house)
+                    $info['houseid'] = $house->numberID;
+                else
+                    $info['houseid'] = -1;
+                $info['sourceid'] = $event->uid;
 				if(preg_match("/PHONE:([\s\+]+[\d\s()-]+)\\n/", $event->description,$match)){
 		    		$phone = str_replace(" ","",$match[1]);
-		    		$info = $info." PHONE: ".$phone;
 		    	}
 		    	if(preg_match("/EMAIL:\s([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})\\n/", $event->description,$match)){
 		    		$email = $match[1];
-		    		$info = $info." EMAIL: ".$email;
 		    	}
 
+                $url = 'houseavailability/show?'.http_build_query($info);
 				$ts = $event->dtstart_array[2];
 				$estart = new \DateTime("@$ts") ;
 				$ts = $event->dtend_array[2];
 				$eend = new \DateTime("@$ts");
 
 
-				$tmp = array('id'=>$event->uid,'start'=>$estart->format('Y-m-d'),'end'=>$eend->format('Y-m-d'),'color'=>$value[1],'url'=>$info);
+				$tmp = array('id'=>$event->uid,'start'=>$estart->format('Y-m-d'),'end'=>$eend->format('Y-m-d'),'color'=>$value[1],'title'=>"Renter: ".$renter."; House: ".$key,'url'=>$url);
 				array_push($ret,$tmp);
 			}
 		}
