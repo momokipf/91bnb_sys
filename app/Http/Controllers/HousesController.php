@@ -7,18 +7,19 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Filesystem\Filesystem;
-use Storage;
+use Illuminate\Support\Facades\Input;
 
 use GuzzleHttp\Pool;
 use GuzzleHttp\Client;
 
-
+use Storage;
 use Validator;
 use View;
 use \DateTime;
 use App\House;
 use App\Houseavailability;
 use App\Houseowner;
+use Exception; 
 
 
 
@@ -167,8 +168,9 @@ class HousesController extends Controller
     }
 
     public function modifyHouse($numberID) {
-    	Log::info($numberID);
     	$house = House::where('numberID', $numberID)->first();
+        $house['imgURLs'] = $house->getImgURLs();
+        Log::info($house);
     	return view('house.ModifyHouse')
     			->with('house', $house)
     			->with('Rep',Auth::user());
@@ -253,12 +255,30 @@ class HousesController extends Controller
         $state = $this->getState($request->input('state'));
         $city = $request->input('city');
 
+        /*
+        Spatial information
+        TODO:  check correctness
+        */
+        if($request->input('search_latitude')&&$request->input('search_longitude'))
+        {
+            $target_pt = collect(['latitude'=>$request->input('search_latitude'),'longitude'=>$request->input('search_longitude')]);
+            $search_longitude=$target_pt['longitude'];
+            $search_latitude = $target_pt['latitude'];
+        }
+        else{
+            if($houseAddress)
+            {
+                $query_addr=$houseAddress.($country?','.$country:' ').($state?','.$state:' ').($city?','.$city:' ').','.$zipcode;
+                try{
+                $response =$httpclient->request('GET','maps/api/geocode/json?',['query'=>['address'=>$query_addr,'key'=>GOOGLE_KEY]]);
+               }
+               catch(GuzzleHttp\Exception\ConnectException $e){
+                    Log::error($e);
+               }
+            }
+        }
 
-
-        $httpclient = new Client(['base_uri'=>'https://maps.googleapis.com/','timeout'=>5.0]);
-        $query_addr=$houseAddress.($country?','.$country:' ').($state?','.$state:' ').($city?','.$city:' ').','.$zipcode;
-        $response =$httpclient->request('GET','maps/api/geocode/json?',['query'=>['address'=>$query_addr,'key'=>GOOGLE_KEY]]);
-        if($response->getStatusCode()=='200')
+        if(isset($response)&&$response->getStatusCode()=='200')
         {
             $obj = json_decode($response->getBody());
             $status = $obj->status;
@@ -287,7 +307,7 @@ class HousesController extends Controller
                 }
             }
         }
-        else
+        else if(isset($response))
         {
             if($request->ajax()||$request->wantsJson()){
                 return response()
@@ -295,6 +315,8 @@ class HousesController extends Controller
             }
 
         }
+
+
         Log::info($search_longitude.'   '.$search_latitude);
 
     	$houseowner = \App\Houseowner::find($input['houseOwnerID']);
@@ -332,6 +354,7 @@ class HousesController extends Controller
 
 			$priceinput = $request->only(\App\Houseprice::$fields); 
 			$conditioninput = $request->only(\App\Housingcondition::$fields);
+            Log::info($conditioninput);
     		$newhouseprice = new \App\Houseprice($priceinput);  
     		$newhousecond = new \App\Housingcondition($conditioninput);
             $newhouseAvailability = new \App\Houseavailability();
@@ -493,25 +516,7 @@ class HousesController extends Controller
             Log::info($house);
             if(isset($house)){
                 $search_geo = collect(['location'=>collect(['lat'=>$house->latitude,'lng'=>$house->longitude])]);
-
-                if($house->ImagePath){
-                    //for local use ftp
-                    //$files = Storage::disk('ftphouseimage')->files("houses/".$house->ImagePath);
-                    
-                    // for server use storage
-                    $files = Storage::files('public/houses/'.$house->ImagePath);
-                    if($files){
-                        
-                        foreach ($files as $tmp) {
-                            //echo $tmp;
-                            if(pathinfo($tmp)['extension'] =='jpg'|| pathinfo($tmp)['extension'] =='png'|| pathinfo($tmp)['extension'] =='jpeg' ){
-                                $house->ImagePath = Storage::url($tmp);
-                                break;
-                            }
-                        } 
-
-                    }    
-                }
+                $house->getCoverImageurl();
                 return response()->json(['houses'=>array($house->load('houseowner')),
                          'geo_center'=>$search_geo]);
             }
@@ -532,21 +537,7 @@ class HousesController extends Controller
                     $search_geo = collect(['location'=>collect(['lat'=>$houses[0]->latitude,'lng'=>$houses[0]->longitude])]);
 
                     for($i =0; $i< count($houses); $i++){
-                        if($houses[$i]->ImagePath){
-                            // for local use ftp
-                            //$files = Storage::disk('ftphouseimage')->files("houses/".$houses[$i]->ImagePath);
-                            // for server use storage
-                            $files = Storage::files('public/houses/'.$houses[$i]->ImagePath);
-                            if($files){
-                                foreach($files as $tmp){
-                                    if(pathinfo($tmp)['extension'] =='jpg'|| pathinfo($tmp)['extension'] =='png'|| pathinfo($tmp)['extension'] =='jpeg' ){
-                                        $houses[$i]->ImagePath = Storage::url($tmp);
-                                        break;
-                                    }
-                                }    
-                            }
-                            
-                        } 
+                        $houses[$i]->getCoverImageurl();
                     }
 
                     return response()
@@ -709,28 +700,9 @@ class HousesController extends Controller
 
                 
                 for($i =0; $i< count($houses); $i++){
-                    
-                    if($houses[$i]->ImagePath){
-                        // for local use ftp 
-                        //$files = Storage::disk('ftphouseimage')->files("houses/".$houses[$i]->ImagePath);
-                        //Log::info('files:'.$files);
-                        // for server use storage
-                        $files = Storage::files('public/houses/'.$houses[$i]->ImagePath);
-                        if($files){
-                            foreach($files as $tmp){
-                                //Log::info('$tmp:'.$tmp);
-                                if(pathinfo($tmp)['extension'] =='jpg'|| pathinfo($tmp)['extension'] =='png'|| pathinfo($tmp)['extension'] =='jpeg' ){
-                                    $houses[$i]->ImagePath = Storage::url($tmp);
-                                    break;
-                                }
-                            }
-                        }
-                            
-                    }
-                    
+                    $houses[$i]->getCoverImageurl();
                 }
-                Log::info('houses query:'.$houses);
-
+                
         		return response()
         			->json(['houses'=>$houses->values()->load('houseowner'),
         					 'geo_center'=>$search_geo
@@ -740,7 +712,50 @@ class HousesController extends Controller
 
     }
 
+    public function picupload(Request $request){
+        Log::info($request->all());
+        $houseid = $request->input('houseID');
+        $house = House::find($houseid);
+        $res = array();
+        if($request->hasFile('pic')){
+            $files = $request->file('pic');
+            $filename = 'public/houses/'.$house->ImagePath;
 
+
+            foreach(Input::file('pic') as $file){
+                $img = array();
+                if($file->isValid()){
+                    if($file->getClientSize()<= 2000000 ){
+                        try{
+                            $path = $file->store($filename);
+                            if(!$path){
+                                throw new Exception('Failed to store');
+                            }
+                            if(!file_exists($path)){
+                                throw new Exception('File not found');
+                            }
+                            $img['status']='success';
+                            $img['url'] = $path;
+                        }catch (\Exception $e){
+                            $img['status'] = 'error';
+                        }
+                    }
+                    else{
+                        $img['status'] = 'error';
+                    }
+                    array_push($res, $img);
+                }
+            }
+        }
+        if($request->ajax()||$request->wantsJson()){
+            return response()
+                    ->json(['status'=>'success','imgs'=>$res]);
+        }
+        else{
+            return \Redirect::intended('/MainPage')
+                    ->with('Rep',Auth::user());  
+        }
+    }
 
 
     /** 

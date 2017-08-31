@@ -187,6 +187,7 @@
 				<li><a data-toggle="tab" href="#availability">Availability</a></li>
 				<li><a data-toggle="tab" href="#price">Price</a></li>
 				<li><a data-toggle="tab" href="#room">Room (Optional)</a></li>
+				<li><a data-toggle="tab" href='#img'>Picture</a><li>
 			</ul>
 
 			<div class="tab-content">
@@ -854,6 +855,33 @@
 							<button class="btn btn-success btn-sm" type="button" id="addRoom">Add a Room</button>
 							<button class="btn btn-danger btn-sm" type="button" id="removeRoom">Remove a Room</button>
 						</div>
+					</div>
+				</div>
+
+				<div class="tab-pane fade" id='img'>
+					<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+						<div class="carousel-inner" role="listbox">
+							@for($i = 0 ; $i<count($house->imgURLs) ; $i++)
+								@if($i==0)
+									<div class="item active">
+								@else
+									<div class="item">
+								@endif
+									<img class="d-block img-fluid" src="{{$house->imgURLs[$i]}}" style="width:100%;">
+								</div>
+							@endfor
+
+						</div>
+						<a class="left carousel-control" href="#carouselExampleControls" data-slide="prev">
+						<span class="glyphicon glyphicon-chevron-left"></span>
+						<span class="sr-only">Previous</span>
+						</a>
+						<a class="right carousel-control" href="#carouselExampleControls" data-slide="next">
+						<span class="glyphicon glyphicon-chevron-right"></span>
+						<span class="sr-only">Next</span>
+						</a>
+						</a>
+
 					</div>
 				</div>
 			</div>

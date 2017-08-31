@@ -3,16 +3,16 @@
 
 @section('head')
 	<link rel="stylesheet" href="{{asset('css/animate.css')}}">
-
+	<!-- <link rel='stylesheet' href="{{asset('css/slideshow.css')}}"> -->
 
 	<script src="{{asset('js/bootbox.min.js')}}"></script>
 	<script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
-
 
 	<style type="text/css">
 		body {
 			background-color: white;
 		}
+
 		.badge {
 			font-size: 25px; 
 			background-color: #5CB85C;
@@ -88,30 +88,6 @@
 						<span class="title-sm" style='padding-left:5px;'> Select or Create House Owner</span>
 					</a>
 				</div>
-<!-- 					</div>
-			</div>
-
-			<hr>
-	        <h4>New house owner?</h4>
-	        <div class="row">
-	            <div class="col-sm-2">
-	                <button data-toggle="modal" data-target="#new_house_owner_modal" class="btn btn-primary btn-sm" onclick="$('#similarResult').empty(); $('#ownerSubmitBtn').show();$('#ownerStillSubmitBtn').hide()" type="button">Add New House Owner</button>
-	            </div>
-	        </div>
-		</div>
-
-		<div class="modal fade" id="new_house_owner_modal" role="dialog">
-			<div class="modal-dialog">
-
-				<div class ="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Add New House Owner</h4>
-					</div>
-					<div class="modal-body">
-						<form class="form-horizontal" method='post' id='new_house_owner_form'> -->
-
-
 				<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
 				<!-- <div class="row"> -->
 					<div class="panel-body">
@@ -263,7 +239,7 @@
 			</div>
 
 			<div class="panel panel-default">
-				<div class="panel-heading" role="tab" id="headingOne">
+				<div class="panel-heading" role="tab" id="headingTwo">
 					<span class="badge" style="background-color:#5CB85C;">2</span>
 					<a id='link2' class="collapsed inactiveLink" role="button" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
 						<span class="title-sm" style='padding-left:5px;'>Add New House</span>
@@ -278,10 +254,11 @@
 							{{ csrf_field()}}
 							<ul class="nav nav-tabs">
 						        <li class="active"><a data-toggle="tab" href="#home">House</a></li>
-						        <li><a data-toggle="tab" href="#menu1">Condition</a></li>
-						        <li><a data-toggle="tab" href="#menu2">Availability</a></li>
-						        <li><a data-toggle="tab" href="#menu3">Price</a></li>
-						        <li><a data-toggle="tab" href="#menu4">Room (Optional)</a></li>
+						        <li><a data-toggle="tab" href="#Conditiontab">Condition</a></li>
+						        <li><a data-toggle="tab" href="#Avatab">Availability</a></li>
+						        <li><a data-toggle="tab" href="#Pricetab">Price</a></li>
+								<!-- <li><a data-toggle="tab" href="#uploadpictab"> Picture </a></li> -->
+						        <li><a data-toggle="tab" href="#Roomtab">Room (Optional)</a></li>
 							</ul>
 
 							<div class="tab-content">
@@ -337,8 +314,6 @@
 										<!-- <input id="state" name="state"> -->
 		                                <input id="route" name="route">
 		                                <input id="room_num" name="room_num">
-<!-- 			                                <input id="search_latitude" name="search_latitude">
-		                                <input id="search_longitude" name="search_longitude"> -->
 		                                <input id="address" diabled>
 									</div>
 
@@ -419,7 +394,7 @@
 								</div>
 								<!-- end of table HOUSE -->
 
-								<div id="menu1" class="tab-pane fade" style="padding:20px; font-size:12px;" >
+								<div id="Conditiontab" class="tab-pane fade" style="padding:20px; font-size:12px;" >
 									<h5>Guests Info</h5>
 									<div class="row">
 						                <div class="col-sm-2">
@@ -649,7 +624,7 @@
 								<!--end of table HOUSINGCONDITION -->
 								<!-- beginning of table HOUSEAVAILABILITY -->
 
-								<div id="menu2" class="tab-pane fade panel-padding">
+								<div id="Avatab" class="tab-pane fade panel-padding">
 						            <div class="row">
 						                <div class="col-sm-2">
 						                    <label>Whole/Share</label>
@@ -739,7 +714,7 @@
 								</div>
 								<!--end of table HOUSEAVAILABILITY -->
 
-								<div id="menu3" class="tab-pane fade panel-padding">
+								<div id="Pricetab" class="tab-pane fade panel-padding">
 									<!-- beginning of table HOUSEPRICE -->
 									<div class="row">
 										<div class="col-sm-2">
@@ -891,7 +866,7 @@
 										
 								</div>
 
-								<div id="menu4" class="tab-pane fade">
+								<div id="Roomtab" class="tab-pane fade">
 								<!-- beginning of table HOUSEROOM -->
 									<div id = "roomsdiv">
 
@@ -918,6 +893,70 @@
 									</div>
 								</div>
 							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading" role="tab" id="headingThird">
+					<span class="badge" style="background-color:#5CB85C;">3</span>
+					<a id='link3' class='collapsed inactiveLink' role='button' data-toggle='collapse' href='#collapseThird' aria-expanded="false" aria-controls="collapseThird">
+						<span class='title-sm' style='padding-left:5px;'>Upload Picture</span>
+					</a>
+				</div>
+				<div id='collapseThird' class='panel-collapse collapse' role='tabpanel' aria-labelledby="headingThird">
+
+					<div class='panel-body'>
+
+<!-- 						<div class="slideshow-container">
+							<div class='mySlides'>
+								<div class="numbertext">1 / 3</div>
+							    <img src="{{asset('img/bg2.jpg')}}" style="width:100%">
+							    <div class="text">Caption Text</div>
+							</div>
+
+							<div class="mySlides">
+							    <div class="numbertext">2 / 3</div>
+							    <img src="{{asset('img/bg3.jpg')}}" style="width:100%">
+							    <div class="text">Caption Two</div>
+							</div>
+
+							<a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+							<a class="next" onclick="plusSlides(1)">&#10095;</a>
+						</div>
+						<div style="text-align:center">
+							<span class="dot" onclick="currentSlide(1)"></span> 
+							<span class="dot" onclick="currentSlide(2)"></span> 
+						</div> -->
+
+						<!-- <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+							<div class="carousel-inner" role="listbox">
+								<div class="item active">
+									<img class="d-block img-fluid" src="{{asset('img/bg2.jpg')}}" alt="First slide" style="width:100%;"> 
+								</div>
+								<div class="item">
+									<img class="d-block img-fluid" src="{{asset('img/bg3.jpg')}}" alt="Second slide" style="width:100%;">
+								</div>
+							</div>
+							<a class="left carousel-control" href="#carouselExampleControls" data-slide="prev">
+							<span class="glyphicon glyphicon-chevron-left"></span>
+							<span class="sr-only">Previous</span>
+							</a>
+							<a class="right carousel-control" href="#carouselExampleControls" data-slide="next">
+							<span class="glyphicon glyphicon-chevron-right"></span>
+							<span class="sr-only">Next</span>
+							</a>
+							</a>
+
+						</div> -->
+						<form action='/house/pic/upload' enctype="multipart/form-data" method="POST" id='picuploadform'>
+							{{ csrf_field()}}
+							<input type='text' name='houseID' value='1292' hidden>
+							<input type='file' name='pic[]'  class= "form-control" accept='image/*'>
+							<!-- <button class='form-control' onclick='addOneMoreFile();'>Add Image file</button>  -->
+							<input type='submit' onclick='checkpic();' value='Upload'>
+
 						</form>
 					</div>
 				</div>
@@ -1107,18 +1146,51 @@
 							// console.log(data);
 							if(data.status=='success'){
 								var str = "House ID: "+ data.houseinfo.fullHouseID + " has been stored.";  
+								$('picuploadform').find("input[name='houseID']").val(data.houseinfo.fullHouseID);
 								$('#house_A_display').text(str);
 							}
 							else{
 
 							}
 							$('#loadele').removeClass("loading");
-							$('#house_A_result_modal').modal();
+							// $('#house_A_result_modal').modal();
+							bootbox.dialog({
+								message:str,
+								title:'Message',
+								button:{
+									main:{
+										label: "OK",
+										className: "btn-primary",
+									}
+								}
+							});
 						}
 					});
 					$('#loadele').addClass("loading");
 				}
 			});
+
+			// $('#picuploadform').submit(function(){
+			// 	var toSend = $(this).serialize();
+			// 	$.ajax({
+			// 		type:'POST',
+			// 		datatype:'json',
+			// 		url:'/house/pic/upload',
+			// 		data:toSend,
+			// 		success: function(data){
+			// 			if(data.status=='success'){
+			// 				var imgdiv = "<div class='item'><img = class='mg class='d-block img-fluid' src='" +data.imgurl+"' alt='First slide' style='width:100%;'>";
+			// 				$('#carouselExampleControls').children('.carousel-inner').append(imgdiv);
+			// 				$('#loadele').removeClass("loading");
+			// 			}	
+			// 			else{
+
+			// 			}
+			// 		}
+			// 	});
+			// 	$('#loadele').addClass("loading");
+			// 	return false;
+			// });
 
 			$("#new_house_owner_form").submit(function(){
 				var toSend = $(this).serialize();//ownerWechatID=XXXX
@@ -1164,6 +1236,18 @@
 				});
 				return false;
 			});
+
+			function addOneMoreInput(){
+				$('input[type=file]').last().change(function(){
+					$(this).after("<input type='file' name='pic[]' class='form-control' accept='image/*'>");
+					$(this).off('change');
+					addOneMoreInput();
+				})
+			}
+
+			addOneMoreInput();
+			// $('#carouselExampleControls').carousel();
+
 
 			$('#addRoom').click(function(){
 				// var htmlstr = "<div class='well' ";
@@ -1385,13 +1469,27 @@
 			}
 
 			if(!optionFound){
-				$(elem)[0].setCustomValidity('Please select a valid value.');
-					return;
+				if(value){
+					$(elem)[0].setCustomValidity('Please select a valid value.');
+						return;
+				}
+				else{
+					if(elem===$('#country')[0]){
+						$('#state').val('');
+						$('#city').val('');
+					}
+					else if(elem===$('#state')[0]){
+						$('#city').val('');
+					}
+				}
 			}
 
 			//var url = "/resource/";
 			if(elem===$('#country')[0]){
 				//url += value.trim();
+				$('#state').val('');
+				$('#statelist').empty();
+				$('#city').val('');
 				$.get({
 					url:"/resource/"+value,
 					type:"GET",
@@ -1408,6 +1506,8 @@
 				});
 			}
 			else if(elem===$('#state')[0]){
+				$('#city').val('');
+				$('#citylist').empty();
 				$.get({
 					url:"/resource/"+$('#country').val()+'/'+value,
 					type:"GET",
@@ -1423,6 +1523,9 @@
 				});	
 			}
 			else{
+				if(ele.value=="Other"){
+					$('#cityOther').parent.show();
+				}
 			}
 
 		}
@@ -1478,6 +1581,46 @@
 			// 	return false;
 			// }
 		}
+
+		function checkpic(){
+			var files = $('input[type=file]');
+			if(files.length<=1){
+				return false;
+			}
+			else{
+				files.last().remove();
+				return true;
+			}
+		}
+
+		// var slideIndex = 1;
+		// showSlides(slideIndex);
+
+		// function plusSlides(n) {
+		//   showSlides(slideIndex += n);
+		// }
+
+		// function currentSlide(n) {
+		//   showSlides(slideIndex = n);
+		// }
+
+		// function showSlides(n) {
+		//   var i;
+		//   var slides = document.getElementsByClassName("mySlides");
+		//   var dots = document.getElementsByClassName("dot");
+		//   if (n > slides.length) {slideIndex = 1} 
+		//   if (n < 1) {slideIndex = slides.length}
+		//   for (i = 0; i < slides.length; i++) {
+		//       slides[i].style.display = "none"; 
+		//   }
+		//   for (i = 0; i < dots.length; i++) {
+		//       dots[i].className = dots[i].className.replace(" active", "");
+		//   }
+		//   slides[slideIndex-1].style.display = "block"; 
+		//   dots[slideIndex-1].className += " active";
+		// }
+
+
 
 	</script>
 @endsection

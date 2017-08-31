@@ -107,6 +107,7 @@
        <thead style="text-align:center">
 
          <th style="min-width:70px;">Priority</th>
+         <th style='min-width:70px;'>Representative</th>
          <th style="min-width:90px;">Name</th>
          <th>City</th>
          <th style="min-width:70px;">Rooms</th>
@@ -162,6 +163,7 @@
                 @endif
               </td>
 
+              <td>{{$query->represent->repFirstName}}</td>
               <!-- inquirer name -->
               <td>{{$query->quirer->inquirerFirst}} {{$query->quirer->inquirerLast}}</td>
               
@@ -453,7 +455,7 @@
                             </tr>
                             <tr>
                               <td>Special Note</td>
-                              <td><{{$query->specialNote}}</td>
+                              <td>{{$query->specialNote}}</td>
                             </tr>
                             <tr>
                               <td>Inquirer ID</td>

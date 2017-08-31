@@ -9,7 +9,7 @@ use App\Events\HouseDelete;
 
 use App\Observers\HouseObserver;
 use DB;
-
+use Storage;
 
 
 define("FULL_HOUSE_ID_TITLE","91bnb_");
@@ -158,7 +158,51 @@ class House extends Model
 	$res = DB::table(DB::raw("($house) as a"))->whereRaw("st_distance(a.location,POINT(-117.091794,31.751236))< 10.040")->get();
 	*/
 
+    /** 
+      * @desc: this function will get the first jpg or png image as the cover 
+      * of the house.
+      * @author Moki mokipang@91bnb.com
+      * @required all
+      * TO DO: later needed to be modified so that we can easily find the cover.
+      *        e.g. naming one image as 'cover'
+    */
 
+    public function getCoverImageurl(){
+        // for local use ftp 
+        //$files = Storage::disk('ftphouseimage')->files("houses/".$houses[$i]->ImagePath);
+        //Log::info('files:'.$files);
+        // for server use storage
+        if( Storage::exists('public/houses/'.$this->ImagePath)){
+            $files = Storage::files('public/houses/'.$this->ImagePath);
+            if($files)   // If there ara images in dir 
+            {  
+                foreach($files as $file){
+                    if(pathinfo($file)['extension'] == 'jpg' || pathinfo($file)['extension'] == 'png'|| pathinfo($file)['extension'] =='jpeg'){
+                        $this->ImagePath = Storage::url($tmp);
+                        break;
+                    }
+                }
+            }
+        }
+        return ;
+    }
+
+
+    public function getImgURLs(){
+        $URLs = array();
+        if( Storage::exists('public/houses/'.$this->ImagePath)){
+            $files = Storage::files('public/houses/'.$this->ImagePath);
+            if($files)   // If there ara images in dir 
+            {  
+                foreach($files as $file){
+                    if(pathinfo($file)['extension'] == 'jpg' || pathinfo($file)['extension'] == 'png'|| pathinfo($file)['extension'] =='jpeg'){
+                        array_push($URLs,Storage::url($file));
+                    }
+                }
+            }
+        }
+        return $URLs;
+    }
 
 	/*
 
