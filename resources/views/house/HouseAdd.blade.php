@@ -241,7 +241,7 @@
 			<div class="panel panel-default">
 				<div class="panel-heading" role="tab" id="headingTwo">
 					<span class="badge" style="background-color:#5CB85C;">2</span>
-					<a id='link2' class="collapsed inactiveLink" role="button" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+					<a id='link2' class="collapsed inactiveLink" role="button" data-toggle="collapse" href="#collapseTwo"; aria-expanded="false" aria-controls="collapseTwo">
 						<span class="title-sm" style='padding-left:5px;'>Add New House</span>
 					</a>
 				</div>
@@ -952,7 +952,7 @@
 						</div> -->
 						<form action='/house/pic/upload' enctype="multipart/form-data" method="POST" id='picuploadform'>
 							{{ csrf_field()}}
-							<input type='text' name='houseID' value='1292' hidden>
+							<input type='text' name='houseID' hidden>
 							<input type='file' name='pic[]'  class= "form-control" accept='image/*'>
 							<!-- <button class='form-control' onclick='addOneMoreFile();'>Add Image file</button>  -->
 							<input type='submit' onclick='checkpic();' value='Upload'>

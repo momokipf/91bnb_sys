@@ -18,7 +18,8 @@
 	<!-- alert box -->
 	<!--<script src="{{asset('js/bootbox.min.js')}}"></script>-->
 
-
+  	<!-- Include jQuery Popup Overlay -->
+  	<script src="https://cdn.rawgit.com/vast-engineering/jquery-popup-overlay/1.7.13/jquery.popupoverlay.js"></script>
 	<script type="text/javascript" src="{{asset('js/moment.js')}}"></script>
 	<link rel="stylesheet" type="text/css" href="{{asset('css/fullcalendar.css')}}">
 	<script rel="stylesheet" type="text/javascript" src="{{asset('js/fullcalendar.min.js')}}"></script>
@@ -110,9 +111,25 @@
 			 background-image: linear-gradient(to bottom right,  transparent calc(50% - 1px), red, transparent calc(50% + 1px));
 		}
 
-		.tool {
-			
-		    
+		div.gallery {
+		    margin: 5px;
+		    border: 1px solid #ccc;
+		    float: left;
+		    width: 180px;
+		}
+
+		div.gallery:hover {
+		    border: 1px solid #777;
+		}
+
+		div.gallery img {
+		    width: 100%;
+		    height: auto;
+		}
+
+		div.desc {
+		    padding: 15px;
+		    text-align: center;
 		}
 
 	</style>
@@ -859,7 +876,17 @@
 				</div>
 
 				<div class="tab-pane fade" id='img'>
-					<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+					<div style = 'height:500px;'>
+					@for($i=0 ; $i < count($house->imgURLs);$i++)
+						<div class="gallery">
+							<!-- <a target="_blank" href="fjords.jpg"> -->
+							<img src="{{$house->imgURLs[$i]}}" alt="Fjords" width="300" height="200">
+							<!-- </a> -->
+							<div class="desc">Add a description of the image here</div>
+						</div>
+					@endfor
+					</div>
+					<!-- <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
 						<div class="carousel-inner" role="listbox">
 							@for($i = 0 ; $i<count($house->imgURLs) ; $i++)
 								@if($i==0)
@@ -881,8 +908,8 @@
 						<span class="sr-only">Next</span>
 						</a>
 						</a>
-
-					</div>
+					</div>-->
+					<button class="uploadpopup_open">Open popup</button>
 				</div>
 			</div>
 
@@ -890,8 +917,22 @@
 				<button class="btn btn-primary btn-sm" type="submit">Save Modified Info</button>
 			</div>
 		</form>
+
+		<div data-role="popup" id='uploadpopup' >
+			<div style = "width:480px;background:#FFFFFF;">
+			<form action='/house/pic/upload' enctype="multipart/form-data" method="POST" id='picuploadform'>
+				{{ csrf_field()}}
+				<input type='text' name='houseID'  value='1292' hidden>
+				<input type='file' name='pic[]'  class= "form-control" accept='image/*'>
+				<div class='hint'>The Maximal size is 2M</div>
+				<!-- <button class='form-control' onclick='addOneMoreFile();'>Add Image file</button>  -->
+				<input type='submit' onclick='checkpic();' value='Upload'>
+				<button class="uploadpopup_close">Close</button>
+			</form>
+			</div>
+		</div>
+
 	</div>
-	<div>
 @endsection
 
 @section('script')
@@ -983,6 +1024,19 @@
 				}
 				
 		    });
+			$('#uploadpopup').popup({
+				background: true,
+			});
+
+			function addOneMoreInput(){
+				$('input[type=file]').last().change(function(){
+					$(this).after("<input type='file' name='pic[]' class='form-control' accept='image/*'>");
+					$(this).off('change');
+					addOneMoreInput();
+				})
+			}
+
+			addOneMoreInput();
 
 			$("#allowKid").change(function() {
 				if (this.checked) {
@@ -1105,6 +1159,16 @@
 
 			$('#modifyForm').submit(function() {
 				var toSend = $('#modifyForm').serializeArray();
+				for(var i=0;i< document.getElementById("roomsdiv").childElementCount;++i){
+					var tableele = $('#roomsdiv').children().eq(i).find('table');
+					var roombedtype="";
+					var rowCount = $('tr', $(tableele).find('tbody')).length;
+					for(var j=0;j<rowCount;++j){
+						roombedtype += ((roombedtype)?';':'')+$('tbody > tr',tableele).eq(j).find('select').val();
+					}
+					console.log = roombedtype;
+					toSend.push({'name':'roomBedType_'+(i+1),'value':roombedtype});
+				}
 				toSend.push({'name':'room_num','value':document.getElementById('roomsdiv').childElementCount});
 				$.ajax({
 					type: "POST",
@@ -1242,6 +1306,18 @@
 					});
 				}
 			});
+		}
+	}
+
+
+	function checkpic(){
+		var files = $('input[type=file]');
+		if(files.length<=1){
+			return false;
+		}
+		else{
+			files.last().remove();
+			return true;
 		}
 	}
 </script>

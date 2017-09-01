@@ -488,7 +488,7 @@
 
                                 </div>
                             </div>
-                            <div id="dontknowowneridDivdon" style="display:none;">
+                            <div id="dontknowowneridDiv" style="display:none;">
                                 <div class="row">
                                     <div class="col-lg-2">
                                         <label>First Name</label>
@@ -966,11 +966,8 @@
     function loadDatafromServer(){
 
             if(!$('#houseSearchForm').find('input[name="search_latitude"]').val()||!$('#houseSearchForm').find('input[name="search_longitude"]').val()){
-                var houseaddress = $('#houseAddress').val();
-                if(!houseaddress){
-                    houseaddress = $('#country').val()+' '+$('#administrative_area_level_1').val()+' '+$('#locality').val();
-                }
-                if(!houseaddress.trim()){
+
+                if(getSearchParams('houseID')||getSearchParams('houseOwnerID')){
                     var toSend = $('#houseSearchForm').serializeArray();
                     if(getSearchParams('houseID')){
                         toSend.push({'name':'houseID','value':getSearchParams('houseID')});
@@ -980,6 +977,17 @@
                     }
                     console.log(toSend);
                     realsearch(toSend);
+                    return ;
+                }
+
+
+                var houseaddress = $('#houseAddress').val();
+                if(!houseaddress){
+                    houseaddress = $('#country').val()+' '+$('#administrative_area_level_1').val()+' '+$('#locality').val();
+                }
+                if(!houseaddress.trim()){
+                    alert('no data passing by');
+                    return ;
                 }
                 else{
                     console.log(houseaddress);

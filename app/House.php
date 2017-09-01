@@ -178,7 +178,7 @@ class House extends Model
             {  
                 foreach($files as $file){
                     if(pathinfo($file)['extension'] == 'jpg' || pathinfo($file)['extension'] == 'png'|| pathinfo($file)['extension'] =='jpeg'){
-                        $this->ImagePath = Storage::url($tmp);
+                        $this->ImagePath = Storage::url($file);
                         break;
                     }
                 }
