@@ -192,6 +192,7 @@ class House extends Model
         $URLs = array();
         if( Storage::exists('public/houses/'.$this->ImagePath)){
             $files = Storage::files('public/houses/'.$this->ImagePath);
+            Log::info($files);
             if($files)   // If there ara images in dir 
             {  
                 foreach($files as $file){

@@ -81,7 +81,7 @@
                         <input id="userID" type="search" class="form-control input-sm" name="userID" placeholder="Input User ID" value="{{old('userID')}}" autocomplete="off">
                     </fieldset>
                     <fieldset class="form-group">
-                        <label>Password</label>
+                        <label>Password</label>hous
                         <input id="userPwd" type="password" class="form-control input-sm" name="userPwd" placeholder="Input Password"  autocomplete="off">
                     </fieldset>
                     <div style="height:15px;">

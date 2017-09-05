@@ -168,6 +168,7 @@ class HousesController extends Controller
     }
 
     public function modifyHouse($numberID) {
+    	// Log::info($numberID);
     	$house = House::where('numberID', $numberID)->first();
         $house['imgURLs'] = $house->getImgURLs();
         Log::info($house);
@@ -719,15 +720,17 @@ class HousesController extends Controller
         $res = array();
         if($request->hasFile('pic')){
             $files = $request->file('pic');
-            $filename = 'public/houses/'.$house->ImagePath;
-
+            $dirname = 'public/houses/'.$house->ImagePath;
+            if(!Storage::exists($dirname)){
+                Storage::makeDirectory($dirname);
+            }
 
             foreach(Input::file('pic') as $file){
                 $img = array();
                 if($file->isValid()){
                     if($file->getClientSize()<= 2000000 ){
                         try{
-                            $path = $file->store($filename);
+                            $path = $file->store($dirname);
                             if(!$path){
                                 throw new Exception('Failed to store');
                             }

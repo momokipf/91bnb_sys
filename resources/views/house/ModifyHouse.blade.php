@@ -111,20 +111,26 @@
 			 background-image: linear-gradient(to bottom right,  transparent calc(50% - 1px), red, transparent calc(50% + 1px));
 		}
 
+		
 		div.gallery {
 		    margin: 5px;
 		    border: 1px solid #ccc;
 		    float: left;
 		    width: 180px;
+		    height: 240px;
 		}
 
 		div.gallery:hover {
 		    border: 1px solid #777;
 		}
 
-		div.gallery img {
+		div.gallery:hover a.glyphicon-trash{
+		   display:inline-block;
+		}
+
+		div.gallery div.image{
 		    width: 100%;
-		    height: auto;
+		    height: 100%;
 		}
 
 		div.desc {
@@ -878,11 +884,13 @@
 				<div class="tab-pane fade" id='img'>
 					<div style = 'height:500px;'>
 					@for($i=0 ; $i < count($house->imgURLs);$i++)
-						<div class="gallery">
+						<div class="gallery" style='background-image:url({{$house->imgURLs[$i]}});'>
 							<!-- <a target="_blank" href="fjords.jpg"> -->
-							<img src="{{$house->imgURLs[$i]}}" alt="Fjords" width="300" height="200">
-							<!-- </a> -->
-							<div class="desc">Add a description of the image here</div>
+							<!-- <img src="{{$house->imgURLs[$i]}}" alt="Fjords" width="300" height="200"> -->
+							<a href="#" class="glyphicon glyphicon-trash">
+							</a>
+													<!-- </a> -->
+							<!-- <div class="desc">Add a description of the image here</div> -->
 						</div>
 					@endfor
 					</div>
@@ -922,7 +930,7 @@
 			<div style = "width:480px;background:#FFFFFF;">
 			<form action='/house/pic/upload' enctype="multipart/form-data" method="POST" id='picuploadform'>
 				{{ csrf_field()}}
-				<input type='text' name='houseID'  value='1292' hidden>
+				<input type='text' name='houseID'  value='{{$house->numberID}}' hidden>
 				<input type='file' name='pic[]'  class= "form-control" accept='image/*'>
 				<div class='hint'>The Maximal size is 2M</div>
 				<!-- <button class='form-control' onclick='addOneMoreFile();'>Add Image file</button>  -->
