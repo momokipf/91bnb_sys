@@ -80,7 +80,7 @@ Route::post('house/searchByOwner','HousesController@searchByOwner');
 Route::get('house/modify/{numberID}','HousesController@modifyHouse');
 Route::post('house/modify/update/{numberID}','HousesController@update');
 Route::post('house/pic/upload','HousesController@picupload');
-
+Route::delete('house/pic/delete','HousesController@picdelete');
 
 Route::get('houseowner/{id}/{house?}','HouseOwnersController@ownerinfo');
 Route::post('houseowner/search/{similar?}','HouseOwnersController@search');
@@ -128,7 +128,9 @@ Route::post('transaction/add','TransactionsController@add');
 
 
 //Route::resource('/postmech','PostController');
-Route::get('/post','PostController@index');
+Route::get('/test',function(){
+	return view('house.Houseresult_v')->with('Rep',Auth::user());
+});
 
 //Auth::routes();
 

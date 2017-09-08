@@ -701,7 +701,10 @@ class HousesController extends Controller
 
                 
                 for($i =0; $i< count($houses); $i++){
-                    $houses[$i]->getCoverImageurl();
+                    $coverurl = $houses[$i]->getCoverImageurl();
+                    if(isset($coverurl)){
+                        $houses[$i]['coverurl'] =  $coverurl;
+                    }
                 }
                 
         		return response()
@@ -760,6 +763,24 @@ class HousesController extends Controller
         }
     }
 
+
+    public function picdelete(Request $request ){
+        Log::info($request->all());
+        $house = House::find($request->input('numberID'));
+        $res = $house->deleteimg($request->input('filename'));
+        if($res==1){
+            if($request->ajax()||$request->wantsJson()){
+                return response()
+                        ->json(['status'=>'success']);
+            }
+        }
+        else{
+            if($request->ajax()||$request->wantsJson()){
+                return response()
+                        ->json(['status'=>'error','info'=>'No such file in server']);
+            }
+        }
+    }
 
     /** 
     * @desc This function check one house availability

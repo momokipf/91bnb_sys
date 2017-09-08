@@ -83,7 +83,7 @@ class LoginController extends Controller
         }
 
 
-        // If the class is using the ThrottlesLogins trait, we can automatically throttle
+        // If the class is using the ThrotctlesLogins trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and
         // the IP address of the client making these requests into this application.
         // if ($this->hasTooManyLoginAttempts($request)) {
@@ -109,21 +109,21 @@ class LoginController extends Controller
             // $this->incrementLoginAttempts($request);
             //dd($errors);
 
-            if(!\App\Representative::where('userID',$input['userID'])->first()){
+            if(!\App\Representative::where('repUserName',$input['userID'])->first()){
                 return redirect()->back()
                         ->withInput()
-                        ->withErrors(['status' => 'Login in failed','info' => 'No such account']);
+                        ->withErrors(array('errorid' => 'No valid account available'));
             }
 
-            if(!\App\Representative::where('userID',$input['userID'])->where('password', bcrypt($input['password']))->first()){
+            if(!\App\Representative::where('repUserName',$input['userID'])->where('password', bcrypt($input['userPwd']))->first()){
                 return redirect()->back()
                         ->withInput()
-                        ->withErrors(['status' => 'Login in failed','info' => 'Wrong password']);
+                        ->withErrors(array('errorpwd' => 'Password is incorrect'));
             }
 
-            return  \Redirect::intended('/login')
-                ->withInput()
-                ->with('status','login failed');
+            // return  \Redirect::intended('/login')
+            //     ->withInput()
+            //     ->with('status','login failed');
         }
 
         // If the login attempt was unsuccessful we will increment the number of attempts

@@ -178,7 +178,7 @@ class House extends Model
             {  
                 foreach($files as $file){
                     if(pathinfo($file)['extension'] == 'jpg' || pathinfo($file)['extension'] == 'png'|| pathinfo($file)['extension'] =='jpeg'){
-                        $this->ImagePath = Storage::url($file);
+                        return Storage::url($file);
                         break;
                     }
                 }
@@ -205,10 +205,19 @@ class House extends Model
         return $URLs;
     }
 
+    public function deleteimg($filename){
+        $file = 'public/houses/'.$this->ImagePath.'/'.$filename;
+        Log::info('delete file '.$file);
+        if(Storage::exists($file)){
+            Storage::delete($file);
+            return 1 ; 
+        }
+        else{
+            return -1;
+        }
+    }
+
 	/*
-
-
-
 	*/
 
     private function state_abbr($name){

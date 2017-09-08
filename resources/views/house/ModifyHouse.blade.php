@@ -116,8 +116,8 @@
 		    margin: 5px;
 		    border: 1px solid #ccc;
 		    float: left;
-		    width: 180px;
-		    height: 240px;
+		    width: 200px;
+		    height: 150px;
 		}
 
 		div.gallery:hover {
@@ -128,9 +128,8 @@
 		   display:inline-block;
 		}
 
-		div.gallery div.image{
-		    width: 100%;
-		    height: 100%;
+		div.gallery{
+		    background-size: 200px 150px;
 		}
 
 		div.desc {
@@ -204,13 +203,13 @@
 	<div class="container">
 		<form method = "post" id="modifyForm" onsubmit='return false;'>
 			{{csrf_field()}}
-			<ul class="nav nav-tabs">
-				<li class="active"><a data-toggle="tab" href="#house">House</a></li>
-				<li><a data-toggle="tab" href="#condition">Condition</a></li>
-				<li><a data-toggle="tab" href="#availability">Availability</a></li>
-				<li><a data-toggle="tab" href="#price">Price</a></li>
-				<li><a data-toggle="tab" href="#room">Room (Optional)</a></li>
-				<li><a data-toggle="tab" href='#img'>Picture</a><li>
+			<ul class="nav nav-tabs" id='navtab'>
+				<li class="active"><a data-toggle="tab" id='housetab' href="#house">House</a></li>
+				<li><a data-toggle="tab" id='conditiontab' href="#condition">Condition</a></li>
+				<li><a data-toggle="tab" id='availabilitytab' href="#availability">Availability</a></li>
+				<li><a data-toggle="tab" id='pricetab' href="#price">Price</a></li>
+				<li><a data-toggle="tab" id='roomtab' href="#room">Room (Optional)</a></li>
+				<li><a data-toggle="tab" id='imgtab' href='#img'>Picture</a><li>
 			</ul>
 
 			<div class="tab-content">
@@ -880,11 +879,10 @@
 						</div>
 					</div>
 				</div>
-
-				<div class="tab-pane fade" id='img'>
-					<div style = 'height:500px;'>
+			</form>
+				<div class="tab-pane fade" id='img' style ="height:500px;overflow-y: scroll;">
 					@for($i=0 ; $i < count($house->imgURLs);$i++)
-						<div class="gallery" style='background-image:url({{$house->imgURLs[$i]}});'>
+						<div class="gallery" value="{{$house->imgURLs[$i]}}" style='background-image:url({{$house->imgURLs[$i]}});'>
 							<!-- <a target="_blank" href="fjords.jpg"> -->
 							<!-- <img src="{{$house->imgURLs[$i]}}" alt="Fjords" width="300" height="200"> -->
 							<a href="#" class="glyphicon glyphicon-trash">
@@ -893,7 +891,6 @@
 							<!-- <div class="desc">Add a description of the image here</div> -->
 						</div>
 					@endfor
-					</div>
 					<!-- <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
 						<div class="carousel-inner" role="listbox">
 							@for($i = 0 ; $i<count($house->imgURLs) ; $i++)
@@ -917,21 +914,23 @@
 						</a>
 						</a>
 					</div>-->
-					<button class="uploadpopup_open">Open popup</button>
+				</div>
+				<div style="margin:auto;text-align: center;">
+					<button class="uploadpopup_open btn btn-default btn-sm" >Upload</button>
 				</div>
 			</div>
 
 			<div style='text-align:center; margin: 25px 0 200px 0;'>
 				<button class="btn btn-primary btn-sm" type="submit">Save Modified Info</button>
 			</div>
-		</form>
+		<!-- </form> -->
 
 		<div data-role="popup" id='uploadpopup' >
 			<div style = "width:480px;background:#FFFFFF;">
 			<form action='/house/pic/upload' enctype="multipart/form-data" method="POST" id='picuploadform'>
 				{{ csrf_field()}}
 				<input type='text' name='houseID'  value='{{$house->numberID}}' hidden>
-				<input type='file' name='pic[]'  class= "form-control" accept='image/*'>
+				<input type='file' name='pic[]'  class= "form-control" accept='image/*' multiple>
 				<div class='hint'>The Maximal size is 2M</div>
 				<!-- <button class='form-control' onclick='addOneMoreFile();'>Add Image file</button>  -->
 				<input type='submit' onclick='checkpic();' value='Upload'>
@@ -1032,13 +1031,66 @@
 				}
 				
 		    });
+
+			// store the currently selected tab in the hash value
+			$("ul.nav-tabs > li > a").on("shown.bs.tab", function(e) {
+			  var id = $(e.target).attr("href").substr(1);
+			  window.location.hash = id;
+			});
+
+			// on load of the page: switch to the currently selected tab
+			var hash = window.location.hash;
+			$('#navtab a[href="' + hash + '"]').tab('show');
+
 			$('#uploadpopup').popup({
 				background: true,
 			});
 
+			$('a.glyphicon-trash').on('click',function(e){
+				e.preventDefault();
+				var ele = $(this);
+				var url = $(this).closest('.gallery').css('background-image');
+				var imageID = url.substring(url.lastIndexOf('/')+1,url.length-2);
+				console.log("deleting: "+imageID);
+
+				$.ajax({
+					url:'/house/pic/delete',
+					type:'DELETE',
+					data:{'_token':"{{csrf_token()}}",'filename':imageID,'numberID':numberID},
+					success:function(data){
+						removeimgNode(data,ele);
+					},
+					error: function(){
+
+					}
+				});
+			});
+
+			function removeimgNode(response,ele){
+				if(response.length!=0&&response.status=='success'){
+					bootbox.dialog({
+						message: "Img has been deleted" ,
+						title:"Success",
+						buttons: {
+							main: {
+								label:"OK",
+								className: "btn-primary"
+							}
+						}
+					});
+					ele.parent().remove();
+				}
+				else if(response.length!=0&&response.status=='error'){
+
+				}
+				else{
+					alert("warning, system error");
+				}
+			}
+
 			function addOneMoreInput(){
 				$('input[type=file]').last().change(function(){
-					$(this).after("<input type='file' name='pic[]' class='form-control' accept='image/*'>");
+					$(this).after("<input type='file' name='pic[]' class='form-control' accept='image/*' multiple>");
 					$(this).off('change');
 					addOneMoreInput();
 				})
@@ -1328,6 +1380,7 @@
 			return true;
 		}
 	}
+
 </script>
 @endsection
 

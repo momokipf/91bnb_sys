@@ -964,110 +964,106 @@
     });
 
     function loadDatafromServer(){
+        if(!$('#houseSearchForm').find('input[name="search_latitude"]').val()||!$('#houseSearchForm').find('input[name="search_longitude"]').val()){
 
-            if(!$('#houseSearchForm').find('input[name="search_latitude"]').val()||!$('#houseSearchForm').find('input[name="search_longitude"]').val()){
-
-                if(getSearchParams('houseID')||getSearchParams('houseOwnerID')){
-                    var toSend = $('#houseSearchForm').serializeArray();
-                    if(getSearchParams('houseID')){
-                        toSend.push({'name':'houseID','value':getSearchParams('houseID')});
-                    }
-                    if(getSearchParams('houseOwnerID')){
-                        toSend.push({'name':'houseOwnerID','value':getSearchParams('houseOwnerID')});
-                    }
-                    console.log(toSend);
-                    realsearch(toSend);
-                    return ;
+            if(getSearchParams('houseID')||getSearchParams('houseOwnerID')){
+                var toSend = $('#houseSearchForm').serializeArray();
+                if(getSearchParams('houseID')){
+                    toSend.push({'name':'houseID','value':getSearchParams('houseID')});
                 }
-
-
-                var houseaddress = $('#houseAddress').val();
-                if(!houseaddress){
-                    houseaddress = $('#country').val()+' '+$('#administrative_area_level_1').val()+' '+$('#locality').val();
+                if(getSearchParams('houseOwnerID')){
+                    toSend.push({'name':'houseOwnerID','value':getSearchParams('houseOwnerID')});
                 }
-                if(!houseaddress.trim()){
-                    alert('no data passing by');
-                    return ;
-                }
-                else{
-                    console.log(houseaddress);
-                    $.ajax({
-                        url:'https://maps.googleapis.com/maps/api/geocode/json?',
-                        type:'GET',
-                        data: {'address':houseaddress, 'key':'AIzaSyCpF-_i-utIH6cZl94zpu4C5vx_FBDDI9s'},
-                        datatype:'json',
-                        success: function(data){
-                            if(data.results.length==0){
+                console.log(toSend);
+                realsearch(toSend);
+                return ;
+            }
 
-                            }
-                            else{
-                                var longitude=data.results[0].geometry.location.lng;
-                                var latitude =data.results[0].geometry.location.lat;
-                                $('#houseSearchForm').find('input[name="search_latitude"]').val(latitude);
-                                $('#houseSearchForm').find('input[name="search_longitude"]').val(longitude);
-                            }
 
-                            search_geo = data.results[0].geometry;
-
-                            realsearch();
-                        },
-                        error: function(){
-
-                        }
-                    });
-                }
+            var houseaddress = $('#houseAddress').val();
+            if(!houseaddress){
+                houseaddress = $('#country').val()+' '+$('#administrative_area_level_1').val()+' '+$('#locality').val();
+            }
+            if(!houseaddress.trim()){
+                alert('no data passing by');
+                return ;
             }
             else{
-                var loc = new google.maps.LatLng($('#houseSearchForm').find('input[name="search_latitude"]').val(),$('#houseSearchForm').find('input[name="search_longitude"]').val());
-                search_geo = {'location': loc};
-                realsearch();
+                console.log(houseaddress);
+                $.ajax({
+                    url:'https://maps.googleapis.com/maps/api/geocode/json?',
+                    type:'GET',
+                    data: {'address':houseaddress, 'key':'AIzaSyCpF-_i-utIH6cZl94zpu4C5vx_FBDDI9s'},
+                    datatype:'json',
+                    success: function(data){
+                        if(data.results.length==0){
+
+                        }
+                        else{
+                            var longitude=data.results[0].geometry.location.lng;
+                            var latitude =data.results[0].geometry.location.lat;
+                            $('#houseSearchForm').find('input[name="search_latitude"]').val(latitude);
+                            $('#houseSearchForm').find('input[name="search_longitude"]').val(longitude);
+                        }
+
+                        search_geo = data.results[0].geometry;
+
+                        realsearch();
+                    },
+                    error: function(){
+
+                    }
+                });
             }
-
-
-
+        }
+        else{
+            var loc = new google.maps.LatLng($('#houseSearchForm').find('input[name="search_latitude"]').val(),$('#houseSearchForm').find('input[name="search_longitude"]').val());
+            search_geo = {'location': loc};
+            realsearch();
+        }
     }
 
-        $("#ownerIDsearch").click(function(){
-            var toSend = $('#ownersearchForm').serialize();
-            $.ajax({
-                type:"POST",
-                url:"/houseowner/search/similar",
-                data:toSend,
-                datatype:'json',
-                success: function(data){
-                    var htmlcont = "";
-                    if(data.length==0){
-                        htmlcont = "<span style='color:red;'>No records found.</span>";
-                    }
-                    else{
-                        htmlcont += "<div style='overflow:auto'>"+
-                                    "<table class='table table-striped table-bordered'>"+
-                                    "<tr>"+
-                                    "<th></th>"+
-                                    "<th style='min-width:100px;'>First Name</th>"+
-                                    "<th style='min-width:100px;'>Last Name</th>"+
-                                    "<th style='min-width:100px;'>WeChat ID</th>"+
-                                    "<th style='min-width:160px;'>WeChat Username</th>"+
-                                    "<th style='min-width:50px;'>ID</td>"+
-                                    "</tr>"
-                    for(i = 0 ;i<data.length;++i)
-                    {
-                        htmlcont += "<tr><td data-dismiss='modal' style='cursor:pointer; text-decoration:underline; color:blue;' onclick=vieweffect(" + data[i].houseOwnerID + ")>Select</td>"+
-                                        "<td>"+data[i].first+"</td>"+
-                                        "<td>"+data[i].last +"</td>"+
-                                        "<td>"+data[i].ownerWechatID+"</td>"+
-                                        "<td>"+data[i].ownerWechatUserName+"</td>"+
-                                        "<td>"+data[i].houseOwnerID+"</td></tr>";
-                    }
-                    htmlcont += "</table></div>";
-                    }
-                    $("#display_search_result").html(htmlcont);
-
-
+    $("#ownerIDsearch").click(function(){
+        var toSend = $('#ownersearchForm').serialize();
+        $.ajax({
+            type:"POST",
+            url:"/houseowner/search/similar",
+            data:toSend,
+            datatype:'json',
+            success: function(data){
+                var htmlcont = "";
+                if(data.length==0){
+                    htmlcont = "<span style='color:red;'>No records found.</span>";
                 }
-            });
+                else{
+                    htmlcont += "<div style='overflow:auto'>"+
+                                "<table class='table table-striped table-bordered'>"+
+                                "<tr>"+
+                                "<th></th>"+
+                                "<th style='min-width:100px;'>First Name</th>"+
+                                "<th style='min-width:100px;'>Last Name</th>"+
+                                "<th style='min-width:100px;'>WeChat ID</th>"+
+                                "<th style='min-width:160px;'>WeChat Username</th>"+
+                                "<th style='min-width:50px;'>ID</td>"+
+                                "</tr>"
+                for(i = 0 ;i<data.length;++i)
+                {
+                    htmlcont += "<tr><td data-dismiss='modal' style='cursor:pointer; text-decoration:underline; color:blue;' onclick=vieweffect(" + data[i].houseOwnerID + ")>Select</td>"+
+                                    "<td>"+data[i].first+"</td>"+
+                                    "<td>"+data[i].last +"</td>"+
+                                    "<td>"+data[i].ownerWechatID+"</td>"+
+                                    "<td>"+data[i].ownerWechatUserName+"</td>"+
+                                    "<td>"+data[i].houseOwnerID+"</td></tr>";
+                }
+                htmlcont += "</table></div>";
+                }
+                $("#display_search_result").html(htmlcont);
 
+
+            }
         });
+
+    });
 
         
 

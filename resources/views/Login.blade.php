@@ -82,7 +82,7 @@
                     </fieldset>
                     <fieldset class="form-group">
                         <label>Password</label>hous
-                        <input id="userPwd" type="password" class="form-control input-sm" name="userPwd" placeholder="Input Password"  autocomplete="off">
+                        <input id="userPwd" type="password" class="form-control input-sm" name="userPwd" placeholder="Input Password"  value="{{old('userPwd')}}" autocomplete="off">
                     </fieldset>
                     <div style="height:15px;">
                     	<h5 id="msg" style="color:red">
@@ -92,8 +92,12 @@
                             {{$errors->first('userPwd')}}
                         @elseif($errors->has('email'))
                             {{$errors->first('email')}}
-	                    @elseif (session('status'))
-               				{{$errors->first('info')}}
+	                    @elseif ($errors->has('massage'))
+               				{{$errors->first('message')}}
+                        @elseif($errors->has('errorid'))
+                            {{$errors->first('errorid')}}
+                        @elseif($errors->has('errorpwd'))
+                            {{$errors->first('errorpwd')}}
                			@endif
                         <!-- @foreach($errors->all() as $key => $error )
                            Key: {{ $key }}
