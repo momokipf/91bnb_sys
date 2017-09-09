@@ -4,7 +4,7 @@
 @section('head')
     <link rel="stylesheet" href="{{asset('css/priceswitch.css')}}">
     <link rel="stylesheet" href="{{asset('css/animate.css')}}">
-
+    <!-- <link rel="stylesheet" href="{{asset('/css/check_radio.css')}}"> -->
 
     <!-- Include Required Prerequisites -->
     <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
@@ -17,38 +17,6 @@
     <script src="{{asset('js/bootstrap-formhelpers-phone.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/jquery.simplePagination.js')}}"></script>
 
-
-    @php
-        function checkKey(&$arr){
-            if(!array_key_exists('houseAddress', $arr)){
-                $arr['houseAddress']=NULL;
-            }
-            if(!array_key_exists("country",$arr)){
-                $arr['country']=NULL;
-            }
-            if(!array_key_exists("state",$arr)){
-                $arr['state']=NULL;
-            }
-            if(!array_key_exists('city', $arr)){
-                $arr['city']=NULL;
-            }
-            if(!array_key_exists('zipcode', $arr)){
-                $arr['zipcode'] = NULL;
-            }
-            if(!array_key_exists('search_latitude', $arr)){
-                $arr['search_latitude']=NULL;
-            }
-            if(!array_key_exists('search_longitude', $arr)){
-                $arr['search_longitude']=NULL;
-            }
-            if(!array_key_exists('milesrange', $arr)){
-                $arr['milesrange']=5;
-            }
-        }
-
-        parse_str($_SERVER['QUERY_STRING'], $parameter);
-        checkKey($parameter);
-    @endphp
     <style>
         @import url("//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css");
         html {width:100%; height:100%;}
@@ -108,11 +76,19 @@
             float: left;
             text-align: -webkit-match-parent;
         }
+        ul.searchbar li.dropdown-item{
+            clear:both;
+            text-align: -webkit-match-parent;
+        }
         li#search{
             /*position: relative;*/
             font-size: 16px;
             width:250px;
         }
+        .searchbardiv{
+            margin-left: 5px;
+        }
+
         input#houseAddress{ 
             height: 35px;
             margin-right: 100px;
@@ -310,10 +286,17 @@
 
 @section('content')
     <div class="container-fluid">
+        <form id="houseSearchForm" style="height:40px;">
         <ul class="searchbar" > 
             <li id='search'>
-            <form id="houseSearchForm" style="height:40px;">
-                <input class="form-control input-sm" type="text" id="houseAddress" name="houseAddress" value="{{$parameter['houseAddress']}}">
+
+                @if(array_key_exists("houseAddress",$_GET))
+                <input class="form-control input-sm"  type="text" id="houseAddress" name="houseAddress" placeholder="Enter and address,neighborhood,city,zipcode" value="{{$_GET['houseAddress']}}">
+                @elseif(!isset($Query))
+                <input class="form-control input-sm"  type="text" id="houseAddress" name="houseAddress" placeholder="Enter and address,neighborhood,city,zipcode" >
+                @else
+                <input class="form-control input-sm"  type="text" id="houseAddress" name="houseAddress" placeholder="Enter and address,neighborhood,city,zipcode" readonly>
+                @endif
                 <div class='searchicondiv'>
                     <button type='submit' aria-label="Submit" style='height:35px;'><i class="fa fa-search"></i></button>
                 </div>
@@ -325,35 +308,135 @@
                 <div style="display:none">
                     <input name = "checkIn" hidden>
                     <input name = "checkOut" hidden>
-                    <input name = "country"  id="country" value="{{$parameter['country']}}">
-                    <input id="administrative_area_level_1" name="state" value="{{$parameter['state']}}">
-                    <input id="locality" name="city" value="{{$parameter['city']}}">
+                    <input name = "country"  id="country">
+                    <input id="administrative_area_level_1" name="state">
+                    <input id="locality" name="city">
                     <input id="route" name="route">
-                    <input id="address" diabled>
-                    <input id='postal_code' name="zipcode" maxlength="5" value="{{$parameter['zipcode']}}">
-                    <input name="milesrange" id="milesrange" value="{{$parameter['milesrange']}}">
-                    <input name ="search_latitude" value="{{$parameter['search_latitude']}}">
-                    <input name ="search_longitude" value="{{$parameter['search_longitude']}}">
+                    @if(!isset($Query))
+                        <input id="address" >
+                    @else
+                        <input id="address" value="{{$Query->country}} {{$Query->state}} {{$Query->city}}" >
+                    @endif
+                    <input id='postal_code' name="zipcode" maxlength="5">
+                    <input name ="search_latitude" value= <?php if(array_key_exists("search_latitude",$_GET)) echo $_GET["search_latitude"];?>  >
+                    <input name ="search_longitude" value=<?php if(array_key_exists("search_longitude", $_GET)) echo $_GET["search_longitude"];?> >
                 </div>
-            </form>
             </li>
             <li>
-                <div class="dropdown" style>
-                  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Distance Mileage
-                  <span class="caret"></span></button>
-                  <ul class="dropdown-menu">
-                    <li><input type='checkbox' >1 Miles</li>
-                    <li><a href="#">2 Miles</a></li>
-                    <li><a href="#">5 Miles</a></li>
-                    <li><a href="#">10 Miles</a></li>
-                    <li><a href="#">20 Miles</a></li>
-                    <li><a href="#">30 Miles</a></li>
-
-                  </ul>
+                <div class='searchbardiv'>
+                    <div class="dropdown">
+                      <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">range
+                      <span class="caret"></span></button>
+                      <ul class="dropdown-menu" style="width:100px;">
+                        <li class="dropdown-item">
+                            <input type='radio' name='mileage' value='1'><label for='mileage'>1 Mile</lable>
+                        </li>
+                        <li class="dropdown-item">
+                            <input type='radio' name='mileage' value='2'><label for='mileage'>2 Mile</lable>
+                        </li>
+                        <li class="dropdown-item"> 
+                            <input type='radio' name='mileage' value='5'><label for='mileage'>5 Mile</lable>
+                        </li>
+                        <li class="dropdown-item">
+                            <input type='radio' name='mileage' value='10'><label for='mileage'>10 Mile</lable>
+                        </li>
+                        <li class="dropdown-item">
+                            <input type='radio' name='mileage' value='20'><label for='mileage'>20 Mile</lable>
+                        </li>
+                        <li class="dropdown-item">
+                            <input type='radio' name='mileage' value='30'><label for='mileage'>30 Mile</lable>
+                        </li>
+                      </ul>
+                    </div>
                 </div>
             </li>
-        </ul>
+            <li>
+                <div class='searchbardiv'>
+                @if(!isset($Query))
+                    <input type="text" id="daterange" class="form-control" value="" />
+                @else
+                    <input type="text" id="daterange" class="form-control" value="07/28/2017 - 08/01/2017" >
+                @endif
+                </div>
+            </li>
+            <li>
+                <div class='searchbardiv'>
+                    <div class='dropdown'>
+                        <button class='btn btn-primary dropdown-toggle' type='button' data-toggle='dropdown'> Rent Type
+                        <span class="caret"></span></button>
+                        <ul class='dropdown-menu'>
+                            <li class="dropdown-item">
+                                @if(isset($Query)|| (isset($Query->share)&&$Query->share==1))
+                                    <input type="radio" id="rentWhole" name="rentShareWhole" value="1" checked> 
+                                @else
+                                    <input type="radio" id="rentWhole" name="rentShareWhole" value="1"> 
+                                @endif
+                                <label>Whole</label>
+                            </li>
+                            <li class="dropdown-item">
+                                @if(isset($Query) && (isset($Query->share)&&$Query->share==-1))
+                                    <input type="radio" id="rentShare" name="rentShareWhole" value="-1" checked>
+                                @else
+                                    <input type="radio" id="rentShare" name="rentShareWhole" value="-1">
+                                @endif
+                                <label>Shared</label>
+                            </li>
+                            <li class="dropdown-item">
+                                @if((isset($Query)&&($Query->share)&&$Query->share==0) || !isset($Query) )
+                                    <input type="radio" id="rentEither" name="rentShareWhole" value="0" checked>
+                                @else 
+                                    <input type="radio" id="rentEither" name="rentShareWhole" value="0" >
+                                @endif
+                                <label>Either</label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
 
+            <li>
+                <div class='searchbardiv'>
+                    <div class='dropdown'>
+                        <button class='btn btn-primary dropdown-toggle' type='button' data-toggle='dropdown'> <span id='guestsum' > 0</span>&nbspGuests
+                        <span class="caret"></span></button>
+                        <ul class='dropdown-menu'>
+                            <li class="dropdown-item" style='min-width:200px;'>
+                                <div style='float:left;margin-left:10px;'><h5>Adults</h5></div>
+                                <div style='float:right;margin-right:10px;'>
+                                    @if(!isset($Query)&&isset($Query->numOfAdult))
+                                    <input class="guests form-control input-sm" type="number" id="numOfAdults" name="numOfAdults" value="{{$Query->numOfAdult}}" min="0">
+                                    @else
+                                    <input class="guests form-control" style='width:50px;' type="number" id="numOfAdults" name="numOfAdults" value="0" min="0">
+                                    @endif
+                                </div>
+                            </li>
+                            <li class='dropdown-item' style='min-width:200px;'> 
+                                <div style='float:left;margin-left:10px;'><h5>Childrens</h5></div>
+                                <div style='float:right;margin-right:10px;'>
+                                    @if(!isset($Query)&&isset($Query->numOfChildrens))
+                                    <input class="guests form-control input-sm" type="number" id="numOfChildrens" name="numOfChildrens" value="{{$Query->numOfChildrens}}" min="0">
+                                    @else
+                                    <input class="guests form-control" style='width:50px;' type="number" id="numOfChildrens" name="numOfChildrens" value="0" min="0">
+                                    @endif
+                                </div>
+                            </li>
+                            <li class='dropdown-item' style='min-width:200px;'>
+                                <div style='float:left;margin-left:10px;'><h5>Babies</h5></div>
+                                <div style='float:right;margin-right:10px;'>
+                                    @if(!isset($Query)&&isset($Query->numOfBabies))
+                                    <input class="guests form-control input-sm" type="number" id="numOfBabies" name="numOfBabies" value="{{$Query->numOfBabies}}" min="0">
+                                    @else
+                                    <input class="guests form-control" style='width:50px;' type="number" id="numOfBabies" name="numOfBabies" value="0" min="0">
+                                    @endif
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+
+        </ul>
+        </form>
 
         <!-- <div class="row">
             
@@ -559,6 +642,8 @@
             </div>
         </div>
     </div>
+    <!-- <iframe height='600px' width="600px" name="iframe_a" style="display:none; position:fixed; margin:auto;"></iframe> -->
+
     <div class="modal" id="loadele"></div>
 @endsection
 
@@ -649,6 +734,7 @@
         function initialize(){
             initMap();
             initAutoComplete();
+            loadDatafromServer();
         }
         function geolocate(){
             var place = autocomplete.getPlace();
@@ -666,6 +752,8 @@
                     }
                 }
                 search_geo = place.geometry;
+                $('#houseSearchForm').find('input[name="search_latitude"]').val(search_geo['location']['lat']);
+                $('#houseSearchForm').find('input[name="search_longitude"]').val(search_geo['location']['lng']);
                 document.getElementById('address').value = document.getElementById('houseAddress').value;
             }
         }
@@ -704,8 +792,6 @@
 
     //fix 0201 suppose all is formatted
     $(document).ready(function() {
-            loadDatafromServer();
-
             $('#checkIn').change(function(){
                 var date = $(this).datepicker('getDate');
                 $('#houseSearchForm').find('input[name="checkIn"]').val(converttimetosql(date));
@@ -726,6 +812,16 @@
                 $('#houseSearchForm').find('input[name="checkOut"]').val(converttimetosql(date[1]));
             });
 
+            $('.guests').change(function(){
+                var elements = $('.guests');
+                var sum = 0 ;
+                for(let i=0;i<elements.length;++i){
+                    sum += parseInt(elements[i].value);
+                }
+
+                $('#guestsum').html(sum);
+            })
+
             if(document.getElementById('address').value){
                 document.getElementById('houseAddress').value =  document.getElementById('address').value;
                 $("#houseAddress").focus();
@@ -733,7 +829,10 @@
         });
 
         function showHousedetail(ele){
-            alert("click the div");
+            alert();
+            var iframeEle = $('iframe').first();
+            iframeEle.src='/MainPage';
+            iframeEle.css('display','block');
         }
 
         /*
@@ -794,7 +893,9 @@
                 }
             }
             else{
+
                 var loc = new google.maps.LatLng($('#houseSearchForm').find('input[name="search_latitude"]').val(),$('#houseSearchForm').find('input[name="search_longitude"]').val());
+
                 search_geo = {'location': loc};
                 realsearch();
             }
@@ -856,14 +957,18 @@
                                 // picturehtml +="<li><p>"+houses[i]['numberID']+"</p><img src=\""+houses[i]['ImagePath']+"\"></li>";
                                 // picturehtml += "<td><img src=\""+houses[i]['ImagePath']+"\"></td>";
 
-                                picturehtml += "<td><a href='#' onclick ='showHousedetail(this);'> <div class='thumbnail' value="+ houses[i]['coverurl']+" style='background-image:url("+houses[i]['coverurl']+");''>"+
+                                picturehtml += "<td><a href='/house/modify/"+houses[i].numberID+"' > <div class='thumbnail' value="+ houses[i]['coverurl']+" style='background-image:url("+houses[i]['coverurl']+");''>"+
                                                 "<input name='numberID' hidden>"+
                                                 "<div><p style='color: white'>"+houses[i].houseAddress+"</p></div>"+
                                                 "<div><p style='color: white'>"+houses[i].fullHouseID+"</p></div>"+
-                                                "</div></a>";
+                                                "</div></a></td>";
                             }
                             else{
-                                picturehtml +="<td><div class='thumbnail'><p> No Image in this house</p></div></td>"; 
+                                picturehtml +="<td><a href='/house/modify/"+houses[i].numberID+"' > <div class='thumbnail'><p> No Image in this house</p>"+
+                                                "<input name='numberID' hidden>"+
+                                                "<div><p style='color: black'>"+houses[i].houseAddress+"</p></div>"+
+                                                "<div><p style='color: black'>"+houses[i].fullHouseID+"</p></div>"+
+                                                "</div></a></td>"; 
                             }
                             if((i&1)==1){
                                 picturehtml +='</tr>'
