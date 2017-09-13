@@ -173,8 +173,8 @@
             margin: 5px;
             border: 1px solid #ccc;
             float: left;
-            width: 300px;
-            height: 225px;
+            width: 100%;
+            height: 180px;
             vertical-align: bottom;
         }
 
@@ -187,7 +187,7 @@
         }
 
         div.thumbnail{
-            background-size: 300px 225px;
+            /*background-size: 240px;*/
         }
 
         div.desc {
@@ -450,15 +450,15 @@
             </div>
         </div> -->
         <div class='row' style='clear:both;'>
-            <div class='col-sm-6'>
+            <div class='col-sm-6' style="padding-right: 0px;">
                 <div id="map_div">
                     <div id="map">
                     </div>
                 </div>
             </div>
-            <div class='col-sm-6'>
+            <div class='col-sm-6' style="padding-left: 0px;"> 
                 <div id='housedisplay'>
-                    <table>
+                    <table style ='width:100%'>
                         <tbody id='imgArea'>
 
                         </tbody>
@@ -957,14 +957,14 @@
                                 // picturehtml +="<li><p>"+houses[i]['numberID']+"</p><img src=\""+houses[i]['ImagePath']+"\"></li>";
                                 // picturehtml += "<td><img src=\""+houses[i]['ImagePath']+"\"></td>";
 
-                                picturehtml += "<td><a href='/house/modify/"+houses[i].numberID+"' > <div class='thumbnail' value="+ houses[i]['coverurl']+" style='background-image:url("+houses[i]['coverurl']+");''>"+
+                                picturehtml += "<td width='50%'><a href='/house/modify/"+houses[i].numberID+"' > <div class='thumbnail' value="+ houses[i]['coverurl']+" style='background-image:url("+houses[i]['coverurl']+");''>"+
                                                 "<input name='numberID' hidden>"+
                                                 "<div><p style='color: white'>"+houses[i].houseAddress+"</p></div>"+
                                                 "<div><p style='color: white'>"+houses[i].fullHouseID+"</p></div>"+
                                                 "</div></a></td>";
                             }
                             else{
-                                picturehtml +="<td><a href='/house/modify/"+houses[i].numberID+"' > <div class='thumbnail'><p> No Image in this house</p>"+
+                                picturehtml +="<td width='50%'><a href='/house/modify/"+houses[i].numberID+"' > <div class='thumbnail'><p> No Image in this house</p>"+
                                                 "<input name='numberID' hidden>"+
                                                 "<div><p style='color: black'>"+houses[i].houseAddress+"</p></div>"+
                                                 "<div><p style='color: black'>"+houses[i].fullHouseID+"</p></div>"+

@@ -204,42 +204,56 @@
                                     @if(!array_key_exists("milesrange",$_GET))
                                         <OPTION value='1'>&nbsp;&nbsp;1 Mile</OPTION>
                                         <OPTION value='2' selected>&nbsp;&nbsp;2 Miles</OPTION>
+                                        <OPTION value='5'>&nbsp;&nbsp;5 Miles</OPTION>
                                         <OPTION value='10'>10 Miles</OPTION>
                                         <OPTION value='20'>20 Miles</OPTION>
                                         <OPTION value='30'>30 Miles</OPTION>
                                     @elseif($_GET['milesrange']=='1')
                                         <OPTION value='1' selected >&nbsp;&nbsp;1 Mile</OPTION>
                                         <OPTION value='2' >&nbsp;&nbsp;2 Miles</OPTION>
+                                        <OPTION value='5'>&nbsp;&nbsp;5 Miles</OPTION>
                                         <OPTION value='10'>10 Miles</OPTION>
                                         <OPTION value='20'>20 Miles</OPTION>
                                         <OPTION value='30'>30 Miles</OPTION>  
                                     @elseif($_GET['milesrange']=='2')
                                         <OPTION value='1'  >&nbsp;&nbsp;1 Mile</OPTION>
                                         <OPTION value='2' selected>&nbsp;&nbsp;2 Miles</OPTION>
+                                        <OPTION value='5'>&nbsp;&nbsp;5 Miles</OPTION>
+                                        <OPTION value='10'>10 Miles</OPTION>
+                                        <OPTION value='20'>20 Miles</OPTION>
+                                        <OPTION value='30'>30 Miles</OPTION>
+                                    @elseif($_GET['milesrange']=='5')
+                                        <OPTION value='1'  >&nbsp;&nbsp;1 Mile</OPTION>
+                                        <OPTION value='2' >&nbsp;&nbsp;2 Miles</OPTION>
+                                        <OPTION value='5' selected>&nbsp;&nbsp;5 Miles</OPTION>
                                         <OPTION value='10'>10 Miles</OPTION>
                                         <OPTION value='20'>20 Miles</OPTION>
                                         <OPTION value='30'>30 Miles</OPTION>
                                     @elseif($_GET['milesrange']=='10')
                                         <OPTION value='1'  >&nbsp;&nbsp;1 Mile</OPTION>
                                         <OPTION value='2' >&nbsp;&nbsp;2 Miles</OPTION>
+                                        <OPTION value='5'>&nbsp;&nbsp;5 Miles</OPTION>
                                         <OPTION value='10'selected>10 Miles</OPTION>
                                         <OPTION value='20'>20 Miles</OPTION>
                                         <OPTION value='30'>30 Miles</OPTION>
                                     @elseif($_GET['milesrange']=='20')
                                         <OPTION value='1'  >&nbsp;&nbsp;1 Mile</OPTION>
                                         <OPTION value='2' >&nbsp;&nbsp;2 Miles</OPTION>
+                                        <OPTION value='5'>&nbsp;&nbsp;5 Miles</OPTION>
                                         <OPTION value='10'>10 Miles</OPTION>
                                         <OPTION value='20'selected>20 Miles</OPTION>
                                         <OPTION value='30'>30 Miles</OPTION>
                                     @elseif($_GET['milesrange']=='30')
                                         <OPTION value='1'  >&nbsp;&nbsp;1 Mile</OPTION>
                                         <OPTION value='2' >&nbsp;&nbsp;2 Miles</OPTION>
+                                        <OPTION value='5'>&nbsp;&nbsp;5 Miles</OPTION>
                                         <OPTION value='10'>10 Miles</OPTION>
                                         <OPTION value='20'>20 Miles</OPTION>
                                         <OPTION value='30'selected>30 Miles</OPTION>
                                     @else
                                         <OPTION value='1'  >&nbsp;&nbsp;1 Mile</OPTION>
                                         <OPTION value='2' selected >&nbsp;&nbsp;2 Miles</OPTION>
+                                        <OPTION value='5'>&nbsp;&nbsp;5 Miles</OPTION>
                                         <OPTION value='10'>10 Miles</OPTION>
                                         <OPTION value='20'>20 Miles</OPTION>
                                         <OPTION value='30'>30 Miles</OPTION>
